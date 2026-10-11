@@ -855,6 +855,7 @@ func traitor() -> void:
 	var ma := marcus.anim
 	ma.create_tween().tween_property(ma, "attack", 1.0, 0.35).from(0.6)
 	await d.wait(0.2)
+	hud.mark_spike(Feel.SPIKE_SCRIPT)  # the bell: Elena
 	hud.fade(1.0, 0.05)
 	await hud.subtitle("", "BONG.", 1.2)
 	ma.attack = -1.0
