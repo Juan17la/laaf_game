@@ -41,8 +41,9 @@ var _cracks: OmniLight3D
 static func spawn_at(parent: Node, pos: Vector3, yaw := 0.0) -> Harvester:
 	var h := Enemy.spawn(parent, "res://models/char_boss.glb", pos, yaw, {
 		"display_name": "The Harvester", "boss": true, "max_health": 900.0, "walk_speed": 1.3,
-		"run_speed": 2.5, "melee_damage": 38.0, "melee_range": 2.8, "windup": 1.0, "mark_gain": 10.0,
-		"sight_range": 70.0, "fov_deg": 220.0, "flare_stun": 0.0, "hearing": 2.0, "agile": false}, Harvester.new()) as Harvester
+		"run_speed": 2.5, "melee_damage": 38.0, "melee_range": 2.8, "windup": 1.0, "mark_gain": Feel.MARK_GAIN.harvester,
+		"sight_range": 70.0, "fov_deg": 220.0, "flare_stun": 0.0, "hearing": 2.0, "agile": false,
+		"instant_notice": true, "question_icon": false}, Harvester.new()) as Harvester  # it never wonders: only "!"
 	var col := h.get_child(0) as CollisionShape3D
 	var cap := col.shape as CapsuleShape3D
 	cap.radius = 0.6
