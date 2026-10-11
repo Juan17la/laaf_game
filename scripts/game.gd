@@ -45,6 +45,8 @@ var pending := {}  ## {"step": String} or a whole save dict (has "flags"), consu
 var loading := false  ## a save is being restored (the chapter directors rebuild earlier steps' state)
 var run := {"damaged": false, "time": 0.0}
 var director: Node  ## the chapter director running the current step
+var dev_evidence := false  ## Dev Mode: runs start with all 12 pieces of evidence (Chapter1Director reads it)
+var dev_mark := -1.0  ## Dev Mode: runs start with the Mark at this % (< 0: as the story has it)
 var _unlocked := {}
 var _check_t := 0.0
 var _pause: CanvasLayer
@@ -64,13 +66,18 @@ func _ready() -> void:
 func start(step: String, run_mode: String, save := {}) -> void:
 	## Into the world at `step` (or the save's step): "story" or "dev".
 	mode = run_mode
+	if run_mode != "dev":
+		dev_evidence = false  # dev conveniences only: never in a story run
+		dev_mark = -1.0
 	pending = save.duplicate(true) if not save.is_empty() else {"step": step}
 	loading = not save.is_empty()
 	if loading:
 		difficulty = int(save.get("difficulty", difficulty))
-		run = (save.get("run", run) as Dictionary).duplicate()
+		run = (save.get("run", run) as Dictionary).duplicate(true)
+		run.erase("veil_told")  # (older saves: the Veil's Eye note's once-a-run flag, gone with the eye)
 	else:
 		run = {"damaged": false, "time": 0.0}
+	Enemy.reset_notes()  # "THEY ADAPT" notes are per run: a static outlives the last one
 	get_tree().paused = false
 	Snd.stop_music(0.5)  # drop pushed tracks / hunt flags from the previous run
 	get_tree().change_scene_to_file(WORLD)
@@ -123,7 +130,7 @@ func snapshot() -> Dictionary:
 	var w: Weapons = p.weapons
 	var chapter := 3 if d is Chapter3Director else (2 if d is Chapter2Director else 1)
 	return {"version": 1, "time": Time.get_unix_time_from_system(), "chapter": chapter, "step": str(d.step),
-		"difficulty": difficulty, "flags": (d.flags as Dictionary).duplicate(true), "run": run.duplicate(),
+		"difficulty": difficulty, "flags": (d.flags as Dictionary).duplicate(true), "run": run.duplicate(true),
 		"label": "Ch.%d · %s" % [chapter, str(d.get("_objective_text")) if str(d.get("_objective_text")) != "" else str(d.step)],
 		"player": {"health": p.health, "mark": p.mark, "bottles": p.bottles, "smokes": p.smokes, "teas": p.teas,
 			"gas_mask": p.gas_mask, "mask_filter": p.mask_filter, "mark_resist": p.mark_resist},
@@ -289,6 +296,11 @@ func _open_pause() -> void:
 	_pause.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_pause)
 	var ui := MenuUI.panel(_pause, "PAUSED", "%s · %s" % [settings().name, _clock(run.time)])
+	var p: Node = director.get("player")
+	if p:  # the exact Mark (the HUD only flashes its rises)
+		var mark := MenuUI.label("MARK  %.1f%%" % float(p.mark), 11, Feel.MARK_NOTICE_RED, true)
+		mark.name = "Mark"
+		ui.add_child(mark)
 	MenuUI.button(ui, "Resume", resume)
 	var can_save := mode != "" and director and bool(director.player.controls_enabled)
 	var save := MenuUI.button(ui, "Save game", func() -> void:
