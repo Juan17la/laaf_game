@@ -31,7 +31,10 @@ func _run() -> void:
 		"chapel_door": Vector3(-22, 1.2, -204.2), "gate": Vector3(30, 1.2, -219.8), "cage1": Vector3(2, 1.0, -199.7),
 		"cage2": Vector3(8, 1.0, -195.7), "candle1": Vector3(-75.9, 0.9, -98.8), "candle2": Vector3(-73.8, 0.9, -101.2),
 		"candle3": Vector3(-69.6, 0.9, -98.8), "candle4": Vector3(-67.5, 0.9, -101.2), "candle5": Vector3(-63.3, 0.9, -98.8),
-		"lucia_cage": Vector3(-24.8, 1.0, -212.3), "silas_seat": Vector3(-19, 1.0, -25.9), "grady3": Vector3(14, 1.2, -17.2)}
+		"lucia_cage": Vector3(-24.8, 1.0, -212.3), "silas_seat": Vector3(-19, 1.0, -25.9), "grady3": Vector3(14, 1.2, -17.2),
+		"room4": Chapter1Director.ROOM4_DOOR, "room4_camera": Chapter1Director.ROOM4_CAMERA,
+		"wire1": Chapter1Director.TRIP_BELLS[0] + Vector3.UP * 0.2, "wire2": Chapter1Director.TRIP_BELLS[1] + Vector3.UP * 0.2,
+		"wire3": Chapter1Director.TRIP_BELLS[2] + Vector3.UP * 0.2}
 	var bad := 0
 	for k in marks:
 		var m: Vector3 = marks[k]
