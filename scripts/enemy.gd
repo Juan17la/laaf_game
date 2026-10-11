@@ -34,7 +34,7 @@ enum State { PATROL, SUSPICIOUS, CHASE, SEARCH, STUNNED, DOWN, DEAD }
 @export var melee_damage := 12.0
 @export var melee_range := 1.7
 @export var windup := 0.55
-@export var mark_gain := 3.0
+@export var mark_gain: float = Feel.MARK_GAIN["marked"]  ## % Mark per blow that lands (Feel.MARK_GAIN)
 @export var sight_range := 20.0
 @export var fov_deg := 130.0
 @export var ranged := false  ## bow: keeps its distance and fires arrows
@@ -57,8 +57,12 @@ enum State { PATROL, SUSPICIOUS, CHASE, SEARCH, STUNNED, DOWN, DEAD }
 @export var hearing := 1.0  ## noise radius multiplier (Marcus hears everything)
 @export var armor := 1.0  ## damage multiplier while not stunned (Marcus: very tough)
 @export var agile := true  ## dodges and pounces (the Harvester is too big for either)
+@export var instant_notice := false  ## sight fills the awareness meter at once (the Harvester always knows)
+@export var question_icon := true  ## shows "?" while noticing / searching (the Harvester only ever shows "!")
 
 var state := State.PATROL
+var awareness := 0.0  ## 0..1: how sure it is it saw Alex (Feel AWARE_*); full = CHASE. hear() doesn't touch it
+var spotted_t := 99.0  ## seconds since it last went into CHASE (the "!" icon)
 var health := 60.0
 var patrol: Array[Vector3] = []
 ## The bow in the left hand (item_bow, the same grip as the player's), string drawn by the game, arms by IK.
@@ -110,8 +114,14 @@ var _leapt := false
 var _pounce_cd := randf_range(2.0, 4.0)
 var _combo := 0  ## follow-up strikes left in this flurry
 var _hit_from := Vector3.ZERO  ## direction the last blow came from (a death falls away from it)
+var _freeze := 0.0  ## > 0: hitstop, the whole body holds still (Feel.HITSTOP)
+var _meshes: Array[MeshInstance3D] = []  ## the model's meshes (hit flash overlay)
+var _flash_mat: StandardMaterial3D
+var _flash_tw: Tween
+var _model_scale := Vector3.ONE
 
 const TAKEDOWN_CONE := 100.0  ## degrees behind the enemy
+const SENSE_STEP := 0.2  ## s between looks (can_see_player)
 const THROW_TIME := 0.9
 const PACE_CAP := 5.3  ## m/s: a raging chaser stays just under Alex's sprint (escape costs stamina)
 const DOWN_POSES := ["kneel", "one_knee", "hands_ground", "sit_back", "side"]
@@ -169,6 +179,11 @@ static func habits() -> Dictionary:
 	return run.habits
 
 
+static func reset_notes() -> void:
+	## A new or loaded run (Game.start): every habit may be told to the player again.
+	_noted.clear()
+
+
 static func learn(key: String, v: float, rate := 0.25) -> void:
 	## Moving average: recent behaviour counts most, so a player who changes style is re-learned. A habit
 	## that takes hold (>= 0.6) is told to the player once, again only after it has faded (< 0.35).
@@ -205,6 +220,10 @@ func _ready() -> void:
 		_make_bow()
 	if checks_hiding and _player and _player.has_signal("hid"):
 		_player.hid.connect(_on_hid)
+	_model_scale = _model.scale
+	for mi in _model.find_children("*", "MeshInstance3D", true, false):
+		_meshes.append(mi)
+	add_child(AlertIcon.new())
 
 
 func _dim_model() -> void:
@@ -232,6 +251,12 @@ func _set_dim(on: bool) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	spotted_t += delta
+	if _freeze > 0.0:  # hitstop: a beat where the blow lands and everything about it holds
+		_freeze -= delta
+		if _freeze <= 0.0:
+			_anim.set_process(true)
+		return
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 	else:
@@ -321,8 +346,13 @@ func _think(delta: float) -> void:
 	_t_sense -= delta
 	_unseen += delta
 	if _t_sense <= 0.0:
-		_t_sense = 0.2
-		if can_see_player():
+		_t_sense = SENSE_STEP
+		var seen := can_see_player()
+		if seen and state != State.CHASE:  # not instant: the meter fills (near, lit, dead ahead: fast)
+			awareness = minf(awareness + _notice_rate() * SENSE_STEP, 1.0)
+		elif not seen and state != State.CHASE:
+			awareness = maxf(awareness - Feel.AWARE_DECAY * SENSE_STEP, 0.0)
+		if seen and (state == State.CHASE or awareness >= 1.0):
 			_unseen = 0.0
 			_target = _player.global_position
 			_seen_vel = _player.velocity
@@ -330,6 +360,9 @@ func _think(delta: float) -> void:
 				learn("stealth", 0.0, 0.1)  # walked into view: not sneaking this time
 			if state != State.CHASE:
 				_set_state(State.CHASE)
+		elif seen and state == State.PATROL and awareness >= Feel.AWARE_LOOK_AT:
+			_target = _player.global_position  # half sure: walks over to look (shows "?")
+			_set_state(State.SUSPICIOUS)
 	if state == State.CHASE and _player.global_position.x > give_up_x:
 		_set_state(State.SEARCH)
 		_target = patrol[0]
@@ -400,6 +433,59 @@ func _think(delta: float) -> void:
 			if _t_state > 12.0:
 				_set_state(State.PATROL)
 				_target = patrol[_patrol_i]
+
+
+func _notice_rate() -> float:
+	## Awareness per second while Alex is in sight (Feel AWARE_*): at once up close or for instant_notice, else
+	## slower with distance (against how far it can see him now: crouching / hiding shrink that) and toward the
+	## edge of the view cone; faster when already alert or when the flashlight is on.
+	var to: Vector3 = _player.global_position - global_position
+	var d := to.length()
+	if instant_notice or d <= Feel.AWARE_NEAR:
+		return INF
+	var reach: float = maxf(sight_range * float(_player.visibility()), Feel.AWARE_NEAR + 0.01)
+	var far := clampf((d - Feel.AWARE_NEAR) / (reach - Feel.AWARE_NEAR), 0.0, 1.0)
+	var rate := 1.0 / lerpf(Feel.AWARE_TIME_NEAR, Feel.AWARE_TIME_FAR, far)
+	var off := clampf(rad_to_deg(_model.global_basis.z.angle_to(to)) / (fov_deg * 0.5), 0.0, 1.0)
+	rate *= lerpf(1.0, Feel.AWARE_EDGE_MULT, off)
+	if state in [State.SUSPICIOUS, State.SEARCH]:
+		rate *= Feel.AWARE_ALERT_MULT
+	var light: Node3D = _player.get("flashlight")
+	if light and light.visible:
+		rate *= Feel.AWARE_LIGHT_MULT
+	return rate
+
+
+func hitstop(t: float) -> void:
+	## The blow lands: hold still for t (scaled by Feel.hitstop). Physics and the pose freeze; nothing else does.
+	t *= Feel.hitstop
+	if t <= 0.0 or state == State.DEAD:
+		return
+	_freeze = maxf(_freeze, t)
+	_anim.set_process(false)
+
+
+func _flash() -> void:
+	## Hit feedback: a white flash over the model and a little swell, both easing off at once.
+	if not _flash_mat:
+		_flash_mat = StandardMaterial3D.new()
+		_flash_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		_flash_mat.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+		_flash_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	if _flash_tw:
+		_flash_tw.kill()
+	for mi in _meshes:
+		if is_instance_valid(mi):
+			mi.material_overlay = _flash_mat
+	_flash_mat.albedo_color = Color(1, 1, 1, Feel.ENEMY_FLASH)
+	_model.scale = _model_scale * Feel.ENEMY_POP
+	_flash_tw = create_tween().set_parallel()
+	_flash_tw.tween_property(_flash_mat, "albedo_color:a", 0.0, Feel.ENEMY_FLASH_TIME)
+	_flash_tw.tween_property(_model, "scale", _model_scale, Feel.ENEMY_POP_TIME).set_ease(Tween.EASE_OUT)
+	_flash_tw.chain().tween_callback(func() -> void:
+		for mi in _meshes:
+			if is_instance_valid(mi):
+				mi.material_overlay = null)
 
 
 func _bow(d: float, delta: float) -> void:
@@ -810,6 +896,12 @@ func _set_state(s: State) -> void:
 	var was := state
 	state = s
 	_t_state = 0.0
+	if s == State.CHASE:
+		awareness = 1.0
+		if was != State.CHASE:
+			spotted_t = 0.0
+			if is_physics_processing():
+				get_tree().call_group("screen_fx", "spike", Feel.SPIKE_CHASE)  # the Mark flares: it's on him
 	if s == State.CHASE and was != State.CHASE and is_physics_processing():
 		Snd.sfx("enemy_alert" if randf() < 0.5 else "growl", global_position)
 	Snd.threat(s == State.CHASE and is_physics_processing(), self)
@@ -861,8 +953,9 @@ func hit(dmg: float, point: Vector3, flare := false) -> void:
 		learn("melee", 1.0 if swung else 0.0, 0.15 if swung else 0.08)
 		_hit_from = (_player.global_position - global_position).normalized()
 	_rage = minf(_rage + (0.06 if boss else 0.12), 1.0)
-	Snd.sfx("enemy_hit", global_position)
-	if point.y - global_position.y > 1.5 * _model.scale.y:
+	Snd.sfx("enemy_hit", global_position, 0.0, Feel.pitch())
+	_flash()
+	if point.y - global_position.y > 1.5 * _model_scale.y:
 		dmg *= 2.0  # headshot
 	if state == State.STUNNED or _calling > 0.0:
 		dmg *= 1.5
@@ -1036,6 +1129,7 @@ func lose_track(p: Vector3) -> void:
 	_target = p
 	_unseen = 99.0
 	_set_state(State.SEARCH)
+	awareness = 0.0  # it has to see Alex properly again
 	_t_sense = 3.0  # blind for a moment
 
 
@@ -1056,6 +1150,7 @@ func reset_to(pos: Vector3) -> void:
 	_rage = 0.0
 	_stun_tol = 0.0
 	_guard = 0.0
+	awareness = 0.0
 	_anim.down_pose = ""
 	_anim.look = Vector2.ZERO
 	_spots.clear()
