@@ -21,7 +21,6 @@ const C3_DEFAULTS := {"marcus": "active", "clara_photo": false, "has_chapel_key"
 	"jacket": false, "cages": 0, "candles": 0, "ending": "", "tea": 0}
 const MEMBERS := ["owen", "nora", "julian", "marcus"]
 const ITEM := {"owen": "lantern", "nora": "drawing", "julian": "sam_file", "marcus": "clara_photo"}
-const MARK_RATE := 0.05  ## Mark % per second at night while in control (×1.5 after Elena, per the docs)
 const MOTH := Color(1.0, 0.85, 0.25)
 # cemetery + church (nave x -84..-60, z -106..-94, door at x -60; see ch2_scenes_b.gd for the yard)
 const HIDE := Vector3(-101.35, 0.05, -76.25)
@@ -77,10 +76,16 @@ func begin(prev: Chapter1Director, from_step := "c3_bell") -> void:
 	player = prev.player
 	hud = prev.hud
 	flags = prev.flags
+	_checkpoint = prev._checkpoint  # (until this chapter's first: the last one, with what was carried there)
+	_kit = prev._kit
 	for d in [prev, get_parent().get_node_or_null("Chapter1"), get_parent().get_node_or_null("Chapter2")]:
 		if d and player.died.is_connected(d._on_died):
 			player.died.disconnect(d._on_died)
+		if d and player.fell.is_connected(d._on_fell):
+			player.fell.disconnect(d._on_fell)
 	player.died.connect(_on_died)
+	player.fell.connect(_on_fell)
+	player.mark_cap = Feel.MARK_SOFT_CAP[3]
 	cam = Camera3D.new()
 	cam.fov = 60.0
 	cam.far = 150.0
@@ -97,7 +102,7 @@ func begin(prev: Chapter1Director, from_step := "c3_bell") -> void:
 	flags.tea = 0
 	var boss_prop := get_parent().get_node_or_null("Props/Boss")
 	if boss_prop:
-		boss_prop.visible = false  # out collecting: it comes back at C3.2
+		show_boss_prop(boss_prop, false)  # out collecting: it comes back at C3.2
 	clear_enemies()  # Chapter 1-2 leftovers (roaming Marked Ones, hidden spared bosses)
 	_on_reset = _reset_marked
 	var i := maxi(C3_STEPS.find(from_step), 0)
@@ -121,6 +126,8 @@ func begin(prev: Chapter1Director, from_step := "c3_bell") -> void:
 			harvester = Harvester.spawn_at(self, HARV_SPAWN, PI)
 			harvester.phase = 3
 			harvester._take(harvester.max_health)  # already kneeling
+	if _dev:
+		_capture_kit.call_deferred()  # (the dev skip's hand-outs: a death keeps them)
 	for s in C3_STEPS.slice(i):
 		if flags.ending == "run" and s in ["harvest", "harvester"]:
 			continue
@@ -135,6 +142,14 @@ func begin(prev: Chapter1Director, from_step := "c3_bell") -> void:
 
 
 # ------------------------------------------------------------------ helpers
+
+static func show_boss_prop(prop: Node3D, on: bool) -> void:
+	## The Harvester standing guard by the chapel (Props/Boss): shown / hidden, and solid only while it's there.
+	prop.visible = on
+	var body := prop.get_node_or_null("Body")
+	if body:
+		body.process_mode = Node.PROCESS_MODE_INHERIT if on else Node.PROCESS_MODE_DISABLED
+
 
 static func pick_ending(f: Dictionary) -> String:
 	## progression.md §4, in priority order: run > signal > unveiled > new_eye > mixed.
@@ -154,7 +169,8 @@ func _process(delta: float) -> void:
 	super(delta)
 	# the Mark creeps up all night (never to 100: the Taken sequence isn't in this build)
 	if player and step in ["run", "marcus", "static", "gate", "harvester"] and player.controls_enabled:
-		player.mark = minf(player.mark + MARK_RATE * 1.5 * player.mark_resist * delta, 99.0)
+		player.mark = maxf(player.mark, minf(player.mark + Feel.MARK_CREEP * player.mark_resist * delta,
+			Feel.MARK_CREEP_MAX))  # (Feel's table: the creep is the after-Elena rate)
 
 
 func _fight(e: Enemy, title: String, hint: String, reset: Callable) -> void:
@@ -305,7 +321,7 @@ func _step_marcus() -> void:
 	var marcus := Enemy.spawn(self, "res://models/char_marcus.glb", MARCUS_SPAWN, PI / 2.0, {
 		"display_name": "Marcus", "boss": true, "max_health": 480.0, "armor": 0.5, "hearing": 2.5,
 		"run_speed": 3.3, "walk_speed": 1.5, "melee_damage": 30.0, "melee_range": 2.0, "windup": 0.8,
-		"mark_gain": 8.0, "sight_range": 26.0, "fov_deg": 160.0})
+		"mark_gain": Feel.MARK_GAIN.marcus, "sight_range": 26.0, "fov_deg": 160.0})
 	marcus.patrol = [MARCUS_SPAWN, Vector3(-66, 0, -100)]
 	_hang_bells()  # any bell shot down on the walk to the altar is back for the fight (and the intro's shot)
 	await scenes3a.marcus_intro(marcus, _bells)
@@ -399,7 +415,7 @@ func _candle(who: String, at: Vector3) -> void:
 	flags.candles += 1
 	if flags.candles == CANDLES.size():
 		player.teas += 2
-		player.mark = maxf(player.mark - 20.0, 0.0)
+		player.mark = maxf(player.mark - Feel.MARK_CANDLES, 0.0)
 	scenes3a.candle_lit(who, CANDLES.size() - flags.candles)
 
 
@@ -568,6 +584,7 @@ func _step_harvester() -> void:
 
 
 func _harvest_phase(n: int) -> void:
+	hud.mark_spike(Feel.SPIKE_SCRIPT)  # the Mark answers it changing
 	if n == 2:
 		await scenes3b.blackout(harvester)  # 03:00: the town goes dark, the floodlights don't
 		for f in floods:
@@ -581,7 +598,8 @@ func _harvest_phase(n: int) -> void:
 			var m: String = MEMBERS[k]
 			if flags.get(m) in ["active", "fled"]:  # side by side, clear of the called one on CALL_SPOTS[3]
 				var e := Enemy.spawn(self, "res://models/char_%s.glb" % m, CALL_SPOTS[3] - Vector3(1.6 * (k + 1), 0, 0), 0.0,
-					{"display_name": m.capitalize(), "max_health": 160.0, "run_speed": 3.6, "melee_damage": 16.0})
+					{"display_name": m.capitalize(), "max_health": 160.0, "run_speed": 3.6, "melee_damage": 16.0,
+					"mark_gain": Feel.MARK_GAIN.member})
 				e.died.connect(func(_e: Enemy) -> void: flags[m] = "killed")
 				_marked.append(e)
 				called.append(e)
