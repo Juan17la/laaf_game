@@ -40,6 +40,7 @@ const BASH := {"name": "Bash", "kind": "melee", "hold": "pistol", "style": "bash
 
 var owned: Array[String] = []
 var current := 0
+var picked := {}  ## id -> [loaded, reserve] just after it was first given (a checkpoint restore gives it back so)
 var loaded := {"revolver": 0, "flare": 0, "shotgun": 0, "bow": 0, "axe": 0, "bat": 0}
 var reserve := {"revolver": 0, "flare": 0, "shotgun": 0, "bow": 0, "axe": 0, "bat": 0}
 
@@ -71,11 +72,52 @@ func dry() -> bool:
 
 
 func give(id: String, rounds := 0) -> void:
-	if id not in owned:
+	var first := id not in owned
+	if first:
 		owned.append(id)
 		loaded[id] = mini(rounds, GUNS[id].get("mag", 0))
 		rounds -= loaded[id]
 	reserve[id] += rounds
+	if first:
+		picked[id] = [loaded[id], reserve[id]]
+	changed.emit()
+
+
+func snapshot() -> Dictionary:
+	## What's carried right now: weapons, rounds in them and in reserve, the one in hand.
+	return {"owned": owned.duplicate(), "loaded": loaded.duplicate(), "reserve": reserve.duplicate(),
+		"current": current}
+
+
+func restore(snap: Dictionary) -> void:
+	## Back to a snapshot(). A weapon picked up since stays (its pickup is gone from the world) with the rounds it
+	## came with; the one in hand stays in hand if it's still carried. Reloads / swaps in progress are dropped.
+	var held := gun()
+	var since := owned.filter(func(id: String) -> bool: return id not in snap.owned)
+	owned.assign(snap.owned)
+	loaded = (snap.loaded as Dictionary).duplicate()
+	reserve = (snap.reserve as Dictionary).duplicate()
+	for id in since:
+		owned.append(id)
+		loaded[id] = picked.get(id, [0, 0])[0]
+		reserve[id] = picked.get(id, [0, 0])[1]
+	current = owned.find(held) if held in owned else clampi(int(snap.current), 0, maxi(owned.size() - 1, 0))
+	_reload = 0.0
+	_swap = 0.0
+	_buffer = 0.0
+	_double = 0.0
+	_cool = 0.0
+	changed.emit()
+
+
+func top_up(id: String, rounds: int) -> void:
+	## At least `rounds` in all for a carried gun (loaded + reserve), the magazine filled from them.
+	if id not in owned or GUNS[id].kind == "melee":
+		return
+	reserve[id] += maxi(rounds - loaded[id] - reserve[id], 0)
+	var n := mini(GUNS[id].mag - loaded[id], reserve[id])
+	loaded[id] += n
+	reserve[id] -= n
 	changed.emit()
 
 
@@ -164,7 +206,8 @@ func loose() -> void:
 
 func shoot(space: PhysicsDirectSpaceState3D, from: Vector3, dir: Vector3, exclude: Array[RID],
 		spread_mult := 1.0) -> Dictionary:
-	## Consume a round and cast the shot. Returns {hit, point, collider, double_tap, gun}.
+	## Consume a round and cast the shot. Returns {hit, point, collider, double_tap, gun, impacts}; impacts: one
+	## [point, normal, collider] per pellet that struck something (the player puts sparks / blood there).
 	var g := gun()
 	var spec: Dictionary = GUNS[g]
 	var dt := _double > 0.0
@@ -177,6 +220,7 @@ func shoot(space: PhysicsDirectSpaceState3D, from: Vector3, dir: Vector3, exclud
 	var aim := dir
 	var out := {}
 	var hits := {}  ## collider → pellets that hit it (one hit() call each: a flinch per shot, not per pellet)
+	var impacts := []
 	for i in spec.get("pellets", 1):
 		dir = (aim + Vector3(randf_range(-s, s), randf_range(-s, s), randf_range(-s, s))).normalized()
 		var q := PhysicsRayQueryParameters3D.create(from, from + dir * spec.range, 0b11, exclude)
@@ -185,6 +229,8 @@ func shoot(space: PhysicsDirectSpaceState3D, from: Vector3, dir: Vector3, exclud
 				"collider": hit.get("collider"), "double_tap": dt, "gun": g}
 		if out.is_empty() or (o.collider and not out.collider):
 			out = o
+		if o.hit:
+			impacts.append([o.point, hit.get("normal", -dir), o.collider])
 		var body: Object = o.collider
 		if body and body.has_method("hit"):
 			hits[body] = [hits.get(body, [0])[0] + 1, o.point]
@@ -192,6 +238,7 @@ func shoot(space: PhysicsDirectSpaceState3D, from: Vector3, dir: Vector3, exclud
 		var dmg: float = spec.damage * hits[body][0] * (DOUBLE_TAP_MULT if dt else 1.0)
 		body.hit(dmg, hits[body][1], spec.flare)
 	out["pellets"] = spec.get("pellets", 1)
+	out["impacts"] = impacts
 	fired.emit(g, dt)
 	changed.emit()
 	return out
