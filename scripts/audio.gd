@@ -192,8 +192,9 @@ func duck(db: float, hold := 2.0) -> void:
 
 # ------------------------------------------------------------------ sfx
 
-func sfx(name: String, at: Variant = null, volume_db := 0.0, pitch := 1.0) -> Node:
+func sfx(name: String, at: Variant = null, volume_db := 0.0, pitch := 1.0, bus := "SFX") -> Node:
 	## One-shot (or loop, see LOOPS). `at`: Vector3 / Node3D for positional sound, null for flat. Returns the player.
+	## `bus`: "SFX", or "Voice" for things that are heard rather than happen (the Mark's whispers).
 	last_sfx = name
 	if silent or _live >= MAX_SFX:
 		return null
@@ -206,7 +207,7 @@ func sfx(name: String, at: Variant = null, volume_db := 0.0, pitch := 1.0) -> No
 	var root := get_tree().current_scene
 	if at is Vector3 and root:
 		var p3 := AudioStreamPlayer3D.new()
-		p3.bus = "SFX"
+		p3.bus = bus
 		p3.unit_size = 7.0
 		p3.max_distance = 55.0
 		p3.volume_db = volume_db
@@ -218,7 +219,7 @@ func sfx(name: String, at: Variant = null, volume_db := 0.0, pitch := 1.0) -> No
 		p = p3
 	else:
 		var p2 := AudioStreamPlayer.new()
-		p2.bus = "SFX"
+		p2.bus = bus
 		p2.volume_db = volume_db
 		p2.pitch_scale = pitch
 		p2.stream = s
