@@ -42,6 +42,14 @@ func _ready() -> void:
 	steel.albedo_color = Color(0.3, 0.3, 0.32)
 	steel.metallic = 0.6
 	_box(Vector3(0.18, 5.0, 0.18), Vector3(0, 2.5, 0), steel)  # pole
+	var body := StaticBody3D.new()  # the pole stops Alex (and the camera) like any post
+	var col := CollisionShape3D.new()
+	var pole := BoxShape3D.new()
+	pole.size = Vector3(0.18, 5.0, 0.18)
+	col.shape = pole
+	col.position.y = 2.5
+	body.add_child(col)
+	add_child(body)
 	var head := Node3D.new()
 	add_child(head)
 	head.position.y = 5.1
