@@ -113,7 +113,7 @@ Ninguna opción se marca como "correcta". Las consecuencias aparecen en el mundo
 
 ## 8. Medidor de Marca
 
-- Rango 0–100%. Se muestra como el Ojo del Velo en el HUD, abriéndose poco a poco.
+- Rango 0–100%. Sin indicador permanente: cuando sube, un pequeño aviso rojo "MARK +N%" parpadea bajo el reloj y se desvanece (las subidas seguidas se suman en un solo aviso); el valor exacto está en el menú de pausa.
 - **Sube:** +1% por minuto de juego de noche, +15% al ser atrapado, +5% al ser visto, más rápido tras el Acto III.
 - **Baja:** descansar en un cuarto seguro (−30%, una vez por noche), consumibles (té de Elena −15%), dormir en el motel (vuelve a 20% cada mañana).
 - **Efectos:**
@@ -132,7 +132,7 @@ Ninguna opción se marca como "correcta". Las consecuencias aparecen en el mundo
 ## 10. HUD
 
 - Barras de vida y estamina (abajo a la izquierda), mínimas.
-- Medidor de Marca (Ojo del Velo, arriba a la derecha).
+- Marca: un breve aviso "MARK +N%" bajo el reloj cuando sube (arriba a la derecha); el valor exacto en el menú de pausa.
 - Ojo de visibilidad y anillo de ruido alrededor del personaje (opcional).
 - Contador de fichas (solo en el hub/al cambiar).
 - Reloj (hora del juego, arriba al centro, se vuelve rojo cerca de las 03:00).
