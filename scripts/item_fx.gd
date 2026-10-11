@@ -54,6 +54,10 @@ const P := {
 		"v": Vector2(0.8, 1.6), "spread": 35.0, "g": Vector3(0, -9.8, 0), "burst": 1.0},
 	"impact": {"c": Color(0.95, 0.9, 0.8), "c2": Color(0.55, 0.08, 0.06), "n": 10, "life": 0.3, "size": 0.05,
 		"v": Vector2(1.0, 2.6), "spread": 55.0, "g": Vector3(0, -6, 0), "burst": 1.0},
+	"splatter": {"c": Color(0.2, 0.02, 0.02), "c2": Color(0.06, 0.01, 0.01), "n": 12, "life": 0.5, "size": 0.05,
+		"v": Vector2(1.2, 3.2), "spread": 40.0, "g": Vector3(0, -9.8, 0), "burst": 1.0},  # a hit on flesh (Feel)
+	"ricochet": {"c": Color(1.0, 0.9, 0.55), "c2": Color(1.0, 0.45, 0.12), "n": 7, "life": 0.22, "size": 0.03,
+		"v": Vector2(2.0, 5.0), "spread": 35.0, "g": Vector3(0, -6, 0), "add": true, "burst": 1.0},  # a round off a wall
 	"thud": {"c": Color(0.6, 0.58, 0.52, 0.5), "n": 8, "life": 0.6, "size": 0.08, "v": Vector2(0.3, 1.0),
 		"spread": 50.0, "g": Vector3(0, -1, 0), "burst": 1.0},
 	"splash": {"c": Color(0.5, 0.36, 0.18, 0.85), "n": 16, "life": 0.6, "size": 0.045, "v": Vector2(1.0, 2.5),
