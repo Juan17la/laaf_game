@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://v2rcnkonib4t"
-path.s3tc="res://.godot/imported/char_lucia_ca_denim_torn.png-5407b091400f911d1240a7f7d35988e9.s3tc.ctex"
+path="res://.godot/imported/char_lucia_ca_denim_torn.png-5407b091400f911d1240a7f7d35988e9.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "202388704a26b8b80203bc85cf022dc2"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_lucia_ca_denim_torn.png"
-dest_files=["res://.godot/imported/char_lucia_ca_denim_torn.png-5407b091400f911d1240a7f7d35988e9.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_lucia_ca_denim_torn.png-5407b091400f911d1240a7f7d35988e9.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://orruas1pf62u"
-path.s3tc="res://.godot/imported/char_shepherd_rust.png-77e6ab87a7ece98752d8996fbf94b81d.s3tc.ctex"
+path="res://.godot/imported/char_shepherd_rust.png-77e6ab87a7ece98752d8996fbf94b81d.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "3a046c02fb626facb11f3910ea355237"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_shepherd_rust.png"
-dest_files=["res://.godot/imported/char_shepherd_rust.png-77e6ab87a7ece98752d8996fbf94b81d.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_shepherd_rust.png-77e6ab87a7ece98752d8996fbf94b81d.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

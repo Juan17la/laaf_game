@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://8sq8khagk7yi"
-path.s3tc="res://.godot/imported/char_alex_ca_shoe_black.png-e89e65e1218cf651557f9d8f5d1f0d8d.s3tc.ctex"
+path="res://.godot/imported/char_alex_ca_shoe_black.png-e89e65e1218cf651557f9d8f5d1f0d8d.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "3e3da5c2596a97361327ea721fce81ca"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_alex_ca_shoe_black.png"
-dest_files=["res://.godot/imported/char_alex_ca_shoe_black.png-e89e65e1218cf651557f9d8f5d1f0d8d.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_alex_ca_shoe_black.png-e89e65e1218cf651557f9d8f5d1f0d8d.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

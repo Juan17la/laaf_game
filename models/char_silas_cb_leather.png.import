@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b11n66q1mhpda"
-path.s3tc="res://.godot/imported/char_silas_cb_leather.png-13a7a67054407ccffc5b82f7edba6e4b.s3tc.ctex"
+path="res://.godot/imported/char_silas_cb_leather.png-13a7a67054407ccffc5b82f7edba6e4b.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "34f88504df6b5ab8db53dc6afbdfa579"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_silas_cb_leather.png"
-dest_files=["res://.godot/imported/char_silas_cb_leather.png-13a7a67054407ccffc5b82f7edba6e4b.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_silas_cb_leather.png-13a7a67054407ccffc5b82f7edba6e4b.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

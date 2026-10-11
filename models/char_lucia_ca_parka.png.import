@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://kgb5cllnp6jn"
-path.s3tc="res://.godot/imported/char_lucia_ca_parka.png-ddc734f4c3acff2f2905477191e51d8e.s3tc.ctex"
+path="res://.godot/imported/char_lucia_ca_parka.png-ddc734f4c3acff2f2905477191e51d8e.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "0b156d9702035c047e3894d26fcfc509"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_lucia_ca_parka.png"
-dest_files=["res://.godot/imported/char_lucia_ca_parka.png-ddc734f4c3acff2f2905477191e51d8e.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_lucia_ca_parka.png-ddc734f4c3acff2f2905477191e51d8e.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

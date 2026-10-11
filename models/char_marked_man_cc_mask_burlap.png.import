@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ba66adduh62ao"
-path.s3tc="res://.godot/imported/char_marked_man_cc_mask_burlap.png-8ba022e7acadd43eaabf75fb75f18863.s3tc.ctex"
+path="res://.godot/imported/char_marked_man_cc_mask_burlap.png-8ba022e7acadd43eaabf75fb75f18863.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "8fa6ed834a12c027b52786c6ef8bb401"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_marked_man_cc_mask_burlap.png"
-dest_files=["res://.godot/imported/char_marked_man_cc_mask_burlap.png-8ba022e7acadd43eaabf75fb75f18863.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_marked_man_cc_mask_burlap.png-8ba022e7acadd43eaabf75fb75f18863.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

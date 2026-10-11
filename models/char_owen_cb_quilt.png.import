@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cmay4l6ru3dt"
-path.s3tc="res://.godot/imported/char_owen_cb_quilt.png-7255405939581443f151d9d20c848575.s3tc.ctex"
+path="res://.godot/imported/char_owen_cb_quilt.png-7255405939581443f151d9d20c848575.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "c75ff149ebbae816cb8f417b26151fb2"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_owen_cb_quilt.png"
-dest_files=["res://.godot/imported/char_owen_cb_quilt.png-7255405939581443f151d9d20c848575.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_owen_cb_quilt.png-7255405939581443f151d9d20c848575.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

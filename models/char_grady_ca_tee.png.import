@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://brcilye2dns6"
-path.s3tc="res://.godot/imported/char_grady_ca_tee.png-e41e1eda7844e5d2fb0d3396ea0b309b.s3tc.ctex"
+path="res://.godot/imported/char_grady_ca_tee.png-e41e1eda7844e5d2fb0d3396ea0b309b.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "17a9220811115289894677a39e219ba0"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_grady_ca_tee.png"
-dest_files=["res://.godot/imported/char_grady_ca_tee.png-e41e1eda7844e5d2fb0d3396ea0b309b.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_grady_ca_tee.png-e41e1eda7844e5d2fb0d3396ea0b309b.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

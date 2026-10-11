@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bs4btb4xfbm1r"
-path.s3tc="res://.godot/imported/char_grady_ca_apron.png-edfb9fbee053edd17187a6847bee99ec.s3tc.ctex"
+path="res://.godot/imported/char_grady_ca_apron.png-edfb9fbee053edd17187a6847bee99ec.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "b3d758590e2e69ae8ac02675a32268ed"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_grady_ca_apron.png"
-dest_files=["res://.godot/imported/char_grady_ca_apron.png-edfb9fbee053edd17187a6847bee99ec.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_grady_ca_apron.png-edfb9fbee053edd17187a6847bee99ec.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

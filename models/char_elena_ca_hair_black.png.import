@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ia880naq4343"
-path.s3tc="res://.godot/imported/char_elena_ca_hair_black.png-08711cbf046f652727b8d580cea30e9e.s3tc.ctex"
+path="res://.godot/imported/char_elena_ca_hair_black.png-08711cbf046f652727b8d580cea30e9e.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "32706b50315aceb7d9801e35639af9a4"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_elena_ca_hair_black.png"
-dest_files=["res://.godot/imported/char_elena_ca_hair_black.png-08711cbf046f652727b8d580cea30e9e.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_elena_ca_hair_black.png-08711cbf046f652727b8d580cea30e9e.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cksvolyoh6rc"
-path.s3tc="res://.godot/imported/char_silas_cb_beard.png-05d5db2c74bbfeb2541dda195d0a437c.s3tc.ctex"
+path="res://.godot/imported/char_silas_cb_beard.png-05d5db2c74bbfeb2541dda195d0a437c.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "7dfbb9ec8e47f462e0f0173629fff6bb"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_silas_cb_beard.png"
-dest_files=["res://.godot/imported/char_silas_cb_beard.png-05d5db2c74bbfeb2541dda195d0a437c.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_silas_cb_beard.png-05d5db2c74bbfeb2541dda195d0a437c.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

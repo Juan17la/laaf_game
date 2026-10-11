@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b24f8a630yojw"
-path.s3tc="res://.godot/imported/char_marked_woman_cc_dress.png-bb3ecb9c5fa683a0beef755db906069b.s3tc.ctex"
+path="res://.godot/imported/char_marked_woman_cc_dress.png-bb3ecb9c5fa683a0beef755db906069b.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "3e1c4a3b241692d0afd159dcd2fb100a"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_marked_woman_cc_dress.png"
-dest_files=["res://.godot/imported/char_marked_woman_cc_dress.png-bb3ecb9c5fa683a0beef755db906069b.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_marked_woman_cc_dress.png-bb3ecb9c5fa683a0beef755db906069b.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
