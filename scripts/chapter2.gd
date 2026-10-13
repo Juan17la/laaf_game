@@ -63,9 +63,15 @@ func begin(ch1: Chapter1Director, from_step := "c2_intro") -> void:
 	player = ch1.player
 	hud = ch1.hud
 	flags = ch1.flags
+	_checkpoint = ch1._checkpoint  # (until this chapter's first: the last one, with what was carried there)
+	_kit = ch1._kit
 	if player.died.is_connected(ch1._on_died):
 		player.died.disconnect(ch1._on_died)
 	player.died.connect(_on_died)
+	player.mark_cap = Feel.MARK_SOFT_CAP[2]
+	if player.fell.is_connected(ch1._on_fell):
+		player.fell.disconnect(ch1._on_fell)
+	player.fell.connect(_on_fell)
 	cam = Camera3D.new()
 	cam.fov = 60.0
 	cam.far = 150.0
@@ -83,6 +89,8 @@ func begin(ch1: Chapter1Director, from_step := "c2_intro") -> void:
 		player.respawn(C2_START[C2_STEPS[i]][0], C2_START[C2_STEPS[i]][1])
 		_checkpoint_at(C2_START[C2_STEPS[i]][0], C2_START[C2_STEPS[i]][1])
 		player.bottles = maxi(player.bottles, 3)
+	if i > 0:
+		_capture_kit.call_deferred()  # (the dev skip's hand-outs: a death keeps them)
 	if i > C2_STEPS.find("zones"):
 		_town_side_missions()
 	for s in C2_STEPS.slice(i):
@@ -457,7 +465,7 @@ func _nora() -> void:
 	_free_marked(SCHOOL)  # the halls clear: Nora hunts alone (her phase-2 kids are the only adds)
 	var nora := Enemy.spawn(self, "res://models/char_nora.glb", NORA_SPAWN, 0.0, {
 		"display_name": "Nora", "boss": true, "lily_calls": true, "call_interval": 7.0, "shadow_bonus": 2.0,
-		"max_health": 360.0, "run_speed": 3.6, "walk_speed": 1.8, "melee_damage": 22.0, "mark_gain": 8.0,
+		"max_health": 360.0, "run_speed": 3.6, "walk_speed": 1.8, "melee_damage": 22.0, "mark_gain": Feel.MARK_GAIN.nora,
 		"sight_range": 18.0, "fov_deg": 140.0, "windup": 0.55})
 	# through the doorways (she steers straight): classroom 1 → corridor → lobby → classroom 3 and back
 	var route: Array[Vector3] = [Vector3(104.2, 0, -5.2), Vector3(106.5, 0, -5.2), Vector3(106.5, 0, -12),
@@ -596,7 +604,7 @@ func _stalker() -> Enemy:
 	var home := Vector3(71, 0, -92)  # the hall: he only ever walks the building
 	var j := Enemy.spawn(self, "res://models/char_julian.glb", home, PI, {
 		"display_name": "Julian", "boss": true, "max_health": 200.0, "gas_thrower": true, "gas_interval": 9.0,
-		"checks_hiding": true, "run_speed": 3.9, "walk_speed": 1.7, "melee_damage": 18.0, "mark_gain": 10.0,
+		"checks_hiding": true, "run_speed": 3.9, "walk_speed": 1.7, "melee_damage": 18.0, "mark_gain": Feel.MARK_GAIN.julian_hunt,
 		"sight_range": 20.0})
 	j.patrol = [home, Vector3(67.5, 0, -90), Vector3(67.5, 0, -112), Vector3(71, 0, -106)]
 	_marked.append(j)
@@ -719,7 +727,7 @@ func _julian() -> void:
 	var julian := Enemy.spawn(self, "res://models/char_julian.glb", JULIAN_SPAWN, -PI / 2.0, {
 		"display_name": "Julian", "boss": true, "gas_thrower": true, "gas_interval": 6.0, "asthma": true,
 		"asthma_stun": 3.5, "checks_hiding": true, "max_health": 380.0, "run_speed": 3.8, "walk_speed": 1.8,
-		"melee_damage": 20.0, "mark_gain": 8.0, "sight_range": 26.0, "fov_deg": 180.0, "windup": 0.55})
+		"melee_damage": 20.0, "mark_gain": Feel.MARK_GAIN.julian, "sight_range": 26.0, "fov_deg": 180.0, "windup": 0.55})
 	julian.patrol = [JULIAN_SPAWN, Vector3(71, 0, -108)]
 	julian.checks_spot.connect(func(_e: Enemy, _p: Vector3) -> void: scenes2b.julian_checks_spot())
 	await scenes2b.julian_intro(julian)

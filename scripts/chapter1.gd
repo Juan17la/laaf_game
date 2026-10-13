@@ -29,6 +29,9 @@ const STEP_START := {  ## where the player stands when a run starts at that step
 	"hunt": [Vector3(-94.0, 0.1, 49.5), PI / 2.0], "square": [Vector3(0.0, 0.1, 30.0), PI],
 	"sawmill": [Vector3(-34.0, 0.1, 0.0), -PI / 2.0], "boss": [Vector3(-104.0, 0.1, -2.0), -PI / 2.0],
 	"blackout": [Vector3(-110.0, 0.1, 0.0), -PI / 2.0]}
+## Dying in a boss fight never comes back without a way to hurt it: at least these rounds (loaded + reserve) for
+## every gun carried, the magazine full. (The checkpoint's own kit is restored first; this only tops up.)
+const BOSS_MIN_AMMO := {"revolver": 12, "flare": 3, "shotgun": 6, "bow": 6}
 const OWEN_LINES := ["I can hear you breathing.", "Dad used to say the forest keeps everything.",
 	"Come out. It's quicker if you don't run.", "You're not the first outsider. You won't be the last.",
 	"The grass won't hide you forever."]
@@ -37,8 +40,10 @@ var player: CharacterBody3D
 var hud: Node
 var cam: Camera3D
 var step := ""
-var flags := {"owen": "active", "evidence": [], "tokens": 0, "key_part": false, "lantern": false}
+var flags := {"owen": "active", "evidence": [], "tokens": 0, "key_part": false, "lantern": false,
+	"room4_open": false, "trip_cut": [], "trip_rang": false}
 var _checkpoint := {"pos": ROOM6, "yaw": PI / 2.0}
+var _kit := {}  ## what Alex carried when he reached the checkpoint (kit()): dying puts it back (_on_died)
 var _on_reset := Callable()
 var _owen: Enemy
 var _grady: Actor
@@ -54,6 +59,8 @@ var _stand_in: Actor
 var _save := {}  ## a save being loaded (Game.pending): its flags and inventory are restored at the start
 var _stand_from := Vector3.INF  ## where the player stood when the stand-in took over
 var _taken: Node3D  ## model of what the player just picked up (Interactable.taken), until claim_item()
+var _all_evidence := false  ## dev: start holding all 12 pieces of evidence (`-- --evidence=all`, Dev Mode toggle)
+var _start_mark := -1.0  ## dev: start with the Mark here (`-- --mark=N`, Dev Mode); < 0 = as the story has it
 
 
 class Target extends StaticBody3D:
@@ -75,11 +82,20 @@ func _ready() -> void:
 			start_step = "c2_intro"
 		elif a == "--chapter=3":
 			start_step = "c3_bell"
+		elif a == "--evidence=all":
+			_all_evidence = true
+		elif a.begins_with("--mark="):  # dev: start with the Mark at N % (0-100)
+			_start_mark = clampf(float(a.substr(7)), 0.0, 100.0)
 	var p := G.take_pending()  # from the main menu: a step, or a whole save
 	if p.has("step") and str(p.step) != "":
 		start_step = p.step
 	if p.has("flags"):
 		_save = p
+	var g := G.game()
+	if g and g.get("dev_evidence"):  # Dev Mode's ALL 12 EVIDENCE toggle
+		_all_evidence = true
+	if g and float(g.get("dev_mark")) >= 0.0:  # Dev Mode's START MARK row
+		_start_mark = float(g.get("dev_mark"))
 	_start.call_deferred()
 
 
@@ -87,6 +103,8 @@ func _start() -> void:
 	player = get_tree().get_first_node_in_group("player")
 	hud = player.hud
 	player.died.connect(_on_died)
+	player.fell.connect(_on_fell)
+	player.mark_cap = Feel.MARK_SOFT_CAP[1]
 	cam = Camera3D.new()
 	cam.fov = 60.0
 	cam.far = 150.0
@@ -96,6 +114,8 @@ func _start() -> void:
 	_setup_world()
 	if not _save.is_empty():
 		flags = (_save.flags as Dictionary).duplicate(true)
+	if _all_evidence:  # dev: the transmitter and the Signal ending (`-- --evidence=all --step=static`)
+		flags.evidence = range(1, 13)
 	var ch2 := get_parent().get_node_or_null("Chapter2")
 	var ch3 := get_parent().get_node_or_null("Chapter3")
 	var i := STEPS.find(start_step)
@@ -105,6 +125,7 @@ func _start() -> void:
 			player.weapons.give(w[0], w[1])
 		flags.key_part = true
 		_restore_save()
+		side_missions()
 		ch3.begin(self, start_step)
 		return
 	if i < 0 and ch2 and ch2.owns_step(start_step):  # dev skip into Chapter 2
@@ -113,6 +134,7 @@ func _start() -> void:
 		player.weapons.give("bow", 10)
 		flags.key_part = true
 		_restore_save()
+		side_missions()
 		ch2.begin(self, start_step)
 		return
 	if i < 0:
@@ -120,10 +142,13 @@ func _start() -> void:
 	if i >= STEPS.find("square"):  # skipping ahead: hand over what earlier steps give
 		arm_player()
 	_restore_save()
+	_capture_kit.call_deferred()  # (until the first checkpoint: dying puts back what the run started with)
 	if STEPS[i] in STEP_START:
 		player.respawn.call_deferred(STEP_START[STEPS[i]][0], STEP_START[STEPS[i]][1])
 	for s in STEPS.slice(i):
 		step = s
+		if STEPS.find(s) > STEPS.find("room"):  # out of room 6: Room 4 and the Tripwire are open
+			side_missions()
 		if s == "free":
 			objective("")
 			if STEPS[i] != "free" and ch2:  # played through the blackout: on to Chapter 2
@@ -182,6 +207,8 @@ func _restore_save() -> void:
 	## A loaded save: its inventory and weapons (after the skip's hand-outs, which it replaces).
 	if not _save.is_empty():
 		G.send("restore_player", [player, _save])
+	if _start_mark >= 0.0:  # (after a save's own Mark: the dev override wins)
+		player.mark = _start_mark
 
 
 func arm_player() -> void:
@@ -193,17 +220,71 @@ func arm_player() -> void:
 
 func _checkpoint_at(pos: Vector3, yaw: float) -> void:
 	_checkpoint = {"pos": pos, "yaw": yaw}
+	_capture_kit.call_deferred()  # (end of the frame: what the step hands out as it reaches the spot counts too)
+
+
+func _capture_kit() -> void:
+	_kit = kit()
+
+
+func kit() -> Dictionary:
+	## Alex's inventory as it stands: weapons and rounds, throwables, tea, the gas mask and its filter, the Mark.
+	return {"weapons": player.weapons.snapshot(), "bottles": player.bottles, "smokes": player.smokes,
+		"teas": player.teas, "gas_mask": player.gas_mask, "mask_filter": player.mask_filter, "mark": player.mark}
+
+
+func restore_kit(k: Dictionary) -> void:
+	## Back to a kit(): spent rounds, throwables, tea and filter come back, gains since are undone. What can't be
+	## found again stays: a weapon picked up since (Weapons.restore) and the gas mask.
+	if k.is_empty():
+		return
+	player.weapons.restore(k.weapons)
+	player.bottles = int(k.bottles)
+	player.smokes = int(k.smokes)
+	player.teas = int(k.teas)
+	if k.gas_mask:
+		player.mask_filter = float(k.mask_filter)
+	player.gas_mask = player.gas_mask or bool(k.gas_mask)
+	player.mark = float(k.mark)
+
+
+func _boss_floor() -> void:
+	## A boss-fight respawn: every gun carried gets at least BOSS_MIN_AMMO, and with no gun at all, the revolver.
+	var w: Weapons = player.weapons
+	if not w.owned.any(func(id: String) -> bool: return Weapons.GUNS[id].kind != "melee"):
+		w.give("revolver")
+	for id in w.owned:
+		if BOSS_MIN_AMMO.has(id):
+			w.top_up(id, BOSS_MIN_AMMO[id])
 
 
 func _on_died() -> void:
+	## Blackout: back at the last checkpoint with what Alex carried when he reached it (kit), healed; the step's
+	## reset puts the fight back. In a boss fight he always has rounds to fight with (_boss_floor).
 	player.controls_enabled = false
 	await hud.fade(1.0, 0.8)
 	await hud.subtitle("", "You black out…", 1.5)
+	var boss: bool = hud.boss_active()
 	player.respawn(spot(_checkpoint.pos) + Vector3.UP * 0.05, _checkpoint.yaw)  # on open floor, never in a prop
+	restore_kit(_kit)
 	if _on_reset.is_valid():
 		_on_reset.call()
+	if boss or hud.boss_active():
+		_boss_floor()
 	await hud.fade(0.0, 0.8)
 	player.controls_enabled = true
+
+
+func _on_fell() -> void:
+	## Out of the world (player.gd FALL_Y): back on the last checkpoint's open floor, like after a blackout, but
+	## mid-play: no heal, no reset of the fight, the inventory untouched (no kit restore), just a cut from black.
+	var hp: float = player.health
+	var st: float = player.stamina
+	player.respawn(spot(_checkpoint.pos) + Vector3.UP * 0.05, _checkpoint.yaw)
+	player.health = hp
+	player.stamina = st
+	await hud.fade(1.0, 0.0)
+	hud.fade(0.0, 0.6)
 
 
 func _use(pos: Vector3, prompt: String, glow := Color(1.0, 0.85, 0.4), item := "") -> void:
@@ -617,7 +698,7 @@ func _step_hunt() -> void:
 	var home := Vector3(-86, 0, 72)
 	_owen = Enemy.spawn(self, "res://models/char_owen.glb", home, PI, {
 		"display_name": "Owen", "invulnerable": true, "bow": true, "give_up_x": -28.0, "run_speed": 4.4,
-		"walk_speed": 1.8, "melee_damage": 20.0, "mark_gain": 15.0, "sight_range": 24.0, "windup": 0.6})
+		"walk_speed": 1.8, "melee_damage": 20.0, "mark_gain": Feel.MARK_GAIN.owen_hunt, "sight_range": 24.0, "windup": 0.6})
 	_owen.patrol = [Vector3(-86, 0, 70), Vector3(-86, 0, 52), Vector3(-70, 0, 60), Vector3(-50, 0, 60),
 		Vector3(-70, 0, 60)]
 	_owen.struck_player.connect(func(_e: Enemy) -> void:
@@ -709,7 +790,8 @@ func _step_sawmill() -> void:
 	if "axe" not in player.weapons.owned:  # optional: a fire axe left in the yard
 		weapon_pickup(Vector3(-114, 0.4, 2.5), "axe", 0, 0.6)
 	var ledger := func(_b: Node) -> void:
-		flags.evidence.append(1)
+		if 1 not in flags.evidence:  # a reload replays the step: never count it twice
+			flags.evidence.append(1)
 		scenes_b.ledger_read()
 	Interactable.make(self, Vector3(-123.5, 1.0, 4.0), "Read the ledger", ledger, Color(0.7, 0.8, 1.0), false,
 		"ledger")
@@ -737,7 +819,7 @@ func _step_boss() -> void:
 	var spawn := Vector3(-130, 0, -5)
 	_owen = Enemy.spawn(self, "res://models/char_owen.glb", spawn, PI / 2.0, {
 		"display_name": "Owen", "boss": true, "max_health": 420.0, "ranged": true, "run_speed": 4.0,
-		"walk_speed": 2.0, "melee_damage": 26.0, "mark_gain": 8.0, "sight_range": 45.0, "fov_deg": 300.0,
+		"walk_speed": 2.0, "melee_damage": 26.0, "mark_gain": Feel.MARK_GAIN.owen, "sight_range": 45.0, "fov_deg": 300.0,
 		"flare_stun": 6.0, "arrow_interval": 2.4, "arrow_damage": 11.0, "windup": 0.6})
 	_owen.patrol = [SAWMILL_YARD]
 	for p in [Vector3(-106, 0.3, 5), Vector3(-107, 0.3, -9)]:
@@ -785,6 +867,139 @@ func _step_boss() -> void:
 		await scenes_b.owen_killed(_owen)
 	if "bow" not in player.weapons.owned:  # his bow stays in the yard
 		weapon_pickup(spot(bow_at, player.global_position) + Vector3.UP * 0.4, "bow", 10, 1.2)
+
+
+# ------------------------------------------------------------------ side missions: Room 4 (#11), Tripwire (#2)
+
+const ROOM4_DOOR := Vector3(-96.4, 1.1, 59.0)  ## Lucía's old room, two doors up from room 6 (the Veil's eye on it)
+const ROOM4_CAMERA := Vector3(-96.0, 0.3, 59.0)  ## her camera, hung on the inside handle: it lands on the mat
+## Owen's early warning on the forest trail south of the sawmill road, toward the cabins (chapters.md §3)
+const TRIP_BELLS: Array[Vector3] = [Vector3(-87, 0, -12), Vector3(-91, 0, -22), Vector3(-93, 0, -31)]
+const TRIP_REACH := 3.0  ## walking upright this close to a wire rings its bell (crouched never does)
+const TRIP_TOKENS := 10
+var _side_ready := false
+
+
+func side_missions() -> void:
+	## Chapter 1's optional missions, started once the player is out of room 6 and on any later start (a dev skip,
+	## a loaded save) so 12/12 evidence stays reachable in Chapters 2-3. They rebuild from the flags: a finished
+	## one doesn't come back, a picked lock stays open, cut wires stay cut, a rung bell stays rung.
+	if _side_ready:
+		return
+	_side_ready = true
+	if not flags.has("room4_open"):  # (saves from before these missions existed)
+		flags["room4_open"] = false
+	if not flags.has("trip_cut"):
+		flags["trip_cut"] = []
+	if not flags.has("trip_rang"):
+		flags["trip_rang"] = false
+	if 11 not in flags.evidence:
+		_room4()
+	if 2 not in flags.evidence:
+		_tripwire()
+
+
+func _room4() -> void:
+	## Room 4: pick the lock (1 pin), then take Lucía's camera (evidence #11).
+	if not flags.room4_open:
+		_hint_near(ROOM4_DOOR, 4.0, scenes_a.room4_hint)
+		while true:
+			await _use(ROOM4_DOOR, "Pick the lock — Room 4", Color(0.7, 0.9, 1.0))
+			player.controls_enabled = false
+			var ok: bool = await Lockpick.play(hud, 1).done
+			player.controls_enabled = true
+			if ok:
+				break
+			player.noise(3.0)
+			hud.banner("THE PICK SLIPPED", Color(1.0, 0.5, 0.4), 1.0)
+		flags.room4_open = true
+		scenes_a.room4_opened()
+	await _use(ROOM4_CAMERA, "Take Lucía's camera", Color(0.95, 0.85, 0.6), "photo")
+	if 11 not in flags.evidence:
+		flags.evidence.append(11)
+	scenes_a.room4_camera()
+
+
+func _tripwire() -> void:
+	## Tripwire: three bells strung across the trail (MusicBox noise traps). Cut every wire (E); walking past one
+	## upright rings it and calls whatever is in earshot. Evidence #2 lies under the last one; the 10 tokens only
+	## if none of them rang.
+	var dir := (TRIP_BELLS[-1] - TRIP_BELLS[0]).normalized()
+	for i in TRIP_BELLS.size():
+		if i in flags.trip_cut:
+			continue
+		var bell := MusicBox.make(self, TRIP_BELLS[i], _trip_bell(atan2(dir.x, dir.z)), "Cut the tripwire")
+		bell.reach = TRIP_REACH
+		bell.sound = "bell"
+		bell.pitch = 2.2  # a hand bell on a wire, not the church
+		bell.chimed.connect(func() -> void:
+			if not flags.trip_rang:
+				flags.trip_rang = true
+				scenes_b.tripwire_rang())
+		bell.silenced.connect(_trip_cut.bind(i))
+	if flags.trip_cut.is_empty():
+		_hint_near(TRIP_BELLS[0], 14.0, scenes_b.tripwire_hint)
+
+
+func _trip_cut(i: int) -> void:
+	if i not in flags.trip_cut:
+		flags.trip_cut.append(i)
+	var left: int = TRIP_BELLS.size() - flags.trip_cut.size()
+	if left > 0:
+		scenes_b.tripwire_cut(left)
+		return
+	if 2 not in flags.evidence:
+		flags.evidence.append(2)
+	var clean: bool = not flags.trip_rang
+	if clean:
+		flags.tokens += TRIP_TOKENS
+	scenes_b.tripwire_done(clean, TRIP_TOKENS)
+
+
+func _trip_bell(yaw: float) -> Node3D:
+	## Placeholder look (no model yet): a wire between two stakes across the trail, a small brass bell hanging
+	## from its middle (the MusicBox origin: where it rings from and where E cuts it).
+	var root := Node3D.new()
+	root.rotation.y = yaw  # local +Z along the trail, so the wire (local X) runs across it
+	var brass := _flat(Color(0.75, 0.6, 0.25), 0.7)
+	var wood := _flat(Color(0.3, 0.22, 0.14))
+	var wire := _flat(Color(0.55, 0.55, 0.5), 0.8)
+	for side in [-1.6, 1.6]:
+		_mesh(root, BoxMesh.new(), Vector3(0.04, 0.45, 0.04), Vector3(side, 0.22, 0), wood)
+	_mesh(root, BoxMesh.new(), Vector3(3.2, 0.008, 0.008), Vector3(0, 0.32, 0), wire)
+	var cone := CylinderMesh.new()
+	cone.top_radius = 0.025
+	cone.bottom_radius = 0.06
+	cone.height = 0.09
+	cone.radial_segments = 8
+	_mesh(root, cone, Vector3.ONE, Vector3(0, 0.25, 0), brass)
+	return root
+
+
+func _flat(c: Color, metal := 0.0) -> StandardMaterial3D:
+	var m := StandardMaterial3D.new()
+	m.albedo_color = c
+	m.metallic = metal
+	return m
+
+
+func _mesh(parent: Node3D, mesh: PrimitiveMesh, size: Vector3, at: Vector3, mat: Material) -> MeshInstance3D:
+	if mesh is BoxMesh:
+		mesh.size = size
+	mesh.material = mat
+	var mi := MeshInstance3D.new()
+	mi.mesh = mesh
+	mi.position = at
+	parent.add_child(mi)
+	return mi
+
+
+func _hint_near(p: Vector3, radius: float, say: Callable) -> void:
+	## Fire-and-forget: the first time the player walks up to p in control, one bark.
+	await _reach(p, radius)
+	while not player.controls_enabled:
+		await get_tree().physics_frame
+	say.call()
 
 
 # ------------------------------------------------------------------ C1.3 Blackout

@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c8xi50o6u4g2d"
-path.s3tc="res://.godot/imported/char_alex_ca_tee_white.png-ec6de61ec7e83c2c174fa10dc308abc8.s3tc.ctex"
+path="res://.godot/imported/char_alex_ca_tee_white.png-ec6de61ec7e83c2c174fa10dc308abc8.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "3458ce7a2265db61a9d4b175b055df11"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_alex_ca_tee_white.png"
-dest_files=["res://.godot/imported/char_alex_ca_tee_white.png-ec6de61ec7e83c2c174fa10dc308abc8.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_alex_ca_tee_white.png-ec6de61ec7e83c2c174fa10dc308abc8.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

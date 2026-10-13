@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ffsxavnvje4"
-path.s3tc="res://.godot/imported/char_shepherd_cc_shep_face.png-1830466b84d1ce903542d4638c06ce8c.s3tc.ctex"
+path="res://.godot/imported/char_shepherd_cc_shep_face.png-1830466b84d1ce903542d4638c06ce8c.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "ca5f71a9d5e800acaa8ac4a78c44ad19"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_shepherd_cc_shep_face.png"
-dest_files=["res://.godot/imported/char_shepherd_cc_shep_face.png-1830466b84d1ce903542d4638c06ce8c.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_shepherd_cc_shep_face.png-1830466b84d1ce903542d4638c06ce8c.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -1,9 +1,11 @@
 extends CanvasLayer
-## Player HUD (gameplay.md §10): health/stamina, Mark meter, gun + ammo, crosshair and hit markers,
+## Player HUD (gameplay.md §10): health/stamina, the Mark's "MARK +N%" notice, gun + ammo, crosshair and hit markers,
 ## objective, interaction prompt, subtitles (every line is on screen and babbled by Snd.voice), banners
 ## (DOUBLE TAP, chapter cards), boss bar, fades. Zone areas call show_zone via the "hud" group.
 ## Chapter 2: clock, QTE (mash prompt), gas mask filter bar + mask vignette, bottle count, takedown prompt.
 ## Chapter 3: the item belt line (bottles / smoke cans / tea).
+## Feel (scripts/feel.gd): the drawn eye (HudEyes: Alex's visibility), off-screen threat arcs (ThreatArcs)
+## and the screen effects of the Mark and of pain (ScreenFx, through the Post shader).
 
 const SPEAKERS := {
 	"Alex": Color(0.85, 0.9, 1.0), "Moth": Color(1.0, 0.85, 0.25), "Grady": Color(0.85, 0.78, 0.62),
@@ -25,7 +27,9 @@ var _health: ColorRect
 var _health_back: ColorRect
 var _stamina: ColorRect
 var _stamina_back: ColorRect
-var _mark: Label
+var _eyes: HudEyes
+var _arcs: ThreatArcs
+var _fx: ScreenFx
 var _ammo: Label
 var _gun: Label
 var _slots: Label  ## every weapon carried, number keys to draw it; the drawn one in brackets
@@ -48,6 +52,12 @@ var _hurt: ColorRect
 var _banner_tw: Tween
 var _skip := false
 var _clock: Label
+var _mark_note: Label  ## "MARK +N%": flashes when the Mark rises, fades (Feel.MARK_NOTICE_*)
+var _mark_tw: Tween
+var _mark_n := 0.0  ## % the notice on screen adds up (rises while it's up merge into it)
+var _mark_last := -1.0  ## the Mark last frame (< 0: not seen yet)
+var _mark_hits := 0.0  ## % the hits since last frame marked (the rest of a rise is the slow creep)
+var _mark_creep := 0.0  ## slow creep gathered toward the next notice
 var _filter: ColorRect
 var _filter_back: ColorRect
 var _bottles: Label
@@ -92,15 +102,23 @@ func _ready() -> void:
 	_mask.visible = false
 	_root.add_child(_mask)
 	_hurt = _rect(Color(0.6, 0.0, 0.0, 0.0), Control.PRESET_FULL_RECT)
+	_fx = ScreenFx.new()  # the Mark's figures sit under every widget
+	_root.add_child(_fx)
+	_fx.setup(player, $Post.material as ShaderMaterial)
 	_health_back = _bar(Vector2(12, -30), Vector2(110, 6), Color(0.15, 0.02, 0.02, 0.8))
 	_health = _bar(Vector2(12, -30), Vector2(110, 6), Color(0.7, 0.12, 0.1))
 	_stamina_back = _bar(Vector2(12, -21), Vector2(110, 3), Color(0.1, 0.1, 0.1, 0.8))
 	_stamina = _bar(Vector2(12, -21), Vector2(110, 3), Color(0.75, 0.75, 0.6))
-	# top right: the minimap (guide.gd, y 8..92), then the Mark meter and the clock under it, never over it
-	_mark = _label("", 10, Color(0.8, 0.25, 0.2), Control.PRESET_TOP_RIGHT, Vector2(-110, 96), Vector2(100, 14))
-	_mark.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	_clock = _label("", 10, Color(0.85, 0.82, 0.7), Control.PRESET_TOP_RIGHT, Vector2(-110, 109), Vector2(100, 14))
+	# top right: the minimap (guide.gd, x -94..-10, y 8..92), the clock right under its rim, and under the clock
+	# the Mark's notice when it rises
+	_clock = _label("", 10, Color(0.85, 0.82, 0.7), Control.PRESET_TOP_RIGHT, Vector2(-110, 95), Vector2(100, 14))
 	_clock.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_mark_note = _label("", 9, Feel.MARK_NOTICE_RED, Control.PRESET_TOP_RIGHT, Vector2(-110, 110), Vector2(100, 12))
+	_mark_note.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_mark_note.modulate.a = 0.0
+	player.marked.connect(func(gain: float) -> void:
+		_mark_hits += gain
+		mark_notice(gain))
 	_filter_back = _bar(Vector2(12, -15), Vector2(110, 3), Color(0.05, 0.1, 0.08, 0.8))
 	_filter = _bar(Vector2(12, -15), Vector2(110, 3), Color(0.45, 0.8, 0.6))
 	_bottles = _label("", 9, Color(0.6, 0.85, 0.65), Control.PRESET_BOTTOM_LEFT, Vector2(12, -46), Vector2(240, 12))
@@ -116,6 +134,12 @@ func _ready() -> void:
 	_wui.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_wui.draw.connect(_draw_weapons)
 	_root.add_child(_wui)
+	_eyes = HudEyes.new()
+	_root.add_child(_eyes)
+	_eyes.setup(player)
+	_arcs = ThreatArcs.new()
+	_root.add_child(_arcs)
+	_arcs.setup(player)
 	_notes = VBoxContainer.new()
 	_notes.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	_notes.position = Vector2(10, 40)
@@ -226,9 +250,11 @@ func _process(delta: float) -> void:
 		_skip = true
 	# gameplay HUD only while the player is in control (cinematics stay clean)
 	var play: bool = player.controls_enabled
-	for n in [_health, _health_back, _stamina, _stamina_back, _mark, _objective, _prompt_box, hint, _clock]:
+	for n in [_health, _health_back, _stamina, _stamina_back, _eyes, _arcs, _objective, _prompt_box, hint, _clock,
+			_mark_note]:
 		n.visible = play
 	_t += delta
+	_track_mark(play)
 	var masked: bool = player.mask_on
 	var owned: bool = player.gas_mask
 	_filter.visible = play and owned
@@ -254,7 +280,6 @@ func _process(delta: float) -> void:
 		_slip(n[0], n[1], n[2])
 	_health.size.x = 110.0 * player.health / player.health_max
 	_stamina.size.x = 110.0 * player.stamina / player.stamina_max
-	_mark.text = "MARK %d%%" % int(player.mark)
 	var w: Weapons = player.weapons
 	var g := w.gun()
 	var sp := w.spec()
@@ -385,9 +410,51 @@ func hit_marker(double_tap: bool) -> void:
 	create_tween().tween_property(_hitmark, "modulate:a", 0.0, 0.25)
 
 
+func mark_spike(amount: float) -> void:
+	## A flare of the Mark's distortion that fades by itself (ScreenFx.spike): story beats, a reveal.
+	_fx.spike(amount)
+
+
+func mark_notice(gain: float) -> void:
+	## "MARK +N%" under the clock: a red flash that holds a moment and fades. A rise while it's still up adds to it
+	## and starts it over, so a flurry of hits reads as one notice.
+	if gain <= 0.0:
+		return
+	_mark_n = (_mark_n if _mark_tw and _mark_tw.is_running() else 0.0) + gain
+	_mark_note.text = "MARK +%s%%" % pct(_mark_n)
+	if _mark_tw:
+		_mark_tw.kill()
+	_mark_note.modulate = Color(2.2, 1.6, 1.4, 1.0)  # the flash
+	_mark_tw = create_tween()
+	_mark_tw.tween_property(_mark_note, "modulate", Color.WHITE, 0.3)
+	_mark_tw.tween_interval(Feel.MARK_NOTICE_HOLD)
+	_mark_tw.tween_property(_mark_note, "modulate:a", 0.0, Feel.MARK_NOTICE_FADE)
+
+
+static func pct(v: float) -> String:
+	## A Mark percentage as the HUD writes it: "4", "0.5", "37.4" (one decimal, none when it's whole).
+	var r := snappedf(v, 0.1)
+	return str(roundi(r)) if is_equal_approx(r, roundf(r)) else "%.1f" % r
+
+
+func _track_mark(play: bool) -> void:
+	## Rises that aren't hits (player.marked) are the slow creep of Chapter 3's nights: gathered and told every
+	## Feel.MARK_NOTICE_CREEP %. A jump that is neither (a save / dev start, a checkpoint restore) is not a rise.
+	var m: float = player.mark
+	var creep := m - _mark_last - _mark_hits if _mark_last >= 0.0 else 0.0
+	_mark_last = m
+	_mark_hits = 0.0
+	if play and creep > 0.0 and creep < 0.5:
+		_mark_creep += creep
+		if _mark_creep >= Feel.MARK_NOTICE_CREEP:
+			mark_notice(_mark_creep)
+			_mark_creep = 0.0
+
+
 func damage_flash() -> void:
 	_hurt.color.a = 0.35
 	create_tween().tween_property(_hurt, "color:a", 0.0, 0.5)
+	_fx.on_hurt()  # and the edges blur red, more the less health is left
 
 
 func note(text: String, title := "", time := 3.5) -> void:
@@ -494,6 +561,11 @@ func banner(text: String, color := Color.WHITE, hold := 1.5) -> void:
 	_banner_tw.tween_property(_banner, "modulate:a", 0.0, 0.5)
 
 
+func boss_active() -> bool:
+	## A boss fight is on (its bar is up).
+	return _boss.visible
+
+
 func boss_bar(title: String, frac: float) -> void:
 	if (frac >= 0.0) != _boss.visible:  # the fight starts / ends
 		if frac >= 0.0:
@@ -552,7 +624,7 @@ func say(lines: Array) -> void:
 
 
 func clock(text: String) -> void:
-	## Small in-game clock under the Mark meter ("" hides it); flashes when it changes.
+	## Small in-game clock under the minimap ("" hides it); flashes when it changes.
 	_clock.text = text
 	_clock.modulate = Color(1.6, 1.4, 0.9)
 	create_tween().tween_property(_clock, "modulate", Color.WHITE, 1.2)

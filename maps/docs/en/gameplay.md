@@ -113,7 +113,7 @@ No choice is signaled as "right". Consequences appear in the world: Grady's line
 
 ## 8. The Mark meter
 
-- Range 0–100%. Shown as the Veil's Eye in the HUD, slowly opening.
+- Range 0–100%. No permanent gauge: when it rises, a small red "MARK +N%" flashes under the clock and fades (rises close together merge into one notice); the exact value is in the pause menu.
 - **Raises:** +1% per in‑game minute at night, +15% when caught, +5% when seen, faster after Act III.
 - **Lowers:** resting in a safe room (−30%, once per night), consumables (Elena's tea −15%), sleeping in the motel (reset to 20% each morning).
 - **Effects:**
@@ -132,7 +132,7 @@ No choice is signaled as "right". Consequences appear in the world: Grady's line
 ## 10. HUD
 
 - Health and stamina bars (bottom left), minimal.
-- Mark meter (Veil's Eye, top right).
+- Mark: a brief "MARK +N%" notice under the clock when it rises (top right); the exact value in the pause menu.
 - Visibility eye and noise ring around the character (optional).
 - Tokens counter (only in hub/when changing).
 - Clock (in‑game time, top center, turns red near 03:00).

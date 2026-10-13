@@ -4,6 +4,8 @@ extends Node3D
 ## it can't tunnel; a roll's i-frames make it pass through the player. The player's arrows hit enemies
 ## (anything with hit()) and stick where they land.
 
+const ItemFx := preload("res://scripts/item_fx.gd")
+
 var velocity := Vector3.ZERO
 var damage := 14.0
 var shooter: Node
@@ -51,11 +53,14 @@ func _physics_process(delta: float) -> void:
 	if not hit.is_empty():
 		var body: Object = hit.collider
 		if body.is_in_group("player"):
-			if not body.hurt(damage, global_position, 2.0):
+			if not body.hurt(damage, global_position, Feel.MARK_GAIN.arrow):
 				global_position = next  # dodged: fly on
 				return
 		elif mine and body.has_method("hit"):
 			body.hit(damage, hit.position)
+			if body is Enemy:
+				ItemFx.burst(get_parent(), hit.position, "splatter", -velocity.normalized())
+				body.hitstop(Feel.HITSTOP.bow)
 			if body is Node3D:  # stuck in them: it rides along until it drops out
 				reparent(body)
 		set_physics_process(false)

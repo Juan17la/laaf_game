@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bb0wd0b37v2yu"
-path.s3tc="res://.godot/imported/char_owen_cb_denim.png-0412d9f06a787ea50198a13a1a60f61c.s3tc.ctex"
+path="res://.godot/imported/char_owen_cb_denim.png-0412d9f06a787ea50198a13a1a60f61c.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "3ca6d08cad78afff7562dc7ff10b70ae"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_owen_cb_denim.png"
-dest_files=["res://.godot/imported/char_owen_cb_denim.png-0412d9f06a787ea50198a13a1a60f61c.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_owen_cb_denim.png-0412d9f06a787ea50198a13a1a60f61c.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

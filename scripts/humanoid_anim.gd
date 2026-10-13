@@ -65,6 +65,15 @@ const RUN_ANKLE := [2, 8, 15, 20, 18, 12, 4, -8, -20, -22, -15, -8, -2, 2, 5, 6,
 ## is scaled so it travels about speed × stance time; the foot lock (_plant_feet) takes up the rest.
 const STANCE_WALK := 0.8
 const STANCE_RUN := 0.78
+## Crouch (sneaking): hips low, knees bent forward over the feet, soles flat (the ankle takes up the knee's bend
+## minus the hip's: CROUCH_KNEE - CROUCH_HIP). The hips drop and sit back by what the folded leg works out to on
+## each rig, so the feet stay under the body. Walking crouched, the gait curves play at CROUCH_GAIT of their size
+## and the total bend is capped: a swing knee never comes up to the chest.
+const CROUCH_HIP := 1.3  ## rad of thigh forward of vertical
+const CROUCH_KNEE := 1.85  ## rad of knee bend
+const CROUCH_GAIT := 0.45
+const CROUCH_HIP_MAX := 1.75  ## rad, crouched: the most a swinging thigh comes forward...
+const CROUCH_KNEE_MAX := 2.2  ## ...and the most a knee folds
 
 var _j := {}
 var _neck: Node3D
@@ -172,16 +181,20 @@ func _process(delta: float) -> void:
 		var ph: float = side[2]
 		var u := fposmod(_phase / TAU + side[1], 1.0)
 		var ur := u + warp * sin(TAU * u) / TAU
-		var hip := deg_to_rad(lerpf(_cyc(WALK_HIP, u), _cyc(RUN_HIP, ur), run)) * a
-		var knee := deg_to_rad(lerpf(_cyc(WALK_KNEE, u), _cyc(RUN_KNEE, ur), run)) * ka + 2.3 * _crouch + 1.1 * _land
-		knee += idle * maxf(0.0, sin(_time * 0.35) * ph) * 0.12  # idle: weight on one leg now and then
+		var gk := lerpf(1.0, CROUCH_GAIT, _crouch)  # crouched: a shuffle, not a march
+		var hip := deg_to_rad(lerpf(_cyc(WALK_HIP, u), _cyc(RUN_HIP, ur), run)) * a * gk
+		var knee := deg_to_rad(lerpf(_cyc(WALK_KNEE, u), _cyc(RUN_KNEE, ur), run)) * ka * gk + CROUCH_KNEE * _crouch \
+				+ 1.1 * _land
+		knee += idle * maxf(0.0, sin(_time * 0.35) * ph) * 0.12 * (1.0 - _crouch)  # idle: weight on one leg now and then
+		knee = minf(knee, lerpf(PI, CROUCH_KNEE_MAX, _crouch))
 		# in stance the ankle takes up the knee's extra share, so the foot rolls over the ground with the stride
 		var on := 1.0 - smoothstep(duty - 0.04, duty + 0.08, u) * (1.0 - smoothstep(0.88, 1.0, u))
-		var ankle := deg_to_rad(lerpf(_cyc(WALK_ANKLE, u), _cyc(RUN_ANKLE, ur), run)) * lerpf(ka, a, on) \
-				+ deg_to_rad(lerpf(_cyc(WALK_KNEE, u), _cyc(RUN_KNEE, ur), run)) * (ka - a) * on
-		_j["Thigh" + k].rotation = Vector3(-hip - lean - 1.1 * _crouch - 0.55 * _land, -yaw, (0.03 + 0.03 * idle) * ph - tilt)
+		var ankle := (deg_to_rad(lerpf(_cyc(WALK_ANKLE, u), _cyc(RUN_ANKLE, ur), run)) * lerpf(ka, a, on) \
+				+ deg_to_rad(lerpf(_cyc(WALK_KNEE, u), _cyc(RUN_KNEE, ur), run)) * (ka - a) * on) * gk
+		var flex := minf(hip + lean + CROUCH_HIP * _crouch, lerpf(PI, CROUCH_HIP_MAX, _crouch))
+		_j["Thigh" + k].rotation = Vector3(-flex - 0.55 * _land, -yaw, (0.03 + 0.03 * idle) * ph - tilt)
 		_j["Shin" + k].rotation = Vector3(knee, 0, 0)  # whole rotations: the foot lock leaves twist on these
-		_j["Foot" + k].rotation = Vector3(-ankle - 1.0 * _crouch - 0.15 * _land, 0, 0)
+		_j["Foot" + k].rotation = Vector3(-ankle - (CROUCH_KNEE - CROUCH_HIP) * _crouch - 0.15 * _land, 0, 0)
 		var lag := u - lerpf(0.05, 0.03, run)
 		drive["R" if k == "L" else "L"] = lerpf(_cyc(WALK_HIP, lag), _cyc(RUN_HIP, lag + warp * sin(TAU * lag) / TAU), run) * a
 		if ur > 0.4 and ur < 0.5:
@@ -189,7 +202,7 @@ func _process(delta: float) -> void:
 
 	var hips: Node3D = _j["Hips"]
 	hips.position = _rest["Hips"] + Vector3((lerpf(0.025, 0.01, run) * sin(cyc) * g + idle * 0.012 * sin(_time * 0.35)) * k_scale,
-			-0.5 * _crouch, 0)
+			0, 0) + crouch_offset() * _crouch
 	hips.rotation = Vector3(lean, yaw, tilt)
 	# plant: the lowest point of either sole (heel, ball or toe) sits exactly on the ground. That gives the walk its
 	# rise over the straight stance leg (lowest in double support) and the run its sink through the bent knee, and
@@ -413,6 +426,16 @@ func _process(delta: float) -> void:
 
 func crouch_amount() -> float:
 	return _crouch
+
+
+func crouch_offset() -> Vector3:
+	## Where the folded leg puts the hips (CROUCH_HIP / CROUCH_KNEE on this rig's thigh and shin): lower by what the
+	## leg loses in height, and back by how far the foot ends up ahead of the hip, so the feet stay under the body.
+	var thigh: float = -_rest["ShinL"].y
+	var shin: float = -_rest["FootL"].y
+	var lean := CROUCH_KNEE - CROUCH_HIP  # the shin's forward lean
+	return Vector3(0, thigh * cos(CROUCH_HIP) + shin * cos(lean) - thigh - shin,
+		-(thigh * sin(CROUCH_HIP) - shin * sin(lean)))
 
 
 func _lunge(step: float, sink: float, push: float, w: float) -> void:

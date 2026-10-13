@@ -80,7 +80,7 @@ func _input(event: InputEvent) -> void:
 	if _phase == "out" or event is InputEventMouseMotion:
 		return
 	get_viewport().set_input_as_handled()
-	if event.is_action_pressed("ui_cancel"):
+	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("pause"):  # Esc / B / Start, like Lockpick
 		if _phase == "guess":
 			_delta += _bet  # unfinished hand: only the chain is lost
 		_close(_phase == "end" and _wins >= wins_needed)

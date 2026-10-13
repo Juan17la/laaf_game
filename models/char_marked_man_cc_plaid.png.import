@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dlgq0sxg60myl"
-path.s3tc="res://.godot/imported/char_marked_man_cc_plaid.png-d64ab515f90212010cb6b62a804471ec.s3tc.ctex"
+path="res://.godot/imported/char_marked_man_cc_plaid.png-d64ab515f90212010cb6b62a804471ec.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "d974a8996fb83413eeecccfb1630d7f8"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_marked_man_cc_plaid.png"
-dest_files=["res://.godot/imported/char_marked_man_cc_plaid.png-d64ab515f90212010cb6b62a804471ec.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_marked_man_cc_plaid.png-d64ab515f90212010cb6b62a804471ec.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -387,6 +387,7 @@ func room_door() -> void:
 	eye.global_position = Vector3(-96.36, 1.45, 49.0)
 	eye.rotation.y = PI / 2.0
 	Snd.stinger("dread", -9.0)
+	hud.mark_spike(Feel.SPIKE_SCRIPT)  # the same eye as the one burned into his hand
 	d.shot(Vector3(-94.6, 1.5, 48.6), Vector3(-96.4, 1.4, 49.0), Vector3(-95.0, 1.5, 48.8), 4.0, 48.0)  # outside: the eye on the door
 	await hud.subtitle("Alex", "The same eye. On my door.")
 	d.shot(Vector3(-95.4, 1.6, 49.4), Vector3(-96.4, 1.45, 49.0))
@@ -519,3 +520,25 @@ func hunt_end() -> void:
 	await hud.subtitle("Alex", "The lights. He won't come into the lights.", 2.4)
 	alex.look(null)
 	_end_stand_in()
+
+
+# ------------------------------------------------------------------ side mission: Room 4 (evidence #11)
+
+func room4_hint() -> void:
+	## Bark, the first time Alex walks up to Lucía's old room (two doors up from room 6). Not awaited.
+	hud.say([["Alex", "Room 4. Same eye on the door.", 2.2],
+		["Alex", "Lucía's postcards were on this motel's paper.", 2.6]])
+
+
+func room4_opened() -> void:
+	## The pick set the pin (Lockpick, 1 pin). Not awaited: the camera is the next marker, on the mat.
+	hud.banner("ROOM 4", Color(0.7, 0.9, 1.0), 1.0)
+	hud.say([["Alex", "Chained on the inside. It gives an inch.", 2.4],
+		["Alex", "Her camera's hanging off the handle.", 2.2]])
+
+
+func room4_camera() -> void:
+	## Evidence #11: Lucía's camera. Not awaited.
+	hud.banner("EVIDENCE #11", Color(0.8, 0.8, 0.9), 1.0)
+	hud.say([["Alex", "Lucía's camera. One frame left.", 2.2],
+		["Alex", "Her last photo: a chapel. In a quarry.", 2.6]])

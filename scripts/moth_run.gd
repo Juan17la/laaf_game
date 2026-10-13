@@ -61,7 +61,7 @@ func _input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 	if event is InputEventMouseMotion:
 		_mouse_y = (event.position - _screen_origin()).y
-	elif event.is_action_pressed("ui_cancel"):
+	elif event.is_action_pressed("ui_cancel") or event.is_action_pressed("pause"):  # Esc / B / Start, like Lockpick
 		_close(0 if _phase == "run" else int(_score))
 	elif _phase == "over" and (event.is_action_pressed("interact") or event.is_action_pressed("ui_accept")
 			or (event is InputEventMouseButton and event.pressed)):

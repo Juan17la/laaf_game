@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://nnvke11oc5mu"
-path.s3tc="res://.godot/imported/char_owen_cb_flannel.png-7c86dc1ddac5ea95e52dc8abbb3d02db.s3tc.ctex"
+path="res://.godot/imported/char_owen_cb_flannel.png-7c86dc1ddac5ea95e52dc8abbb3d02db.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "ef81bb35586c8aae1174edc6a69a5452"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_owen_cb_flannel.png"
-dest_files=["res://.godot/imported/char_owen_cb_flannel.png-7c86dc1ddac5ea95e52dc8abbb3d02db.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_owen_cb_flannel.png-7c86dc1ddac5ea95e52dc8abbb3d02db.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

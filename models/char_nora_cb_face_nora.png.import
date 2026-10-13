@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cfa22yjdffufm"
-path.s3tc="res://.godot/imported/char_nora_cb_face_nora.png-67feaaa4fdbb618a82c9ee68dc0ca8bf.s3tc.ctex"
+path="res://.godot/imported/char_nora_cb_face_nora.png-67feaaa4fdbb618a82c9ee68dc0ca8bf.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "d2730325ad5f65e62bf2e002dcf92543"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_nora_cb_face_nora.png"
-dest_files=["res://.godot/imported/char_nora_cb_face_nora.png-67feaaa4fdbb618a82c9ee68dc0ca8bf.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_nora_cb_face_nora.png-67feaaa4fdbb618a82c9ee68dc0ca8bf.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

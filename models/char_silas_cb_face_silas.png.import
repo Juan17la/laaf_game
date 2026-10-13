@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bm8nxgl0r24g7"
-path.s3tc="res://.godot/imported/char_silas_cb_face_silas.png-baf4ab257a20036d9cbf602c69b1e54d.s3tc.ctex"
+path="res://.godot/imported/char_silas_cb_face_silas.png-baf4ab257a20036d9cbf602c69b1e54d.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "2a0e916e3da8a899667bf715a3723300"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_silas_cb_face_silas.png"
-dest_files=["res://.godot/imported/char_silas_cb_face_silas.png-baf4ab257a20036d9cbf602c69b1e54d.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_silas_cb_face_silas.png-baf4ab257a20036d9cbf602c69b1e54d.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://3fomasxmm4qi"
-path.s3tc="res://.godot/imported/char_marcus_cc_coat.png-805c969514dd6cd5128a89d7aeb73782.s3tc.ctex"
+path="res://.godot/imported/char_marcus_cc_coat.png-805c969514dd6cd5128a89d7aeb73782.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "467b9c290cb3fbbff5a22b41cc2a1b05"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_marcus_cc_coat.png"
-dest_files=["res://.godot/imported/char_marcus_cc_coat.png-805c969514dd6cd5128a89d7aeb73782.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_marcus_cc_coat.png-805c969514dd6cd5128a89d7aeb73782.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

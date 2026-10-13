@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://byhp8a2uc3h7a"
-path.s3tc="res://.godot/imported/char_grady_ca_face_grady.png-60f078351fa38db93ae25ccd927d81b5.s3tc.ctex"
+path="res://.godot/imported/char_grady_ca_face_grady.png-60f078351fa38db93ae25ccd927d81b5.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "993dad5070b97956b91527e8a5417e6b"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_grady_ca_face_grady.png"
-dest_files=["res://.godot/imported/char_grady_ca_face_grady.png-60f078351fa38db93ae25ccd927d81b5.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_grady_ca_face_grady.png-60f078351fa38db93ae25ccd927d81b5.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

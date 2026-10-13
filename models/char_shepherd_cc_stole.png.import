@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b40tq4frrh4l2"
-path.s3tc="res://.godot/imported/char_shepherd_cc_stole.png-edfd22cd4d3d3cf7dd021e76ec47c86c.s3tc.ctex"
+path="res://.godot/imported/char_shepherd_cc_stole.png-edfd22cd4d3d3cf7dd021e76ec47c86c.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "3faaa1c787f12a0e03593d73cc0f9035"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_shepherd_cc_stole.png"
-dest_files=["res://.godot/imported/char_shepherd_cc_stole.png-edfd22cd4d3d3cf7dd021e76ec47c86c.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_shepherd_cc_stole.png-edfd22cd4d3d3cf7dd021e76ec47c86c.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -13,6 +13,9 @@ extends CharacterBody3D
 signal died
 signal interacted(target: Node)
 signal hid(pos: Vector3)  ## the player just became hidden (is_hidden() went true) here
+signal marked(gain: float)  ## a hit raised the Mark by `gain` % (screen spike, the Veil's Eye note)
+signal beat  ## a heartbeat thudded (low health; the HUD pulses with it)
+signal fell  ## dropped out of the world (below FALL_Y): the running chapter director puts Alex back at its checkpoint
 
 @export var walk_speed := 2.8
 @export var sprint_speed := 5.6
@@ -39,6 +42,7 @@ signal hid(pos: Vector3)  ## the player just became hidden (is_hidden() went tru
 
 const STAND_HEIGHT := 1.8
 const CROUCH_HEIGHT := 1.35  ## tall enough for the crouched / sliding head: it never pokes through low ceilings
+const FALL_Y := -30.0  ## below this Alex has fallen out of the world
 const COYOTE := 0.12
 const JUMP_BUFFER := 0.12
 const GAS_DPS := 6.0  ## health per second breathing gas unprotected
@@ -46,6 +50,9 @@ const FILTER_TIME := 45.0  ## seconds of gas one filter lasts
 const TAKEDOWN_RANGE := 1.6
 const THROW_RANGE := 22.0  ## bottles / smoke cans land on the crosshair up to this far
 const ARM_REACH := 0.95  ## shoulder → muzzle when aiming: a wall closer than this tucks the gun in
+const CAM_CLEAR := 0.22  ## m kept between the camera rig and any wall (a sphere, so thin posts count too)
+const ASH_ROOF := 30.0  ## m: anything over Alex's head this close (a roof, a ceiling) and the falling ash fades out
+const ASH_FADE := 0.6  ## s
 const ItemFx := preload("res://scripts/item_fx.gd")
 const WEAPON_MODELS := {"revolver": "res://models/item_revolver.glb", "flare": "res://models/item_flare_gun.glb",
 	"shotgun": "res://models/item_shotgun.glb", "bow": "res://models/item_bow.glb", "axe": "res://models/item_axe.glb",
@@ -80,7 +87,8 @@ const SWING_TURNS := {"swing": [0.0, 0.3, 0.6, 1.0], "chop": [0.0, 0.35, 0.65, 1
 
 var stamina := stamina_max
 var health := health_max
-var mark := 10.0  ## Mark meter 0..100 (gameplay.md §8)
+var mark := Feel.MARK_START  ## Mark meter 0..100 (gameplay.md §8; how it grows: Feel's MARK_* table)
+var mark_cap: float = Feel.MARK_SOFT_CAP[3]  ## this chapter's soft cap (set by the director): past it hits mark less
 var crouching := false
 var aiming := false
 var controls_enabled := true
@@ -127,6 +135,13 @@ var _gas_frame := -10  ## physics frame of the last gas_exposure (several clouds
 var _cough_t := 0.0
 var _meshes: Array[GeometryInstance3D] = []  ## Alex's body parts: shadow-only when the camera is inside him
 var _cam_inside := false
+var trauma := 0.0  ## 0..1 camera shake, stacks up and decays (Feel.TRAUMA_*); add_trauma()
+var _shake_t := 0.0
+var _hitstop := 0.0  ## > 0: a landed melee blow holds the swing still (Feel.HITSTOP)
+var _cam_probe := SphereShape3D.new()
+var _indoors := false  ## a roof over Alex's head: no ash falls (it used to drift through ceilings indoors)
+var _ash_t := 0.0
+var _ash_k := 1.0
 
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var collider: CollisionShape3D = $CollisionShape3D
@@ -140,6 +155,7 @@ var _cam_inside := false
 @onready var flashlight: SpotLight3D = $CameraPivot/Pitch/Flashlight
 @onready var weapons: Weapons = $Weapons
 @onready var hud: Node = $HUD
+@onready var ash: GPUParticles3D = $Ash
 
 
 func _ready() -> void:
@@ -149,6 +165,7 @@ func _ready() -> void:
 	var probe := SphereShape3D.new()  # a sphere, not a ray: the near plane can't slice into walls at the edges
 	probe.radius = 0.18
 	arm.shape = probe
+	_cam_probe.radius = CAM_CLEAR
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	_build_guns()
 	for m in model.find_children("*", "GeometryInstance3D", true, false):
@@ -251,9 +268,12 @@ func _move_dir() -> Vector3:
 func _physics_process(delta: float) -> void:
 	if controls_enabled:
 		_look(Input.get_vector("look_left", "look_right", "look_up", "look_down") * stick_sensitivity * delta)
-	if global_position.y < -30.0:
-		global_position = _spawn
+	if global_position.y < FALL_Y:
 		velocity = Vector3.ZERO
+		if fell.get_connections().is_empty():
+			global_position = _spawn  # no director (a bare player scene): back to where it started
+		else:
+			fell.emit()  # the director respawns Alex at its last checkpoint (Chapter1Director._on_fell)
 	_hurt_cd = maxf(_hurt_cd - delta, 0.0)
 	_heartbeat(delta)
 	_aim_face = maxf(_aim_face - delta, 0.0)
@@ -265,7 +285,12 @@ func _physics_process(delta: float) -> void:
 		_fire()
 	if weapons.gun() == "bow" and weapons.loaded.bow <= 0:
 		weapons.reload()  # nock the next arrow
-	_advance_strike(delta)
+	if _hitstop > 0.0:  # the blow landed: the swing (and the body's pose) hold for a beat
+		_hitstop -= delta
+		if _hitstop <= 0.0:
+			anim.set_process(true)
+	else:
+		_advance_strike(delta)
 	if _busy or dead:
 		_animate(0.0)
 		return
@@ -342,6 +367,7 @@ func _physics_process(delta: float) -> void:
 		Snd.sfx("land", global_position, minf(_fall_speed - 8.0, 0.0) * 0.5)
 	_was_air = not is_on_floor()
 
+	_update_ash(delta)
 	_emit_step_noise(delta, Vector2(velocity.x, velocity.z).length(), sprinting)
 	_footsteps(delta, Vector2(velocity.x, velocity.z).length(), sprinting)
 	_face(delta)
@@ -357,12 +383,17 @@ func _update_camera(delta: float) -> void:
 	var zoom := aiming and not weapons.melee()  # a melee "aim" is a ready stance: no zoom
 	var want := (0.55 if zoom else 0.65) * _shoulder
 	var side := pitch.global_basis.x * signf(want)
-	var hit := _ray(pivot.global_position, pivot.global_position + side * (absf(want) + 0.25))
-	if hit:
-		want = signf(want) * maxf(pivot.global_position.distance_to(hit.position) - 0.25, 0.0)
+	want = signf(want) * absf(want) * _clear_along(pivot.global_position, side * absf(want))
 	arm.position.x = want if absf(want) < absf(arm.position.x) else lerpf(arm.position.x, want, 8.0 * delta)
 	arm.spring_length = lerpf(arm.spring_length, 1.25 if zoom else (1.8 if aiming else 2.2), 10.0 * delta)
-	camera.fov = lerpf(camera.fov, 48.0 if zoom else 65.0, 10.0 * delta)
+	camera.fov = lerpf(camera.fov, 48.0 if zoom else 65.0, 10.0 * delta)  # (a shot's FOV punch eases back here)
+	# trauma shake: frustum offset + roll, so the aim ray (camera position, -Z) never moves
+	trauma = maxf(trauma - Feel.TRAUMA_DECAY * delta, 0.0)
+	_shake_t += delta * Feel.SHAKE_FREQ
+	var sk := trauma * trauma * Feel.shake
+	camera.h_offset = Feel.SHAKE_OFFSET * sk * (sin(_shake_t * 1.0) + 0.5 * sin(_shake_t * 2.7 + 1.3))
+	camera.v_offset = Feel.SHAKE_OFFSET * sk * (sin(_shake_t * 1.3 + 2.1) + 0.5 * sin(_shake_t * 3.1))
+	camera.rotation.z = Feel.SHAKE_ROLL * sk * sin(_shake_t * 0.9 + 0.7)
 	# camera squeezed into Alex (back to a wall): hide his body instead of rendering the inside of his head
 	var inside := camera.global_position.distance_to(global_position + Vector3.UP * pivot.position.y) < 0.55
 	if inside != _cam_inside:
@@ -371,6 +402,41 @@ func _update_camera(delta: float) -> void:
 			if is_instance_valid(m):
 				m.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY if inside \
 					else GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+
+
+func _clear_along(from: Vector3, motion: Vector3) -> float:
+	## 0..1: how far a CAM_CLEAR sphere gets from `from` along `motion` before touching world geometry (layer 1),
+	## never Alex. The spring arm's own origin is moved by this, so it never starts inside a wall: a sphere, not a
+	## ray, so a pole or a corner beside the shoulder can't slip between the camera and Alex either.
+	var q := PhysicsShapeQueryParameters3D.new()
+	q.shape = _cam_probe
+	q.transform = Transform3D(Basis(), from)
+	q.motion = motion
+	q.collision_mask = 1
+	q.exclude = [get_rid()]
+	var space := get_world_3d().direct_space_state
+	if not space.intersect_shape(q, 1).is_empty():
+		return 0.0  # the pivot itself is tight against something: the camera stays right behind the head
+	return space.cast_motion(q)[0]
+
+
+func _update_ash(delta: float) -> void:
+	## The falling ash (the Ash particles round Alex) fades out under a roof and back in outside.
+	_ash_t -= delta
+	if _ash_t <= 0.0:
+		_ash_t = 0.3
+		var head := global_position + Vector3.UP * 1.7
+		_indoors = not _ray(head, head + Vector3.UP * ASH_ROOF).is_empty()
+	_ash_k = move_toward(_ash_k, 0.0 if _indoors else 1.0, delta / ASH_FADE)
+	ash.amount_ratio = maxf(_ash_k, 0.001)
+	var m := (ash.draw_pass_1 as PrimitiveMesh).material as StandardMaterial3D
+	if m:
+		m.albedo_color.a = 0.75 * _ash_k
+
+
+func add_trauma(amount: float) -> void:
+	## Camera shake: own shots, blows landed, hits taken (Feel.TRAUMA_*). Stacks to 1, decays by itself.
+	trauma = clampf(trauma + amount, 0.0, 1.0)
 
 
 func _ray(from: Vector3, to: Vector3) -> Dictionary:
@@ -504,19 +570,39 @@ func _fire() -> void:
 		spread *= 1.8
 	var result := weapons.shoot(get_world_3d().direct_space_state, from, dir, [get_rid()], spread)
 	_aim_face = 0.6
-	anim.recoil = 1.0
-	noise(Weapons.GUNS[result.gun].noise)
-	Snd.sfx("gun_" + str(result.gun), global_position + Vector3.UP * 1.4)
-	_tracer(result.point, Weapons.GUNS[result.gun].color, result.gun == "flare")
+	var gun: String = result.gun
+	anim.recoil = Feel.RECOIL[gun]
+	add_trauma(Feel.TRAUMA_SHOT[gun])
+	noise(Weapons.GUNS[gun].noise)
+	Snd.sfx("gun_" + gun, global_position + Vector3.UP * 1.4, 0.0, Feel.pitch())
+	_tracer(result.point, Weapons.GUNS[gun].color, gun == "flare")
+	_impacts(result.impacts, dir, gun)
 	if result.collider and result.collider.has_method("hit"):
 		hud.hit_marker(result.double_tap)
+
+
+func _impacts(impacts: Array, dir: Vector3, gun: String) -> void:
+	## Where the shot landed: dark spatter and a hitstop on what bleeds, sparks and chips off the rest.
+	var stopped := {}
+	for im in impacts:
+		var at: Vector3 = im[0]
+		var normal: Vector3 = im[1]
+		var body: Object = im[2]
+		if body is Enemy:
+			ItemFx.burst(get_parent(), at, "splatter", (normal - dir).normalized())
+			if not stopped.has(body):  # one freeze per body, not per pellet
+				stopped[body] = true
+				body.hitstop(Feel.HITSTOP[gun])
+		elif not (body and body.has_method("hit")):  # a wall, the ground: the round sparks off it
+			ItemFx.burst(get_parent(), at, "ricochet", normal)
+			ItemFx.burst(get_parent(), at, "thud", normal, 3)
 
 
 func _on_fired(gun: String, double_tap: bool) -> void:
 	if double_tap:
 		hud.banner("DOUBLE TAP", Color(1.0, 0.8, 0.3), 0.7)
-	var kick := 0.07 if gun == "shotgun" else 0.025
-	pitch.rotation.x = clampf(pitch.rotation.x + kick, -1.2, 0.8)  # muzzle climb
+	pitch.rotation.x = clampf(pitch.rotation.x + Feel.KICK_PITCH[gun], -1.2, 0.8)  # muzzle climb
+	camera.fov += Feel.KICK_FOV[gun]  # a punch outward; _update_camera eases it back
 
 
 func _on_reload(gun: String, spent: int) -> void:
@@ -641,7 +727,8 @@ func _hold(delta: float) -> void:
 	var t := {}
 	anim.ik_pole.clear()  # (the bow sets the drawing elbow's)
 	var c := anim.crouch_amount()
-	var drop := Vector3(0, -0.45 * c, 0.22 * c)  # crouched: everything sits lower and further forward
+	var co := anim.crouch_offset()  # (where the crouch puts the hips: lower, and sat back over the feet)
+	var drop := Vector3(0, co.y - 0.06, co.z + 0.22) * c  # crouched: everything sits lower, the arms out front
 	var ad := Vector3(0, sin(anim.aim_pitch), cos(anim.aim_pitch))  # the aim, model space
 	var id := weapons.gun()
 	var sp := weapons.spec()
@@ -815,7 +902,9 @@ func _loose() -> void:
 	Arrow.fire(get_parent(), from, throw_target(Weapons.GUNS.bow.range), Weapons.GUNS.bow.damage * k, self,
 		lerpf(18.0, 46.0, k))
 	weapons.loose()
-	Snd.sfx("bow", global_position + Vector3.UP * 1.4)
+	anim.recoil = Feel.RECOIL.bow
+	add_trauma(Feel.TRAUMA_SHOT.bow)
+	Snd.sfx("bow", global_position + Vector3.UP * 1.4, 0.0, Feel.pitch())
 	_draw = 0.0
 	_aim_face = 0.6
 	noise(Weapons.GUNS.bow.noise)
@@ -891,6 +980,8 @@ func _melee_hit() -> void:
 		if wall and wall.collider != body:
 			continue
 		ItemFx.burst(get_parent(), at, "impact", -fwd)
+		if body is Enemy:
+			ItemFx.burst(get_parent(), at, "splatter", (fwd + Vector3.UP * 0.4).normalized())
 		landed = true
 		if body.get("invulnerable"):
 			bounce = bounce or heavy  # it can't be hurt: the axe / bat glances off
@@ -902,13 +993,20 @@ func _melee_hit() -> void:
 			if _combo % 3 == 0:
 				dmg *= 1.8
 		body.hit(dmg, at)
+		if body is Enemy:
+			body.hitstop(Feel.HITSTOP.get(sp.style if sp.style in ["jab", "bash"] else weapons.gun(), 0.05))
 		if body.get("state") == Enemy.State.DEAD:
 			G.send("unlock", ["hands_on"])
 		if float(sp.stun) >= 0.5 and body.has_method("stagger"):  # resisted: no stun-locking (Enemy.stagger)
 			body.stagger(float(sp.stun) * (0.4 if body.get("boss") else 1.0))
 	if landed:
-		Snd.sfx("punch" if sp.style == "jab" else "melee_hit", chest + fwd)
+		Snd.sfx("punch" if sp.style == "jab" else "melee_hit", chest + fwd, 0.0, Feel.pitch())
 		hud.hit_marker(false)
+		add_trauma(Feel.TRAUMA_MELEE.get(sp.style, 0.15))
+		var hs: float = Feel.HITSTOP.get(sp.style if sp.style in ["jab", "bash"] else weapons.gun(), 0.05) * Feel.hitstop
+		if hs > 0.0:  # our swing holds with the enemy it struck
+			_hitstop = hs
+			anim.set_process(false)
 		pitch.rotation.x = clampf(pitch.rotation.x - 0.02, -1.2, 0.8)  # the jolt runs up the arms
 		noise(float(sp.noise))
 		if bounce:
@@ -966,8 +1064,12 @@ func hurt(amount: float, _from := Vector3.ZERO, mark_gain := 0.0) -> bool:
 	amount *= G.settings().hurt * 0.8  # difficulty; 0.8 = global -20% balance pass
 	G.send("hurt", [amount])
 	health -= amount
-	mark = clampf(mark + mark_gain * mark_resist, 0.0, 100.0)
+	var was := mark
+	mark = Feel.add_mark(mark, mark_gain * mark_resist, mark_cap)
+	if mark > was:
+		marked.emit(mark - was)
 	anim.flinch = 1.0
+	add_trauma(minf(amount * Feel.TRAUMA_HURT, Feel.TRAUMA_HURT_MAX))
 	hud.damage_flash()
 	_check_dead()
 	return true
@@ -1043,6 +1145,7 @@ func _heartbeat(delta: float) -> void:
 	if _beat_t <= 0.0:
 		_beat_t = lerpf(0.5, 1.1, frac / 0.4)
 		Snd.sfx("heartbeat", null, lerpf(0.0, -8.0, frac / 0.4))
+		beat.emit()
 
 
 func _emit_step_noise(delta: float, speed: float, sprinting: bool) -> void:
@@ -1145,7 +1248,7 @@ func drink_tea() -> void:
 	if teas <= 0 or mark <= 0.0:
 		return
 	teas -= 1
-	mark = maxf(mark - 15.0, 0.0)
+	mark = maxf(mark - Feel.MARK_TEA, 0.0)
 	Snd.sfx("item_use")
 	hud.banner("ELENA'S TEA  ·  MARK -15%", Color(0.8, 0.9, 0.6), 1.0)
 

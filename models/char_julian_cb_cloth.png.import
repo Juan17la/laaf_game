@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c573ssl2e41yy"
-path.s3tc="res://.godot/imported/char_julian_cb_cloth.png-cdef492701ef901724c92096473621f4.s3tc.ctex"
+path="res://.godot/imported/char_julian_cb_cloth.png-cdef492701ef901724c92096473621f4.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "8531d10771d958c87603f7057a0c0593"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_julian_cb_cloth.png"
-dest_files=["res://.godot/imported/char_julian_cb_cloth.png-cdef492701ef901724c92096473621f4.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_julian_cb_cloth.png-cdef492701ef901724c92096473621f4.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

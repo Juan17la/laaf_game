@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dfkqiv7jhenpy"
-path.s3tc="res://.godot/imported/char_elena_metal.png-ca6afdf01cce50b3de9a1363bd5c80bc.s3tc.ctex"
+path="res://.godot/imported/char_elena_metal.png-ca6afdf01cce50b3de9a1363bd5c80bc.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "d03f6f16c7eeb3cd0f206043ea61e467"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_elena_metal.png"
-dest_files=["res://.godot/imported/char_elena_metal.png-ca6afdf01cce50b3de9a1363bd5c80bc.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_elena_metal.png-ca6afdf01cce50b3de9a1363bd5c80bc.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

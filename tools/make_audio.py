@@ -902,6 +902,38 @@ def voice_clip(p, vowel, rng, dur=None, f0_mul=1.0, contour=0.0, rough=None, con
     return y
 
 
+def sfx_whisper(rng, syllables=7):
+    """The Mark's whispers (Voice bus): unvoiced syllables, the voices' vowel formants on breath noise instead of a
+    pitch, with s / t bursts; a slow swell, dark and roomy. Nothing in them is a word."""
+    parts = []
+    for _ in range(syllables):
+        vowel = rng.choice("aeiou")
+        n = secs(rng.uniform(0.09, 0.2))
+        src = noise(n, rng)
+        y = zeros(n)
+        for fr, g, qq in zip(VOWELS[vowel], (1.0, 0.7, 0.35), (6, 8, 10)):
+            add(y, bp(src, fr * rng.uniform(0.85, 1.05), qq), 0, g)
+        y = mul(y, env_ar(n, 0.025, 0.06))
+        if rng.random() < 0.45:
+            cn = secs(0.05)
+            hiss = mul(hp(noise(cn, rng), 3500), env_exp(cn, 0.02, 0.003))
+            add(y, scale(hiss, 0.6 * peak(y) / peak(hiss)))  # the burst rides the syllable's onset
+        parts.append(y + zeros(secs(rng.uniform(0.02, 0.12))))
+    x = [v for p in parts for v in p]
+    n = len(x)
+    x = mul(x, [math.sin(math.pi * i / n) ** 0.7 for i in range(n)])  # swells in and out
+    x = lp(x, 3200)
+    return reverb(x + zeros(secs(0.6)), 0.35, 1.2, 1800.0)
+
+
+def sfx_spotted(rng):
+    """The "!" sting: a short bright metallic stab with a hiss under it."""
+    n = secs(0.45)
+    stab = mix(bell(hz(86), 0.45, 1.0, 2.76, 3.0, 0.08), scale(bell(hz(91), 0.45, 0.6, 3.1, 2.0, 0.06), 0.7))
+    hiss = mul(hp(noise(n, rng), 2500), env_exp(n, 0.05, 0.002))
+    return mix(stab, scale(hiss, 0.25))
+
+
 def voice_set(name):
     p = PROFILES[name]
     rng = random.Random(sum(map(ord, name)))
@@ -983,6 +1015,9 @@ def build():
     job("sfx_glass", lambda: sfx_glass(R(89)), 0.7)
     job("sfx_scrape", lambda: sfx_scrape(R(90)), 0.6)
     job("sfx_thud", lambda: sfx_ladder_thud(R(91)), 0.7)
+    for v in range(4):  # the Mark (python3 tools/make_audio.py whisper)
+        job("sfx_whisper_%d" % v, lambda v=v: sfx_whisper(R(100 + v), 5 + v), 0.6)
+    job("sfx_spotted", lambda: sfx_spotted(R(110)), 0.7)  # the "!" (python3 tools/make_audio.py spotted)
 
     for ch in PROFILES:
         for i in range(8):

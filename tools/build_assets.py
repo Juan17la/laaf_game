@@ -867,6 +867,379 @@ def bake_ao(model, radius=None, gain=None, floor=None):
     return out
 
 
+# ============================================================== collision pass
+# Godot turns a "-col" node into trimesh collision of its own mesh, so a model only blocks where its author put
+# geometry in such a node. auto_collision() (every map model, before writing) closes the gaps found by
+# tools/collision_audit.gd, all in one "auto-colonly" node:
+#   box   a piece (connected triangles) of a visible-only node that the player can walk into and no collider covers:
+#         a closed box around it (oriented to the piece, at least COL_THICK thick); one too big for a box (a rock
+#         mass, a roof) gets a copy of its own triangles instead ("mesh")
+#   slab  a collider piece thinner than COL_THIN (a door leaf, a floor, a sheet with no back side): a COL_THICK slab
+#   back  an open collider surface (a quad, a lathe's tube: one-sided, so walkable from behind or from inside once
+#         past it): its triangles again, facing the other way
+# Foliage and decals (PASSABLE_TEX, PASSABLE_NODES) stay passable.
+
+PASSABLE_TEX = {"moth", "eye", "ext_grasscard", "ext_leafcard", "hd_needles", "park_leafcard", "park_weedcard",
+                "park_crack", "park_canopycard", "park_streak", "town_poster", "town_graffiti", "hs_crack"}
+PASSABLE_NODES = ("needles", "branches", "leaves", "litter", "wires", "water", "smoke", "slabs", "AoFlags")
+COL_REACH = 2.0  # m over the floor under it: a piece starting higher is out of the player's reach
+COL_MIN_H = 0.45  # m: lower pieces are stepped over / through (curbs, rubble, stone slabs), as before
+COL_MIN_FACE = 0.35  # m² of width x height for a piece to stop the player
+COL_PROTRUDE = 0.15  # m a piece may stand proud of the colliders around it before it gets its own
+COL_THIN = 0.12  # m: collider pieces thinner than this get a slab...
+COL_THICK = 0.3  # ...this thick (sideways: centred; floors: downward, so the walked surface stays put), when the
+COL_SHEET = 0.8  # piece is a sheet (both its larger sides at least this): smaller thin parts (a chair back, a sign)
+COL_THIN_SMALL = 0.12  # only get this much, so furniture doesn't swell into the walkways
+COL_GIANT = 40.0  # m³: a bigger loose piece is reported, not boxed (an OBB that big could plug a passage)
+
+
+def _is_col(name):
+    return name.endswith("-col") or name.endswith("-colonly")
+
+
+def _node_offsets(model):
+    by_name, off = {nd["name"]: nd for nd in model.nodes}, {}
+
+    def get(nd):
+        if nd["name"] not in off:
+            p = by_name.get(nd["parent"]) if nd["parent"] else None
+            off[nd["name"]] = v_add(get(p), tuple(nd["t"])) if p else tuple(nd["t"])
+        return off[nd["name"]]
+    for nd in model.nodes:
+        get(nd)
+    return off
+
+
+def _pieces(nd, off):
+    """Connected pieces of a node's triangles (sharing a corner, any material): [(tris, textures), ...] in model
+    space, tris as (a, b, c) tuples."""
+    tris, texs = [], []
+    for mat, (pos, _, _) in nd["prims"].items():
+        for i in range(0, len(pos) - 2, 3):
+            tris.append(tuple(v_add(pos[i + k], off) for k in range(3)))
+            texs.append(MATS[mat]["tex"])
+    parent = list(range(len(tris)))
+
+    def find(i):
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+    seen = {}
+    for t, tri in enumerate(tris):
+        for v in tri:
+            key = (round(v[0] * 500), round(v[1] * 500), round(v[2] * 500))
+            if key in seen:
+                a, b = find(t), find(seen[key])
+                if a != b:
+                    parent[a] = b
+            else:
+                seen[key] = t
+    groups = {}
+    for t in range(len(tris)):
+        g = groups.setdefault(find(t), ([], set()))
+        g[0].append(tris[t])
+        g[1].add(texs[t])
+    return list(groups.values())
+
+
+def _aabb(tris):
+    pts = [v for tri in tris for v in tri]
+    return tuple(min(p[i] for p in pts) for i in range(3)), tuple(max(p[i] for p in pts) for i in range(3))
+
+
+def _obb(tris):
+    """Oriented box around a piece: axes from its dominant face normals (exact for boxes, close for the rest), or
+    the world axes when those hug it tighter. Returns (centre, [axis, ...], [half extent, ...])."""
+    acc = {}
+    for a, b, c in tris:
+        n = v_cross(v_sub(b, a), v_sub(c, a))
+        ln = math.sqrt(v_dot(n, n))
+        if ln < 1e-9:
+            continue
+        n = tuple(x / ln for x in n)
+        lead = next(x for x in n if abs(x) > 1e-6)
+        if lead < 0:
+            n = tuple(-x for x in n)
+        key = tuple(round(x, 2) for x in n)
+        acc[key] = (acc[key][0] + ln, n) if key in acc else (ln, n)
+    normals = [n for _, n in sorted(acc.values(), reverse=True)]
+    frames = [[(1, 0, 0), (0, 1, 0), (0, 0, 1)]]
+    if normals:
+        A = normals[0]
+        B = next((n for n in normals[1:] if abs(v_dot(A, n)) < 0.1), None)
+        if B is None:  # a flat (or round) piece: its longest edge across the normal
+            a, b, c = max(tris, key=lambda t: max(math.dist(t[0], t[1]), math.dist(t[1], t[2])))
+            B = v_sub(b, a) if math.dist(a, b) >= math.dist(b, c) else v_sub(c, b)
+            if abs(v_dot(v_norm(B), A)) > 0.99:
+                B = (0, 1, 0) if abs(A[1]) < 0.9 else (1, 0, 0)
+        B = v_norm(v_sub(B, tuple(x * v_dot(A, B) for x in A)))
+        frames.append([A, B, v_cross(A, B)])
+    pts = [v for t in tris for v in t]
+    best = None
+    for ax in frames:
+        lo = [min(v_dot(p, a) for p in pts) for a in ax]
+        hi = [max(v_dot(p, a) for p in pts) for a in ax]
+        vol = (hi[0] - lo[0] + 0.01) * (hi[1] - lo[1] + 0.01) * (hi[2] - lo[2] + 0.01)
+        if best is None or vol < best[0] - 1e-9:
+            mid = [(lo[i] + hi[i]) / 2 for i in range(3)]
+            centre = tuple(sum(ax[i][k] * mid[i] for i in range(3)) for k in range(3))
+            best = (vol, centre, ax, [(hi[i] - lo[i]) / 2 for i in range(3)])
+    return best[1:]
+
+
+def _open(tris):
+    """True when some edge of the piece borders only one triangle (a sheet, a tube: not a closed solid)."""
+    edges = {}
+    for tri in tris:
+        keys = [(round(v[0] * 500), round(v[1] * 500), round(v[2] * 500)) for v in tri]
+        for i in range(3):
+            e = tuple(sorted((keys[i], keys[(i + 1) % 3])))
+            edges[e] = edges.get(e, 0) + 1
+    return any(n == 1 for n in edges.values())
+
+
+def _overlap(lo, hi, boxes):
+    """Volume of (lo, hi) inside the union of boxes (summed: boxes rarely overlap each other much)."""
+    total = 0.0
+    for blo, bhi in boxes:
+        d = [min(hi[i], bhi[i]) - max(lo[i], blo[i]) for i in range(3)]
+        if min(d) > 0:
+            total += d[0] * d[1] * d[2]
+    return total
+
+
+def _thick(h):
+    """Collision thickness for a piece of half extents h: COL_THICK for a sheet, COL_THIN_SMALL for a small part."""
+    return COL_THICK if sorted(h)[1] * 2 >= COL_SHEET else COL_THIN_SMALL
+
+
+def auto_collision(model):
+    """Adds the "auto-colonly" node (see the section comment). Returns a report: [(kind, piece box), ...]."""
+    off = _node_offsets(model)
+    col, loose = [], []
+    for nd in model.nodes:
+        if not nd["prims"] or nd["name"].startswith(PASSABLE_NODES):
+            continue
+        for tris, texs in _pieces(nd, off[nd["name"]]):
+            if _is_col(nd["name"]):
+                col.append(tris)
+            elif not texs <= PASSABLE_TEX:  # (foliage, decals: passable)
+                loose.append(tris)
+    # floors the player can stand on (up-facing collider faces): reach is measured from the one under a piece
+    area = {}
+    for tris in col:
+        for a, b, c in tris:
+            n = v_cross(v_sub(b, a), v_sub(c, a))
+            ln = math.sqrt(v_dot(n, n))
+            if ln > 1e-9 and n[1] / ln > 0.9:
+                area[round(a[1] * 20) / 20] = area.get(round(a[1] * 20) / 20, 0.0) + ln / 2
+    floors = sorted({0.0} | {y for y, ar in area.items() if ar >= 3.0})  # (a wall top is no floor)
+    col_boxes = [_aabb(t) for t in col]
+    grown = [(tuple(x - 0.05 for x in lo), tuple(x + 0.05 for x in hi)) for lo, hi in col_boxes]
+
+    def reach(lo, hi, floor=False):
+        ground = max((f for f in floors if f <= lo[1] + 0.1), default=lo[1])
+        return lo[1] - ground < COL_REACH and (floor or hi[1] > ground + 0.15)
+
+    boxes, copies, report = [], [], []
+    for tris in loose:
+        lo, hi = _aabb(tris)
+        size = v_sub(hi, lo)
+        if size[1] < COL_MIN_H or max(size[0], size[2]) * min(size[1], COL_REACH) < COL_MIN_FACE or not reach(lo, hi):
+            continue
+        core_lo, core_hi = list(lo), list(hi)
+        for i in (0, 2):  # trim the allowed protrusion off the sides (never below 2 cm)
+            cut = min(COL_PROTRUDE, max(size[i] - 0.02, 0.0) / 2)
+            core_lo[i] += cut
+            core_hi[i] -= cut
+        core_lo = [x - 0.01 for x in core_lo]
+        core_hi = [x + 0.01 for x in core_hi]
+        vol = (core_hi[0] - core_lo[0]) * (core_hi[1] - core_lo[1]) * (core_hi[2] - core_lo[2])
+        if _overlap(core_lo, core_hi, grown) >= 0.5 * vol:
+            continue  # stands within its model's colliders
+        c, ax, h = _obb(tris)
+        if 8 * h[0] * h[1] * h[2] > COL_GIANT:
+            copies.append((tris, True, _open(tris)))
+            report.append(("mesh", (lo, hi)))
+            continue
+        boxes.append((c, ax, [max(x, _thick(h) / 2) for x in h]))
+        report.append(("box", (lo, hi)))
+    if not col and not boxes and not copies and loose:  # a prop of thin parts (an IV stand): one box round it all
+        tris = [t for p in loose for t in p]
+        lo, hi = _aabb(tris)
+        size = v_sub(hi, lo)
+        if size[1] >= COL_MIN_H and max(size[0], size[2]) * min(size[1], COL_REACH) >= COL_MIN_FACE and reach(lo, hi):
+            c, ax, h = _obb(tris)
+            boxes.append((c, ax, [max(x, _thick(h) / 2) for x in h]))
+            report.append(("box", (lo, hi)))
+    for tris in col:
+        lo, hi = _aabb(tris)
+        c, ax, h = _obb(tris)
+        thin = min(range(3), key=lambda i: h[i])
+        n = ax[thin]
+        level = abs(n[1]) > 0.7  # a floor / a shelf / a ramp
+        if sorted(h)[1] * 2 < COL_MIN_H or not reach(lo, hi, level):
+            continue
+        if h[thin] * 2 >= COL_THIN:
+            if _open(tris):
+                copies.append((tris, False, True))
+                report.append(("back", (lo, hi)))
+            continue
+        t = _thick(h)
+        h = list(h)
+        if level:  # thickened downward: its top stays where it's walked on
+            up = 1 if n[1] > 0 else -1
+            c = v_add(c, tuple(x * up * (h[thin] - t / 2) for x in n))
+        h[thin] = t / 2
+        boxes.append((c, ax, h))
+        report.append(("slab", (lo, hi)))
+    if boxes or copies:
+        mat = next(iter(next(nd for nd in model.nodes if nd["prims"])["prims"]))  # (dropped on import: any will do)
+        cur = model.cur
+        model.node("auto-colonly")
+        pos, nrm, uv = model.cur["prims"].setdefault(mat, ([], [], []))
+        for tris, front, back in copies:  # a piece's own triangles: as they are and / or turned around
+            for a, b, c in tris:
+                for tri in ([(a, b, c)] if front else []) + ([(a, c, b)] if back else []):
+                    n = v_norm(v_cross(v_sub(tri[1], tri[0]), v_sub(tri[2], tri[0])))
+                    for v in tri:
+                        pos.append(v)
+                        nrm.append(n)
+                        uv.append((0.0, 0.0))
+        for c, ax, h in boxes:
+            corner = lambda s: tuple(c[k] + sum(s[i] * h[i] * ax[i][k] for i in range(3)) for k in range(3))
+            for i in range(3):
+                j, k = (i + 1) % 3, (i + 2) % 3
+                for sgn in (-1, 1):
+                    quad = []
+                    for u, v in ((-1, -1), (1, -1), (1, 1), (-1, 1)):
+                        s = [0, 0, 0]
+                        s[i], s[j], s[k] = sgn, u, v
+                        quad.append(corner(s))
+                    model.emit(mat, quad, c)
+        model.cur = cur
+    return report
+
+
+# ============================================================== z-fighting pass
+# Two faces in the same plane, facing the same way and overlapping, flicker as the depth test picks either one
+# (a skirting flush with its wall, a band or a poster laid on a wall, a beam flush with a ceiling). unfight()
+# moves the smaller piece (connected triangles of one material) of each such pair ZFIGHT_OFFSET out along the
+# shared normal, so it reads as laid on top; a piece caught on opposite sides (a slab running flush into both
+# outer walls) instead has those faces drawn in by ZFIGHT_OFFSET, behind the bigger surface. The offset is off
+# the round-centimetre steps the models are authored in, so a moved face doesn't land on another one.
+
+ZFIGHT_OFFSET = 0.0125  # m
+ZFIGHT_PLANE = 0.0015  # m: faces closer than this to one plane are coplanar
+ZFIGHT_CELL = 2.0  # m: spatial grid for the pair search
+
+
+def unfight(model, passes=4):
+    """Returns how many pieces were moved (a stack of three flush layers takes two passes to pull apart)."""
+    total = 0
+    for _ in range(passes):
+        n = _unfight_pass(model)
+        total += n
+        if not n:
+            break
+    return total
+
+
+def _unfight_pass(model):
+    tris = []  # (piece key, normal, plane offset, bbox lo, bbox hi, area)
+    pieces = {}  # piece key -> [(node, mat, first vertex index), ...]
+    for nd in model.nodes:
+        if not nd["prims"] or nd["name"].endswith("-colonly"):
+            continue
+        flat = []
+        for mat, (pos, _, _) in nd["prims"].items():
+            flat.extend((mat, i) for i in range(0, len(pos) - 2, 3))
+        parent = list(range(len(flat)))
+
+        def find(i):
+            while parent[i] != i:
+                parent[i] = parent[parent[i]]
+                i = parent[i]
+            return i
+        seen = {}
+        for t, (mat, i) in enumerate(flat):
+            for v in nd["prims"][mat][0][i:i + 3]:
+                # (per material: a skirting touching its wall at a corner is still a piece of its own)
+                key = (mat, round(v[0] * 500), round(v[1] * 500), round(v[2] * 500))
+                if key in seen:
+                    a, b = find(t), find(seen[key])
+                    if a != b:
+                        parent[a] = b
+                else:
+                    seen[key] = t
+        for t, (mat, i) in enumerate(flat):
+            a, b, c = nd["prims"][mat][0][i:i + 3]
+            n = v_cross(v_sub(b, a), v_sub(c, a))
+            ln = math.sqrt(v_dot(n, n))
+            if ln < 1e-8:
+                continue
+            n = tuple(x / ln for x in n)
+            key = (nd["name"], find(t))
+            pieces.setdefault(key, []).append((nd["name"], mat, i))
+            lo, hi = _aabb([(a, b, c)])
+            tris.append((key, n, v_dot(n, a), lo, hi, ln / 2))
+    area = {}
+    for key, _, _, _, _, ar in tris:
+        area[key] = area.get(key, 0.0) + ar
+    planes = {}
+    for k, t in enumerate(tris):
+        n = t[1]
+        planes.setdefault((round(n[0], 2), round(n[1], 2), round(n[2], 2), math.floor(t[2] / ZFIGHT_PLANE)), []).append(k)
+    push, checked = {}, set()
+    for (nx, ny, nz, d), ks in planes.items():
+        if ny < -0.9 and abs(d * ZFIGHT_PLANE) < 0.02:
+            continue  # undersides on the ground: never seen
+        cand = ks + planes.get((nx, ny, nz, d + 1), [])
+        if len(cand) < 2:
+            continue
+        grid = {}
+        for k in cand:
+            lo, hi = tris[k][3], tris[k][4]
+            for gx in range(math.floor(lo[0] / ZFIGHT_CELL), math.floor(hi[0] / ZFIGHT_CELL) + 1):
+                for gy in range(math.floor(lo[1] / ZFIGHT_CELL), math.floor(hi[1] / ZFIGHT_CELL) + 1):
+                    for gz in range(math.floor(lo[2] / ZFIGHT_CELL), math.floor(hi[2] / ZFIGHT_CELL) + 1):
+                        grid.setdefault((gx, gy, gz), []).append(k)
+        for cell in grid.values():
+            for i in range(len(cell)):
+                a = tris[cell[i]]
+                for j in range(i + 1, len(cell)):
+                    pair = (min(cell[i], cell[j]), max(cell[i], cell[j]))
+                    if pair in checked:
+                        continue
+                    checked.add(pair)
+                    b = tris[cell[j]]
+                    if a[0] == b[0] or abs(a[2] - b[2]) > ZFIGHT_PLANE or v_dot(a[1], b[1]) < 0.999:
+                        continue
+                    o = sorted(min(a[4][x], b[4][x]) - max(a[3][x], b[3][x]) for x in range(3))
+                    if o[0] < -ZFIGHT_PLANE or o[1] < 0.01 or o[2] < 0.01:
+                        continue  # (edge to edge, or apart)
+                    small = a if area[a[0]] <= area[b[0]] else b
+                    push.setdefault(small[0], {})[(nx, ny, nz)] = (small[1], small[2])
+    by_name = {nd["name"]: nd for nd in model.nodes}
+    for key, planes_hit in push.items():
+        d, shrink = (0.0, 0.0, 0.0), []
+        for (nx, ny, nz), (n, off) in planes_hit.items():
+            if (round(-nx, 2), round(-ny, 2), round(-nz, 2)) in planes_hit:
+                shrink.append((n, off))
+            else:
+                d = v_add(d, tuple(x * ZFIGHT_OFFSET for x in n))
+        for node, mat, i in pieces[key]:
+            pos = by_name[node]["prims"][mat][0]
+            for j in range(i, i + 3):
+                v = v_add(pos[j], d)
+                for n, off in shrink:
+                    if abs(v_dot(n, pos[j]) - off) < ZFIGHT_PLANE:
+                        v = v_sub(v, tuple(x * ZFIGHT_OFFSET for x in n))
+                pos[j] = v
+    return len(push)
+
+
 # ============================================================== glb writer
 
 def write_glb(model, path):
@@ -1326,17 +1699,18 @@ WARM, COLD, SICK, RED = (1.0, 0.68, 0.38), (0.55, 0.68, 1.0), (0.7, 1.0, 0.75), 
 def build_world():
     W = World()
     rng = random.Random(1413)
+    # (the night's look as tuned in the editor: a colder, clearer moonlit fog)
     env = W.sub("Environment", background_mode=1, background_color="Color(0.055, 0.065, 0.06, 1)",
-                ambient_light_source=2, ambient_light_color="Color(0.42, 0.5, 0.46, 1)", ambient_light_energy=0.6,
-                tonemap_mode=2, fog_enabled="true", fog_light_color="Color(0.15, 0.18, 0.16, 1)",
-                fog_density=0.03, fog_sky_affect=1.0, volumetric_fog_enabled="true",
-                volumetric_fog_density=0.028, volumetric_fog_albedo="Color(0.72, 0.8, 0.74, 1)",
-                volumetric_fog_length=48.0, glow_enabled="true", glow_intensity=0.6,
-                adjustment_enabled="true", adjustment_contrast=1.12, adjustment_saturation=0.55)
+                ambient_light_source=2, ambient_light_color="Color(0.4, 0.5, 0.58, 1)", ambient_light_energy=0.8,
+                tonemap_mode=2, fog_enabled="true", fog_light_color="Color(0.12, 0.16, 0.19, 1)",
+                fog_density=0.024, fog_sky_affect=1.0, volumetric_fog_enabled="true",
+                volumetric_fog_density=0.022, volumetric_fog_albedo="Color(0.72, 0.8, 0.74, 1)",
+                volumetric_fog_length=60.0, glow_enabled="true", glow_intensity=0.6,
+                adjustment_enabled="true", adjustment_contrast=1.18, adjustment_saturation=0.55)
     W.add("Hollowmere", None, "Node3D")
     W.add("WorldEnvironment", typ="WorldEnvironment", environment=env)
     W.add("Moon", typ="DirectionalLight3D", transform="Transform3D(0.8, 0.35, -0.48, 0, 0.81, 0.59, 0.6, -0.47, 0.64, 0, 30, 0)",
-          light_color=color4((0.55, 0.66, 0.72)), light_energy=0.18)
+          light_color=color4((0.55, 0.66, 0.8)), light_energy=0.3)
     for group in ("Terrain", "Buildings", "Props", "Lights", "Signs", "Zones"):
         W.add(group, typ="Node3D")
     W.add("Bounds", typ="StaticBody3D")
@@ -1497,6 +1871,9 @@ def build_world():
     boss = W.add("Boss", "Props", instance=W.res("res://models/char_boss.glb", "PackedScene"),
                  transform=xform(-22, height(-22, -199), -199))  # guards the chapel door, facing the quarry
     W.add("Anim", boss, "Node", script=W.res("res://scripts/humanoid_anim.gd", "Script"))
+    body = W.add("Body", boss, "StaticBody3D")  # (a character model has no collision of its own; Chapter 3 switches
+    W.add("Shape", body, "CollisionShape3D", transform=xform(0, 1.4, 0),  # it off while the prop is away)
+          shape=W.sub("CapsuleShape3D", radius=0.6, height=2.8))
     W.light(-22, 4.5, -196, RED, 0.8, 6, flicker=True)
     W.building("tunnel_gate", 30, -222.5, 0, 7, 2)
     W.label("OLD PASS TUNNEL", 30, 7.8, -221.8, size=72)
@@ -1570,15 +1947,20 @@ def main():
     os.makedirs(os.path.join(ROOT, "maps"), exist_ok=True)
     for fn in MODELS:
         m = fn()
+        moved = unfight(m) if not m.name.startswith("char_") else 0
+        cols = auto_collision(m) if not m.name.startswith(("char_", "item_")) and m.name != "terrain" else []
         write_glb(m, os.path.join(ROOT, "models", m.name + ".glb"))
-        tris = sum(len(p[0]) for nd in m.nodes for p in nd["prims"].values()) // 3
-        print("%-18s %6d tris" % (m.name, tris))
-    with open(os.path.join(ROOT, "maps", "hollowmere.tscn"), "w") as f:
+        tris = sum(len(p[0]) for nd in m.nodes if not _is_col(nd["name"]) or nd["name"].endswith("-col")
+                   for p in nd["prims"].values()) // 3
+        kinds = {k: sum(1 for c in cols if c[0] == k) for k in ("box", "slab", "back", "mesh")}
+        print("%-18s %6d tris" % (m.name, tris) + ("   + collision %s" % ", ".join(
+            "%d %s" % (n, k) for k, n in kinds.items() if n) if cols else "") + ("   %d z-fights" % moved if moved else ""))
+    with open(os.path.join(ROOT, "maps", "hollowmere.tscn"), "w", newline=chr(10)) as f:  # (LF on any OS: the repo's line endings)
         f.write(build_world().text())
     print("maps/hollowmere.tscn written")
     chars = sorted(m for m in (os.path.splitext(f)[0] for f in os.listdir(os.path.join(ROOT, "models")))
                    if m.startswith("char_") and m + ".glb" in os.listdir(os.path.join(ROOT, "models")))
-    with open(os.path.join(ROOT, "maps", "character_gallery.tscn"), "w") as f:
+    with open(os.path.join(ROOT, "maps", "character_gallery.tscn"), "w", newline=chr(10)) as f:
         f.write(build_gallery(chars).text())
     print("maps/character_gallery.tscn written (%d characters)" % len(chars))
 

@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://glo1jyh2bx4t"
-path.s3tc="res://.godot/imported/char_boss_bx_crack.png-377b617c9fb4a2f59fabb0e6940d6801.s3tc.ctex"
+path="res://.godot/imported/char_boss_bx_crack.png-377b617c9fb4a2f59fabb0e6940d6801.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "1c93a334f1972862e38ec53c27f409c1"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_boss_bx_crack.png"
-dest_files=["res://.godot/imported/char_boss_bx_crack.png-377b617c9fb4a2f59fabb0e6940d6801.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_boss_bx_crack.png-377b617c9fb4a2f59fabb0e6940d6801.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

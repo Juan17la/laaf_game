@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cdmlrfsm756so"
-path.s3tc="res://.godot/imported/char_elena_ca_leather.png-3c587f03567f9461f47c108334b9df3d.s3tc.ctex"
+path="res://.godot/imported/char_elena_ca_leather.png-3c587f03567f9461f47c108334b9df3d.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "4dd7f8c30dc2b7ecf1f3ea3505f1fcb0"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_elena_ca_leather.png"
-dest_files=["res://.godot/imported/char_elena_ca_leather.png-3c587f03567f9461f47c108334b9df3d.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_elena_ca_leather.png-3c587f03567f9461f47c108334b9df3d.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

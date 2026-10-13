@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://55ageu66quwa"
-path.s3tc="res://.godot/imported/char_elena_ca_skin.png-f3656775ed1ae518ccf760657640d818.s3tc.ctex"
+path="res://.godot/imported/char_elena_ca_skin.png-f3656775ed1ae518ccf760657640d818.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "30e7c09b15063c9c45d5c96518ab02a7"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_elena_ca_skin.png"
-dest_files=["res://.godot/imported/char_elena_ca_skin.png-f3656775ed1ae518ccf760657640d818.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_elena_ca_skin.png-f3656775ed1ae518ccf760657640d818.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

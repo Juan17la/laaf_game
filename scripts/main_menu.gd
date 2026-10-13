@@ -332,12 +332,22 @@ func _achievements() -> void:
 	_set_page("extra", "EXTRA   %d / %d" % [got, items.size()], items)
 
 
-func _dev() -> void:
-	var items := []
+func _dev(sel := -1) -> void:
+	var items := [["ALL 12 EVIDENCE: %s" % ("ON" if _g.dev_evidence else "OFF"),
+		"Start holding every piece of evidence: the transmitter and the Signal ending (try CH3 · STATIC).",
+		func() -> void:
+			_g.dev_evidence = not _g.dev_evidence
+			_dev(0), true],
+		["START MARK: %s" % ("STORY" if _g.dev_mark < 0.0 else "%d%%" % int(_g.dev_mark)),
+		"Start with the Mark at a set level (its notices, whispers, the heartbeat, the sightings).",
+		func() -> void:
+			var steps := [-1.0, 30.0, 60.0, 95.0]
+			_g.dev_mark = steps[(steps.find(_g.dev_mark) + 1) % steps.size()]
+			_dev(1), true]]
 	for ch in DEV_STEPS:
 		for st in ch[2]:
 			items.append(["%s · %s" % [ch[0], st.to_upper()], "Chapter %s — %s. Normal, nothing saved." % [ch[0], ch[1]],
 				func() -> void:
 					_g.difficulty = 1
 					_g.start(st, "dev"), true])
-	_set_page("dev", "DEV MODE", items)
+	_set_page("dev", "DEV MODE", items, sel)

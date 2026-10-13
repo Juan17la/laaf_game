@@ -252,6 +252,7 @@ func the_harvest(allies: Dictionary) -> void:
 	d.key_light(pit + Vector3(-9, 2.4, 4), Color(1.0, 0.75, 0.45), 1.5, 8.0)
 	d.key_light(pit + Vector3(9, 2.4, -4), Color(1.0, 0.75, 0.45), 1.5, 8.0)
 	Snd.stinger("reveal", -8.0)
+	hud.mark_spike(Feel.SPIKE_SCRIPT)  # it comes home
 	Snd.attach(harv, "harvester", -2.0)
 	var taken := d.actor(MARKED[0], Vector3(2, 0, -150), 0.0)
 	_drag(harv, taken)
@@ -728,7 +729,7 @@ func pop_1413(ending: String) -> void:
 	if run or not h:
 		var prop := d.get_parent().get_node_or_null("Props/Boss") as Node3D
 		if prop:
-			prop.visible = true
+			Chapter3Director.show_boss_prop(prop, true)
 			h = prop
 	if h:
 		_shot(h.global_position + Vector3(1.6, 1.8, 2.8), h.global_position + Vector3.UP * (0.6 if h is Enemy else 2.2))

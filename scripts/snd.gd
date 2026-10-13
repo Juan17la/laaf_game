@@ -39,9 +39,9 @@ static func threat(on: bool, source: Object) -> void:
 		a.threat(on, source)
 
 
-static func sfx(name: String, at: Variant = null, volume_db := 0.0, pitch := 1.0) -> Node:
+static func sfx(name: String, at: Variant = null, volume_db := 0.0, pitch := 1.0, bus := "SFX") -> Node:
 	var a := _a()
-	return a.sfx(name, at, volume_db, pitch) if a else null
+	return a.sfx(name, at, volume_db, pitch, bus) if a else null
 
 
 static func attach(parent: Node3D, name: String, volume_db := 0.0) -> Node:

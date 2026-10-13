@@ -3,10 +3,9 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c0lt2h28dyqj8"
-path.s3tc="res://.godot/imported/char_alex_ca_jeans_mud.png-a6878c46780e7e3dc409f53439b01e6f.s3tc.ctex"
+path="res://.godot/imported/char_alex_ca_jeans_mud.png-a6878c46780e7e3dc409f53439b01e6f.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
 "md5": "ad9a78dc0b250b170d06da776eddc490"
@@ -15,11 +14,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/char_alex_ca_jeans_mud.png"
-dest_files=["res://.godot/imported/char_alex_ca_jeans_mud.png-a6878c46780e7e3dc409f53439b01e6f.s3tc.ctex"]
+dest_files=["res://.godot/imported/char_alex_ca_jeans_mud.png-a6878c46780e7e3dc409f53439b01e6f.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

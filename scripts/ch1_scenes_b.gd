@@ -389,6 +389,7 @@ func blackout() -> void:
 	eyes.position = Vector3(0, 2.6, 0.5)
 	Snd.attach(harvester, "harvester", -4.0)  # the red-eyed hum
 	Snd.stinger("reveal", -8.0)
+	hud.mark_spike(Feel.SPIKE_SCRIPT)  # the first sight of the Harvester
 	var walk := harvester.walk_to(Vector3(-86, 0, 0), 1.6)
 	d.shot(Vector3(-91, 0.6, 3.0), Vector3(-86, 2.0, -8), Vector3(-91, 0.9, 2.0), 6.0)
 	await d.wait(2.6)
@@ -427,3 +428,29 @@ func blackout() -> void:
 	d.release_stand_in()
 	d.cinematic(false)
 	hud.fade(0.0, 1.5)
+
+
+# ------------------------------------------------------------------ side mission: Tripwire (evidence #2)
+
+func tripwire_hint() -> void:
+	## Bark + tip, the first time Alex nears the forest trail's wires. Not awaited.
+	hud.note("Bells on a wire across the trail. Crouch (C) to get close without ringing them; E cuts the wire.",
+		"TRIPWIRE", 5.0)
+	hud.subtitle("Alex", "Bells on a wire. Owen's doorbell.", 2.4)
+
+
+func tripwire_rang() -> void:
+	## The first bell Alex set off (whatever is in earshot is coming). Not awaited.
+	hud.subtitle("Alex", "Damn it. Everyone heard that.", 2.0)
+
+
+func tripwire_cut(left: int) -> void:
+	## One wire cut, `left` to go. Not awaited.
+	hud.banner("WIRE CUT  ·  %d LEFT" % left, Color(0.85, 0.8, 0.6), 0.9)
+
+
+func tripwire_done(clean: bool, tokens: int) -> void:
+	## The last wire: evidence #2 was tied under its stake. Not awaited.
+	hud.banner("EVIDENCE #2" + ("  +%d TOKENS" % tokens if clean else ""), Color(0.8, 0.8, 0.9), 1.2)
+	hud.say([["Alex", "Oilcloth, tied under the stake. Moth's handwriting.", 2.6],
+		["Alex", "\"His wires. He marks whoever gets through.\" Photos of doors.", 3.0]])
