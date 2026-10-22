@@ -52,8 +52,7 @@ func _ready() -> void:
 			var i := AudioServer.bus_count - 1
 			AudioServer.set_bus_name(i, b)
 			AudioServer.set_bus_send(i, "Master")
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), -5.0)
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), -2.0)
+	Settings.apply_audio()  # the buses at the player's volumes (Settings.BUS_DB: the mix as designed at 100%)
 	var rv := AudioEffectReverb.new()
 	rv.wet = 0.06
 	rv.room_size = 0.5

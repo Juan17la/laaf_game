@@ -54,6 +54,8 @@ var _pause: CanvasLayer
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	Settings.load_file()  # the player's settings (scripts/settings.gd): in effect from the first frame
+	Settings.apply()
 	DirAccess.make_dir_recursive_absolute(SAVE_DIR)
 	var cfg := ConfigFile.new()
 	if cfg.load(ACH_FILE) == OK:
