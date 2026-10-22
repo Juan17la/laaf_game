@@ -1,0 +1,50 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0b0a09;--fog:#8a8580;--bone:#e9e2d3;--rust:#9e140f;--amber:#ffb84d}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1280px;height:720px;overflow:hidden;background:var(--ink);font-family:"Barlow Semi Condensed",sans-serif;color:var(--bone)}
+.scene{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 38%,#77726c 0%,#3a3734 50%,#121110 90%)}
+.scene:after{content:"";position:absolute;left:0;right:0;top:50%;height:50%;background:linear-gradient(#292624,#0c0b0a)}
+.vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,transparent 35%,rgba(0,0,0,.8))}
+.bars:before,.bars:after{content:"";position:absolute;left:0;right:0;height:44px;background:#000}.bars:before{top:0}.bars:after{bottom:0}
+.logo{position:absolute;left:0;right:0;top:118px;text-align:center}
+.logo h1{font-family:"IM Fell English",serif;font-weight:400;font-size:136px;letter-spacing:.34em;padding-left:.34em;line-height:1}
+.logo .rule{width:340px;height:2px;background:var(--rust);margin:16px auto 12px}
+.logo p{font-size:15px;letter-spacing:.6em;color:#a9a39a}
+.cast{position:absolute;left:0;right:0;top:392px;text-align:center}
+.cast .f{font-size:13px;letter-spacing:.34em;color:var(--amber);font-weight:700}
+.cast .l{font-family:"IM Fell English",serif;font-size:26px;margin-top:8px;color:#e1d9c9}
+.cast .s{font-size:15px;color:#a9a39a;margin-top:6px}
+.dial{position:absolute;left:110px;right:110px;top:500px;height:120px;border-radius:24px;
+ background:linear-gradient(180deg,rgba(40,34,26,.82),rgba(14,12,10,.9));border:1px solid rgba(255,184,77,.22);
+}
+.ticks{position:absolute;left:28px;right:28px;top:16px;height:18px;
+ background:repeating-linear-gradient(90deg,rgba(233,226,211,.35) 0 1px,transparent 1px 12px)}
+.ticks:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(233,226,211,.6) 0 2px,transparent 2px 60px);height:26px;top:-4px}
+.stations{position:absolute;left:28px;right:28px;top:44px;display:flex;justify-content:space-between}
+.st{width:150px;display:flex;flex-direction:column;align-items:center;gap:6px;opacity:.72}
+.st svg{width:26px;height:26px;stroke:var(--bone);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.st span{font-weight:700;font-size:15px;letter-spacing:.18em}
+.st i{font-style:normal;font-size:11px;color:#b3ada3;letter-spacing:.1em}
+.st.on{opacity:1}.st.on svg{stroke:var(--amber)}.st.on span{color:var(--amber)}
+.needle{position:absolute;top:6px;bottom:6px;left:134px;width:3px;border-radius:2px;background:#ff3a26}
+.help{position:absolute;bottom:58px;left:110px;right:110px;display:flex;justify-content:flex-end;font-size:14px;color:#a9a39a}
+.help span{display:inline-flex;align-items:center;gap:6px;margin-left:18px}
+kbd{font-family:inherit;font-weight:700;font-size:12px;padding:2px 7px;border-radius:5px;border:1px solid #6a645c;color:var(--bone)}
+</style></head><body>
+<div class="scene"></div><div class="vig"></div><div class="bars"></div>
+<div class="logo"><h1>LAAF</h1><div class="rule"></div><p>HOLLOWMERE</p></div>
+<div class="cast"><div class="f">CONTINUE · SAMPLE SAVE</div><div class="l">Chapter I — The Mark · Motel, Room 6</div><div class="s">00:42:17 · Normal · Mark 18%</div></div>
+<div class="dial"><div class="ticks"></div><div class="needle"></div>
+ <div class="stations">
+  <div class="st on"><svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v2h4V3M7 8h10l-1 11a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2zM12 11v4"/></svg><span>CONTINUE</span><i>88.1</i></div>
+  <div class="st"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 8l9 6 9-6"/></svg><span>NEW GAME</span><i>91.4</i></div>
+  <div class="st"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg><span>LOAD</span><i>95.0</i></div>
+  <div class="st"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="12" cy="11" r="3"/></svg><span>EXTRA</span><i>99.7</i></div>
+  <div class="st"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg><span>OPTIONS</span><i>103.3</i></div>
+  <div class="st"><svg viewBox="0 0 24 24"><path d="M14 3H6v18h8M10 12h10M17 9l3 3-3 3"/></svg><span>QUIT</span><i>107.9</i></div>
+ </div></div>
+<div class="help"><span><kbd>A</kbd><kbd>D</kbd> tune</span><span><kbd>ENTER</kbd> listen</span><span><kbd>ESC</kbd> back</span></div>
+</body></html>

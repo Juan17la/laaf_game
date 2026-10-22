@@ -1,0 +1,60 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0b0a09;--bone:#e9e2d3;--rust:#9e140f;--amber:#ffb84d}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1280px;height:720px;overflow:hidden;background:var(--ink);font-family:"Barlow Semi Condensed",sans-serif;color:var(--bone)}
+.scene{position:absolute;inset:0;background:radial-gradient(ellipse 50% 45% at 30% 45%,#716c66,#393633 50%,#121110 90%)}
+.scene:after{content:"";position:absolute;left:0;right:0;top:52%;height:48%;background:linear-gradient(#292624,#0c0b0a)}
+.vig{position:absolute;inset:0;background:linear-gradient(90deg,transparent 40%,rgba(0,0,0,.7))}
+.bars:before,.bars:after{content:"";position:absolute;left:0;right:0;height:44px;background:#000}.bars:before{top:0}.bars:after{bottom:0}
+.logo{position:absolute;left:72px;top:96px}
+.logo h1{font-family:"IM Fell English",serif;font-weight:400;font-size:104px;letter-spacing:.3em;line-height:1}
+.logo .rule{width:280px;height:2px;background:var(--rust);margin:14px 0 10px}
+.logo p{font-size:14px;letter-spacing:.6em;color:#a9a39a}
+.cap{position:absolute;left:72px;bottom:72px}
+.cap .t{color:#d06a5d;font-size:13px;letter-spacing:.3em;font-weight:700}
+.cap .l{font-family:"IM Fell English",serif;font-style:italic;font-size:19px;color:#bdb6a8;margin-top:6px}
+.folder{position:absolute;right:80px;top:84px;width:440px;height:552px;border-radius:20px;background:linear-gradient(170deg,#211d19,#121010);
+ border:1px solid rgba(233,226,211,.12);padding:30px 30px 26px 30px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.tabs{position:absolute;left:-66px;top:40px;display:flex;flex-direction:column;gap:8px}
+.tab{width:66px;height:58px;border-radius:14px 0 0 14px;background:#1a1714;border:1px solid rgba(233,226,211,.1);border-right:none;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;opacity:.6}
+.tab svg{width:22px;height:22px;stroke:var(--bone);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tab span{font-size:9px;font-weight:700;letter-spacing:.14em}
+.tab.on{background:#221e1a;opacity:1}.tab.on svg{stroke:var(--amber)}
+.k{font-size:13px;letter-spacing:.26em;color:var(--amber);font-weight:700}
+.photo{margin:16px 0 18px;height:200px;border-radius:12px;background:radial-gradient(ellipse at 50% 40%,#8a847c,#3b3632 70%);
+ border:6px solid #d9d0bf;transform:rotate(-1.5deg);position:relative}
+.photo:after{content:"ROOM 6";position:absolute;right:10px;bottom:8px;font-size:11px;letter-spacing:.2em;color:#1a1612;font-weight:700}
+h2{font-family:"IM Fell English",serif;font-weight:400;font-size:34px}
+.meta{display:flex;gap:8px;margin:10px 0 18px}
+.chip{padding:5px 11px;border-radius:999px;background:rgba(233,226,211,.08);font-size:14px;color:#cfc8ba}
+.chip.mark{background:rgba(158,20,15,.3);color:#f0b3a8}
+.obj{display:flex;gap:10px;align-items:flex-start;font-size:16px;color:#d8d0c1;padding:12px 14px;border-radius:12px;background:rgba(255,184,77,.07)}
+.obj b{color:var(--amber);font-size:12px;letter-spacing:.2em}
+.go{position:absolute;left:30px;right:30px;bottom:26px;height:54px;border-radius:14px;background:linear-gradient(#b0170f,#6e0d08);
+ display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-weight:700;font-size:17px;letter-spacing:.2em}
+kbd{font-family:inherit;font-weight:700;font-size:12px;padding:2px 7px;border-radius:5px;border:1px solid rgba(233,226,211,.5)}
+</style></head><body>
+<div class="scene"></div><div class="vig"></div><div class="bars"></div>
+<div class="logo"><h1>LAAF</h1><div class="rule"></div><p>HOLLOWMERE</p></div>
+<div class="cap"><div class="t">ROOM 6</div><div class="l">A shape behind the glass. A hiss. The smell of burning.</div></div>
+<div class="folder">
+ <div class="tabs">
+  <div class="tab on"><svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v2h4V3M7 8h10l-1 11a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2z"/></svg><span>CONT.</span></div>
+  <div class="tab"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 8l9 6 9-6"/></svg><span>NEW</span></div>
+  <div class="tab"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/></svg><span>LOAD</span></div>
+  <div class="tab"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="12" cy="11" r="3"/></svg><span>EXTRA</span></div>
+  <div class="tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg><span>OPTIONS</span></div>
+  <div class="tab"><svg viewBox="0 0 24 24"><path d="M14 3H6v18h8M10 12h10"/></svg><span>QUIT</span></div>
+ </div>
+ <div class="k">CONTINUE · SAMPLE SAVE</div>
+ <div class="photo"></div>
+ <h2>Chapter I — The Mark</h2>
+ <div class="meta"><div class="chip">00:42:17</div><div class="chip">Normal</div><div class="chip mark">Mark 18%</div></div>
+ <div class="obj"><b>NEXT</b>Find the key to the sawmill office.</div>
+ <div class="go"><span>RESUME</span><kbd>ENTER</kbd></div>
+</div>
+</body></html>

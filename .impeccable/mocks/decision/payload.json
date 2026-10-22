@@ -1,0 +1,50 @@
+{
+  "title": "Choose the main menu's structure",
+  "question": "Same world for all three: fog, grain, bone-white type, rust red, lantern amber. What changes is how the menu is built. Pick one; steer or re-roll if none fits.",
+  "options": [
+    {
+      "id": "key-rack",
+      "kind": "assigned",
+      "label": "Room 6 Key Rack",
+      "kicker": "THE ROLL",
+      "lineage": "the Hollowmere motel's reception key board",
+      "thesis": "The menu is the motel's key rack: every option is a rounded key fob with an icon, and the one you pick swings forward and tells you where it leads.",
+      "palette": ["#0b0a09", "#8a8580", "#e9e2d3", "#9e140f", "#ffb84d"],
+      "materials": ["fog scene behind", "rounded enamel key fobs", "brass hooks", "film grain"],
+      "viewport": "The live fog scene fills the screen. The logo is top-left. A horizontal row of six fobs hangs from a brass rail at the lower third. The selected fob drops forward under an amber light, and a save-preview card sits above it: chapter, place, play time, Mark %.",
+      "risk": "The fobs could read as a novelty if the motion is cute rather than heavy; they have to swing like real metal.",
+      "html": ".impeccable/mocks/decision/key-rack.html",
+      "htmlFrame": "1280x720"
+    },
+    {
+      "id": "radio-dial",
+      "kind": "dealt",
+      "label": "Channel 7 Dial",
+      "kicker": "DEALT",
+      "lineage": "Moth's pocket radio, Silent Hill's static",
+      "thesis": "The menu is a radio band: options are stations along a dial at the bottom, a needle glides between them, and static fills the gaps.",
+      "palette": ["#0b0a09", "#8a8580", "#e9e2d3", "#9e140f", "#ffb84d"],
+      "materials": ["fog scene behind", "backlit dial glass", "needle", "static noise"],
+      "viewport": "The fog scene is full-bleed with the logo large and centred high. Along the bottom, a rounded glass dial carries six station marks, each with an icon and a frequency number. The amber needle sits on the selection, and its description reads above the dial like a broadcast.",
+      "risk": "A horizontal dial is slower to scan than a column; deep pages (Load, Dev) need their own vertical layout.",
+      "html": ".impeccable/mocks/decision/radio-dial.html",
+      "htmlFrame": "1280x720"
+    },
+    {
+      "id": "dossier",
+      "kind": "dealt",
+      "label": "Case Dossier",
+      "kicker": "DEALT",
+      "lineage": "the missing-person file on Alex's sister",
+      "thesis": "The menu is a case folder lying in the fog: rounded index tabs are the pages, and inside are a postcard, save slots as evidence cards, and the next step.",
+      "palette": ["#0b0a09", "#8a8580", "#e9e2d3", "#9e140f", "#ffb84d"],
+      "materials": ["fog scene behind", "dark folder with rounded tabs", "pinned photo", "film grain"],
+      "viewport": "The fog scene is on the left 60%, with the logo over it. On the right, a dark folder with rounded tabs (Continue, New, Load, Extra) runs down its edge. The open tab shows the Continue card large: a polaroid of where you saved, the chapter and the objective.",
+      "risk": "It's the most 'UI panel' of the three; without heavy material it slides toward a generic settings sheet.",
+      "html": ".impeccable/mocks/decision/dossier.html",
+      "htmlFrame": "1280x720"
+    }
+  ],
+  "reroll": true,
+  "steer": true
+}
