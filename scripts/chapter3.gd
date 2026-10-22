@@ -618,7 +618,7 @@ func _allies_help(called: Array[Enemy]) -> void:
 			return
 		match m:
 			"owen":  # fire at its feet: light stuns it
-				var fire := FuelBarrel.make(self, harvester.global_position + Vector3(1.5, 0, 1.5))
+				var fire := FuelBarrel.make(self, harvester.global_position + Vector3(1.5, 0, 1.5), false)
 				fire.hit(0.0, fire.global_position)
 				harvester.light_stun()
 			"nora":  # the lanterns they carry go out: nearly blind
