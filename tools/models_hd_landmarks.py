@@ -404,7 +404,9 @@ def m_festival_stall():
         beam(m, "hd_timber", (-1.18 + i * 0.295, 0.05, 0.87), (-1.18 + i * 0.295, 0.88, 0.87), 0.05, 0.02)
     m.box("hd_awning", (2.3, 0.4, 0.03), (0, 1.2, 0.88), faces={"+y": "hd_timber", "-y": "hd_timber"})  # sign board
     m.box("moth", (0.36, 0.36, 0.01), (0.8, 1.2, 0.9))
-    m.box("hd_lumber", (2.3, 0.04, 0.35), (0, 1.1, -0.72))  # back shelf
+    m.use("frame-col")  # back shelf: the stall's back is open, so it's walked into (too thin for auto collision)
+    m.box("hd_lumber", (2.3, 0.04, 0.35), (0, 1.1, -0.72))
+    m.use("detail")
     for i in range(7):
         x = -1.0 + i * 0.33
         hh = rng.uniform(0.14, 0.22)

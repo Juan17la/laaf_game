@@ -933,8 +933,9 @@ def _clinic_dressing(m, w, d, rng):
     # exam room: eye chart, privacy screen, a sink, the scales
     K.board(m, "ik_chart", CL_X[1] - 0.08, 1.6, -3.0, -90, 0.6, 0.9)
     K.sink(m, -9.3, -3.5, 90)
-    for k in range(3):
-        m.box("ik_curtain", (0.9, 1.6, 0.03), (-6.5 + k * 0.85, 0.95, -2.2), (0, 20 - 20 * k, 0))
+    with K._On(m, "curtain_cloth"):  # (cloth, by the back door: no collision, like the bay curtains)
+        for k in range(3):
+            m.box("ik_curtain", (0.9, 1.6, 0.03), (-6.5 + k * 0.85, 0.95, -2.2), (0, 20 - 20 * k, 0))
     # pharmacy: order sheets, a fallen tray of pills
     K.board(m, "ik_cork", CL_X[2] - 0.08, 1.7, -2.4, -90, 0.8, 0.6)
     for k in range(9):

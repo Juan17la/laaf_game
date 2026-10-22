@@ -737,8 +737,10 @@ func _step_square() -> void:
 	# optional practice: tin moths on a festival stall
 	objective("Optional: knock down the 5 tin moths · Talk to Grady when ready", _grady)
 	var left := [5]
+	var targets: Array[Node] = []
 	for i in 5:
 		var tgt := Target.new()
+		targets.append(tgt)
 		tgt.collision_layer = 2
 		var col := CollisionShape3D.new()
 		var box := BoxShape3D.new()
@@ -758,10 +760,13 @@ func _step_square() -> void:
 		tgt.global_position = Vector3(-4.0 + i * 2.0, 1.4 + 0.3 * (i % 2), -10.0)
 		tgt.down.connect(func() -> void:
 			left[0] -= 1
-			if left[0] == 0:
+			if left[0] == 0 and not flags.get("moths", false):  # once a run: a reload replays the step
+				flags["moths"] = true
 				flags.tokens += 25
 				hud.banner("+25 TOKENS", Color(0.9, 0.8, 0.4), 1.0))
 	await _use(GRADY_SPOT, "Tell Grady you're ready")
+	for t in targets:  # the stall's done: no tin moths left hanging over the square for the rest of the game
+		t.queue_free()
 	await scenes_b.moth_sawmill_call(_grady)
 
 
@@ -847,12 +852,12 @@ func _step_boss() -> void:
 	await _owen.downed
 	hud.boss_bar("", -1.0)
 	_on_reset = Callable()
+	var choice := [""]
+	_owen.died.connect(func(_e: Enemy) -> void: choice[0] = "killed")  # (before the scene: no death goes unheard)
 	await scenes_b.boss_down(_owen)
 	objective("SPARE him (E) — or shoot to KILL", _owen)
-	var choice := [""]
 	var spare := Interactable.make(self, _owen.global_position + Vector3.UP * 1.0, "Spare Owen",
 		func(_b: Node) -> void: choice[0] = "spared")
-	_owen.died.connect(func(_e: Enemy) -> void: choice[0] = "killed")
 	while choice[0] == "":
 		await get_tree().physics_frame
 	spare.queue_free()

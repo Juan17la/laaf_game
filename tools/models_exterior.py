@@ -452,6 +452,23 @@ def m_warning_sign():
     return m
 
 
+def m_town_sign():
+    """The welcome board on the bridge road: faces +Z, board centred at y=2.2 with its front at z=0 (the text,
+    "HOLLOWMERE  POP. 1413", is a Label3D just in front of it: build_assets.build_world)."""
+    m = B.Model("ext_town_sign")
+    m.node("post-col")
+    for x in (-2.55, 2.55):
+        post(m, "hs_wood", x, -0.1, 2.75, 0.06, power=6, seg=6)
+    m.box("planks", (5.6, 0.75, 0.08), (0, 2.2, -0.04))
+    m.node("detail")
+    for y in (1.8, 2.6):
+        m.box("hs_wood", (5.7, 0.07, 0.05), (0, y, 0.005))  # top and bottom rails
+    for x in (-2.55, 2.55):
+        for y in (1.95, 2.45):
+            m.cyl("rust", 0.02, 0.02, 0.02, (x, y, 0.01), (90, 0, 0), seg=6)  # bolts
+    return m
+
+
 def m_well():
     """Dry-stone ring, shingled gable, crank + rope + bucket."""
     m = B.Model("ext_well")
@@ -573,7 +590,7 @@ def m_burnt_car():
 
 MODELS = [m_tall_grass, m_bush, m_boulder, m_phone_booth, m_mailbox, m_dumpster, m_trash_can, m_bus_stop,
           m_broken_fence, m_hanging_trap, m_fuel_barrels, m_generator, m_warning_sign, m_well, m_rowboat,
-          m_watchtower, m_burnt_car]
+          m_watchtower, m_burnt_car, m_town_sign]
 
 
 def place(W, rng):

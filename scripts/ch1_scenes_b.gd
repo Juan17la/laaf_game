@@ -217,7 +217,7 @@ func boss_intro(owen: Enemy) -> void:
 	await hud.subtitle("Owen", "That's not yours.", 1.8)
 	d.track(owen, Vector3(1.6, 0.2, 2.4), Vector3(0, 1.4, 0))
 	await hud.subtitle("Alex", "Owen. You marked me.", 1.8)
-	await out
+	await Actor.settle(out)  # (the walk may be over by now)
 	_face_node(owen, alex.global_position)
 	await _talk(owen, alex, "Owen", "I delivered you. There's a difference.", 1.0, 2.6)
 	alex.gesture("clutch_hand", 2.4)
@@ -255,6 +255,7 @@ func boss_phase2(owen: Enemy) -> void:
 func boss_down(owen: Enemy) -> void:
 	## Owen is on his knees (Enemy.State.DOWN). The spare / kill prompt appears after this.
 	var a := _anim(owen)
+	owen.set_physics_process(false)  # frozen for the scene: an arrow / flare still in the air can't kill him
 	d.cinematic(true)
 	var o := owen.global_position
 	var from := _alex_near(o, 2.6)
@@ -266,6 +267,7 @@ func boss_down(owen: Enemy) -> void:
 	a.look = Vector2(0, -0.3)
 	await hud.subtitle("Owen", "Everyone else did.", 2.0)
 	a.look = Vector2.ZERO
+	owen.set_physics_process(true)
 	d.cinematic(false)
 
 
@@ -398,7 +400,7 @@ func blackout() -> void:
 	d.ots(harvester, alex, 1.0)
 	alex.look(harvester)
 	await hud.subtitle("Alex", "What is that...", 1.8)
-	await walk
+	await Actor.settle(walk)
 	# it stops, and turns its head toward Alex
 	d.shot(Vector3(-88.5, 2.6, 2.2), Vector3(-86, 2.6, 0), Vector3(-88.0, 2.7, 1.6), 3.0)
 	harvester.look(alex)

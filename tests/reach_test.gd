@@ -25,7 +25,7 @@ func _run() -> void:
 		"desk4": Vector3(107.6, 0.9, -7.8), "breaker": Vector3(108, 1.3, -17.2), "key2": Vector3(107.6, 0.9, 12.2),
 		"drawing": Vector3(111, 0.9, 6.6), "triage": Vector3(75, 1.0, -88), "morgue": Vector3(66, 1.0, -112.8),
 		"pharmacy": Vector3(78.4, 1.2, -102), "sam": Vector3(78.2, 1.0, -113), "mask": Vector3(72, 1.0, -83.2),
-		"ladder": Vector3(80.4, 1.2, -110), "hvac": Vector3(74.5, 8.4, -100), "key3": Vector3(69.2, 1.2, -103),
+		"ladder": Vector3(80.4, 1.2, -110), "hvac": Chapter2Director.HVAC, "key3": Vector3(69.2, 1.2, -103),
 		"shotgun": Vector3(14.5, 0.4, 105.5), "bat": Vector3(104.5, 0.4, 4), "stash": Vector3(-100.6, 0.8, -74.0),
 		"photo": Vector3(-78.0, 1.0, -103.0), "register": Vector3(-62.0, 1.0, -104.5), "recorder": Vector3(7.4, 1.0, 144.0),
 		"chapel_door": Vector3(-22, 1.2, -204.2), "gate": Vector3(30, 1.2, -219.8), "cage1": Vector3(2, 1.0, -199.7),

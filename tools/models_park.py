@@ -525,8 +525,8 @@ def m_weeds():
     m = B.Model("park_weeds")
     m.node("blades")
     for yaw in (0, 60, 120):
-        m.decal("park_weedcard", 0.55, 0.4, (0, 0.27, 0), (0, yaw, 0))
-    flat(m, "park_leafcard", 0.5, 0.5, (0, 0.082, 0), 30)
+        m.decal("park_weedcard", 0.55, 0.4, (0, 0.2, 0), (0, yaw, 0))
+    flat(m, "park_leafcard", 0.5, 0.5, (0, 0.012, 0), 30)  # (placed on the paving: just over it at any scale)
     return m
 
 
@@ -698,7 +698,8 @@ def place(W, rng):
     W.inst("park_gate", -17.25, 29.3)
 
     # --- wrought-iron fence round the lawns: gaps for the lanes, planters and a pulled-out panel
-    fence(W, "x", 29.3, (-5.8, -8.8, -14.8, -19.7, -22.7, -25.7, -27.8), lean=(-22.7,))  # south, west of the entry
+    fence(W, "x", 29.3, (-5.8, -8.8, -14.8, -19.7, -22.7, -25.7, -27.8), lean=(-22.7, -27.8))  # south, west of the
+    # entry (the corner panel overlaps its neighbour by 0.9 m: knocked askew, so their rails don't z-fight)
     fence(W, "x", 29.3, (8.8, 11.8, 14.8, 17.8, 20.8, 23.8, 26.8), lean=(20.8,))          # south, east of the bus stop
     fence(W, "z", -29.3, (-10.2, -5.8, 5.8, 8.8, 11.8, 14.8, 17.8, 22.3, 25.3, 28.3))       # west (planter at z=20)
     fence(W, "z", 29.3, (-8.8, -5.8, 5.8, 10.2, 13.2, 19.2, 22.2, 25.2, 28.2), lean=(10.2,))  # east (gap: dirt path)
@@ -743,7 +744,7 @@ def place(W, rng):
     while placed < 44:
         x, z = rng.uniform(-29, 29), rng.uniform(-29, 29)
         if clear_of(x, z, keep):
-            W.inst("park_weeds", x, z, rng.uniform(0, 360), rng.uniform(0.7, 1.4))
+            W.inst("park_weeds", x, z, rng.uniform(0, 360), rng.uniform(0.7, 1.4), y=0.07)  # (on the lots' top)
             placed += 1
     for _ in range(22):
         x, z = rng.uniform(-29, 29), rng.uniform(-11, 29)

@@ -786,7 +786,7 @@ func traitor() -> void:
 	_lock(HIDE + Vector3(0.1, 0.6, -0.3), 45.0)  # his hand on the cold marble
 	await d.wait(1.4)
 	alex.gesture("")
-	await mw
+	await Actor.settle(mw)  # (the walk may be over by now)
 	marcus.face(elena.global_position)
 	marcus.look(elena)
 	elena.face(marcus.global_position)

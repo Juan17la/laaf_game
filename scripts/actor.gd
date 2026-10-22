@@ -95,6 +95,15 @@ func run_to(p: Vector3) -> Signal:
 	return walk_to(p, 4.5)
 
 
+static func settle(walk: Signal) -> void:
+	## Coroutine: waits out a walk_to / face (or any tween's `finished`) started earlier and awaited only now. It
+	## may be over already: its tween is then gone, and awaiting a freed tween's signal ends the caller with an
+	## error, the scene never returning (a cinematic soft-lock). A paused tween (pause menu) is still waited for.
+	var tw := walk.get_object() as Tween
+	if tw and tw.is_valid():
+		await walk
+
+
 func gesture(g: String, hold := -1.0) -> void:
 	## Starts a gesture; with hold > 0 it ends by itself after hold seconds.
 	anim.gesture = g

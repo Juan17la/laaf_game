@@ -266,7 +266,7 @@ func the_harvest(allies: Dictionary) -> void:
 	await hud.subtitle("Lucía", "Alex, don't go out there. It's not what you think it is.", 2.8)
 	lucia.gesture("")
 	d.track(harv, Vector3(-4.0, 1.4, -3.0), Vector3(0, 1.8, 0))
-	await steps
+	await Actor.settle(steps)  # (the walk may be over by now)
 	taken.set_meta("dropped", true)  # it lets go of the ankle: the body stays where it fell
 	harv.anim.ik_w["L"] = 0.0
 	taken.global_transform = Transform3D(Basis(), Chapter3Director.HARV_SPAWN + Vector3(1.2, 0, 0.8))

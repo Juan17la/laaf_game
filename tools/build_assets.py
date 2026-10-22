@@ -877,13 +877,20 @@ def bake_ao(model, radius=None, gain=None, floor=None):
 #   slab  a collider piece thinner than COL_THIN (a door leaf, a floor, a sheet with no back side): a COL_THICK slab
 #   back  an open collider surface (a quad, a lathe's tube: one-sided, so walkable from behind or from inside once
 #         past it): its triangles again, facing the other way
+#   group small pieces that touch (a stack of stock boxes, sacks, a woodpile, a stump and its axe) judged as one,
+#         one box round them all
+# "Covered" means inside the collision that is already there: a compact collider piece (a box, a cylinder) by its
+# bounding box, a hollow one (a room's walls joined at the corners: its bounding box is the whole room) only where a
+# point really is inside its solid (_Solids), so the furniture standing in a room is not taken for part of the walls.
 # Foliage and decals (PASSABLE_TEX, PASSABLE_NODES) stay passable.
 
 PASSABLE_TEX = {"moth", "eye", "ext_grasscard", "ext_leafcard", "hd_needles", "park_leafcard", "park_weedcard",
                 "park_crack", "park_canopycard", "park_streak", "town_poster", "town_graffiti", "hs_crack"}
-PASSABLE_NODES = ("needles", "branches", "leaves", "litter", "wires", "water", "smoke", "slabs", "AoFlags")
+PASSABLE_NODES = ("needles", "branches", "leaves", "litter", "wires", "water", "smoke", "slabs", "AoFlags",
+                  "ajar_leaves", "curtain_cloth")  # (interior_kit: open door leaves, bay curtains: never blocking)
 COL_REACH = 2.0  # m over the floor under it: a piece starting higher is out of the player's reach
-COL_MIN_H = 0.45  # m: lower pieces are stepped over / through (curbs, rubble, stone slabs), as before
+COL_MIN_H = 0.45  # m: pieces reaching no higher over the floor are stepped over / through (curbs, rubble, stone
+#                   slabs); a piece hanging higher (a window AC unit at hip height) is walked into however thin it is
 COL_MIN_FACE = 0.35  # m² of width x height for a piece to stop the player
 COL_PROTRUDE = 0.15  # m a piece may stand proud of the colliders around it before it gets its own
 COL_THIN = 0.12  # m: collider pieces thinner than this get a slab...
@@ -891,6 +898,12 @@ COL_THICK = 0.3  # ...this thick (sideways: centred; floors: downward, so the wa
 COL_SHEET = 0.8  # piece is a sheet (both its larger sides at least this): smaller thin parts (a chair back, a sign)
 COL_THIN_SMALL = 0.12  # only get this much, so furniture doesn't swell into the walkways
 COL_GIANT = 40.0  # m³: a bigger loose piece is reported, not boxed (an OBB that big could plug a passage)
+COL_COMPACT = 0.4  # a collider piece enclosing at least this fraction of its bounding box covers by that box
+COL_REST = 0.3  # m: a piece with collision this close under it rests on it (it doesn't hang in the air)
+COL_HEAD = 1.7  # m: a piece hanging higher than this is over Alex's head (an IV stand's hook bar): own height only
+COL_TOUCH = 0.02  # m: small loose pieces closer than this form one group...
+COL_GROUP_THIN = 0.05  # m: ...unless thinner than this (a rug, a board, a stair tread, a rail post: never a group)...
+COL_GROUP_MAX = 2.6  # m: ...boxed only while no side of it is longer (a chain of trim along a facade is not a prop)
 
 
 def _is_col(name):
@@ -1014,6 +1027,99 @@ def _thick(h):
     return COL_THICK if sorted(h)[1] * 2 >= COL_SHEET else COL_THIN_SMALL
 
 
+def _compact(tris):
+    """A piece that covers by its bounding box: one box (even tilted: a stair's ramp covers its steps, as authored),
+    or a piece enclosing most of that box (a cylinder), unlike a room's walls joined at the corners. Volume by the
+    divergence theorem over the closed, outward-wound piece."""
+    if len(tris) <= 12:
+        return True
+    lo, hi = _aabb(tris)
+    vol = abs(sum(v_dot(a, v_cross(b, c)) for a, b, c in tris)) / 6.0
+    return vol >= COL_COMPACT * math.prod(hi[i] - lo[i] + 0.01 for i in range(3))
+
+
+def _touching(pieces):
+    """Groups of 2+ pieces [(tris, lo, hi), ...] whose bounding boxes come within COL_TOUCH of each other:
+    [(tris, lo, hi), ...] per group."""
+    parent = list(range(len(pieces)))
+
+    def find(i):
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+    grid = {}
+    for i, (_, lo, hi) in enumerate(pieces):
+        cells = [(gx, gy, gz) for gx in range(math.floor(lo[0] * 2), math.floor(hi[0] * 2) + 1)
+                 for gy in range(math.floor(lo[1] * 2), math.floor(hi[1] * 2) + 1)
+                 for gz in range(math.floor(lo[2] * 2), math.floor(hi[2] * 2) + 1)]
+        near = {j for cell in cells for j in grid.get(cell, ())}
+        for j in near:
+            jlo, jhi = pieces[j][1], pieces[j][2]
+            if all(lo[k] <= jhi[k] + COL_TOUCH and jlo[k] <= hi[k] + COL_TOUCH for k in range(3)):
+                parent[find(i)] = find(j)
+        for cell in cells:
+            grid.setdefault(cell, []).append(i)
+    groups = {}
+    for i in range(len(pieces)):
+        groups.setdefault(find(i), []).append(i)
+    out = []
+    for members in groups.values():
+        if len(members) > 1:
+            tris = [t for i in members for t in pieces[i][0]]
+            out.append((tris,) + _aabb(tris))
+    return out
+
+
+class _Solids:
+    """Point-in-collider test for a model's collider triangles: straight up from a point inside a closed solid, the
+    first face met is one of its top faces (facing up); from outside it is an underside, or nothing."""
+    CELL = 1.0
+
+    def __init__(self, tris):
+        self.grid = {}
+        for a, b, c in tris:
+            n = v_cross(v_sub(b, a), v_sub(c, a))
+            ln = math.sqrt(v_dot(n, n))
+            if ln < 1e-9 or abs(n[1]) / ln < 1e-3:
+                continue  # (a wall face: a vertical ray never crosses it)
+            lo, hi = _aabb([(a, b, c)])
+            for gx in range(math.floor(lo[0] / self.CELL), math.floor(hi[0] / self.CELL) + 1):
+                for gz in range(math.floor(lo[2] / self.CELL), math.floor(hi[2] / self.CELL) + 1):
+                    self.grid.setdefault((gx, gz), []).append((a, b, c, n[1] > 0))
+
+    def inside(self, p):
+        return self._first(p, 1)[1]
+
+    def below(self, p):
+        """Height of the first collider face straight under p, or None."""
+        return self._first(p, -1)[0]
+
+    def _first(self, p, way):
+        """(height, facing up) of the first collider face met going straight up (way 1) or down (-1) from p."""
+        best, up = None, False
+        for a, b, c, facing_up in self.grid.get((math.floor(p[0] / self.CELL), math.floor(p[2] / self.CELL)), ()):
+            # where the vertical line through p crosses the triangle (barycentric in XZ)
+            d = (b[2] - c[2]) * (a[0] - c[0]) + (c[0] - b[0]) * (a[2] - c[2])
+            if abs(d) < 1e-12:
+                continue
+            w0 = ((b[2] - c[2]) * (p[0] - c[0]) + (c[0] - b[0]) * (p[2] - c[2])) / d
+            w1 = ((c[2] - a[2]) * (p[0] - c[0]) + (a[0] - c[0]) * (p[2] - c[2])) / d
+            w2 = 1.0 - w0 - w1
+            if min(w0, w1, w2) < -1e-6:
+                continue
+            y = w0 * a[1] + w1 * b[1] + w2 * c[1]
+            if (y - p[1]) * way > 0 and (best is None or (best - y) * way > 0):
+                best, up = y, facing_up
+        return best, up
+
+    def fraction(self, lo, hi):
+        """Share of a 3 x 2 x 3 grid of points in the box (lo, hi) that are inside a collider."""
+        pts = [(lo[0] + (hi[0] - lo[0]) * fx, lo[1] + (hi[1] - lo[1]) * fy, lo[2] + (hi[2] - lo[2]) * fz)
+               for fx in (0.17, 0.5, 0.83) for fy in (0.25, 0.75) for fz in (0.17, 0.5, 0.83)]
+        return sum(1 for p in pts if self.inside(p)) / len(pts)
+
+
 def auto_collision(model):
     """Adds the "auto-colonly" node (see the section comment). Returns a report: [(kind, piece box), ...]."""
     off = _node_offsets(model)
@@ -1035,36 +1141,69 @@ def auto_collision(model):
             if ln > 1e-9 and n[1] / ln > 0.9:
                 area[round(a[1] * 20) / 20] = area.get(round(a[1] * 20) / 20, 0.0) + ln / 2
     floors = sorted({0.0} | {y for y, ar in area.items() if ar >= 3.0})  # (a wall top is no floor)
-    col_boxes = [_aabb(t) for t in col]
-    grown = [(tuple(x - 0.05 for x in lo), tuple(x + 0.05 for x in hi)) for lo, hi in col_boxes]
+    grow = lambda lo, hi: (tuple(x - 0.05 for x in lo), tuple(x + 0.05 for x in hi))
+    grown = [grow(*_aabb(t)) for t in col if _compact(t)]
+    grown_all = [grow(*_aabb(t)) for t in col]  # (giant pieces: a foundation, a plinth round the walls)
+    solids = _Solids([tri for t in col for tri in t])
+
+    def ground(lo):
+        return max((f for f in floors if f <= lo[1] + 0.1), default=lo[1])
 
     def reach(lo, hi, floor=False):
-        ground = max((f for f in floors if f <= lo[1] + 0.1), default=lo[1])
-        return lo[1] - ground < COL_REACH and (floor or hi[1] > ground + 0.15)
+        return lo[1] - ground(lo) < COL_REACH and (floor or hi[1] > ground(lo) + 0.15)
 
-    boxes, copies, report = [], [], []
-    for tris in loose:
-        lo, hi = _aabb(tris)
-        size = v_sub(hi, lo)
-        if size[1] < COL_MIN_H or max(size[0], size[2]) * min(size[1], COL_REACH) < COL_MIN_FACE or not reach(lo, hi):
-            continue
+    def big(lo, hi):
+        """Walked into: reaching COL_MIN_H over its floor, with COL_MIN_FACE of width x height up to that. A piece
+        resting on collision (a stair tread on its ramp, a TV on its dresser) only counts its own height."""
+        under = solids.below(((lo[0] + hi[0]) / 2, lo[1] + 0.01, (lo[2] + hi[2]) / 2))
+        rests = under is not None and lo[1] - under < COL_REST
+        tall = hi[1] - lo[1]
+        if not rests and lo[1] - ground(lo) <= COL_HEAD:
+            tall = max(tall, hi[1] - ground(lo))
+        return tall >= COL_MIN_H and max(hi[0] - lo[0], hi[2] - lo[2]) * min(tall, COL_REACH) >= COL_MIN_FACE \
+            and reach(lo, hi)
+
+    def covered(lo, hi, giant=False):
+        """Stands within the model's colliders: its core (the allowed protrusion trimmed off the sides, never
+        below 2 cm) mostly inside compact collider boxes, or inside the colliders' solid. A giant piece (a building's
+        base) only has to be inside any collider's box, as it always did: it is no prop to walk into."""
         core_lo, core_hi = list(lo), list(hi)
-        for i in (0, 2):  # trim the allowed protrusion off the sides (never below 2 cm)
-            cut = min(COL_PROTRUDE, max(size[i] - 0.02, 0.0) / 2)
+        for i in (0, 2):
+            cut = min(COL_PROTRUDE, max(hi[i] - lo[i] - 0.02, 0.0) / 2)
             core_lo[i] += cut
             core_hi[i] -= cut
         core_lo = [x - 0.01 for x in core_lo]
         core_hi = [x + 0.01 for x in core_hi]
         vol = (core_hi[0] - core_lo[0]) * (core_hi[1] - core_lo[1]) * (core_hi[2] - core_lo[2])
-        if _overlap(core_lo, core_hi, grown) >= 0.5 * vol:
-            continue  # stands within its model's colliders
+        if giant:
+            return _overlap(core_lo, core_hi, grown_all) >= 0.5 * vol
+        return _overlap(core_lo, core_hi, grown) >= 0.5 * vol or solids.fraction(core_lo, core_hi) >= 0.5
+
+    boxes, copies, report = [], [], []
+
+    def add(tris, lo, hi, kind="box"):
         c, ax, h = _obb(tris)
         if 8 * h[0] * h[1] * h[2] > COL_GIANT:
             copies.append((tris, True, _open(tris)))
             report.append(("mesh", (lo, hi)))
-            continue
+            return
         boxes.append((c, ax, [max(x, _thick(h) / 2) for x in h]))
-        report.append(("box", (lo, hi)))
+        report.append((kind, (lo, hi)))
+
+    small = []
+    for tris in loose:
+        lo, hi = _aabb(tris)
+        if not big(lo, hi):
+            if min(v_sub(hi, lo)) >= COL_GROUP_THIN:  # (a rug would join the suitcase on it, a tread its rail post)
+                small.append((tris, lo, hi))
+            continue
+        c, ax, h = _obb(tris)
+        if not covered(lo, hi, 8 * h[0] * h[1] * h[2] > COL_GIANT):
+            add(tris, lo, hi)
+    for tris, lo, hi in _touching(small):  # a stack of boxes, a stool's seat on its post...
+        size = v_sub(hi, lo)
+        if max(size) <= COL_GROUP_MAX and big(lo, hi) and not covered(lo, hi):
+            add(tris, lo, hi, "group")
     if not col and not boxes and not copies and loose:  # a prop of thin parts (an IV stand): one box round it all
         tris = [t for p in loose for t in p]
         lo, hi = _aabb(tris)
@@ -1509,6 +1648,70 @@ LOTS = [  # (x0, z0, x1, z1, material): plazas and parking
 ]
 
 
+FLOOR_CUTS = []  # world XZ rects (x0, z0, x1, z1) of building floors: no road / lot / street is drawn under them
+FLOOR_TOP = (0.02, 0.12)  # m: an up-facing collider face this high in a building model is its ground floor
+
+
+def _floor_rects(model):
+    """XZ rects (model space) of a building model's ground floor: its up-facing collider faces at FLOOR_TOP height.
+    Roads and lots run at 3-10 cm, so under a floor they either z-fight with it or poke through it."""
+    off = _node_offsets(model)
+    out = []
+    for nd in model.nodes:
+        if not nd["prims"] or not _is_col(nd["name"]):
+            continue
+        for tris, _ in _pieces(nd, off[nd["name"]]):
+            for a, b, c in tris:
+                n = v_cross(v_sub(b, a), v_sub(c, a))
+                ln = math.sqrt(v_dot(n, n))
+                if ln > 1e-9 and n[1] / ln > 0.99 and FLOOR_TOP[0] <= a[1] <= FLOOR_TOP[1]:
+                    lo, hi = _aabb([(a, b, c)])
+                    out.append((lo[0], lo[2], hi[0], hi[2]))
+    return out
+
+
+def _placed_rects(rects, x, z, yaw):
+    """Model-space XZ rects of a building placed at (x, z) turned by yaw (a multiple of 90 deg), in world XZ."""
+    c, s = math.cos(math.radians(yaw)), math.sin(math.radians(yaw))
+    out = []
+    for x0, z0, x1, z1 in rects:
+        pts = [(x + c * px + s * pz, z - s * px + c * pz) for px in (x0, x1) for pz in (z0, z1)]
+        out.append((min(p[0] for p in pts), min(p[1] for p in pts), max(p[0] for p in pts), max(p[1] for p in pts)))
+    return out
+
+
+def _subtract(r, holes):
+    """Rect r (x0, z0, x1, z1) minus the hole rects: the rects left (UVs are world-projected, so pieces still tile)."""
+    out = [r]
+    for hx0, hz0, hx1, hz1 in holes:
+        nxt = []
+        for x0, z0, x1, z1 in out:
+            if hx0 >= x1 or hx1 <= x0 or hz0 >= z1 or hz1 <= z0:
+                nxt.append((x0, z0, x1, z1))
+                continue
+            if z0 < hz0:
+                nxt.append((x0, z0, x1, hz0))
+            if hz1 < z1:
+                nxt.append((x0, hz1, x1, z1))
+            mz0, mz1 = max(z0, hz0), min(z1, hz1)
+            if x0 < hx0:
+                nxt.append((x0, mz0, hx0, mz1))
+            if hx1 < x1:
+                nxt.append((hx1, mz0, x1, mz1))
+        out = [q for q in nxt if q[2] - q[0] > 0.01 and q[3] - q[1] > 0.01]
+    return out
+
+
+def _ground_rect(m, mat, x0, z0, x1, z1, y):
+    """A road / lot / street quad, with the building floors (FLOOR_CUTS) cut out of it."""
+    for r in _subtract((x0, z0, x1, z1), FLOOR_CUTS):
+        m.rect(mat, *r, y)
+
+
+def _under_floor(x, z):
+    return any(x0 < x < x1 and z0 < z < z1 for x0, z0, x1, z1 in FLOOR_CUTS)
+
+
 def m_terrain():
     m = Model("terrain")
     m.node("ground-col")
@@ -1525,11 +1728,12 @@ def m_terrain():
     cx, cz, rx, rz = LAKE
     m.emit("water", [(cx + rx * math.cos(a / 32 * math.tau), -0.25, cz + rz * math.sin(a / 32 * math.tau))
                      for a in range(32)], (cx, -10, cz))
-    m.node("roads")
+    m.node("roads")  # (never under a building's floor: FLOOR_CUTS)
     for i, ((ax, az), (bx, bz), w, mat) in enumerate(ROADS):
-        m.rect(mat, min(ax, bx) - w / 2, min(az, bz) - w / 2, max(ax, bx) + w / 2, max(az, bz) + w / 2, 0.03 + i * 0.002)
+        _ground_rect(m, mat, min(ax, bx) - w / 2, min(az, bz) - w / 2, max(ax, bx) + w / 2, max(az, bz) + w / 2,
+                     0.03 + i * 0.002)
     for x0, z0, x1, z1, mat in LOTS:
-        m.rect(mat, x0, z0, x1, z1, 0.07)
+        _ground_rect(m, mat, x0, z0, x1, z1, 0.07)
     m.node("streets")
     rects = [_road_rect(r) for r in ROADS] + [l[:4] for l in LOTS]
     for i, road in enumerate(ROADS):
@@ -1548,13 +1752,15 @@ def m_terrain():
                 strip = (x0 - SIDEWALK, z0, x0, z1) if side < 0 else (x1, z0, x1 + SIDEWALK, z1)
             for a0, a1 in _cut(strip, k, others):
                 sx0, sz0, sx1, sz1 = (a0, strip[1], a1, strip[3]) if k == 0 else (strip[0], a0, strip[2], a1)
-                m.rect("sidewalk", sx0, sz0, sx1, sz1, y)
+                _ground_rect(m, "sidewalk", sx0, sz0, sx1, sz1, y)
                 if k == 0:
                     ez = sz1 if side < 0 else sz0
-                    m.emit("curb", [(sx0, 0.0, ez), (sx1, 0.0, ez), (sx1, y, ez), (sx0, y, ez)], (0, 0, ez + side))
+                    if not _under_floor((sx0 + sx1) / 2, ez):
+                        m.emit("curb", [(sx0, 0.0, ez), (sx1, 0.0, ez), (sx1, y, ez), (sx0, y, ez)], (0, 0, ez + side))
                 else:
                     ex = sx1 if side < 0 else sx0
-                    m.emit("curb", [(ex, 0.0, sz0), (ex, 0.0, sz1), (ex, y, sz1), (ex, y, sz0)], (ex + side, 0, 0))
+                    if not _under_floor(ex, (sz0 + sz1) / 2):
+                        m.emit("curb", [(ex, 0.0, sz0), (ex, 0.0, sz1), (ex, y, sz1), (ex, y, sz0)], (ex + side, 0, 0))
         # faded markings: white edge lines, dashed yellow centre line
         c = (az if k == 0 else ax)
         for off, mat_, dash in ((-(w / 2 - 0.35), "line_white", 0), (w / 2 - 0.35, "line_white", 0), (0, "line_yellow", 1)):
@@ -1563,9 +1769,9 @@ def m_terrain():
                 spans = [(a0, a1)] if not dash else [(t, min(t + 3.0, a1)) for t in _frange(a0 + 1.0, a1, 7.0)]
                 for t0, t1 in spans:
                     if k == 0:
-                        m.rect(mat_, t0, band[1], t1, band[3], 0.068)
+                        _ground_rect(m, mat_, t0, band[1], t1, band[3], 0.068)
                     else:
-                        m.rect(mat_, band[0], t0, band[2], t1, 0.068)
+                        _ground_rect(m, mat_, band[0], t0, band[2], t1, 0.068)
     return m
 
 
@@ -1601,6 +1807,7 @@ class World:
         self.rects = [(min(a[0], b[0]) - w / 2, min(a[1], b[1]) - w / 2, max(a[0], b[0]) + w / 2, max(a[1], b[1]) + w / 2)
                       for a, b, w, _ in ROADS] + [l[:4] for l in LOTS]
         self.circles = []
+        self.buildings = []  # (model, x, z, yaw) of every building(): their floors are cut out of the roads
 
     def res(self, path, typ):
         if path not in self.ext:
@@ -1645,6 +1852,7 @@ class World:
     def building(self, model, x, z, yaw, hw, hd):
         """Axis-aligned footprint half extents (hw, hd) in world axes, used to keep trees out."""
         self.rects.append((x - hw, z - hd, x + hw, z + hd))
+        self.buildings.append((model, x, z, yaw))
         self.inst(model, x, z, yaw, parent="Buildings")
 
     def light(self, x, y, z, color, energy, rng_, flicker=False, parent="Lights"):
@@ -1855,6 +2063,7 @@ def build_world():
     # --- Collapsed Bridge
     W.inst("bridge", -100, RAVINE_Z - 4, y=0)
     W.label("BRIDGE OUT", -100, 1.5, RAVINE_Z + 7.4, 180, size=48, color=(0.9, 0.85, 0.7))
+    W.inst("ext_town_sign", -104.6, 140, 90)  # (the board the welcome text stands on, not floating in the air)
     W.label("HOLLOWMERE  POP. 1413", -104.5, 2.2, 140, 90, size=40)
     W.light(-100, 2, RAVINE_Z + 6, RED, 0.7, 8, flicker=True)
     W.zone("Collapsed Bridge", -125, 128, -75, 190)
@@ -1945,18 +2154,29 @@ def main():
     MODELS.extend(fn for pack in EXTRA_PACKS for fn in pack.MODELS)
     os.makedirs(os.path.join(ROOT, "models"), exist_ok=True)
     os.makedirs(os.path.join(ROOT, "maps"), exist_ok=True)
-    for fn in MODELS:
+    world = build_world()  # first: the terrain (built last) cuts its roads out of the placed buildings' floors
+    placed = {b[0] for b in world.buildings}
+    floors = {}
+
+    def build(fn):
         m = fn()
+        if m.name in placed:
+            floors[m.name] = _floor_rects(m)
         moved = unfight(m) if not m.name.startswith("char_") else 0
         cols = auto_collision(m) if not m.name.startswith(("char_", "item_")) and m.name != "terrain" else []
         write_glb(m, os.path.join(ROOT, "models", m.name + ".glb"))
         tris = sum(len(p[0]) for nd in m.nodes if not _is_col(nd["name"]) or nd["name"].endswith("-col")
                    for p in nd["prims"].values()) // 3
-        kinds = {k: sum(1 for c in cols if c[0] == k) for k in ("box", "slab", "back", "mesh")}
+        kinds = {k: sum(1 for c in cols if c[0] == k) for k in ("box", "group", "slab", "back", "mesh")}
         print("%-18s %6d tris" % (m.name, tris) + ("   + collision %s" % ", ".join(
             "%d %s" % (n, k) for k, n in kinds.items() if n) if cols else "") + ("   %d z-fights" % moved if moved else ""))
+    for fn in MODELS:
+        if fn is not m_terrain:
+            build(fn)
+    FLOOR_CUTS[:] = [r for model, x, z, yaw in world.buildings for r in _placed_rects(floors.get(model, []), x, z, yaw)]
+    build(m_terrain)
     with open(os.path.join(ROOT, "maps", "hollowmere.tscn"), "w", newline=chr(10)) as f:  # (LF on any OS: the repo's line endings)
-        f.write(build_world().text())
+        f.write(world.text())
     print("maps/hollowmere.tscn written")
     chars = sorted(m for m in (os.path.splitext(f)[0] for f in os.listdir(os.path.join(ROOT, "models")))
                    if m.startswith("char_") and m + ".glb" in os.listdir(os.path.join(ROOT, "models")))

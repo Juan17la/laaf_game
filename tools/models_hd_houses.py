@@ -845,7 +845,8 @@ def m_motel():
     downpipe(m, 15.1, d / 2 + 2.95, d / 2 + 2.95, h - 0.05)
     beam(m, "metal", (-20.2, h - 0.12, d / 2 + 2.2), (15.2, h - 0.12, d / 2 + 2.2), 0.14, 0.2)
     for x in range(-20, 17, 5):
-        m.box("metal", (0.1, h - 0.2, 0.1), (x, (h - 0.2) / 2, d / 2 + 2.2))
+        with K._On(m, "props-col"):  # canopy posts on the walkway: walked into (too thin for auto collision)
+            m.box("metal", (0.1, h - 0.2, 0.1), (x, (h - 0.2) / 2, d / 2 + 2.2))
         m.box("metal", (0.24, 0.02, 0.24), (x, 0.06, d / 2 + 2.2))
     m.box("concrete", (w + 6, 0.12, 0.12), (-3, 0.06, d / 2 + 2.4))  # curb
     # kick band along the front
@@ -889,9 +890,7 @@ def m_motel():
         m.cyl("metal", 0.08, 0.08, 0.5, (x, h + 0.25, -1.5), seg=6)
         m.cyl("metal", 0.14, 0.14, 0.06, (x, h + 0.75, -1.5), seg=6)
     m.box("hh_grille", (1.1, 0.8, 1.1), (-18, 3.6, -1.5), faces={"+y": "metal"})
-    # room 6 props (unchanged)
-    m.box("metal", (0.35, 0.22, 0.2), (14.6, 0.71, -2.9))  # the radio
-    m.cyl("metal", 0.01, 0.01, 0.4, (14.7, 0.82, -2.9), (0, 0, -20), seg=3, caps=False)
+    # room 6 props (the radio itself is Chapter 1's, on the table: Ch1ScenesA._room_props; the nightstand has the lamp)
     m.decal("moth", 0.8, 0.8, (12.5, 1.8, -d / 2 + 0.21))
     m.decal("eye", 0.7, 0.7, (-15 + 5 * 3.5 + 0.5, 1.6, d / 2 + 0.12))  # room 4
     _motel_room6(m)
@@ -925,9 +924,10 @@ def m_diner():
     with m.push((5.8, 0, 3.2), (0, 200, 0)):  # arcade cabinet
         m.box("iron", (0.8, 1.8, 0.8), (0, 0.9, 0))
     m.node("detail")
-    for x in range(6):
-        m.cyl("red", 0.2, 0.2, 0.06, (x * 1.3 - 1.5, 0.7, -1.5), seg=6)
-        m.cyl("metal", 0.04, 0.04, 0.7, (x * 1.3 - 1.5, 0, -1.5), seg=4)
+    with K._On(m, "props-col"):  # counter stools: furniture, walked into (seat and post too thin for auto boxes)
+        for x in range(6):
+            m.cyl("red", 0.2, 0.2, 0.06, (x * 1.3 - 1.5, 0.7, -1.5), seg=6)
+            m.cyl("metal", 0.04, 0.04, 0.7, (x * 1.3 - 1.5, 0, -1.5), seg=4)
     B.windows(m, "hh_glass", "s", w, d, (-1, 1.5, 4), 1.6, 2.2, 1.4)
     with m.push((5.8, 0, 3.2), (0, 200, 0)):
         m.decal("screen", 0.6, 0.45, (0, 1.35, 0.41), (-10, 0, 0))
@@ -1090,9 +1090,10 @@ def m_bar():
             B.chair(m, x + math.cos(k * 2.1 + i) * 0.9, z + math.sin(k * 2.1 + i) * 0.9, k * 120 + i * 30)
     B.table(m, -4, -3, 1.4, 1.4)  # Silas' card table
     m.node("detail")
-    for x in range(-1, 4):
-        m.cyl("metal", 0.18, 0.18, 0.05, (x * 1.4 - 0.5, 0.75, -2.1), seg=6)
-        m.cyl("metal", 0.03, 0.03, 0.7, (x * 1.4 - 0.5, 0, -2.1), seg=4)
+    with K._On(m, "props-col"):  # bar stools: furniture, walked into (seat and post too thin for auto boxes)
+        for x in range(-1, 4):
+            m.cyl("metal", 0.18, 0.18, 0.05, (x * 1.4 - 0.5, 0.75, -2.1), seg=6)
+            m.cyl("metal", 0.03, 0.03, 0.7, (x * 1.4 - 0.5, 0, -2.1), seg=4)
     for x in range(12):
         m.cyl("glass", 0.05, 0.05, 0.28, (-1.8 + x * 0.5, 1.6, -4.3), seg=5)
     B.windows(m, "hh_glass_lit", "s", w, d, (1.0, 4.0), 1.6, 1.4, 1.2)

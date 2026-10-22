@@ -346,7 +346,7 @@ INTERIOR = [
     (CLINIC, "int_filing_cabinet", -13.5, 2.6, 90, 0.05),
     (CLINIC, "int_locker", 13.5, -0.5, -90, 0.05),
     (CLINIC, "int_eye_door", 13.78, -4.0, -90, 0.05),
-    (CLINIC, "int_debris", -1, -3, 15, 0.05),
+    (CLINIC, "int_debris", -0.6, -4.2, 15, 0.05),  # (its tipped chair is solid: clear of the pharmacy door)
     (CLINIC, "int_pa_speaker", 0, -6.8, 0, 3.0),
     (SCHOOL, "int_pa_speaker", 2.2, -6.8, 0, 2.9),  # the office: Nora's PA
     (SCHOOL, "int_pa_speaker", -8.0, 6.8, 180, 3.0),  # corridor
