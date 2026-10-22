@@ -78,11 +78,12 @@ demo = true
 [node name="Sign" type="Label3D" parent="Signs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -15, 2.3, 0)
 text = "Alex"
-font_size = 32
-pixel_size = 0.01
+font_size = 27
+pixel_size = 0.01185
 modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
-texture_filter = 0
+double_sided = false
+texture_filter = 3
 
 [node name="Omni" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -15, 3, 2)
@@ -100,11 +101,12 @@ demo = true
 [node name="Sign2" type="Label3D" parent="Signs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12.5, 2.3, 0)
 text = "Boss"
-font_size = 32
-pixel_size = 0.01
+font_size = 27
+pixel_size = 0.01185
 modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
-texture_filter = 0
+double_sided = false
+texture_filter = 3
 
 [node name="Omni2" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12.5, 3, 2)
@@ -122,11 +124,12 @@ demo = true
 [node name="Sign3" type="Label3D" parent="Signs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10, 2.3, 0)
 text = "Elena"
-font_size = 32
-pixel_size = 0.01
+font_size = 27
+pixel_size = 0.01185
 modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
-texture_filter = 0
+double_sided = false
+texture_filter = 3
 
 [node name="Omni3" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10, 3, 2)
@@ -144,11 +147,12 @@ demo = true
 [node name="Sign4" type="Label3D" parent="Signs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -7.5, 2.3, 0)
 text = "Grady"
-font_size = 32
-pixel_size = 0.01
+font_size = 27
+pixel_size = 0.01185
 modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
-texture_filter = 0
+double_sided = false
+texture_filter = 3
 
 [node name="Omni4" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -7.5, 3, 2)
@@ -166,11 +170,12 @@ demo = true
 [node name="Sign5" type="Label3D" parent="Signs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -5, 2.3, 0)
 text = "Julian"
-font_size = 32
-pixel_size = 0.01
+font_size = 27
+pixel_size = 0.01185
 modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
-texture_filter = 0
+double_sided = false
+texture_filter = 3
 
 [node name="Omni5" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -5, 3, 2)
@@ -188,11 +193,12 @@ demo = true
 [node name="Sign6" type="Label3D" parent="Signs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -2.5, 2.3, 0)
 text = "Lucia"
-font_size = 32
-pixel_size = 0.01
+font_size = 27
+pixel_size = 0.01185
 modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
-texture_filter = 0
+double_sided = false
+texture_filter = 3
 
 [node name="Omni6" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -2.5, 3, 2)
@@ -210,11 +216,12 @@ demo = true
 [node name="Sign7" type="Label3D" parent="Signs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 2.3, 0)
 text = "Marcus"
-font_size = 32
-pixel_size = 0.01
+font_size = 27
+pixel_size = 0.01185
 modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
-texture_filter = 0
+double_sided = false
+texture_filter = 3
 
 [node name="Omni7" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 3, 2)
@@ -232,11 +239,12 @@ demo = true
 [node name="Sign8" type="Label3D" parent="Signs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 2.5, 2.3, 0)
 text = "Marked Man"
-font_size = 32
-pixel_size = 0.01
+font_size = 27
+pixel_size = 0.01185
 modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
-texture_filter = 0
+double_sided = false
+texture_filter = 3
 
 [node name="Omni8" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 2.5, 3, 2)
@@ -254,11 +262,12 @@ demo = true
 [node name="Sign9" type="Label3D" parent="Signs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 5, 2.3, 0)
 text = "Marked Woman"
-font_size = 32
-pixel_size = 0.01
+font_size = 27
+pixel_size = 0.01185
 modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
-texture_filter = 0
+double_sided = false
+texture_filter = 3
 
 [node name="Omni9" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 5, 3, 2)
@@ -276,11 +285,12 @@ demo = true
 [node name="Sign10" type="Label3D" parent="Signs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7.5, 2.3, 0)
 text = "Nora"
-font_size = 32
-pixel_size = 0.01
+font_size = 27
+pixel_size = 0.01185
 modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
-texture_filter = 0
+double_sided = false
+texture_filter = 3
 
 [node name="Omni10" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7.5, 3, 2)
@@ -298,11 +308,12 @@ demo = true
 [node name="Sign11" type="Label3D" parent="Signs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 10, 2.3, 0)
 text = "Owen"
-font_size = 32
-pixel_size = 0.01
+font_size = 27
+pixel_size = 0.01185
 modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
-texture_filter = 0
+double_sided = false
+texture_filter = 3
 
 [node name="Omni11" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 10, 3, 2)
@@ -320,11 +331,12 @@ demo = true
 [node name="Sign12" type="Label3D" parent="Signs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 12.5, 2.3, 0)
 text = "Shepherd"
-font_size = 32
-pixel_size = 0.01
+font_size = 27
+pixel_size = 0.01185
 modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
-texture_filter = 0
+double_sided = false
+texture_filter = 3
 
 [node name="Omni12" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 12.5, 3, 2)
@@ -342,11 +354,12 @@ demo = true
 [node name="Sign13" type="Label3D" parent="Signs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 15, 2.3, 0)
 text = "Silas"
-font_size = 32
-pixel_size = 0.01
+font_size = 27
+pixel_size = 0.01185
 modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
-texture_filter = 0
+double_sided = false
+texture_filter = 3
 
 [node name="Omni13" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 15, 3, 2)
