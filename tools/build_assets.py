@@ -904,6 +904,8 @@ COL_HEAD = 1.7  # m: a piece hanging higher than this is over Alex's head (an IV
 COL_TOUCH = 0.02  # m: small loose pieces closer than this form one group...
 COL_GROUP_THIN = 0.05  # m: ...unless thinner than this (a rug, a board, a stair tread, a rail post: never a group)...
 COL_GROUP_MAX = 2.6  # m: ...boxed only while no side of it is longer (a chain of trim along a facade is not a prop)
+COL_GAP = 0.7  # m: ...and while no opening this wide runs through it over the walking band (a door's casing: two
+COL_GAP_BAND = (0.3, 1.7)  # jambs and a header touch, but the doorway between them is walked through)
 
 
 def _is_col(name):
@@ -1040,7 +1042,7 @@ def _compact(tris):
 
 def _touching(pieces):
     """Groups of 2+ pieces [(tris, lo, hi), ...] whose bounding boxes come within COL_TOUCH of each other:
-    [(tris, lo, hi), ...] per group."""
+    [(tris, lo, hi, [(member lo, member hi), ...]), ...] per group."""
     parent = list(range(len(pieces)))
 
     def find(i):
@@ -1067,8 +1069,25 @@ def _touching(pieces):
     for members in groups.values():
         if len(members) > 1:
             tris = [t for i in members for t in pieces[i][0]]
-            out.append((tris,) + _aabb(tris))
+            out.append((tris,) + _aabb(tris) + ([pieces[i][1:] for i in members],))
     return out
+
+
+def _passage(lo, hi, members):
+    """A group with an opening the player walks through: seen along X or Z, the members standing in the walking
+    band (COL_GAP_BAND over the group's foot) leave a gap of COL_GAP or more (a door casing's jambs either side of
+    the doorway, a pergola's posts)."""
+    y0, y1 = lo[1] + COL_GAP_BAND[0], lo[1] + COL_GAP_BAND[1]
+    for k in (0, 2):
+        spans = sorted((mlo[k], mhi[k]) for mlo, mhi in members if mlo[1] < y1 and mhi[1] > y0)
+        edge = lo[k]
+        for a, b in spans:
+            if a - edge >= COL_GAP:
+                return True
+            edge = max(edge, b)
+        if hi[k] - edge >= COL_GAP:
+            return True
+    return False
 
 
 class _Solids:
@@ -1200,9 +1219,9 @@ def auto_collision(model):
         c, ax, h = _obb(tris)
         if not covered(lo, hi, 8 * h[0] * h[1] * h[2] > COL_GIANT):
             add(tris, lo, hi)
-    for tris, lo, hi in _touching(small):  # a stack of boxes, a stool's seat on its post...
+    for tris, lo, hi, members in _touching(small):  # a stack of boxes, a stool's seat on its post...
         size = v_sub(hi, lo)
-        if max(size) <= COL_GROUP_MAX and big(lo, hi) and not covered(lo, hi):
+        if max(size) <= COL_GROUP_MAX and big(lo, hi) and not _passage(lo, hi, members) and not covered(lo, hi):
             add(tris, lo, hi, "group")
     if not col and not boxes and not copies and loose:  # a prop of thin parts (an IV stand): one box round it all
         tris = [t for p in loose for t in p]
@@ -1861,9 +1880,29 @@ class World:
             props["script"] = self.res("res://scripts/flicker.gd", "Script")
         self.add("Omni", parent, "OmniLight3D", **props)
 
-    def label(self, text, x, y, z, yaw=0, size=64, color=(0.8, 0.78, 0.7)):
+    def label(self, text, x, y, z, yaw=0, size=64, color=(0.8, 0.78, 0.7), board=None):
+        """World text (a Label3D, single-sided, facing yaw). board=(w, h): the board it is painted on, centred on
+        (x, y) just behind it: the text is sized to fit inside it with LABEL_MARGIN to spare (and never above `size`
+        px at 1 cm a pixel). Rasterised at about LABEL_TEXEL a texel, filtered with mipmaps: chunky up close,
+        still whole letters across the square at 640x360 (tests/signs_test.gd checks every sign)."""
+        em = size * 0.01
+        if board:
+            em = min(em, label_em(text, *board))
+        fs = max(12, min(96, round(em / LABEL_TEXEL)))
         self.add("Sign", "Signs", "Label3D", transform=xform(x, y, z, yaw), text=json.dumps(text),
-                 font_size=size, pixel_size=0.01, modulate=color4(color), outline_size=0, texture_filter=0)
+                 font_size=fs, pixel_size="%.5f" % (em / fs), modulate=color4(color), outline_size=0,
+                 double_sided="false", texture_filter=3)
+
+    def board_label(self, text, inst, at, board, color=(0.8, 0.78, 0.7), size=96, back=None):
+        """Text on a board of a placed model: inst = (x, z, yaw) of the instance, at = (x, y, z) of the middle of
+        the board's front face in model space (front facing +Z), board = (w, h) of its lettering area. back = the
+        model-space z of its back face, for a board lettered on both sides (it reads from behind too)."""
+        ix, iz, iyaw = inst
+        c, s_ = math.cos(math.radians(iyaw)), math.sin(math.radians(iyaw))
+        faces = [(at[2], 0, LABEL_GAP)] + ([(back, 180, -LABEL_GAP)] if back is not None else [])
+        for face, turn, off in faces:
+            px, pz = at[0], face + off
+            self.label(text, ix + c * px + s_ * pz, at[1], iz - s_ * px + c * pz, iyaw + turn, size, color, board)
 
     def zone(self, name, x0, z0, x1, z1):
         n = self.add("Zone", "Zones", "Area3D", script=self.res("res://scripts/zone.gd", "Script"),
@@ -1889,6 +1928,27 @@ class World:
             out.append('[ext_resource type="%s" path="%s" id="%s"]\n' % (typ, path, rid))
         out += [""] + self.subs + self.nodes
         return "\n".join(out)
+
+
+# world signs (World.label): the default font's advance per character in ems (measured in Godot 4.7), its line
+# height (a Label3D's box per line) in ems
+FONT_ADV = {" ": 0.26, "A": 0.66, "B": 0.66, "C": 0.63, "D": 0.73, "E": 0.56, "F": 0.53, "G": 0.73, "H": 0.75,
+            "I": 0.31, "J": 0.30, "K": 0.64, "L": 0.54, "M": 0.92, "N": 0.78, "O": 0.79, "P": 0.61, "Q": 0.79,
+            "R": 0.64, "S": 0.55, "T": 0.57, "U": 0.74, "V": 0.62, "W": 0.95, "X": 0.62, "Y": 0.59, "Z": 0.58,
+            "'": 0.24, ".": 0.27, "-": 0.32, "&": 0.74, ",": 0.27, "!": 0.28, "?": 0.45}
+FONT_DIGIT = 0.57
+FONT_LINE = 1.45  # (1.37 at large sizes; small integer sizes round each line up)
+LABEL_MARGIN = (0.02, 0.12, 0.08)  # m of board kept clear round the text: this share of its height, within min / max
+LABEL_GAP = 0.03  # m the text floats off its board (no z-fighting)
+LABEL_TEXEL = 0.012  # m per font texel (the raster size follows from it)
+
+
+def label_em(text, w, h):
+    """The largest em (m) at which text fits a w x h board with LABEL_MARGIN (and 15 % slack) round it."""
+    lines = text.split(chr(10))
+    adv = max(sum(FONT_DIGIT if ch.isdigit() else FONT_ADV.get(ch.upper(), 0.7) for ch in ln) for ln in lines)
+    m = min(max(LABEL_MARGIN[1] * h, LABEL_MARGIN[0]), LABEL_MARGIN[2]) * 1.15
+    return min((w - 2 * m) / adv / 1.03, (h - 2 * m) / (FONT_LINE * len(lines)))
 
 
 def xform(x, y, z, yaw=0.0, s=(1, 1, 1)):
@@ -1926,10 +1986,11 @@ def build_world():
 
     # --- Town Square (hub)
     W.building("grady_store", 14, -24, 0, 7.5, 5.5)
-    W.label("GRADY'S GENERAL STORE", 14, 4.2, -18.9, size=56)
+    W.board_label("GRADY'S GENERAL STORE", (14, -24, 0), (0, 4.05, 5.06), (10.0, 0.8), size=56)  # (models_hd_houses
+    #                                                                                      GRADY_BOARD, SIGN_Y)
     W.light(14, 2.8, -24, WARM, 1.6, 9)
     W.building("bar", -15, -24, 0, 6.5, 5.5)
-    W.label("THE DROWNED LANTERN", -15, 3.3, -18.9, size=48, color=(0.8, 0.35, 0.25))
+    W.board_label("THE DROWNED LANTERN", (-15, -24, 0), (0.2, 3.12, 5.055), (7.6, 0.72), (0.8, 0.35, 0.25), 48)
     W.light(-14, 2.6, -25, (1.0, 0.45, 0.25), 1.2, 8, flicker=True)
     for x, z, yaw in ((-42, -12, 0), (-58, -12, 0), (-42, 12, 180), (-58, 13, 180), (42, -12, 0), (58, -12, 0),
                       (42, 12, 180), (60, 12, 180), (-14, 40, 90), (14, 40, -90), (14, 76, -90), (-14, 80, 90),
@@ -1957,13 +2018,12 @@ def build_world():
     # --- Lakeview Motel (start) + diner
     W.building("motel", -100, 62, 90, 4.5, 21)
     W.building("diner", -100, 92, 90, 5, 7.5)
-    W.inst("lamp_post", -82, 44, -90, block=0.5)
-    W.label("LAKEVIEW MOTEL", -82, 5.5, 44, 90, size=72, color=(0.9, 0.3, 0.25))
-    W.label("VACANCY", -82, 5.0, 44, 90, size=40, color=(0.9, 0.2, 0.2))
+    W.inst("motel_sign", -82, 44, 90, block=1.0)  # the pole sign by the road (models_hd_houses m_motel_sign)
+    W.board_label("LAKEVIEW MOTEL", (-82, 44, 90), (0, 5.6, 0.1), (4.2, 1.0), (0.85, 0.22, 0.18), 72, back=-0.1)
+    W.board_label("VACANCY", (-82, 44, 90), (0, 4.6, 0.08), (2.2, 0.4), (0.95, 0.2, 0.18), 40, back=-0.08)
     W.light(-83, 5.2, 44, RED, 1.0, 7, flicker=True)
-    W.label("DINER", -95.4, 3.6, 92, 90, size=64, color=(0.6, 0.8, 0.9))
-    for i in range(6):
-        W.label(str(i + 1), -96.4, 2.4, 62 + 12.5 - 5 * i - 0.5, 90, size=32)
+    W.board_label("DINER", (-100, 92, 90), (0, 3.65, 4.57), (3.4, 0.5), (0.6, 0.8, 0.9), 64)
+    # (room numbers: the brass plates on the motel doors, models_hd_houses m_motel)
     W.light(-99.5, 2.4, 49.5, WARM, 1.3, 6)
     W.light(-98, 2.8, 92, SICK, 0.7, 9, flicker=True)
     W.inst("car_wreck", -86, 52, 5, block=2.5)
@@ -2015,7 +2075,7 @@ def build_world():
 
     # --- St. Agnes Clinic (Julian)
     W.building("clinic", 72, -100, -90, 7.5, 15)
-    W.label("ST. AGNES CLINIC", 64.3, 4.0, -100, -90, size=64, color=(0.7, 0.8, 0.75))
+    W.board_label("ST. AGNES CLINIC", (72, -100, -90), (0, 3.88, 7.12), (3.3, 0.48), (0.7, 0.8, 0.75), 64)
     W.inst("ambulance", 55, -92, 20, block=3)
     W.inst("car_wreck", 50, -112, 90, block=2.5)
     for x, z in ((46, -116), (46, -84), (62, -116), (62, -84)):
@@ -2026,7 +2086,7 @@ def build_world():
 
     # --- Hollowmere Elementary (Nora)
     W.building("school", 108, 0, -90, 7.5, 18.5)
-    W.label("HOLLOWMERE ELEMENTARY", 100.4, 4.0, 0, -90, size=64, color=(0.75, 0.72, 0.6))
+    W.board_label("HOLLOWMERE ELEMENTARY", (108, 0, -90), (0, 4.4, 7.56), (3.8, 0.5), (0.3, 0.27, 0.22), 64)
     W.inst("flagpole", 95, -8)
     W.inst("swing_set", 88, 28, 0)
     W.inst("slide", 95, 34, 60)
@@ -2062,9 +2122,10 @@ def build_world():
 
     # --- Collapsed Bridge
     W.inst("bridge", -100, RAVINE_Z - 4, y=0)
-    W.label("BRIDGE OUT", -100, 1.5, RAVINE_Z + 7.4, 180, size=48, color=(0.9, 0.85, 0.7))
+    # (on the barricade board's ravine side, z 11.615 in the bridge's space: between its two posts, over the lamp)
+    W.label("BRIDGE OUT", -100, 1.56, RAVINE_Z - 4 + 11.615 - LABEL_GAP, 180, 48, (0.9, 0.85, 0.7), board=(2.5, 0.52))
     W.inst("ext_town_sign", -104.6, 140, 90)  # (the board the welcome text stands on, not floating in the air)
-    W.label("HOLLOWMERE  POP. 1413", -104.5, 2.2, 140, 90, size=40)
+    W.board_label("HOLLOWMERE  POP. 1413", (-104.6, 140, 90), (0, 2.2, 0.0), (4.9, 0.68), size=40)
     W.light(-100, 2, RAVINE_Z + 6, RED, 0.7, 8, flicker=True)
     W.zone("Collapsed Bridge", -125, 128, -75, 190)
 
@@ -2085,7 +2146,7 @@ def build_world():
           shape=W.sub("CapsuleShape3D", radius=0.6, height=2.8))
     W.light(-22, 4.5, -196, RED, 0.8, 6, flicker=True)
     W.building("tunnel_gate", 30, -222.5, 0, 7, 2)
-    W.label("OLD PASS TUNNEL", 30, 7.8, -221.8, size=72)
+    W.board_label("OLD PASS TUNNEL", (30, -222.5, 0), (0, 7.8, 0.645), (7.4, 1.0), size=72)
     W.light(34.5, 6.8, -220.5, RED, 1.5, 8, flicker=True)
     for x, z, yaw in ((15, -175, 30), (-28, -168, -60)):
         W.inst("crane", x, z, yaw, block=2)

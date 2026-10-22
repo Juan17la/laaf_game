@@ -598,9 +598,8 @@ def place(W, rng):
         W.inst(model, x, z, yaw, s, y, block=gap)
 
     def sign(text, x, z, yaw):
-        put("ext_warning_sign", x, z, yaw, 0.5)
-        a = math.radians(yaw)
-        W.label(text, x + 0.05 * math.sin(a), 1.6, z + 0.05 * math.cos(a), yaw, size=36, color=(0.6, 0.08, 0.06))
+        put("ext_warning_sign", x, z, yaw, 0.5)  # lettered between its red stripes, inside the oval
+        W.board_label(text, (x, z, yaw), (0, 1.6, 0.015), (1.2, 0.5), (0.6, 0.08, 0.06), 36)
 
     # hiding grass: forest, cemetery, lake shore
     W.scatter(rng, ["ext_tall_grass"], 260, -163, -68, -76, 44, 1.0, (0.8, 1.3))

@@ -333,6 +333,7 @@ def m_apartments():
     door(m, -0.45, zf + 0.02, 0.85, 2.3, trim="town_foundation")
     door(m, 0.45, zf + 0.02, 0.85, 2.3, trim="town_foundation")
     m.box("metal", (2.8, 0.15, 1.6), (0, 2.75, zf + 0.8))
+    m.box("town_trim_dk", (3.8, 0.56, 0.06), (0, 3.62, zf + 0.04))  # name board over the canopy (world Label3D)
     for x in (-1.3, 1.3):
         m.cyl("metal", 0.04, 0.04, 2.1, (x, 0.6, zf + 1.5), (0, 0, 0), seg=5)
     m.box("bulb", (0.3, 0.06, 0.3), (0, 2.66, zf + 0.8))
@@ -471,18 +472,23 @@ def m_hydrant():
     return m
 
 
+STREET_BLADES = ((0, 2.84), (90, 3.1))  # (turn, centre height) of the street sign's two name blades
+
+
 def m_street_sign():
     """Stop sign with two street-name blades on top."""
     m = B.Model("town_street_sign")
     m.node("pole-col")
-    m.cyl("metal", 0.035, 0.035, 3.0, seg=6)
+    m.cyl("metal", 0.035, 0.035, 2.74, seg=6)  # (stops under the blades: never across their lettering)
     m.node("detail")
+    m.cyl("metal", 0.025, 0.025, 0.06, (0, 2.94, 0), seg=6)  # the bracket between the two blades
     m.cyl("town_stop", 0.38, 0.38, 0.03, (0, 2.2, 0.05), (90, 0, 0), seg=8, phase=0.5)
     m.cyl("white", 0.4, 0.4, 0.02, (0, 2.2, 0.035), (90, 0, 0), seg=8, phase=0.5)
     m.box("white", (0.5, 0.1, 0.035), (0, 2.2, 0.075))
-    for a, y in ((0, 2.85), (90, 3.0)):
-        m.box("town_sign", (1.0, 0.18, 0.03), (0, y, 0), (0, a, 0))
-        m.box("white", (0.7, 0.05, 0.034), (0, y, 0), (0, a, 0))
+    for a, y in STREET_BLADES:  # name blades: the names are world Label3Ds on both faces (place())
+        m.box("town_sign", (1.0, 0.2, 0.03), (0, y, 0), (0, a, 0))
+        for s in (-1, 1):
+            m.box("white", (0.98, 0.012, 0.032), (0, y + s * 0.094, 0), (0, a, 0))  # white edge lines
     return m
 
 
@@ -747,17 +753,17 @@ def place(W, rng):
     G = GREEN
 
     # --- commercial frontage around the square and on the east road
-    building(W, "town_apartments", 40, -28, -90)
-    W.label("HOLLOWMERE ARMS", 34.1, 3.1, -28, -90, size=40, color=(0.7, 0.62, 0.45))
-    building(W, "town_laundromat", -38, -26, 90)
-    W.label("LAUNDROMAT  24H", -34.4, 4.82, -26, 90, size=52, color=(0.5, 1.0, 0.55))
+    if building(W, "town_apartments", 40, -28, -90):
+        W.board_label("HOLLOWMERE ARMS", (40, -28, -90), (0, 3.62, 4.47), (3.8, 0.56), (0.75, 0.66, 0.48), 40)
+    if building(W, "town_laundromat", -38, -26, 90):
+        W.board_label("LAUNDROMAT  24H", (-38, -26, 90), (0, 4.82, 3.35), (7.0, 1.0), (0.5, 1.0, 0.55), 52)
     light(W, -33, 3.2, -26, G, 2.2, 8, flicker=True)
-    building(W, "town_pawnshop", -38, 24, 90)
-    W.label("PAWN & LOAN", -34.4, 4.82, 24, 90, size=52, color=(0.85, 0.6, 0.35))
+    if building(W, "town_pawnshop", -38, 24, 90):  # (its lot is taken: no shop, so no sign hanging in the air)
+        W.board_label("PAWN & LOAN", (-38, 24, 90), (0, 4.82, 3.35), (7.0, 1.0), (0.85, 0.6, 0.35), 52)
     light(W, -33.5, 2.8, 24, B.WARM, 2.0, 7)
     building(W, "town_duplex", 40, 26, -90)
-    building(W, "town_gas_station", 76, -14, 0)
-    W.label("GAS - FOOD - ICE", 76, 3.0, -15.6, 0, size=40, color=(0.75, 0.95, 0.8))
+    if building(W, "town_gas_station", 76, -14, 0):
+        W.board_label("GAS - FOOD - ICE", (76, -14, 0), (0, 3.0, -1.62), (7.2, 0.6), (0.75, 0.95, 0.8), 40)
     light(W, 76, 3.9, -12, (0.8, 0.95, 1.0), 2.4, 10, flicker=True)
     for x, z, yaw in ((73, -9.5, 90), (79.5, -8.8, 95)):
         W.inst("car_wreck", x, z, yaw, block=2.4)
@@ -804,9 +810,11 @@ def place(W, rng):
     for x, z, yaw in ((-40, 57.7, 0), (-66, 62.3, 180), (32, 57.7, 0), (2.3, 84, 90),
                       (-2.4, -76, -90), (22, -60.3, 180), (-34, -55.8, 0), (-50, 2.3, 180)):
         W.inst("car_wreck", x, z, yaw)
-    W.label("ELM ST", 4.8, 2.86, -53, 90, size=18, color=(0.85, 0.85, 0.8))
-    W.label("MAPLE AVE", 4.8, 3.0, 64.5, 0, size=18, color=(0.85, 0.85, 0.8))
-    W.label("LAKE RD", -4.8, 2.86, 55, -90, size=18, color=(0.85, 0.85, 0.8))
+    # street names on the blades, both faces (the low blade runs along the sign's x, the high one across it)
+    for name, (x, z, yaw), high in (("ELM ST", (4.8, -53, 180), False), ("MAPLE AVE", (4.8, 64.5, 180), True),
+                                    ("LAKE RD", (-4.8, 55, 0), False)):
+        W.board_label(name, (x, z, yaw + (90 if high else 0)), (0, STREET_BLADES[high][1], 0.015), (0.96, 0.17),
+                      (0.88, 0.88, 0.82), 18, back=-0.015)
 
     # --- alleys: dumpsters, bags, pallets, graffiti, sickly green light
     for x, z, yaw in ((-35, -12, 90), (35, -12, 90), (-50, 12.5, 90), (21, 48, 90), (-21, 72, 90), (47, -46, 90),

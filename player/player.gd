@@ -1,7 +1,7 @@
 extends CharacterBody3D
 ## Third-person survival-horror controller (RF-01): walk, sprint, crouch, jump (coyote + buffer),
 ## dodge roll (i-frames), knee slide (crouch while sprinting), mantle low walls, aim + shoot
-## (see weapons.gd for the swap-shot double tap), flashlight, over-the-shoulder camera.
+## (see weapons.gd for the swap-shot double tap), the headlamp (flashlight), over-the-shoulder camera.
 ## Emits noise to the "enemies" group; enemies call hurt() / is_hidden() / visibility().
 ## Chapter 2: carry (both hands, walk only), gas mask + filter, throwable bottles (G), stealth takedown (E).
 ## Chapter 3: smoke cans (T, SmokeCloud breaks line of sight), Elena's tea (H, Mark -15), Elena's jacket
@@ -54,6 +54,8 @@ const ARM_REACH := 0.95  ## shoulder → muzzle when aiming: a wall closer than 
 ## space, see _hold), so it stops at a table or a wall like Alex does instead of sinking into it
 const CARRY_BOX := Vector3(0.46, 0.3, 0.3)
 const CARRY_AT := Vector3(0, 1.1, 0.45)
+const BODY_LAYER := 1 << 19  ## visual layer of Alex's own meshes (body, guns, headlamp): his lamp never lights them
+const LAMP_REACH := 1.134  ## rad (65°): the beam turns this far off the face at most (the head turns the rest)
 const CAM_CLEAR := 0.22  ## m kept between the camera rig and any wall (a sphere, so thin posts count too)
 const ASH_ROOF := 30.0  ## m: anything over Alex's head this close (a roof, a ceiling) and the falling ash fades out
 const ASH_FADE := 0.6  ## s
@@ -68,22 +70,31 @@ const MUZZLE := {"revolver": Vector3(0, 0.06, -0.24), "flare": Vector3(0, 0.06, 
 ## and bat handles) run through the fist, thumb toward the business end.
 const GRIP := Transform3D(Basis(Vector3(-1, 0, 0), Vector3(0, 0, 1), Vector3(0, 1, 0)), Vector3(0, -0.06, -0.02))
 const LONG_GRIP := Transform3D(Basis(Vector3(-1, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, -1)), Vector3(0, -0.075, 0))
+## axe / bat: the same fist round the handle, but hammer-wise: the business edge (+Y) toward the knuckles (-Y), so
+## the blade faces where the fist drives instead of back along the forearm (that turned the wrist inside out)
+const MELEE_GRIP := Transform3D(Basis(Vector3(1, 0, 0), Vector3(0, -1, 0), Vector3(0, 0, -1)), Vector3(0, -0.075, 0))
+## axe / bat carried on the right shoulder (model space): the fist in front of the chest, the handle up over the
+## shoulder, the head behind it; the forearm (wrist → elbow) the way it hangs from there
+const CARRY_HAND := Vector3(-0.2, 1.1, 0.27)
+const CARRY_DIR := Vector3(-0.17, 0.8, -0.57)
+const CARRY_FOREARM := Vector3(0.05, -0.35, -0.94)
 const SUPPORT := {"shotgun": Vector3(0, 0.0, -0.27), "axe": Vector3(0, 0, -0.4), "bat": Vector3(0, 0, -0.14)}  ## off hand
 const BOW_TIPS := [Vector3(0, 0.62, 0.1), Vector3(0, -0.62, 0.1)]  ## where the string ties on (bow space)
 const BOW_BRACE := 0.16  ## string at rest (bow space z); a full draw pulls the nock BOW_DRAW further back
 const BOW_DRAW := 0.45
 ## Melee swings: weapon poses in model space (origin = right-hand grip, head direction) at strike progress t.
 ## The bat sweeps flat around the right side (pointing right, then at the target on contact, then left) and wraps
-## over the left shoulder; the axe goes up behind the head, over the top and down through the target to the shins.
+## over the left shoulder; the axe, held at guard (head forward and up, the left hand up the handle, clear of the
+## face), goes up behind the head, over the top and down through the target to the shins.
 const SWINGS := {
 	"swing": [[0.0, Vector3(-0.12, 1.25, 0.3), Vector3(0.1, 0.9, 0.3)], [0.3, Vector3(-0.26, 1.38, 0.14), Vector3(-0.5, 0.55, -0.67)],
 		[0.39, Vector3(-0.24, 1.22, 0.3), Vector3(-0.95, 0.12, 0.25)], [0.45, Vector3(-0.02, 1.22, 0.45), Vector3(0.05, 0.08, 1.0)],
 		[0.52, Vector3(0.24, 1.24, 0.38), Vector3(0.95, 0.05, 0.3)], [0.6, Vector3(0.4, 1.35, 0.3), Vector3(0.55, 0.5, -0.65)],
 		[1.0, Vector3(-0.12, 1.25, 0.3), Vector3(0.1, 0.9, 0.3)]],
-	"chop": [[0.0, Vector3(-0.12, 1.25, 0.3), Vector3(0.1, 0.9, 0.3)], [0.18, Vector3(-0.1, 1.68, 0.3), Vector3(0.0, 0.95, -0.25)],
+	"chop": [[0.0, Vector3(-0.14, 1.12, 0.3), Vector3(0.15, 0.62, 0.77)], [0.18, Vector3(-0.1, 1.68, 0.3), Vector3(0.0, 0.95, -0.25)],
 		[0.35, Vector3(-0.05, 1.88, -0.14), Vector3(0.0, 0.4, -0.92)],
 		[0.43, Vector3(-0.05, 1.8, 0.34), Vector3(0.0, 0.9, 0.45)], [0.5, Vector3(-0.03, 1.22, 0.58), Vector3(0.0, -0.1, 1.0)],
-		[0.65, Vector3(0.0, 0.92, 0.52), Vector3(0.0, -0.85, 0.5)], [1.0, Vector3(-0.12, 1.25, 0.3), Vector3(0.1, 0.9, 0.3)]],
+		[0.65, Vector3(0.0, 0.92, 0.52), Vector3(0.0, -0.85, 0.5)], [1.0, Vector3(-0.14, 1.12, 0.3), Vector3(0.15, 0.62, 0.77)]],
 }
 ## Where each swing turns around (wind-up top, follow-through end): it eases to a stop only there, and is fastest
 ## midway between, on the contact key (hit_at).
@@ -140,6 +151,7 @@ var _gas_frame := -10  ## physics frame of the last gas_exposure (several clouds
 var _cough_t := 0.0
 var _meshes: Array[GeometryInstance3D] = []  ## Alex's body parts: shadow-only when the camera is inside him
 var _cam_inside := false
+var headlamp: Headlamp  ## worn on the Head joint; the flashlight shines from its lens
 var trauma := 0.0  ## 0..1 camera shake, stacks up and decays (Feel.TRAUMA_*); add_trauma()
 var _shake_t := 0.0
 var _hitstop := 0.0  ## > 0: a landed melee blow holds the swing still (Feel.HITSTOP)
@@ -157,7 +169,7 @@ var _ash_k := 1.0
 @onready var pitch: Node3D = $CameraPivot/Pitch
 @onready var arm: SpringArm3D = $CameraPivot/Pitch/SpringArm3D
 @onready var camera: Camera3D = $CameraPivot/Pitch/SpringArm3D/Camera3D
-@onready var flashlight: SpotLight3D = $CameraPivot/Pitch/Flashlight
+@onready var flashlight: SpotLight3D = $Flashlight  ## hung on the headlamp's lens in _ready (_aim_lamp aims it)
 @onready var weapons: Weapons = $Weapons
 @onready var hud: Node = $HUD
 @onready var ash: GPUParticles3D = $Ash
@@ -173,8 +185,16 @@ func _ready() -> void:
 	_cam_probe.radius = CAM_CLEAR
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	_build_guns()
+	headlamp = Headlamp.wear(model)
+	if headlamp:  # the light comes from the lamp on his forehead, not from his chest
+		flashlight.reparent(headlamp, false)
+		flashlight.transform = Transform3D(Basis(), Headlamp.LENS + Vector3(0, 0, 0.012))
+	flashlight.light_cull_mask = 0xFFFFF & ~BODY_LAYER  # (no glare on his own hands, hair or gun...
+	if "shadow_caster_mask" in flashlight:
+		flashlight.set("shadow_caster_mask", 0xFFFFF & ~BODY_LAYER)  # ...and no shadow of his own head over the beam)
 	for m in model.find_children("*", "GeometryInstance3D", true, false):
 		_meshes.append(m)
+		m.layers = BODY_LAYER
 	weapons.changed.connect(_update_gun_meshes)
 	weapons.fired.connect(_on_fired)
 	weapons.reload_started.connect(_on_reload)
@@ -384,6 +404,37 @@ func _physics_process(delta: float) -> void:
 	_face(delta)
 	_animate(delta)
 	_update_camera(delta)
+
+
+func _process(_delta: float) -> void:
+	_aim_lamp()
+
+
+func _aim_lamp() -> void:
+	## The headlamp's beam on what the crosshair is on (the camera's centre ray), turned from the lamp on his head:
+	## the head looks that way itself (anim.look), the beam makes up the rest, as far as a lamp on a head can point
+	## (LAMP_REACH off the face; the camera swung round to his face doesn't turn it back through him). The lens
+	## glows while the light is on.
+	if not headlamp:
+		return
+	if headlamp.lit != flashlight.visible:
+		headlamp.lit = flashlight.visible
+	if not flashlight.visible or not camera.is_inside_tree():
+		return
+	var fwd := -camera.global_basis.z
+	var from := camera.global_position + fwd * arm.spring_length  # (the ray starts past Alex, as the shots do)
+	var to := from + fwd * flashlight.spot_range
+	var hit := _ray(from, to)
+	var target: Vector3 = hit.position if hit else to
+	var dir := target - flashlight.global_position
+	if dir.length() < 0.3:
+		dir = fwd
+	dir = dir.normalized()
+	var face := headlamp.global_basis.z.normalized()
+	var off := face.angle_to(dir)
+	if off > LAMP_REACH:
+		dir = face.slerp(dir, LAMP_REACH / off).normalized()
+	flashlight.global_basis = Basis.looking_at(dir, Vector3.BACK if absf(dir.y) > 0.98 else Vector3.UP)
 
 
 func _update_camera(delta: float) -> void:
@@ -691,7 +742,7 @@ func _build_guns() -> void:
 			return
 		var root := Node3D.new()
 		hand.add_child(root)
-		root.transform = LONG_GRIP if Weapons.GUNS[id].hold in ["long", "melee"] else GRIP
+		root.transform = {"long": LONG_GRIP, "melee": MELEE_GRIP}.get(Weapons.GUNS[id].hold, GRIP)
 		var path: String = WEAPON_MODELS[id]
 		var ps: PackedScene = load(path) as PackedScene if ResourceLoader.exists(path) else null
 		if ps:
@@ -751,11 +802,11 @@ func _hold(delta: float) -> void:
 		# eases in from wherever the weapon was held (on the shoulder, or up ready)
 		var w := _melee_hold(sp.style, drop, ready).interpolate_with(_swing_pose(anim.strike_style, _strike_t, drop),
 			smoothstep(0.0, 0.2, _strike_t))
-		t.R = w * LONG_GRIP.affine_inverse()
+		t.R = w * MELEE_GRIP.affine_inverse()
 		# the axe's hands slide together for the chop (the far hand couldn't reach overhead), apart again after
 		var slide := 1.0 - 0.6 * smoothstep(0.0, 0.3, _strike_t) * (1.0 - smoothstep(0.65, 1.0, _strike_t)) \
 			if anim.strike_style == "chop" else 1.0
-		t.L = w * Transform3D(Basis(), SUPPORT.get(id, Vector3(0, 0, -0.3)) * slide) * LONG_GRIP.affine_inverse()
+		t.L = w * Transform3D(Basis(), SUPPORT.get(id, Vector3(0, 0, -0.3)) * slide) * MELEE_GRIP.affine_inverse()
 	elif _strike_t >= 0.0 and sp.hold == "long":  # butt-stroke: the whole gun drives forward
 		var w := _long_pose(ad, drop, lerpf(ready, 1.0, smoothstep(0.0, 0.15, _strike_t)))  # up from low ready first
 		w.origin += w.basis * Vector3(0, 0, -0.35) * sin(minf(_strike_t / _strike.hit_at, 1.0) * PI * 0.5) \
@@ -785,9 +836,9 @@ func _hold(delta: float) -> void:
 				t.L = w * Transform3D(Basis(), SUPPORT[id]) * LONG_GRIP.affine_inverse()
 			"melee":
 				var w := _melee_hold(sp.style, drop, ready)
-				t.R = w * LONG_GRIP.affine_inverse()
+				t.R = w * MELEE_GRIP.affine_inverse()
 				if ready > 0.05:
-					t.L = w * Transform3D(Basis(), SUPPORT[id]) * LONG_GRIP.affine_inverse()
+					t.L = w * Transform3D(Basis(), SUPPORT[id]) * MELEE_GRIP.affine_inverse()
 			"bow":
 				var w := _bow_pose(ad, drop, ready)
 				t.L = w * GRIP.affine_inverse()
@@ -856,8 +907,11 @@ func _bow_pose(ad: Vector3, drop: Vector3, k: float) -> Transform3D:
 
 
 func _melee_hold(style: String, drop: Vector3, ready: float) -> Transform3D:
-	## Axe / bat at rest on the shoulder (head up and out past it, not through it), or up ready (ready = 1).
-	var rest := Transform3D(_toward(Vector3(-0.3, 0.9, -0.25).normalized(), style == "chop"), Vector3(-0.21, 1.17, 0.24) + drop)
+	## Axe / bat at rest on the right shoulder (CARRY_*: head behind it, the axe's blade upward, clear of the head and
+	## seen edge-on from the camera behind), or up ready (ready = 1).
+	var z := -CARRY_DIR.normalized()
+	var y := -(CARRY_FOREARM + z * -CARRY_FOREARM.dot(z)).normalized()  # (the edge: away from the forearm)
+	var rest := Transform3D(Basis(y.cross(z), y, z), CARRY_HAND + drop)
 	return rest.interpolate_with(_swing_pose(style, 0.0, drop), ready)
 
 
@@ -1178,6 +1232,8 @@ func carry(item: String) -> void:
 	_carry_mesh.add_child(ItemFx.emit("battery"))  # the odd spark off the terminals
 	model.add_child(_carry_mesh)
 	_carry_mesh.position = Vector3(0, 1.08, 0.42)  # the hands grip its sides (_hold)
+	for m in _carry_mesh.find_children("*", "GeometryInstance3D", true, false):
+		m.layers = BODY_LAYER  # (held right under the headlamp: never lit by it)
 	_carry_col = CollisionShape3D.new()
 	var box := BoxShape3D.new()
 	box.size = CARRY_BOX
