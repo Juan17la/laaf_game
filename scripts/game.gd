@@ -136,6 +136,7 @@ func snapshot() -> Dictionary:
 		"label": "Ch.%d · %s" % [chapter, str(d.get("_objective_text")) if str(d.get("_objective_text")) != "" else str(d.step)],
 		"player": {"health": p.health, "mark": p.mark, "bottles": p.bottles, "smokes": p.smokes, "teas": p.teas,
 			"gas_mask": p.gas_mask, "mask_filter": p.mask_filter, "mark_resist": p.mark_resist},
+		"pos": [p.global_position.x, p.global_position.z],  # where it was saved (the menu's map photo pins it)
 		"weapons": {"owned": w.owned.duplicate(), "loaded": w.loaded.duplicate(), "reserve": w.reserve.duplicate(),
 			"current": w.current}}
 
