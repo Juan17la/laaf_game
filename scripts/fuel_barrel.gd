@@ -77,6 +77,8 @@ func _physics_process(delta: float) -> void:
 	if _tick <= 0.0:
 		_tick = 0.5
 		for n in get_tree().get_nodes_in_group("enemies") + get_tree().get_nodes_in_group("player"):
+			if n is Enemy and (n as Enemy).state == Enemy.State.DOWN:
+				continue  # a kneeling boss waits for spare / kill: the fire never decides it (a hit would kill)
 			if n.global_position.distance_to(global_position) < RADIUS:
 				if n.has_method("stagger") and n.flare_stun > 0.0:
 					n.stagger(n.flare_stun)
