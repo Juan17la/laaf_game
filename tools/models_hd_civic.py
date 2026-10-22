@@ -743,6 +743,7 @@ def m_clinic():
     m.box("civ_canopy", (6.6, 0.04, 3.9), (0, 3.45, d / 2 + 1.95), (-4, 0, 0))
     m.box("glass", (1.8, 1.2, 0.04), (2.1, 3.4, d / 2 + 2.3), (-4, 0, 0))  # a smashed pane
     m.box("bulb_cold", (0.6, 0.04, 0.3), (0, 3.08, d / 2 + 2.0))
+    m.box("civ_frame", (3.3, 0.48, 0.06), (0, 3.88, d / 2 + 0.09))  # name board over the canopy (world Label3D)
     with m.push((0, 0, d / 2 + 0.42)):
         m.box("civ_frame", (2.3, 2.3, 0.12), (0, 5.3, 0))
         m.box("civ_sign", (2.1, 2.1, 0.04), (0, 5.3, 0.07), faces={"-z": "civ_frame"})
