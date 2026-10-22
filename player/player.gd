@@ -50,6 +50,10 @@ const FILTER_TIME := 45.0  ## seconds of gas one filter lasts
 const TAKEDOWN_RANGE := 1.6
 const THROW_RANGE := 22.0  ## bottles / smoke cans land on the crosshair up to this far
 const ARM_REACH := 0.95  ## shoulder → muzzle when aiming: a wall closer than this tucks the gun in
+## carry(): a second body shape round what the arms hold out in front (the battery, the hands on its sides; model
+## space, see _hold), so it stops at a table or a wall like Alex does instead of sinking into it
+const CARRY_BOX := Vector3(0.46, 0.3, 0.3)
+const CARRY_AT := Vector3(0, 1.1, 0.45)
 const CAM_CLEAR := 0.22  ## m kept between the camera rig and any wall (a sphere, so thin posts count too)
 const ASH_ROOF := 30.0  ## m: anything over Alex's head this close (a roof, a ceiling) and the falling ash fades out
 const ASH_FADE := 0.6  ## s
@@ -130,6 +134,7 @@ var _rebound := 0.0  ## > 0: the axe / bat bounced off something it can't hurt (
 var _bow_string: Array[MeshInstance3D] = []
 var _bow_arrow: Node3D
 var _carry_mesh: Node3D
+var _carry_col: CollisionShape3D  ## CARRY_BOX while carrying, turned with the model (_physics_process)
 var _was_hidden := false
 var _gas_frame := -10  ## physics frame of the last gas_exposure (several clouds count once)
 var _cough_t := 0.0
@@ -180,7 +185,7 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		if controls_enabled:
-			_look(event.relative * mouse_sensitivity * (0.6 if aiming else 1.0))
+			_look(event.relative * mouse_sensitivity * Settings.number("controls/mouse_sensitivity") * (0.6 if aiming else 1.0))
 	elif event is InputEventMouseButton and event.pressed and Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		get_viewport().set_input_as_handled()
@@ -247,8 +252,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _look(delta: Vector2) -> void:
+	## Mouse and right stick alike (Settings: invert up / down).
 	pivot.rotate_y(-delta.x)
-	pitch.rotation.x = clampf(pitch.rotation.x - delta.y, -1.2, 0.8)
+	var up := -1.0 if Settings.flag("controls/invert_y") else 1.0
+	pitch.rotation.x = clampf(pitch.rotation.x - delta.y * up, -1.2, 0.8)
 
 
 # ------------------------------------------------------------------ movement
@@ -267,7 +274,8 @@ func _move_dir() -> Vector3:
 
 func _physics_process(delta: float) -> void:
 	if controls_enabled:
-		_look(Input.get_vector("look_left", "look_right", "look_up", "look_down") * stick_sensitivity * delta)
+		_look(Input.get_vector("look_left", "look_right", "look_up", "look_down") * stick_sensitivity
+			* Settings.number("controls/stick_sensitivity") * delta)
 	if global_position.y < FALL_Y:
 		velocity = Vector3.ZERO
 		if fell.get_connections().is_empty():
@@ -361,6 +369,9 @@ func _physics_process(delta: float) -> void:
 	if health < health_max * regen_cap:
 		health = minf(health + 1.5 * delta, health_max * regen_cap)
 
+	if _carry_col:  # the load faces where Alex faces (turning it into a wall pushes him back off it)
+		var turn := Basis(Vector3.UP, model.rotation.y)
+		_carry_col.transform = Transform3D(turn, turn * CARRY_AT)
 	move_and_slide()
 	if is_on_floor() and _was_air and _fall_speed > 3.0:
 		noise(6.0)  # landing thud
@@ -1167,6 +1178,13 @@ func carry(item: String) -> void:
 	_carry_mesh.add_child(ItemFx.emit("battery"))  # the odd spark off the terminals
 	model.add_child(_carry_mesh)
 	_carry_mesh.position = Vector3(0, 1.08, 0.42)  # the hands grip its sides (_hold)
+	_carry_col = CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = CARRY_BOX
+	_carry_col.shape = box
+	add_child(_carry_col)
+	var turn := Basis(Vector3.UP, model.rotation.y)
+	_carry_col.transform = Transform3D(turn, turn * CARRY_AT)
 	_update_gun_meshes()
 	hud.banner(item.to_upper(), Color(0.85, 0.82, 0.7), 0.6)
 
@@ -1175,6 +1193,9 @@ func drop_carry() -> void:
 	if _carry_mesh:
 		_carry_mesh.queue_free()
 		_carry_mesh = null
+	if _carry_col:
+		_carry_col.queue_free()
+		_carry_col = null
 	carrying = ""
 	_update_gun_meshes()
 
