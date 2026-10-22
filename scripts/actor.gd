@@ -20,6 +20,8 @@ static func make(parent: Node, scene: String, pos: Vector3, yaw := 0.0) -> Actor
 	var a := Actor.new()
 	a.model = load(scene).instantiate()
 	a.add_child(a.model)
+	if scene.ends_with("char_alex.glb"):  # Alex's stand-in wears his headlamp too (off: the scene lights itself)
+		Headlamp.wear(a.model)
 	a.anim = HumanoidAnim.new()
 	a.model.add_child(a.anim)
 	a.anim.model_path = ^".."

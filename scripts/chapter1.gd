@@ -64,14 +64,19 @@ var _start_mark := -1.0  ## dev: start with the Mark here (`-- --mark=N`, Dev Mo
 
 
 class Target extends StaticBody3D:
-	## Tin moth on the festival stall: knocked down by any shot.
+	## Tin moth hung from the shooting gallery's bar (its origin: the hook): any shot knocks it swinging up over the
+	## bar. raise() hangs it back (a checkpoint respawn before all five were down).
 	signal down
 	func hit(_d: float, _p: Vector3, _f := false) -> void:
 		if collision_layer == 0:
 			return
 		collision_layer = 0
-		create_tween().tween_property(self, "rotation:x", -PI / 2.0, 0.15)
+		create_tween().tween_property(self, "rotation:x", -PI * 0.55, 0.18).set_trans(Tween.TRANS_BACK)
 		down.emit()
+
+	func raise() -> void:
+		collision_layer = 2
+		rotation.x = 0.0
 
 
 func _ready() -> void:
@@ -188,6 +193,104 @@ func _setup_world() -> void:
 	lamp.global_position = Vector3(-94.8, 2.6, 49.0)
 	# Grady waits at his store door (square)
 	_grady = actor("res://models/char_grady.glb", Vector3(14, 0, -17.6), 0.0)
+	_gallery()
+
+
+const MOTHS := 5  ## tin moths on the square's shooting gallery (M3, optional)
+const MOTH_SIZE := 0.35
+const GALLERY_Z := -10.0
+
+
+func _moth_hook(i: int) -> Vector3:
+	## Where tin moth i hangs from the gallery bar (its top edge): alternately high and low over the plaza.
+	return Vector3(-4.0 + i * 2.0, 1.4 + 0.3 * (i % 2) + MOTH_SIZE / 2.0, GALLERY_Z)
+
+
+func _gallery() -> void:
+	## The festival's shooting gallery on the square: two posts and a bar, a chain down to each moth's hook. Stays
+	## up all game (the moths themselves only hang there during M3).
+	var root := Node3D.new()
+	add_child(root)
+	var wood := _flat(Color(0.33, 0.22, 0.13))
+	var paint := _flat(Color(0.55, 0.12, 0.08))
+	var chain := _flat(Color(0.45, 0.43, 0.4), 0.8)
+	for x in [-5.3, 5.3]:
+		var post := StaticBody3D.new()  # (walked into: thin, but solid)
+		var col := CollisionShape3D.new()
+		var box := BoxShape3D.new()
+		box.size = Vector3(0.14, 2.3, 0.14)
+		col.shape = box
+		col.position.y = 1.15
+		post.add_child(col)
+		root.add_child(post)
+		post.position = Vector3(x, 0, GALLERY_Z)
+		_mesh(post, BoxMesh.new(), Vector3(0.12, 2.3, 0.12), Vector3(0, 1.15, 0), wood)
+		_mesh(post, BoxMesh.new(), Vector3(0.4, 0.06, 0.4), Vector3(0, 0.03, 0), wood)
+	_mesh(root, BoxMesh.new(), Vector3(10.9, 0.1, 0.1), Vector3(0, 2.25, GALLERY_Z), paint)
+	_mesh(root, BoxMesh.new(), Vector3(10.9, 0.04, 0.12), Vector3(0, 2.32, GALLERY_Z), wood)
+	for i in MOTHS:
+		var hook := _moth_hook(i)
+		_mesh(root, BoxMesh.new(), Vector3(0.012, 2.2 - hook.y, 0.012), Vector3(hook.x, (2.2 + hook.y) / 2.0, GALLERY_Z), chain)
+
+
+static var _moth_tex: Texture2D
+
+
+static func _moth_texture() -> Texture2D:
+	## 16x16 tin moth cut-out: painted wings with eye spots on stamped tin, hard alpha edges (PS2 sprite).
+	if not _moth_tex:
+		var img := Image.create(16, 16, false, Image.FORMAT_RGBA8)
+		img.fill(Color(0, 0, 0, 0))
+		for y in 16:
+			for x in 16:
+				var dx := absf(x - 7.5)
+				var fy := y - 7.5
+				var upper := fy < 0.5 and dx < 7.6 - absf(fy + 2.5) * 0.9 and dx > 0.8
+				var lower := fy >= 0.5 and dx < 5.2 - (fy - 0.5) * 0.75 and dx > 0.8
+				var body := dx < 1.2 and y > 1 and y < 15
+				if not (upper or lower or body):
+					continue
+				var c := Color(0.62, 0.6, 0.55)  # bare tin
+				if body:
+					c = Color(0.25, 0.22, 0.2)
+				elif upper and Vector2(dx - 4.0, fy + 2.5).length() < 1.6:
+					c = Color(0.85, 0.75, 0.3)  # eye spot
+				elif (x + y) % 5 == 0:
+					c = Color(0.45, 0.3, 0.2)  # rust
+				elif upper:
+					c = Color(0.72, 0.68, 0.6)
+				img.set_pixel(x, y, c)
+		_moth_tex = ImageTexture.create_from_image(img)
+	return _moth_tex
+
+
+func _moth(i: int) -> Target:
+	## Tin moth i on its hook: shot through by any gun (collision layer 2), swings up over the bar when hit.
+	var tgt := Target.new()
+	tgt.collision_layer = 2
+	var col := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(MOTH_SIZE, MOTH_SIZE, 0.08)
+	col.shape = box
+	col.position.y = -MOTH_SIZE / 2.0
+	tgt.add_child(col)
+	var mi := MeshInstance3D.new()
+	var q := QuadMesh.new()
+	q.size = Vector2(MOTH_SIZE, MOTH_SIZE)
+	var mat := StandardMaterial3D.new()
+	mat.albedo_texture = _moth_texture()
+	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	mat.metallic = 0.5
+	mat.roughness = 0.45
+	q.material = mat
+	mi.mesh = q
+	mi.position.y = -MOTH_SIZE / 2.0
+	tgt.add_child(mi)
+	add_child(tgt)
+	tgt.global_position = _moth_hook(i)
+	return tgt
 
 
 func weapon_pickup(pos: Vector3, id: String, rounds := 0, yaw := 0.0) -> Interactable:
@@ -260,11 +363,13 @@ func _boss_floor() -> void:
 
 func _on_died() -> void:
 	## Blackout: back at the last checkpoint with what Alex carried when he reached it (kit), healed; the step's
-	## reset puts the fight back. In a boss fight he always has rounds to fight with (_boss_floor).
+	## reset puts the fight back, and every fuel drum stands again unexploded. In a boss fight he always has rounds
+	## to fight with (_boss_floor).
 	player.controls_enabled = false
 	await hud.fade(1.0, 0.8)
 	await hud.subtitle("", "You black out…", 1.5)
 	var boss: bool = hud.boss_active()
+	get_tree().call_group(FuelBarrel.GROUP, "reset")  # every drum blown up since stands again (the fire tactic)
 	player.respawn(spot(_checkpoint.pos) + Vector3.UP * 0.05, _checkpoint.yaw)  # on open floor, never in a prop
 	restore_kit(_kit)
 	if _on_reset.is_valid():
@@ -736,35 +841,25 @@ func _step_square() -> void:
 	await scenes_b.guns_tutorial()
 	# optional practice: tin moths on a festival stall
 	objective("Optional: knock down the 5 tin moths · Talk to Grady when ready", _grady)
-	var left := [5]
-	var targets: Array[Node] = []
-	for i in 5:
-		var tgt := Target.new()
+	var left := [MOTHS]
+	var targets: Array[Target] = []
+	for i in MOTHS:
+		var tgt := _moth(i)
 		targets.append(tgt)
-		tgt.collision_layer = 2
-		var col := CollisionShape3D.new()
-		var box := BoxShape3D.new()
-		box.size = Vector3(0.35, 0.35, 0.08)
-		col.shape = box
-		tgt.add_child(col)
-		var mi := MeshInstance3D.new()
-		var bm := BoxMesh.new()
-		bm.size = box.size
-		var mat := StandardMaterial3D.new()
-		mat.albedo_color = Color(0.7, 0.68, 0.6)
-		mat.metallic = 0.6
-		bm.material = mat
-		mi.mesh = bm
-		tgt.add_child(mi)
-		add_child(tgt)
-		tgt.global_position = Vector3(-4.0 + i * 2.0, 1.4 + 0.3 * (i % 2), -10.0)
 		tgt.down.connect(func() -> void:
 			left[0] -= 1
 			if left[0] == 0 and not flags.get("moths", false):  # once a run: a reload replays the step
 				flags["moths"] = true
 				flags.tokens += 25
 				hud.banner("+25 TOKENS", Color(0.9, 0.8, 0.4), 1.0))
+	_on_reset = func() -> void:  # a blackout before all five were down: they hang there again; a full set stays won
+		if flags.get("moths", false):
+			return
+		left[0] = MOTHS
+		for t in targets:
+			t.raise()
 	await _use(GRADY_SPOT, "Tell Grady you're ready")
+	_on_reset = Callable()
 	for t in targets:  # the stall's done: no tin moths left hanging over the square for the rest of the game
 		t.queue_free()
 	await scenes_b.moth_sawmill_call(_grady)
@@ -773,6 +868,7 @@ func _step_square() -> void:
 # ------------------------------------------------------------------ M4 The Woodsman (part 1)
 
 const SAWMILL_ROAD := Vector3(-100, 0, 0)
+const YARD_BARRELS: Array[Vector3] = [Vector3(-112, 0, -9), Vector3(-110, 0, 6), Vector3(-117, 0, 9), Vector3(-104, 0, -2)]
 const KEY_SPOT := Vector3(-121.0, 1.0, -2.0)
 
 
@@ -785,8 +881,7 @@ func _step_sawmill() -> void:
 	for i in spots.size():
 		var p := spots[i]
 		marked.append(_spawn_marked(p, i, [p, p + Vector3(randf_range(-6, 6), 0, randf_range(-5, 5))]))
-	for p in [Vector3(-112, 0, -9), Vector3(-110, 0, 6), Vector3(-117, 0, 9), Vector3(-104, 0, -2)]:
-		FuelBarrel.make(self, p)
+	_yard_barrels()
 	# optional: the parents' lantern (spare condition) and evidence #1
 	var lantern := func(_b: Node) -> void:
 		flags.lantern = true
@@ -815,10 +910,20 @@ func _step_sawmill() -> void:
 	await scenes_b.key_found()
 
 
+func _yard_barrels() -> void:
+	## The sawmill yard's fuel drums (the fire the boss objective names): placed once, by whichever of the sawmill /
+	## boss steps runs first (a save or a skip can start at the boss).
+	if not get_tree().get_nodes_in_group(FuelBarrel.GROUP).filter(func(b: Node) -> bool: return b.get_parent() == self) 			.is_empty():
+		return
+	for p in YARD_BARRELS:
+		FuelBarrel.make(self, p)
+
+
 # ------------------------------------------------------------------ M4 boss: Owen
 
 func _step_boss() -> void:
 	arm_player()
+	_yard_barrels()
 	clear_enemies()  # the sawmill's Marked Ones: Owen fights alone (boss_intro cuts away this frame)
 	_checkpoint_at(Vector3(-104, 0.1, -2), -PI / 2.0)
 	var spawn := Vector3(-130, 0, -5)
