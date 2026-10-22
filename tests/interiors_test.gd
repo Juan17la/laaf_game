@@ -47,7 +47,7 @@ func _run() -> void:
 		Vector3(104, 0, 0), Vector3(104.2, 0, 6.2), Vector3(106.5, 0, 6.2), Vector3(106.5, 0, 8.6),
 		Vector3(112, 0, 8.6), Vector3(106.5, 0, 15.5), Vector3(104, 0, -15), Vector3(104, 0, 15),
 		Vector3(102.5, 0, -2), Vector3(102.5, 0, 2), Vector3(103, 0, -10), Vector3(112.5, 0, 4.6), Vector3(103, 0, -16.5),
-		Vector3(112, 0, 16.8), Vector3(106.4, 0, 12.2), Vector3(67.5, 0, -112), Vector3(67.5, 0, -88),
+		Vector3(112, 0, 16.8), Vector3(106.4, 0, 12.2), Vector3(67.5, 0, -111.2), Vector3(67.5, 0, -88),
 		Vector3(77.8, 0, -88), Vector3(77.8, 0, -96), Vector3(71, 0, -108), Vector3(66, 0, -88), Vector3(78, 0, -110)]
 	for p in pts:
 		if d._stand(p) == Vector3.INF:
