@@ -35,6 +35,9 @@ albedo_color = Color(0.72, 0.71, 0.68, 0.75)
 albedo_texture = SubResource("ash_dot")
 texture_filter = 0
 billboard_mode = 3
+distance_fade_mode = 1
+distance_fade_min_distance = 1.2
+distance_fade_max_distance = 3.0
 particles_anim_h_frames = 1
 particles_anim_v_frames = 1
 
@@ -84,8 +87,8 @@ fov = 65.0
 near = 0.05
 far = 110.0
 
-[node name="Flashlight" type="SpotLight3D" parent="CameraPivot/Pitch"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, -0.3, 0)
+[node name="Flashlight" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.77, 0.18)
 light_color = Color(1, 0.95, 0.85, 1)
 light_energy = 3.0
 light_volumetric_fog_energy = 1.0
