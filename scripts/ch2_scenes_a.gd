@@ -152,7 +152,7 @@ func moth_intro() -> void:
 	# her face; Alex coming up behind her
 	d.shot(Vector3(-13.2, 1.6, 115.7), Vector3(-10.5, 1.55, 116.4))
 	await hud.subtitle("Elena", "You came alone. Good.", 2.2)
-	await walk
+	await Actor.settle(walk)  # (the walk may be over by now)
 	alex.look(elena)
 	d.ots(elena, alex, 1.0)
 	await hud.subtitle("Alex", "Moth?", 1.4)
