@@ -220,11 +220,18 @@ func _run() -> void:
 	boss.patrol = [boss.position]
 	var last := _param(post, "aberration")
 	var jump := 0.0
-	for i in 240:
-		await physics_frame
+	# every frame for 4 s, each change per 1/60 s of the delta it was eased by (read one frame late: process_frame
+	# comes before the frame's _process): a hitch (the boss model loading) is one long frame through which the ease
+	# takes one long step; a real step (a snap to the level) is just as big at any frame rate
+	var dt := 1.0 / 60.0
+	var watched := 0.0
+	while watched < 4.0:
+		await process_frame
 		var ab := _param(post, "aberration")
-		jump = maxf(jump, absf(ab - last))
+		jump = maxf(jump, absf(ab - last) / maxf(dt * 60.0, 1.0))
 		last = ab
+		dt = root.get_process_delta_time()
+		watched += dt
 	var amb := Feel.SPIKE_BOSS * Feel.SPIKE_ABERRATION * Feel.mark_fx
 	if last < amb * 0.8 or last > amb * 1.05 or _param(post, "warp") > Feel.COMBAT_MAX_WARP:
 		return _fail("boss ambience: aberration %f (level %f) warp %f" % [last, amb, _param(post, "warp")])
