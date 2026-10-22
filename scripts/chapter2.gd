@@ -37,7 +37,7 @@ const LADDER := Vector3(80.4, 1.2, -110)
 const ROOF := Vector3(77.5, 7.75, -110)
 const HATCH_LADDER := Vector3(78.4, 4.9, -110)  ## the ladder up to the roof hatch, on the upstairs landing
 const HATCH := Vector3(77, 3.9, -110)  ## under the roof hatch: the clinic's upstairs landing, the way back in
-const HVAC := Vector3(74.5, 8.4, -100)
+const HVAC := Vector3(75.3, 8.3, -100)  ## on the side of the middle roof unit (it's solid: not its middle)
 const KEY3 := Vector3(69.2, 1.2, -103)
 const SAM_FILE := Vector3(78.2, 1.0, -113)
 const JULIAN_SPAWN := Vector3(71, 0, -92)
@@ -516,7 +516,7 @@ func _clinic_setup() -> void:
 	# corridor gas before the mask (permanent until the clinic is done)
 	for p in [Vector3(67.5, 0, -100), Vector3(72, 0, -109), Vector3(72, 0, -92), Vector3(62, 0, -100)]:
 		GasCloud.make(self, p, 3.0, 0.0)
-	_marked_one(Vector3(67.5, 0, -112), [Vector3(67.5, 0, -112), Vector3(67.5, 0, -88)])
+	_marked_one(Vector3(67.5, 0, -111.2), [Vector3(67.5, 0, -111.2), Vector3(67.5, 0, -88)])  # (short of the open drawer)
 	_marked_one(Vector3(77.8, 0, -88), [Vector3(77.8, 0, -88), Vector3(77.8, 0, -96)])  # behind the ward beds
 	_marked_one(Vector3(50, 0, -120), [Vector3(50, 0, -120), Vector3(62, 0, -120)])
 	_marked_one(Vector3(84, 0, -118), [Vector3(84, 0, -118), Vector3(84, 0, -84)])
@@ -606,7 +606,7 @@ func _stalker() -> Enemy:
 		"display_name": "Julian", "boss": true, "max_health": 200.0, "gas_thrower": true, "gas_interval": 9.0,
 		"checks_hiding": true, "run_speed": 3.9, "walk_speed": 1.7, "melee_damage": 18.0, "mark_gain": Feel.MARK_GAIN.julian_hunt,
 		"sight_range": 20.0})
-	j.patrol = [home, Vector3(67.5, 0, -90), Vector3(67.5, 0, -112), Vector3(71, 0, -106)]
+	j.patrol = [home, Vector3(67.5, 0, -90), Vector3(67.5, 0, -111.2), Vector3(71, 0, -106)]
 	_marked.append(j)
 	j.checks_spot.connect(func(_e: Enemy, _p: Vector3) -> void: scenes2b.julian_checks_spot())
 	j.struck_player.connect(func(_e: Enemy) -> void:
