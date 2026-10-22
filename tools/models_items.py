@@ -295,6 +295,15 @@ def t_itm_band(x, y, a, b, r):
     return mul(c, 0.75 + 0.25 * a)
 
 
+def t_itm_strap(x, y, a, b, r):
+    """Woven elastic headband: black, a yellow stripe along each edge, the weave showing (no lettering)."""
+    if y < 9 or y > 54:
+        return mul((0.85, 0.66, 0.1), 0.75 + 0.25 * a)
+    if y < 12 or y > 51:
+        return (0.05, 0.05, 0.05)
+    return mul((0.09, 0.09, 0.085), 0.8 + 0.25 * a + (0.12 if (x + y) % 4 == 0 else 0.0))
+
+
 B.TEXTURES.update({k[2:]: v for k, v in list(globals().items()) if k.startswith("t_itm_")})
 B.TEX_SIZE["itm_crayon"] = 128
 
@@ -341,10 +350,12 @@ B.MATS.update({
     "itm_cork": B.M("itm_leather", (0.75, 0.58, 0.4), 0.05),
     "itm_wood": B.M("planks", (0.85, 0.65, 0.5), 0.25),
     "itm_wax": B.M("plain", (0.55, 0.05, 0.05), 1, rough=0.3),
+    "itm_lamp_lens": B.M("plain", (0.78, 0.8, 0.74), 1, rough=0.1),  # the headlamp's lens (lit by the game)
     # printed (fit = one copy per face / lathe band)
     **{"itm_" + k: B.M("itm_" + k, fit=True) for k in (
         "panel", "grille", "bottle_label", "ammo", "redcross", "gauze", "gauze_end", "flare", "note", "pages",
-        "ledger_label", "photo", "crayon", "batt", "cassette", "perf", "map", "file", "tea", "tin", "tag", "band")},
+        "ledger_label", "photo", "crayon", "batt", "cassette", "perf", "map", "file", "tea", "tin", "tag", "band",
+        "strap")},
 })
 B.MATS["itm_dial"] = B.M("itm_dial", fit=True, emit=0.7)
 B.MATS["itm_gauze_roll"] = B.M("itm_gauze", scale=0.04)
@@ -1170,9 +1181,50 @@ def m_handmic():
     return m
 
 
+# ============================================================== worn
+
+# Alex's head (char_alex, Head joint space, origin at the top of the neck, face +Z): skin and hair reach |x| 0.111,
+# z -0.128 (back) .. +0.132 (fringe) over y 0.16-0.2, where the band runs. Everything here sits clear of that.
+HEADLAMP_Y = 0.178  # band centre height over the Head pivot (above the brows, under the crown)
+HEADLAMP_LENS = (0.0, 0.176, 0.19)  # centre of the lens face (player.gd HEADLAMP_LENS: the beam starts here)
+
+
+def m_headlamp():
+    """Work / camping headlamp worn on Alex's head (Head joint space, see above): a flat elastic band round the head
+    over the hair, a small boxy lamp unit on the forehead with a tilt hinge and a top button, the lens in its own
+    node ("lens") so the game can light it while the lamp is on. No markings."""
+    m = B.Model("item_headlamp")
+    m.node("headlamp")
+    y, h, t = HEADLAMP_Y, 0.024, 0.006
+    ax, zf, zb = 0.121, 0.145, 0.139  # half-widths of the band's ellipse: sides, front, back (outside the hair)
+    n = 20
+    pts = []
+    for k in range(n):
+        a = 2 * math.pi * k / n
+        pts.append((ax * math.sin(a), (zf if math.cos(a) > 0 else zb) * math.cos(a)))
+    for k in range(n):
+        (x0, z0), (x1, z1) = pts[k], pts[(k + 1) % n]
+        seg = math.hypot(x1 - x0, z1 - z0)
+        yaw = math.degrees(math.atan2(x1 - x0, z1 - z0)) - 90
+        m.box("itm_strap", (seg + 0.004, h, t), ((x0 + x1) / 2, y, (z0 + z1) / 2), (0, yaw, 0))
+    # lamp unit on the forehead: bracket on the band, the housing tilted a touch down on its hinge, a top button
+    m.box("itm_case", (0.05, 0.03, 0.008), (0, y, zf + 0.006))
+    m.cyl("itm_grey", 0.007, 0.007, 0.064, (-0.032, y - 0.004, zf + 0.012), (0, 0, -90), seg=6)  # hinge pin
+    with m.push((0, y, zf + 0.023), (6, 0, 0)):
+        m.box("itm_case", (0.068, 0.04, 0.03), (0, 0, 0))
+        m.box("itm_grey", (0.072, 0.008, 0.032), (0, 0.016, 0))  # rim
+        m.box("itm_orange_dk", (0.016, 0.006, 0.012), (0, 0.023, -0.002))  # switch
+        m.box("itm_grey", (0.06, 0.032, 0.004), (0, -0.001, 0.016))  # bezel
+    m.node("lens")
+    with m.push((0, y, zf + 0.023), (6, 0, 0)):
+        m.box("itm_lamp_lens", (0.046, 0.022, 0.004), (0, -0.001, 0.019))
+    return m
+
+
 # ============================================================== registry
 
 MODELS = [m_revolver, m_flare_gun, m_bottle, m_car_battery, m_ammo_box, m_bandage, m_flares, m_mask_filter,
           m_gas_mask, m_smoke_can, m_key_part, m_note, m_ledger, m_photo, m_drawing, m_recorder, m_lockpick,
           m_tea_tin, m_tin_box, m_file, m_syringe, m_map, m_chapel_key, m_keyring, m_brand_iron, m_supply_box,
-          m_toe_tag, m_fishing_rod, m_bucket, m_axe, m_bat, m_bow, m_arrow, m_shotgun, m_shells, m_room_key, m_handmic]
+          m_toe_tag, m_fishing_rod, m_bucket, m_axe, m_bat, m_bow, m_arrow, m_shotgun, m_shells, m_room_key, m_handmic,
+          m_headlamp]

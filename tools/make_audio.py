@@ -795,6 +795,21 @@ def sfx_glass(rng):
     return x
 
 
+def sfx_explosion(rng):
+    """Fuel drum bursting: a sub thump, a roar of low noise that rolls off, the drum's metal tearing and a
+    crackle of burning fuel in the tail."""
+    n = secs(3.0)
+    x = zeros(n)
+    add(x, kick(2.0, 110, 26, 0.9), 0)
+    add(x, mul(lp(noise(n, rng), 900), env_exp(n, 0.45, 0.004)), 0, 1.3)
+    add(x, mul(lp(noise(secs(0.6), rng), 3500), env_exp(secs(0.6), 0.09, 0.001)), 0, 0.9)
+    add(x, mul(bp_sweep(noise(secs(0.5), rng), 2200, 700, 3.0), env_exp(secs(0.5), 0.12)), secs(0.02), 0.5)  # metal
+    for _ in range(40):  # burning fuel crackle
+        t = rng.uniform(0.25, 2.6)
+        add(x, mul(hp(noise(secs(0.012), rng), 2500), env_exp(secs(0.012), 0.004)), secs(t), rng.uniform(0.1, 0.35) * (1.2 - t / 3))
+    return reverb(sat(x, 1.4), 0.45, 1.6)
+
+
 def sfx_scrape(rng):
     n = secs(2.0)
     return mul(bp_sweep(osc("saw", glide(90, 70, n), n), 800, 500, 6), env_ar(n, 0.8, 0.9))
@@ -1018,6 +1033,7 @@ def build():
     for v in range(4):  # the Mark (python3 tools/make_audio.py whisper)
         job("sfx_whisper_%d" % v, lambda v=v: sfx_whisper(R(100 + v), 5 + v), 0.6)
     job("sfx_spotted", lambda: sfx_spotted(R(110)), 0.7)  # the "!" (python3 tools/make_audio.py spotted)
+    job("sfx_explosion", lambda: sfx_explosion(R(111)), 1.0)  # a fuel drum bursting (FuelBarrel)
 
     for ch in PROFILES:
         for i in range(8):
