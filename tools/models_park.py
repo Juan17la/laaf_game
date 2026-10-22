@@ -680,9 +680,11 @@ def place(W, rng):
     W.inst("park_gazebo", gx, gz)
     W.light(gx, 2.3, gz, B.WARM, 0.7, 6, flicker=True)
     W.inst("park_statue", -19, -7.3)
-    W.label("FOR THE NINE\nWHO NEVER CAME HOME", -19, 1.0, -6.66, size=9, color=(0.55, 0.62, 0.5))
+    W.board_label("FOR THE NINE\nWHO NEVER\nCAME HOME", (-19, -7.3, 0), (0, 1.0, 0.615), (0.8, 0.42), (0.55, 0.62, 0.5),
+                  12)
     W.inst("park_kiosk", 23, -7.5, -90)
-    W.label("REFRESHMENTS", 21.72, 2.52, -7.5, -90, size=28, color=(0.75, 0.7, 0.55))
+    W.board_label("REFRESHMENTS", (23, -7.5, -90), (0, 2.555, 1.255), (2.2, 0.29), (0.75, 0.7, 0.55), 28)  # (above
+    #                                                                       the shutter box hiding its lower edge)
     W.light(21.6, 2.05, -7.5, B.SICK, 0.6, 5, flicker=True)
     W.inst("park_drinking_fountain", 16.5, -5.2, 200)
     W.inst("park_birdbath", -13.9, 17.5)
@@ -692,9 +694,10 @@ def place(W, rng):
         W.inst("park_pillar", -29.3, z)
         W.inst("park_pillar", 29.3, z)
     W.inst("park_arch", -29.3, 0, -90)
-    W.label("HOLLOWMERE MEMORIAL PARK", -29.36, 3.02, 0, -90, size=34, color=(0.62, 0.6, 0.5))
+    W.board_label("HOLLOWMERE MEMORIAL PARK", (-29.3, 0, -90), (0, 3.02, 0.025), (6.9, 0.52), (0.62, 0.6, 0.5), 34)
     W.inst("park_sign", -4.8, 28.3)
-    W.label("HOLLOWMERE MEMORIAL PARK\nCLOSED AT DUSK", -4.8, 1.3, 28.35, size=12, color=(0.7, 0.68, 0.58))
+    W.board_label("HOLLOWMERE MEMORIAL PARK\nCLOSED AT DUSK", (-4.8, 28.3, 0), (0, 1.28, 0.02), (1.8, 0.72),
+                  (0.7, 0.68, 0.58), 16)
     W.inst("park_gate", -17.25, 29.3)
 
     # --- wrought-iron fence round the lawns: gaps for the lanes, planters and a pulled-out panel
