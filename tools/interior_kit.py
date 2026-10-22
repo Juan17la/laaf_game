@@ -224,7 +224,7 @@ def partition(m, mat, a, b, y0, h, doors=(), t=0.15, frame="ik_wood", leaf="door
             w = c1 - c0
             hinge = c0 * sgn
             ang = math.radians(ajar)
-            with _On(m, "detail"):
+            with _On(m, "ajar_leaves"):  # (build_assets PASSABLE_NODES: no auto collision for dressing)
                 if along_x:
                     p = (ax + hinge + math.cos(ang) * w / 2 * sgn, y0 + dh / 2, az + swing * math.sin(ang) * w / 2)
                     m.box(leaf, (w - 0.04, dh - 0.02, 0.04), p, (0, -ajar * sgn * swing, 0))
@@ -489,13 +489,15 @@ def curtain(m, x, z0, z1, top=2.3, drawn=0.6, along_z=True):
     c = (z0 + z1) / 2
     if along_z:
         m.box("ik_rail", (0.04, 0.03, L), (x, top + 0.1, c))
-        m.box("ik_curtain", (0.03, top - 0.25, L * drawn), (x, 0.25 + (top - 0.25) / 2, min(z0, z1) + L * drawn / 2))
-        for k in range(int(L * drawn / 0.2)):
-            m.box("ik_curtain", (0.08, top - 0.3, 0.05), (x + (0.03 if k % 2 else -0.03), 0.28 + (top - 0.3) / 2,
-                                                          min(z0, z1) + 0.1 + k * 0.2))
+        with _On(m, "curtain_cloth"):  # (build_assets PASSABLE_NODES: cloth is pushed through, never a wall)
+            m.box("ik_curtain", (0.03, top - 0.25, L * drawn), (x, 0.25 + (top - 0.25) / 2, min(z0, z1) + L * drawn / 2))
+            for k in range(int(L * drawn / 0.2)):
+                m.box("ik_curtain", (0.08, top - 0.3, 0.05), (x + (0.03 if k % 2 else -0.03), 0.28 + (top - 0.3) / 2,
+                                                              min(z0, z1) + 0.1 + k * 0.2))
     else:
         m.box("ik_rail", (L, 0.03, 0.04), (c, top + 0.1, x))
-        m.box("ik_curtain", (L * drawn, top - 0.25, 0.03), (min(z0, z1) + L * drawn / 2, 0.25 + (top - 0.25) / 2, x))
+        with _On(m, "curtain_cloth"):
+            m.box("ik_curtain", (L * drawn, top - 0.25, 0.03), (min(z0, z1) + L * drawn / 2, 0.25 + (top - 0.25) / 2, x))
 
 
 def bedside(m, x, z, yaw):
