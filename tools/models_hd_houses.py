@@ -994,6 +994,10 @@ def m_diner():
 
 # ============================================================== Grady's store (enterable)
 
+GRADY_BOARD = (10.0, 0.8)  # the store's name board (w, h), centred at SIGN_Y, front at z = 5.06
+SIGN_Y = 4.05  # over the awning frames (3.58), under the string course
+
+
 def m_grady_store():
     m = B.Model("grady_store")
     w, d, h = 14, 10, 4.2
@@ -1022,19 +1026,21 @@ def m_grady_store():
             m.box("hh_trim_dark", (0.8, 0.35, 0.03), (x + k * 1.0, 0.3, hd + 0.095))
         m.decal("hh_glass", 3.0, 0.4, (x, 2.95, hd + 0.01))
         window(m, (x, 2.95, hd + 0.01), 0, 3.0, 0.4, None, grid=(3, 1), trim="hh_trim_dark", d=0.06)
-    for x in (-6.9, -1.25, 1.25, 6.9):
-        m.box("brick", (0.5, h, 0.12), (x, h / 2, hd + 0.06))
+    for x in (-6.9, -1.25, 1.25, 6.9):  # pilasters: capped under the sign band (they used to run across it)
+        top = SIGN_Y - GRADY_BOARD[1] / 2 - 0.02
+        m.box("brick", (0.5, top, 0.12), (x, top / 2, hd + 0.06))
         m.box("stone", (0.6, 0.25, 0.18), (x, 0.12, hd + 0.08))
-        m.box("stone", (0.6, 0.2, 0.18), (x, h - 0.1, hd + 0.08))
+        m.box("stone", (0.6, 0.2, 0.18), (x, top - 0.1, hd + 0.08))
     door(m, (0, 0, hd), 0, 1.6, 2.4, leaf=False, trim="hh_trim_dark")
     m.decal("hh_glass", 1.5, 0.4, (0, 2.95, hd + 0.01))
-    # cornice + sign board on the parapet (world Label3D sits at z=+5.1)
+    # cornice + the sign band between the awning frames and the cornice (its world Label3D: build_assets, on
+    # GRADY_BOARD; nothing stands proud of it)
     m.box("stone", (w + 0.5, 0.16, 0.5), (0, h + 0.88, hd - 0.1))
     m.box("stone", (w + 0.36, 0.12, 0.4), (0, h + 0.74, hd - 0.1))
-    m.box("stone", (w + 0.3, 0.14, 0.32), (0, h + 0.05, hd + 0.02))
-    m.box("hh_sign_green", (10.0, 0.72, 0.06), (0, h - 0.02, hd + 0.03))
+    m.box("stone", (w + 0.3, 0.14, 0.32), (0, SIGN_Y + GRADY_BOARD[1] / 2 + 0.09, hd + 0.02))  # string course
+    m.box("hh_sign_green", (GRADY_BOARD[0], GRADY_BOARD[1], 0.06), (0, SIGN_Y, hd + 0.03))
     for s in (-1, 1):
-        m.box("hh_trim", (0.08, 0.8, 0.1), (s * 5.04, h - 0.02, hd + 0.05))
+        m.box("hh_trim", (0.08, GRADY_BOARD[1] + 0.08, 0.1), (s * (GRADY_BOARD[0] / 2 + 0.04), SIGN_Y, hd + 0.05))
     for k, x in enumerate((-3.5, 0, 3.5)):  # gooseneck lamps, one still working
         beam(m, "iron", (x, h + 0.55, hd - 0.02), (x, h + 0.75, hd + 0.35), 0, r=0.025, seg=4)
         beam(m, "iron", (x, h + 0.75, hd + 0.35), (x, h + 0.62, hd + 0.62), 0, r=0.025, seg=4)
@@ -1146,7 +1152,30 @@ def m_bar():
     return m
 
 
-MODELS = [m_house_a, m_house_b, m_house_c, m_cabin, m_motel, m_diner, m_grady_store, m_bar]
+def m_motel_sign():
+    """Lakeview Motel's pole sign by the road: a lettered board on two steel posts, the VACANCY box hung under it;
+    both read from either side (front +Z). The lettering is world Label3Ds (build_assets: faces at z = +-0.1 and
+    +-0.08)."""
+    m = B.Model("motel_sign")
+    m.node("posts-col")
+    for x in (-1.6, 1.6):
+        m.cyl("metal", 0.08, 0.08, 6.3, (x, 0, 0), seg=8)
+    m.node("detail")
+    for x in (-1.6, 1.6):
+        m.box("concrete", (0.5, 0.3, 0.5), (x, 0.15, 0))
+    m.box("hh_enamel_teal", (4.5, 1.25, 0.16), (0, 5.6, 0))
+    m.box("hh_sign_cream", (4.2, 1.0, 0.2), (0, 5.6, 0))
+    m.box("hh_enamel_red", (4.6, 0.1, 0.22), (0, 6.27, 0))
+    for k in range(9):
+        m.cyl("bulb" if k % 3 else "glass", 0.035, 0.035, 0.06, (-2.0 + k * 0.5, 6.32, 0), seg=5)
+    for x in (-0.95, 0.95):  # the VACANCY box hangs off the board on two brackets
+        m.box("metal", (0.05, 0.3, 0.05), (x, 4.97, 0))
+    m.box("hh_enamel_teal", (2.4, 0.52, 0.14), (0, 4.6, 0))
+    m.box("iron", (2.2, 0.4, 0.16), (0, 4.6, 0))
+    return m
+
+
+MODELS = [m_house_a, m_house_b, m_house_c, m_cabin, m_motel, m_diner, m_grady_store, m_bar, m_motel_sign]
 
 
 # ============================================================== furnished interiors (interior_kit)
