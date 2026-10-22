@@ -5,8 +5,8 @@
 # Godot export / mono
 .mono/
 *.translation
-export_presets.cfg
 export.cfg
+/build/
 
 # Python
 __pycache__/
