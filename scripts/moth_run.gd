@@ -251,12 +251,13 @@ func _draw_scores() -> void:
 	for i in mini(rows.size(), 5 if secret else 8):
 		var you: bool = rows[i][0] == "YOU"
 		var col := GLOW if you and int(_t * 3.0) % 2 else PALE
-		_text(Vector2(40, 28 + i * 11), 80, "%d. %s" % [i + 1, rows[i][0]], 8, col, false, HORIZONTAL_ALIGNMENT_LEFT)
+		_text(Vector2(40, 28 + i * 11), 80, "%d. %s" % [i + 1, tr("YOU") if you else rows[i][0]], 8, col, false,
+			HORIZONTAL_ALIGNMENT_LEFT)
 		_text(Vector2(120, 28 + i * 11), 80, str(rows[i][1]), 8, col, false, HORIZONTAL_ALIGNMENT_RIGHT)
 	if secret:  # Elena's message hidden in the table memory
 		draw_rect(Rect2(8, 84, SW - 16, SH - 92), Color(0.12, 0.1, 0.02))
 		draw_rect(Rect2(8, 84, SW - 16, SH - 92), GLOW.darkened(0.3), false)
-		draw_multiline_string(_font, Vector2(12, 95), MSG_BYE if goodbye else MSG, HORIZONTAL_ALIGNMENT_LEFT,
+		draw_multiline_string(_font, Vector2(12, 95), tr(MSG_BYE if goodbye else MSG), HORIZONTAL_ALIGNMENT_LEFT,
 			SW - 24, 7, -1, Color(1.0, 0.85, 0.5))
 	else:
 		_text(Vector2(0, SH - 10), SW, "GAME OVER", 8, TRIM.lightened(0.3))
@@ -264,6 +265,12 @@ func _draw_scores() -> void:
 
 func _text(pos: Vector2, width: float, s: String, fsize: int, col: Color, outline := false,
 		align := HORIZONTAL_ALIGNMENT_CENTER) -> void:
+	## s: an English id (drawn translated) or text already put together with tr(). A translation too wide for
+	## `width` is drawn a size or two smaller (never below 7, or its own size if that's smaller).
+	var t := tr(s)
+	if t != s and width > 0.0:
+		while fsize > 7 and _font.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x > width:
+			fsize -= 1
 	if outline:
-		draw_string_outline(_font, pos, s, align, width, fsize, 3, Color(0, 0, 0, 0.85))
-	draw_string(_font, pos, s, align, width, fsize, col)
+		draw_string_outline(_font, pos, t, align, width, fsize, 3, Color(0, 0, 0, 0.85))
+	draw_string(_font, pos, t, align, width, fsize, col)
