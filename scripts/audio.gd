@@ -19,6 +19,7 @@ const MAX_SFX := 28
 var music_name := ""  ## what is (or, headless, would be) playing
 var last_sfx := ""
 var last_voice := ""
+var last_caption := ""  ## the sound the last sound caption played (caption())
 var silent := false  ## headless: record, don't play
 var _base := ""  ## the track to return to when no one is hunting
 var _threats := {}  ## instance id -> true
@@ -267,10 +268,12 @@ const CAPTIONS := [  ## sound captions in the story ("BONG.", "Click.", "Kshhhâ€
 
 
 func caption(text: String) -> void:
-	## A narration line / banner that names a sound plays it.
+	## A narration line / banner that names a sound plays it. `text` is the line's English id (hud.gd hands it in
+	## before translating), so the keywords hold in every language. last_caption: the sound it played (tests).
 	var t := text.to_lower()
 	for c in CAPTIONS:
 		if t.contains(c[0]):
+			last_caption = c[1]
 			var p := sfx(c[1], null, c[2], c[3])
 			if p and float(c[4]) > 0.0:
 				get_tree().create_timer(c[4]).timeout.connect(stop.bind(p))
