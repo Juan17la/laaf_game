@@ -481,7 +481,7 @@ func sam_file_found() -> void:
 
 func key_part3_found() -> void:
 	var n: int = maxi(int(d.flags.get("key_parts", 0)), 1)
-	await _pickup(Vector3(0.05, 0.02, 0.1), Color(0.8, 0.65, 0.3), "KEY PART %d / 3" % n, [
+	await _pickup(Vector3(0.05, 0.02, 0.1), Color(0.8, 0.65, 0.3), tr("KEY PART %d / 3") % n, [
 		["Alex", "Julian's piece. Cold, like everything in here.", 2.4]], "lean", "key_part")
 
 
@@ -919,10 +919,11 @@ func traitor() -> void:
 	await d.wait(1.5)
 	hud.banner("II · MOTH", Color(0.85, 0.8, 0.7), 4.0)
 	await d.wait(4.5)
-	var nora_text: String = {"spared": "spared", "killed": "killed"}.get(f.get("nora", "active"), "fled")
-	var julian_text: String = {"spared": "spared", "killed": "killed"}.get(f.get("julian", "active"), "fled")
-	await hud.say([["", "End of Chapter 2.  Nora: %s · Julian: %s · Evidence %d · Tokens %d · Key parts %d/3" % [
-		nora_text, julian_text, f.evidence.size(), f.tokens, int(f.get("key_parts", 0))]]])
+	var nora_text: String = {"spared": "Nora: spared", "killed": "Nora: killed"}.get(f.get("nora", "active"), "Nora: fled")
+	var julian_text: String = {"spared": "Julian: spared", "killed": "Julian: killed"}.get(f.get("julian", "active"),
+		"Julian: fled")
+	await hud.say([["", "End of Chapter 2.  %s · %s · Evidence %d · Tokens %d · Key parts %d/3", -1.0, [
+		tr(nora_text), tr(julian_text), f.evidence.size(), f.tokens, int(f.get("key_parts", 0))]]])
 	d.release_stand_in()
 	d.cinematic(false)
 	hud.fade(0.0, 1.5)
