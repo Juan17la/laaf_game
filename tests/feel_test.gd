@@ -326,12 +326,12 @@ func _run() -> void:
 	await _frames(20)
 	player.hurt(5.0, Vector3.ZERO, 2.0)
 	await _frames(3)
-	if hud._mark_note.modulate.a < 0.9 or hud._mark_note.text != "MARK +2%":
+	if hud._mark_note.modulate.a < 0.9 or hud._mark_note.text != tr("MARK +%s%%") % "2":  # (in the run's language)
 		return _fail("mark notice: '%s' alpha %.2f" % [hud._mark_note.text, hud._mark_note.modulate.a])
 	await _frames(20)
 	player.hurt(5.0, Vector3.ZERO, 1.5)
 	await _frames(3)
-	if hud._mark_note.text != "MARK +3.5%":
+	if hud._mark_note.text != tr("MARK +%s%%") % "3.5":
 		return _fail("rapid rises didn't merge: '%s'" % hud._mark_note.text)
 	await _secs(Feel.MARK_NOTICE_HOLD + Feel.MARK_NOTICE_FADE + 0.5)
 	if hud._mark_note.modulate.a > 0.01:
@@ -339,7 +339,7 @@ func _run() -> void:
 	for i in 30:  # creep: 0.1 % a frame, 3 % in all → one notice of 2 %, the rest waiting
 		player.mark += 0.1
 		await process_frame
-	if hud._mark_note.modulate.a < 0.5 or not hud._mark_note.text.begins_with("MARK +2"):
+	if hud._mark_note.modulate.a < 0.5 or not hud._mark_note.text.begins_with((tr("MARK +%s%%") % "2").trim_suffix("%")):
 		return _fail("creep notice: '%s' alpha %.2f" % [hud._mark_note.text, hud._mark_note.modulate.a])
 	var before: String = hud._mark_note.text
 	player.mark += 20.0  # a jump that's no rise (a save / dev start, a checkpoint restore): no notice
@@ -354,7 +354,7 @@ func _run() -> void:
 		var shown: Array = gg._pause.find_children("Mark", "Label", true, false)
 		var txt: String = shown[0].text if not shown.is_empty() else ""
 		gg.resume()
-		if txt != "MARK  37.4%":
+		if txt != tr("MARK  %.1f%%") % 37.4:
 			return _fail("pause menu mark: '%s'" % txt)
 	player.mark = 0.0
 	# a hit: red edges that fade

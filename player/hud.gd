@@ -6,6 +6,9 @@ extends CanvasLayer
 ## Chapter 3: the item belt line (bottles / smoke cans / tea).
 ## Feel (scripts/feel.gd): the drawn eye (HudEyes: Alex's visibility), off-screen threat arcs (ThreatArcs)
 ## and the screen effects of the Mark and of pain (ScreenFx, through the Post shader).
+## Text: everything handed in here is an English id (locale/es.po has the Spanish), translated as it's shown, so
+## the game's state keeps the ids; Labels that hold an id translate themselves again on a language switch. Sound
+## captions are looked up from the id, never from the translated text.
 
 const SPEAKERS := {
 	"Alex": Color(0.85, 0.9, 1.0), "Moth": Color(1.0, 0.85, 0.25), "Grady": Color(0.85, 0.78, 0.62),
@@ -73,6 +76,8 @@ var _swap_t := 0.0  ## seconds since the drawn weapon changed (the card flares)
 const TIP := "WASD move · Shift run · F light"  ## the only note at the start; the rest come when they matter
 var _queue: Array = []  ## notes wait their turn: one slip on screen at a time
 var _told_dry := false
+var _objective_id := ""  ## the objective as handed in (an English id): shown translated, again on a language switch
+var _line := 0  ## the subtitle on screen (a line that ends only clears the panel if no newer one took it over)
 const INK := Color(0.16, 0.11, 0.07)
 const PAPER := Color(0.87, 0.8, 0.63)
 
@@ -180,6 +185,7 @@ func _ready() -> void:
 	_sub_panel.add_child(_sub)
 	_banner = _label("", 26, Color(1, 1, 1, 0), Control.PRESET_CENTER, Vector2(-300, -60), Vector2(600, 40))
 	_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_banner.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART  # (a long translation wraps instead of leaving the screen)
 	_boss = Control.new()
 	_boss.set_anchors_preset(Control.PRESET_CENTER_TOP)
 	_boss.position = Vector2(-120, 62)  # under the compass (y 28..55), not on it
@@ -269,7 +275,7 @@ func _process(delta: float) -> void:
 	var items := []  # throwables / consumables on the belt
 	for it in [[player.bottles, "Bottle", "G"], [player.smokes, "Smoke", "T"], [player.teas, "Tea", "H"]]:
 		if it[0] > 0:
-			items.append("%s ×%d [%s]" % [it[1], it[0], it[2]])
+			items.append("%s ×%d [%s]" % [tr(it[1]), it[0], it[2]])
 	_bottles.visible = play and not items.is_empty()
 	_bottles.text = "  ".join(items)
 	if play and not _hint_shown:  # the first time the player's in control: one line of controls
@@ -286,14 +292,14 @@ func _process(delta: float) -> void:
 	_gun.visible = play
 	_ammo.visible = play and sp.kind != "melee"
 	_cross.visible = (g != "" or player.bottles > 0 or player.smokes > 0) and player.controls_enabled  # throws land on it too
-	var title: String = sp.name.to_upper()
+	var title: String = tr(sp.name).to_upper()
 	if w.dry():
-		title += "  · EMPTY"
+		title += "  · " + tr("EMPTY")
 		if not _told_dry:  # the moment it matters: the gun just ran dry
 			_told_dry = true
 			note("Empty. B strikes.", "", 3.0)
 	elif w.reloading():
-		title += "  · nocking" if g == "bow" else "  · reloading"
+		title += "  · " + (tr("nocking") if g == "bow" else tr("reloading"))
 	_gun.text = title
 	if g != _last_gun:  # drawn: the name takes the weapon's colour and flares up
 		_gun.add_theme_color_override("font_color", Color(0.75, 0.72, 0.65).lerp(sp.color, 0.6))
@@ -302,7 +308,7 @@ func _process(delta: float) -> void:
 		_slot_count = w.owned.size()
 		var slots := PackedStringArray()
 		for i in w.owned.size():
-			var n: String = Weapons.GUNS[w.owned[i]].name.to_upper()
+			var n: String = tr(Weapons.GUNS[w.owned[i]].name).to_upper()
 			slots.append(("[%d %s]" if i == w.current else "%d %s") % [i + 1, n])
 		_slots.text = "   ".join(slots)
 	if sp.kind != "melee":
@@ -318,7 +324,7 @@ func _process(delta: float) -> void:
 	var t: Node = player.interact_target() if player.controls_enabled else null
 	var vis: bool = k != null or (t != null and not t.auto)
 	if vis:
-		_prompt.text = "Takedown" if k else t.prompt  # keeps the last text while fading out
+		_prompt.text = tr("Takedown") if k else tr(t.prompt)  # keeps the last text while fading out
 		_prompt.add_theme_color_override("font_color", Color(1.0, 0.55, 0.45) if k else Color(0.95, 0.92, 0.8))
 	_prompt_box.modulate.a = move_toward(_prompt_box.modulate.a, 1.0 if vis else 0.0, delta * 4.0)
 
@@ -387,7 +393,14 @@ func show_zone(zone_name: String) -> void:
 		return  # zone volumes fire as cinematics teleport the stand-in: no stale titles over a shot
 	if zone_label.text == zone_name and zone_label.modulate.a > 0.0:
 		return
-	zone_label.text = zone_name
+	zone_label.text = zone_name  # (an English id: the Label shows it translated)
+	var fs := 20
+	var shown := tr(zone_name)
+	if shown != zone_name:  # a longer translation shrinks (to 16) to stay clear of the note slips on the left
+		while fs > 16 and zone_label.get_theme_font("font").get_string_size(shown, HORIZONTAL_ALIGNMENT_LEFT, -1,
+				fs).x > 250.0:
+			fs -= 1
+	zone_label.add_theme_font_size_override("font_size", fs)
 	if _tween:
 		_tween.kill()
 	_tween = create_tween()
@@ -398,10 +411,16 @@ func show_zone(zone_name: String) -> void:
 
 func objective(text: String, target: Variant = null) -> void:
 	## target (Vector3 / Node3D / null) is handed to the Guide (minimap, compass, waypoint marker).
-	_objective.text = "> " + text if text != "" else ""
+	_objective_id = text
+	_objective.text = "> " + tr(text) if text != "" else ""
 	var guide := player.get_node_or_null("Guide")
 	if guide:
 		guide.set_target(target, text)
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED and _objective:  # a language switch (Settings): the objective again
+		_objective.text = "> " + tr(_objective_id) if _objective_id != "" else ""
 
 
 func hit_marker(double_tap: bool) -> void:
@@ -421,7 +440,7 @@ func mark_notice(gain: float) -> void:
 	if gain <= 0.0:
 		return
 	_mark_n = (_mark_n if _mark_tw and _mark_tw.is_running() else 0.0) + gain
-	_mark_note.text = "MARK +%s%%" % pct(_mark_n)
+	_mark_note.text = tr("MARK +%s%%") % pct(_mark_n)
 	if _mark_tw:
 		_mark_tw.kill()
 	_mark_note.modulate = Color(2.2, 1.6, 1.4, 1.0)  # the flash
@@ -482,7 +501,7 @@ func _slip(text: String, title: String, time: float) -> void:
 	slip.add_child(col)
 	if title != "":
 		var t := Label.new()
-		t.text = title.to_upper()
+		t.text = tr(title).to_upper()
 		t.add_theme_font_size_override("font_size", 8)
 		t.add_theme_color_override("font_color", Color(0.55, 0.12, 0.08))
 		col.add_child(t)
@@ -535,7 +554,7 @@ func _draw_weapons() -> void:
 		var tc := Color(1, 0.96, 0.85) if sel else Color(0.6, 0.57, 0.5)
 		c.draw_string(font, r.position + Vector2(3, 8), str(i + 1) if id != "" else "", HORIZONTAL_ALIGNMENT_LEFT, -1, 7,
 			Color(col, 0.9))
-		c.draw_string(font, r.position + Vector2(0, 17), short, HORIZONTAL_ALIGNMENT_CENTER, cw, 7, tc)
+		c.draw_string(font, r.position + Vector2(0, 17), tr(short), HORIZONTAL_ALIGNMENT_CENTER, cw, 7, tc)
 		if id != "" and sp.kind != "melee" and w.reserve[id] + w.loaded[id] <= 0:
 			c.draw_line(r.position + Vector2(4, 4), r.end - Vector2(4, 6), Color(0.8, 0.2, 0.15, 0.8), 1.0)  # dry
 	var g := w.gun()
@@ -596,31 +615,42 @@ func fade(alpha: float, time := 0.6) -> Signal:
 	return tw.finished
 
 
-func subtitle(speaker: String, text: String, time := -1.0) -> void:
-	## Coroutine: shows one line and returns when it's done (or skipped with Enter / E).
+func subtitle(speaker: String, text: String, time := -1.0, args := []) -> void:
+	## Coroutine: shows one line and returns when it's done (or skipped with Enter / E). `text` is the English id
+	## (with `args`: a template, "%d of 12." and [n]): the line shows (and is babbled) translated. A translation
+	## that runs longer stays up longer, fixed times too: the English time plus the reading pace (0.055 s a letter,
+	## as for an untimed line) for every extra letter. English keeps its timing exactly.
+	var line := tr(text) % args if not args.is_empty() else tr(text)
+	if not args.is_empty():
+		text = text % args
+	var extra := maxf(line.length() - text.length(), 0) * 0.055
 	if time < 0.0:
 		time = clampf(1.1 + text.length() * 0.055, 1.6, 6.5)
+	time += extra
 	var c: Color = SPEAKERS.get(speaker, Color.WHITE)
-	if speaker == "":  # narration / sound captions: the ones that name a sound get it
+	if speaker == "":  # narration / sound captions: the ones that name a sound get it (found from the id)
 		Snd.caption(text)
-		_sub.text = "[i]%s[/i]" % text
+		_sub.text = "[i]%s[/i]" % line
 	else:
-		_sub.text = "[b][color=#%s]%s:[/color][/b] %s" % [c.to_html(false), speaker.to_upper(), text]
+		_sub.text = "[b][color=#%s]%s:[/color][/b] %s" % [c.to_html(false), tr(speaker).to_upper(), line]
 	_sub_panel.visible = true
 	_skip = false
-	Snd.voice(speaker, text, time)
+	_line += 1
+	var me := _line
+	Snd.voice(speaker, line, time)
 	var left := time
 	while left > 0.0 and not (_skip and left < time - 0.3):
 		await get_tree().process_frame
 		left -= get_process_delta_time()
-	Snd.stop_voice()
-	_sub_panel.visible = false
+	if me == _line:  # (a newer line took the panel over: it stays, with its voice)
+		Snd.stop_voice()
+		_sub_panel.visible = false
 
 
 func say(lines: Array) -> void:
-	## Coroutine: [[speaker, text], ...] one after another.
+	## Coroutine: [[speaker, text], ...] one after another ([speaker, text, time, args] for a template).
 	for l in lines:
-		await subtitle(l[0], l[1], l[2] if l.size() > 2 else -1.0)
+		await subtitle(l[0], l[1], l[2] if l.size() > 2 else -1.0, l[3] if l.size() > 3 else [])
 
 
 func clock(text: String) -> void:
