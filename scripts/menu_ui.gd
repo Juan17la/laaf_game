@@ -2,6 +2,8 @@ class_name MenuUI
 extends RefCounted
 ## The menus' look (main menu, pause menu): a dark card with a paper-coloured title, buttons that glow on
 ## hover / focus with a lantern-amber edge, and old-paper list rows. Keyboard / pad focus works throughout.
+## Titles and button names are English ids: Labels translate themselves, buttons through tr() as they're made
+## (a page is built again to change language).
 
 const PAPER := Color(0.88, 0.82, 0.66)
 const INK := Color(0.12, 0.09, 0.06)
@@ -35,10 +37,12 @@ static func panel(parent: Node, title: String, subtitle := "", width := 280.0) -
 	return col
 
 
-static func button(col: Control, text: String, cb: Callable) -> Button:
+static func button(col: Control, id: String, cb: Callable) -> Button:
 	## A PS1-style menu line: plain text, dim until selected; the selected one (keyboard, pad or mouse
 	## hover) is bright, gets a ▶ and a soft bar behind it. Disabled lines are greyed out.
+	var text := TranslationServer.translate(id)
 	var b := Button.new()
+	b.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED  # (already translated, with its ▶ prefix)
 	b.text = "   " + text
 	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	b.focus_mode = Control.FOCUS_ALL
@@ -85,9 +89,74 @@ static func first_button(col: Control) -> Button:
 
 
 static func focus(col: Control) -> void:
-	var b := first_button(col)
+	var b := (col as Button) if col is Button and not (col as Button).disabled else first_button(col)
 	if b:
 		b.grab_focus.call_deferred()
+
+
+static func settings_list(col: Control, changed := Callable()) -> Control:
+	## Every Settings row as a menu line under its group's heading, in a scrolling box: Enter / click and D / right
+	## step it up, A / left down; the value sits at the right. Each row is a Button named "<section>_<key>".
+	## `changed(id)` runs after a row changes. Returns the scroll box.
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(0, 220)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.follow_focus = true
+	col.add_child(scroll)
+	var rows := VBoxContainer.new()
+	rows.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	rows.add_theme_constant_override("separation", 0)
+	scroll.add_child(rows)
+	var help := label("", 8, DIM)
+	help.custom_minimum_size = Vector2(0, 22)
+	help.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+	for g in Settings.GROUPS:
+		var head := label(g[1], 8, Color(0.75, 0.62, 0.4))
+		rows.add_child(head)
+		for r in Settings.ROWS:
+			if r[0] != g[0]:
+				continue
+			var id := "%s/%s" % [r[0], r[1]]
+			var value := label("", 11, PAPER)
+			value.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+			value.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+			value.set_anchors_preset(Control.PRESET_RIGHT_WIDE)
+			value.offset_left = -90
+			value.offset_right = -4
+			value.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			var show := func() -> void: value.text = setting_text(id)
+			var change := func(dir: int) -> void:
+				Settings.step(id, dir)
+				Snd.sfx("move")
+				show.call()
+				if changed.is_valid():
+					changed.call(id)
+			var b := button(rows, r[2], change.bind(1))
+			b.name = id.replace("/", "_")
+			b.clip_text = true
+			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_constant_override("h_separation", 0)
+			b.add_child(value)
+			b.gui_input.connect(func(e: InputEvent) -> void:
+				if e.is_action_pressed("ui_left") or e.is_action_pressed("move_left"):
+					change.call(-1)
+					b.accept_event()
+				elif e.is_action_pressed("ui_right") or e.is_action_pressed("move_right"):
+					change.call(1)
+					b.accept_event())
+			b.focus_entered.connect(func() -> void: help.text = TranslationServer.translate(r[6]))
+			show.call()
+	col.add_child(help)
+	return scroll
+
+
+static func setting_text(id: String) -> String:
+	## A setting's value as the pause menu writes it (the main menu draws its own meters and switches).
+	var r := Settings.row(id)
+	match r[3] if not r.is_empty() else "":
+		"percent":
+			return "%d%%" % roundi(Settings.number(id) * 100.0)
+	return Settings.text(id)
 
 
 static func label(text: String, size: int, color: Color, centered := false) -> Label:
