@@ -37,6 +37,8 @@ const REGISTER := Vector3(-62.0, 1.0, -104.5)
 const CANDLES := [["Tomás", Vector3(-75.9, 0.9, -98.8)], ["Clara", Vector3(-73.8, 0.9, -101.2)],
 	["the Clarkes", Vector3(-69.6, 0.9, -98.8)], ["Lily", Vector3(-67.5, 0.9, -101.2)],
 	["Sam", Vector3(-63.3, 0.9, -98.8)]]
+const CANDLE_PROMPT := {"Tomás": "Light a candle for Tomás", "Clara": "Light a candle for Clara",
+	"the Clarkes": "Light a candle for the Clarkes", "Lily": "Light a candle for Lily", "Sam": "Light a candle for Sam"}
 # town + lighthouse
 const RECORDER := Vector3(4.3, 1.0, 135.4)  # on the step by the lighthouse door
 # quarry (chapel (-22,-210) door at z -205, gate (30,-222.5), cages (2,-201) (8,-197))
@@ -404,7 +406,7 @@ func _register() -> void:
 
 func _candle(who: String, at: Vector3) -> void:
 	## Empty Chairs: a candle on each of the five families' pews.
-	await _use(at, "Light a candle for " + who, Color(1.0, 0.75, 0.4))
+	await _use(at, CANDLE_PROMPT[who], Color(1.0, 0.75, 0.4))
 	var flame := OmniLight3D.new()
 	flame.light_color = Color(1.0, 0.7, 0.35)
 	flame.light_energy = 0.8
