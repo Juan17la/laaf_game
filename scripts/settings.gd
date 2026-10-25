@@ -5,12 +5,16 @@ extends RefCounted
 ## gameplay code reads it with no autoload, so the headless tests run on the defaults, which are the game as designed.
 ## ROWS is the whole screen, one setting per row, grouped by its section: a new one (a language, key bindings) is a
 ## row here plus the line in apply() that puts it into effect. The cfg keeps one [section] per group, key = value.
+## Labels and help are English message ids: the screens show them through tr() (locale/es.po, tools/l10n.py).
+## The language row's default is the system's (Spanish when the OS locale is Spanish, else English); a language
+## forced on the command line (`--language es`: tests, dev runs) wins over the saved one.
 
 const PATH := "user://settings.cfg"
-const GROUPS := [["audio", "AUDIO"], ["controls", "CONTROLS"], ["gameplay", "GAMEPLAY & ACCESSIBILITY"], ["video", "VIDEO"]]
+const GROUPS := [["general", "GENERAL"], ["audio", "AUDIO"], ["controls", "CONTROLS"], ["gameplay", "GAMEPLAY & ACCESSIBILITY"], ["video", "VIDEO"]]
 ## [section, key, label, kind, default, extra, help]. kind: "slider" (extra [min, max, step]; "percent" shows a bar,
 ## "times" a multiplier), "toggle" (bool), "choice" (extra [[value, label], ...]).
 const ROWS := [
+	["general", "language", "Language", "choice", "en", LANGUAGES, "The game's text: menus, subtitles, notes, signs."],
 	["audio", "master", "Master volume", "percent", 1.0, [0.0, 1.0, 0.1], "Everything you hear."],
 	["audio", "music", "Music", "percent", 1.0, [0.0, 1.0, 0.1], "The score: exploring, the hunts, the bosses."],
 	["audio", "sfx", "Sound effects", "percent", 1.0, [0.0, 1.0, 0.1], "Steps, shots, doors, the town around you."],
@@ -31,6 +35,7 @@ const ROWS := [
 	["video", "vsync", "VSync", "toggle", true, null, "Sync to the monitor: no tearing (a frame of latency)."],
 	["video", "post_fx", "Film grain & vignette", "percent", 1.0, [0.0, 1.0, 0.1], "The grain and the dark corners over the picture."],
 ]
+const LANGUAGES := [["en", "English"], ["es", "Español"]]  ## each in its own language (never translated)
 const BUS_DB := {"Master": 0.0, "Music": -5.0, "SFX": -2.0, "Voice": 0.0}  ## each bus at 100% (the mix as designed)
 const BUSES := {"master": "Master", "music": "Music", "sfx": "SFX", "voice": "Voice"}
 
@@ -64,7 +69,16 @@ static func reset() -> void:
 	## Every row back to its default (not applied, not saved).
 	values.clear()
 	for r in ROWS:
-		values["%s/%s" % [r[0], r[1]]] = r[4]
+		values["%s/%s" % [r[0], r[1]]] = system_language() if r[1] == "language" else r[4]
+
+
+static func system_language() -> String:
+	## The language a first run starts in: Spanish when the system is (or `--language es`), English otherwise.
+	return "es" if _boot_locale.begins_with("es") else "en"
+
+
+static var _boot_locale := TranslationServer.get_locale()  ## (before apply() first sets it)
+static var _forced := _boot_locale != OS.get_locale()  ## `--language` was given (the engine takes the flag itself)
 
 
 static func set_value(id: String, v: Variant, save_now := true) -> void:
@@ -108,8 +122,12 @@ static func load_file(path := PATH) -> void:
 	for r in ROWS:
 		if cfg.has_section_key(r[0], r[1]):
 			var v: Variant = cfg.get_value(r[0], r[1])
+			if r[3] == "choice" and not (r[5] as Array).any(func(o: Array) -> bool: return o[0] == v):
+				continue  # (a value this build doesn't offer: the default stays)
 			if typeof(v) == typeof(r[4]) or (r[4] is float and v is int):
 				values["%s/%s" % [r[0], r[1]]] = float(v) if r[4] is float else v
+	if _forced:
+		values["general/language"] = system_language()
 
 
 static func save_file(path := PATH) -> bool:
@@ -125,6 +143,8 @@ static func apply() -> void:
 	## sensitivities and invert are read by the player as he turns; the post FX by ScreenFx (version).
 	if values.is_empty():
 		reset()
+	if TranslationServer.get_locale() != str(value("general/language")):
+		TranslationServer.set_locale(str(value("general/language")))  # every Label / Label3D re-translates itself
 	Feel.shake = number("gameplay/shake")
 	Feel.hitstop = number("gameplay/hitstop")
 	Feel.mark_fx = number("gameplay/mark_fx")
@@ -171,9 +191,9 @@ static func text(id: String) -> String:
 		"times":
 			return "%.1f×" % number(id)
 		"toggle":
-			return "ON" if flag(id) else "OFF"
+			return TranslationServer.translate("ON") if flag(id) else TranslationServer.translate("OFF")
 		"choice":
 			for o in r[5]:
 				if o[0] == value(id):
-					return str(o[1])
+					return str(o[1]) if r[1] == "language" else TranslationServer.translate(str(o[1]))
 	return str(value(id))
