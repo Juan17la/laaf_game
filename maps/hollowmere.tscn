@@ -258,6 +258,8 @@
 
 [ext_resource type="PackedScene" path="res://player/player.tscn" id="r129"]
 
+[ext_resource type="Script" path="res://scripts/sign_label.gd" id="sign_label"]
+
 
 [sub_resource type="Environment" id="s1"]
 background_mode = 1
@@ -500,6 +502,7 @@ modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni" type="OmniLight3D" parent="Lights"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 14, 2.8, -24)
@@ -519,6 +522,7 @@ modulate = Color(0.8, 0.35, 0.25, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni2" type="OmniLight3D" parent="Lights"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -14, 2.6, -25)
@@ -791,6 +795,7 @@ modulate = Color(0.85, 0.22, 0.18, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Sign4" type="Label3D" parent="Signs"]
 transform = Transform3D(-1.837e-16, 0, -1, 0, 1, 0, 1, 0, -1.837e-16, -82.13, 5.6, 44)
@@ -801,6 +806,7 @@ modulate = Color(0.85, 0.22, 0.18, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Sign5" type="Label3D" parent="Signs"]
 transform = Transform3D(6.1232e-17, 0, 1, 0, 1, 0, -1, 0, 6.1232e-17, -81.89, 4.6, 44)
@@ -811,6 +817,7 @@ modulate = Color(0.95, 0.2, 0.18, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Sign6" type="Label3D" parent="Signs"]
 transform = Transform3D(-1.837e-16, 0, -1, 0, 1, 0, 1, 0, -1.837e-16, -82.11, 4.6, 44)
@@ -821,6 +828,7 @@ modulate = Color(0.95, 0.2, 0.18, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni9" type="OmniLight3D" parent="Lights"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -83, 5.2, 44)
@@ -838,6 +846,7 @@ modulate = Color(0.6, 0.8, 0.9, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni10" type="OmniLight3D" parent="Lights"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -99.5, 2.4, 49.5)
@@ -2603,6 +2612,7 @@ modulate = Color(0.7, 0.8, 0.75, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="ambulance" parent="Props" instance=ExtResource("r31")]
 transform = Transform3D(0.93969, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.93969, 55, 0, -92)
@@ -2678,6 +2688,7 @@ modulate = Color(0.3, 0.27, 0.22, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="flagpole" parent="Props" instance=ExtResource("r34")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 95, 0, -8)
@@ -2860,6 +2871,8 @@ modulate = Color(0.9, 0.85, 0.7, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+script = ExtResource("sign_label")
+ems = {"en": 0.25964, "es": 0.25964}
 
 [node name="ext_town_sign" parent="Props" instance=ExtResource("r45")]
 transform = Transform3D(6.1232e-17, 0, 1, 0, 1, 0, -1, 0, 6.1232e-17, -104.6, 0, 140)
@@ -2873,6 +2886,8 @@ modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+script = ExtResource("sign_label")
+ems = {"en": 0.34207, "es": 0.34207}
 
 [node name="Omni27" type="OmniLight3D" parent="Lights"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -100, 2, 156)
@@ -3015,6 +3030,7 @@ modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni30" type="OmniLight3D" parent="Lights"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 34.5, 6.8, -220.5)
@@ -4184,6 +4200,8 @@ modulate = Color(0.6, 0.08, 0.06, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+script = ExtResource("sign_label")
+ems = {"en": 0.24966, "es": 0.24667}
 
 [node name="ext_warning_sign2" parent="Props" instance=ExtResource("r67")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6, 0, -140)
@@ -4197,6 +4215,8 @@ modulate = Color(0.6, 0.08, 0.06, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+script = ExtResource("sign_label")
+ems = {"en": 0.21798, "es": 0.20830}
 
 [node name="ext_warning_sign3" parent="Props" instance=ExtResource("r67")]
 transform = Transform3D(6.1232e-17, 0, 1, 0, 1, 0, -1, 0, 6.1232e-17, -77, 0, -6)
@@ -4210,6 +4230,8 @@ modulate = Color(0.6, 0.08, 0.06, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+script = ExtResource("sign_label")
+ems = {"en": 0.14857, "es": 0.10178}
 
 [node name="ext_burnt_car" parent="Props" instance=ExtResource("r68")]
 transform = Transform3D(0.98481, 0, 0.17365, 0, 1, 0, -0.17365, 0, 0.98481, -6, 0, -80)
@@ -4854,6 +4876,8 @@ modulate = Color(0.55, 0.62, 0.5, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+script = ExtResource("sign_label")
+ems = {"en": 0.06990, "es": 0.06990}
 
 [node name="park_kiosk" parent="Props" instance=ExtResource("r90")]
 transform = Transform3D(6.1232e-17, 0, -1, 0, 1, 0, 1, 0, 6.1232e-17, 23, 0, -7.5)
@@ -4867,6 +4891,7 @@ modulate = Color(0.75, 0.7, 0.55, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni54" type="OmniLight3D" parent="Lights"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 21.6, 2.05, -7.5)
@@ -4905,6 +4930,7 @@ modulate = Color(0.62, 0.6, 0.5, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="park_sign" parent="Props" instance=ExtResource("r95")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -4.8, 0, 28.3)
@@ -4918,6 +4944,8 @@ modulate = Color(0.7, 0.68, 0.58, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+script = ExtResource("sign_label")
+ems = {"en": 0.10155, "es": 0.10155}
 
 [node name="park_gate" parent="Props" instance=ExtResource("r96")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -17.25, 0, 29.3)
@@ -5429,6 +5457,7 @@ modulate = Color(0.75, 0.66, 0.48, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="town_laundromat" parent="Buildings" instance=ExtResource("r106")]
 transform = Transform3D(6.1232e-17, 0, 1, 0, 1, 0, -1, 0, 6.1232e-17, -38, 0, -26)
@@ -5442,6 +5471,7 @@ modulate = Color(0.5, 1, 0.55, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni55" type="OmniLight3D" parent="Lights"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -33, 3.2, -26)
@@ -5475,6 +5505,7 @@ modulate = Color(0.75, 0.95, 0.8, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni57" type="OmniLight3D" parent="Lights"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 76, 3.9, -12)
@@ -6269,6 +6300,7 @@ modulate = Color(0.88, 0.88, 0.82, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Sign24" type="Label3D" parent="Signs"]
 transform = Transform3D(1, 0, -2.4493e-16, 0, 1, 0, 2.4493e-16, 0, 1, 4.8, 2.84, -52.955)
@@ -6279,6 +6311,7 @@ modulate = Color(0.88, 0.88, 0.82, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Sign25" type="Label3D" parent="Signs"]
 transform = Transform3D(-1.837e-16, 0, -1, 0, 1, 0, 1, 0, -1.837e-16, 4.755, 3.1, 64.5)
@@ -6289,6 +6322,7 @@ modulate = Color(0.88, 0.88, 0.82, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Sign26" type="Label3D" parent="Signs"]
 transform = Transform3D(3.0616e-16, 0, 1, 0, 1, 0, -1, 0, 3.0616e-16, 4.845, 3.1, 64.5)
@@ -6299,6 +6333,7 @@ modulate = Color(0.88, 0.88, 0.82, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Sign27" type="Label3D" parent="Signs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -4.8, 2.84, 55.045)
@@ -6309,6 +6344,7 @@ modulate = Color(0.88, 0.88, 0.82, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Sign28" type="Label3D" parent="Signs"]
 transform = Transform3D(-1, 0, 1.2246e-16, 0, 1, 0, -1.2246e-16, 0, -1, -4.8, 2.84, 54.955)
@@ -6319,6 +6355,7 @@ modulate = Color(0.88, 0.88, 0.82, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="town_graffiti_wall" parent="Props" instance=ExtResource("r120")]
 transform = Transform3D(6.1232e-17, 0, 1, 0, 1, 0, -1, 0, 6.1232e-17, -35, 0, -12)
