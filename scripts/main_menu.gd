@@ -8,27 +8,29 @@ extends Control
 ##    Continue (the last save: a map photo pinned where it was made, chapter, time, Mark, weapons, the objective),
 ##    New (difficulty with its numbers as meters), Load, Extra (achievements), Options (scripts/settings.gd),
 ##    Dev, Quit. W/S choose a tab, Enter / D opens it, Esc goes back; the mouse points and clicks.
+##  · every word drawn goes through tr() (English ids, Spanish in locale/es.po): the page redraws each frame, so a
+##    language switch on the Options page shows at once
 ##  · grain, dither and CRT scanlines over everything. The menu draws in canvas_items scale so its type is crisp at
 ##    any window size; the 3D town stays low-res (its SubViewport is 640×360) and the game's own scale comes back
 ##    on the way out.
 
 const SCENES := [  ## caption, line, camera from → to, looking at, cast [model, pos, yaw, gesture], light [pos, colour, energy]
-	["LAST POSTCARD", "\"Hollowmere is beautiful. Don't come.\"",
+	["Last Postcard", "\"Hollowmere is beautiful. Don't come.\"",
 		Vector3(-98, 1.1, 150), Vector3(-100, 1.4, 146.5), Vector3(-105, 1.5, 136),
 		[["char_alex", Vector3(-104.5, 0, 138.5), PI, "look_around"]], [Vector3(-103, 3.0, 141), Color(1.0, 0.7, 0.45), 1.6]],
-	["ROOM 6", "A shape behind the glass. A hiss. The smell of burning.",
+	["Room 6", "A shape behind the glass. A hiss. The smell of burning.",
 		Vector3(-88, 1.3, 58), Vector3(-90, 1.6, 54.5), Vector3(-95.5, 1.4, 50),
 		[["char_owen", Vector3(-95.0, 0.1, 50.2), -PI / 2.0, "window_press"]], [Vector3(-94.5, 2.6, 49), Color(1.0, 0.8, 0.5), 1.4]],
-	["FOR THE NINE", "Who never came home.",
+	["For The Nine", "Who never came home.",
 		Vector3(-19.4, 1.5, 0.5), Vector3(-19.2, 1.4, -1.6), Vector3(-19, 0.7, -5.5),
 		[["char_marked_woman", Vector3(-19, 0, -4.6), PI, "slump"]], [Vector3(-18.6, 0.6, -5.4), Color(1.0, 0.55, 0.25), 1.2]],
-	["CHANNEL 7", "\"They marked you. Stay in the grass.\"",
+	["Channel 7", "\"They marked you. Stay in the grass.\"",
 		Vector3(12.5, 1.4, 130), Vector3(11.5, 1.6, 131.5), Vector3(8.6, 1.3, 134),
 		[["char_elena", Vector3(8.6, 0, 134.0), PI * 0.75, "hand_to_face"]], [Vector3(9, 2.4, 134.5), Color(0.6, 0.8, 1.0), 1.0]],
-	["ST. BRENDAN", "The doors were never locked. Nobody leaves.",
+	["St. Brendan", "The doors were never locked. Nobody leaves.",
 		Vector3(-50, 1.5, -98), Vector3(-52, 1.6, -99), Vector3(-56.5, 1.5, -100),
 		[["char_marcus", Vector3(-56.5, 0, -100), PI / 2.0, "arms_crossed"]], [Vector3(-57.5, 3.0, -100), Color(1.0, 0.6, 0.3), 1.6]],
-	["THE HARVEST", "It never talks. Its footsteps are the only loud thing.",
+	["The Harvest", "It never talks. Its footsteps are the only loud thing.",
 		Vector3(-21, 1.0, -189), Vector3(-21.6, 1.3, -193), Vector3(-22, 2.2, -199),
 		[], [Vector3(-21, 3.2, -195.5), Color(1.0, 0.15, 0.1), 4.0]],
 ]
@@ -39,6 +41,11 @@ const DEV_STEPS := [
 	["III", "The Harvest", ["c3_bell", "run", "marcus", "static", "gate", "harvest", "harvester", "shepherd", "epilogue"]],
 ]
 const CHAPTERS := ["", "I — The Mark", "II — Moth", "III — The Harvest"]
+## A save made before any objective is on screen reads as its step, the way String.capitalize() writes the step id:
+## these are those names (English ids for tr(); locale/es.po has them in Spanish).
+const STEP_TITLES := ["Intro", "Room", "Hunt", "Square", "Sawmill", "Boss", "Blackout", "Free", "C 2 Intro",
+	"Channel 7", "Zones", "Traitor", "C 3 Bell", "Run", "Marcus", "Static", "Gate", "Harvest", "Harvester", "Shepherd",
+	"Epilogue"]
 const TABS := [["continue", "CONTINUE"], ["new", "NEW"], ["load", "LOAD"], ["extra", "EXTRA"],
 	["options", "OPTIONS"], ["dev", "DEV"], ["quit", "QUIT"]]
 const ACH_ICONS := {"ch1": "axe", "ch2": "mark", "ch3": "continue", "evidence": "load", "keys": "key",
@@ -335,18 +342,24 @@ func _place(pos: Variant) -> String:
 	return "Hollowmere"
 
 
-func _objective(s: Dictionary) -> String:
-	var label := str(s.get("label", ""))
-	var text := label.split(" · ", true, 1)[1] if " · " in label else label
-	return text.capitalize() if text == str(s.get("step", "")) else text  # (no objective on screen: the step's name)
+func _objective(s: Dictionary, translated := true) -> String:
+	## The objective a save was made on, in the current language (`translated` false: its English id). Saves keep
+	## the English ("objective"; older ones only have it inside "label", "Ch.N · objective"), so a save loads and
+	## reads the same in any language.
+	var text := str(s.get("objective", ""))
+	if not s.has("objective"):
+		var label := str(s.get("label", ""))
+		text = label.split(" · ", true, 1)[1] if " · " in label else label
+	if text == "" or text == str(s.get("step", "")):  # (no objective on screen: the step's name, STEP_TITLES)
+		text = str(s.get("step", "")).capitalize()
+	return tr(text) if translated else text
 
 
 func _save_title(s: Dictionary) -> String:
 	## A load row's name: the objective it was saved on; an autosave with none on screen, the place it was made.
-	var text := _objective(s)
-	if text.to_lower() == str(s.get("step", "")).to_lower() and s.get("pos", null) != null:
-		return _place(s.pos)
-	return text
+	if _objective(s, false).to_lower() == str(s.get("step", "")).to_lower() and s.get("pos", null) != null:
+		return tr(_place(s.pos))
+	return _objective(s)
 
 
 func _row_box(r: Rect2, on: bool) -> void:
@@ -371,18 +384,18 @@ func _draw_deco() -> void:
 	# the scene's caption, bottom left, in and out with the shot
 	var cap := clampf(_shot_t - 2.0, 0.0, 1.0) * clampf(SCENE_TIME - 2.0 - _shot_t, 0.0, 1.0)
 	var s: Array = SCENES[_shot]
-	_shadowed(_serif_it, Vector2(32, H - 36), s[1], 11, Color(0.82, 0.79, 0.72, cap * 0.9))
-	_shadowed(_ui, Vector2(32, H - 25), "— " + str(s[0]).capitalize(), 7, Color(0.85, 0.5, 0.44, cap * 0.95))
+	_shadowed(_serif_it, Vector2(32, H - 36), tr(s[1]), 11, Color(0.82, 0.79, 0.72, cap * 0.9))
+	_shadowed(_ui, Vector2(32, H - 25), "— " + tr(s[0]), 7, Color(0.85, 0.5, 0.44, cap * 0.95))
 	if _fade < 1.0:
 		var ta := 1.0 - e
 		var pulse := 0.55 + 0.45 * (0.5 + 0.5 * sin(_t * 2.6))
-		var label := "PRESS ANY KEY"
+		var label := tr("PRESS ANY KEY")
 		var tw := _caps.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x
 		var r := Rect2(W / 2.0 - tw / 2.0 - 12.0, 248, tw + 24.0, 19)
 		Icons.fill_round(_deco, r, 9.5, Color(0, 0, 0, 0.45 * ta))
 		_deco.draw_polyline(Icons.round_rect(r, 9.5), Color(BONE, 0.35 * ta * pulse), 1.0, true)
 		_str(_caps, Vector2(r.position.x + 12.0, r.position.y + 12.8), label, 8, Color(BONE, ta * pulse))
-		_shadowed(_caps, Vector2(0, H - 6), "HOLLOWMERE  ·  POP. 1413", 7, Color(MUTED, 0.8 * ta), W,
+		_shadowed(_caps, Vector2(0, H - 6), tr("HOLLOWMERE  ·  POP. 1413"), 7, Color(MUTED, 0.8 * ta), W,
 			HORIZONTAL_ALIGNMENT_CENTER)
 	if _fade <= 0.0:
 		return
@@ -480,16 +493,16 @@ func _tab_face(r: Rect2, i: int, open: bool, e: float) -> void:
 	var c := r.get_center() + Vector2(0 if open else -2, -3.5)
 	var ink := AMBER if open else MUTED
 	Icons.draw(_deco, TABS[i][0], c, 12.0, Color(ink, (1.0 if open else 0.75) * e), 1.3)
-	_str(_bold, Vector2(r.position.x, r.end.y - 3.5), TABS[i][1], 7, Color(BONE if open else MUTED, e),
+	_str(_bold, Vector2(r.position.x, r.end.y - 3.5), tr(TABS[i][1]), 7, Color(BONE if open else MUTED, e),
 		r.size.x - (0 if open else 4), HORIZONTAL_ALIGNMENT_CENTER)
 
 
 func _draw_help(W: float, H: float, e: float) -> void:
 	## The keys that work right now, in the bottom letterbox, right-aligned under the folder.
-	var keys: Array = [["ESC", "Back" if _focus == "page" else "Title"], ["ENTER", "Select"]]
+	var keys: Array = [["ESC", tr("Back") if _focus == "page" else tr("Title")], ["ENTER", tr("Select")]]
 	if _focus == "page" and TABS[_tab][0] == "options":
-		keys.append(["A D", "Adjust"])
-	keys.append(["W A S D" if _focus == "page" and TABS[_tab][0] == "extra" else "W S", "Move" if _focus == "page" else "Tabs"])
+		keys.append(["A D", tr("Adjust")])
+	keys.append(["W A S D" if _focus == "page" and TABS[_tab][0] == "extra" else "W S", tr("Move") if _focus == "page" else tr("Tabs")])
 	var x := W - 36.0
 	var y := H - 9.0
 	for k in keys:
@@ -503,35 +516,37 @@ func _draw_help(W: float, H: float, e: float) -> void:
 
 func _page_continue(r: Rect2) -> void:
 	if _saves.is_empty():
-		_heading(r.position.x, r.position.y + 16, "No case open")
-		_wrap(_serif_it, Vector2(r.position.x, r.position.y + 36), "Nothing saved yet. Start a new case and Hollowmere will keep your place.", 10, _c(MUTED), r.size.x, 3)
+		_heading(r.position.x, r.position.y + 16, tr("No case open"))
+		_wrap(_serif_it, Vector2(r.position.x, r.position.y + 36), tr("Nothing saved yet. Start a new case and Hollowmere will keep your place."), 10, _c(MUTED), r.size.x, 3)
 		_photo(Rect2(r.position.x + 8, r.position.y + 76, r.size.x - 16, 104), null, -0.02, "Hollowmere")
-		_bar(Rect2(r.position.x, r.end.y - BAR_H, r.size.x, BAR_H), "NEW CASE", "new", _focus == "tabs")
+		_bar(Rect2(r.position.x, r.end.y - BAR_H, r.size.x, BAR_H), tr("NEW CASE"), "new", _focus == "tabs")
 		return
 	var s: Dictionary = _saves[0][1]
 	var pos: Variant = s.get("pos", null)
-	_photo(Rect2(r.position.x + 2, r.position.y + 2, r.size.x - 4, 108), pos, -0.025, _place(pos))
+	_photo(Rect2(r.position.x + 2, r.position.y + 2, r.size.x - 4, 108), pos, -0.025, tr(_place(pos)))
 	var ch := clampi(int(s.get("chapter", 1)), 1, 3)
-	_str(_serif, Vector2(r.position.x, r.position.y + 132), "Chapter " + CHAPTERS[ch], 16, _c(BONE))
+	_str(_serif, Vector2(r.position.x, r.position.y + 132), _fit(_serif, tr("Chapter %s") % tr(CHAPTERS[ch]), 16, r.size.x), 16, _c(BONE))
 	var x := r.position.x
 	var y := r.position.y + 140.0
 	x += _chip(x, y, "clock", _g._clock(float(s.run.time))) + 4.0
-	x += _chip(x, y, "flame", str(_g.DIFFICULTY[int(s.difficulty)].name)) + 4.0
+	x += _chip(x, y, "flame", tr(str(_g.DIFFICULTY[int(s.difficulty)].name))) + 4.0
 	var mark := float(s.get("player", {}).get("mark", 0.0))
-	_chip(x, y, "mark", "Mark %d%%" % roundi(mark), Color(RUST, 0.32))
+	_chip(x, y, "mark", tr("Mark %d%%") % roundi(mark), Color(RUST, 0.32))
 	_weapons(Vector2(r.position.x, r.position.y + 161), s.get("weapons", {}))
 	var nb := Rect2(r.position.x, r.position.y + 196, r.size.x, 30)
 	Icons.fill_round(_deco, nb, 8.0, _c(AMBER, 0.08))
-	_str(_caps, nb.position + Vector2(8, 12), "NEXT", 7, _c(AMBER))
-	_wrap(_ui, nb.position + Vector2(34, 12.5), _objective(s), 8, _c(BONE), nb.size.x - 42.0, 2)
-	_bar(Rect2(r.position.x, r.end.y - BAR_H, r.size.x, BAR_H), "RESUME", "play", _focus == "tabs")
+	var next := tr("NEXT")
+	var nx := maxf(34.0, _caps.get_string_size(next, HORIZONTAL_ALIGNMENT_LEFT, -1, 7).x + 14.0)
+	_str(_caps, nb.position + Vector2(8, 12), next, 7, _c(AMBER))
+	_wrap(_ui, nb.position + Vector2(nx, 12.5), _objective(s), 8, _c(BONE), nb.size.x - nx - 8.0, 2)
+	_bar(Rect2(r.position.x, r.end.y - BAR_H, r.size.x, BAR_H), tr("RESUME"), "play", _focus == "tabs")
 
 
 func _weapons(at: Vector2, w: Dictionary) -> void:
 	## What the save carries: each weapon's drawn icon, rounds loaded / in reserve for the ones that shoot.
 	var owned: Array = w.get("owned", [])
 	if owned.is_empty():
-		_str(_ui, at + Vector2(0, 12), "Empty-handed.", 7, _c(MUTED))
+		_str(_ui, at + Vector2(0, 12), tr("Empty-handed."), 7, _c(MUTED))
 		return
 	var cur := int(w.get("current", 0))
 	for i in mini(owned.size(), 6):
@@ -547,8 +562,8 @@ func _weapons(at: Vector2, w: Dictionary) -> void:
 
 
 func _page_new(r: Rect2) -> void:
-	_heading(r.position.x, r.position.y + 16, "A new case")
-	_wrap(_serif_it, Vector2(r.position.x, r.position.y + 34), "Dusk. The bridge is out. Your sister's postcard says don't come.", 10, _c(MUTED), r.size.x, 2)
+	_heading(r.position.x, r.position.y + 16, tr("A new case"))
+	_wrap(_serif_it, Vector2(r.position.x, r.position.y + 34), tr("Dusk. The bridge is out. Your sister's postcard says don't come."), 10, _c(MUTED), r.size.x, 2)
 	var pick: int = _sel if _focus == "page" else _g.difficulty
 	var blurbs := ["Forgiving. For the story.", "As it was meant to be.", "Every round counts."]
 	for i in 3:
@@ -559,25 +574,26 @@ func _page_new(r: Rect2) -> void:
 			Icons.draw(_deco, "flame", row.position + Vector2(11 + f * 7.0, 15), 10.0,
 				_c(AMBER if i == pick else FAINT), 1.1)
 		var tx := row.position.x + 38.0
-		_str(_caps, Vector2(tx, row.position.y + 13), str(_g.DIFFICULTY[i].name).to_upper(), 8, _c(BONE))
-		_str(_ui, Vector2(tx, row.position.y + 23.5), blurbs[i], 7, _c(MUTED))
+		_str(_caps, Vector2(tx, row.position.y + 13), tr(str(_g.DIFFICULTY[i].name)).to_upper(), 8, _c(BONE))
+		_str(_ui, Vector2(tx, row.position.y + 23.5), tr(blurbs[i]), 7, _c(MUTED))
 	var d: Dictionary = _g.DIFFICULTY[pick]
 	var meters := [["Damage you take", float(d.hurt)], ["Enemy toughness", float(d.enemy)], ["Ammo you find", float(d.ammo)]]
 	for i in 3:
 		var y := r.position.y + 165 + i * 15.0
-		_str(_ui, Vector2(r.position.x, y), meters[i][0], 7, _c(MUTED))
+		_str(_ui, Vector2(r.position.x, y), tr(meters[i][0]), 7, _c(MUTED))
 		_str(_caps, Vector2(r.position.x, y), "×%.2f" % meters[i][1] if i == 1 else "×%.1f" % meters[i][1], 7, _c(BONE),
 			r.size.x, HORIZONTAL_ALIGNMENT_RIGHT)
-		var track := Rect2(r.position.x + 78, y - 4.0, r.size.x - 108, 3.5)
+		var lw := maxf(78.0, _ui.get_string_size(tr(meters[i][0]), HORIZONTAL_ALIGNMENT_LEFT, -1, 7).x + 6.0)
+		var track := Rect2(r.position.x + lw, y - 4.0, r.size.x - lw - 30.0, 3.5)
 		Icons.fill_round(_deco, track, 1.75, _c(BONE, 0.1))
 		Icons.fill_round(_deco, Rect2(track.position, Vector2(track.size.x * meters[i][1] / 1.5, 3.5)), 1.75, _c(BONE, 0.7))
-	_bar(Rect2(r.position.x, r.end.y - BAR_H, r.size.x, BAR_H), "BEGIN", "play", _focus == "page")
+	_bar(Rect2(r.position.x, r.end.y - BAR_H, r.size.x, BAR_H), tr("BEGIN"), "play", _focus == "page")
 
 
 func _page_load(r: Rect2) -> void:
-	_heading(r.position.x, r.position.y + 16, "Load game", "%d saved" % _saves.size() if not _saves.is_empty() else "")
+	_heading(r.position.x, r.position.y + 16, tr("Load game"), tr("%d saved") % _saves.size() if not _saves.is_empty() else "")
 	if _saves.is_empty():
-		_wrap(_serif_it, Vector2(r.position.x, r.position.y + 36), "Nothing saved yet. Save from the pause menu; the game also saves on its own as you go.", 10, _c(MUTED), r.size.x, 3)
+		_wrap(_serif_it, Vector2(r.position.x, r.position.y + 36), tr("Nothing saved yet. Save from the pause menu; the game also saves on its own as you go."), 10, _c(MUTED), r.size.x, 3)
 		return
 	for i in range(_top, mini(_top + LOAD_ROWS, _saves.size())):
 		var s: Dictionary = _saves[i][1]
@@ -595,12 +611,12 @@ func _page_load(r: Rect2) -> void:
 			_str(_serif, Vector2(thumb.position.x, thumb.position.y + 17), CHAPTERS[ch].split(" ")[0], 14, _c(MUTED),
 				thumb.size.x, HORIZONTAL_ALIGNMENT_CENTER)
 		var tx := row.position.x + 47.0
-		_str(_bold, Vector2(tx, row.position.y + 13.5), _fit(_bold, "Ch.%s · %s" % [CHAPTERS[ch].split(" ")[0], _save_title(s)], 8, row.size.x - 52.0), 8, _c(BONE))
+		_str(_bold, Vector2(tx, row.position.y + 13.5), _fit(_bold, tr("Ch.%s · %s") % [CHAPTERS[ch].split(" ")[0], _save_title(s)], 8, row.size.x - 52.0), 8, _c(BONE))
 		var when := Time.get_datetime_string_from_unix_time(int(s.time), true).substr(5, 11)
-		_str(_ui, Vector2(tx, row.position.y + 25.5), "%s · %s · %s · %s" % [s.get("kind", "Save"),
-			_g.DIFFICULTY[int(s.difficulty)].name, _g._clock(float(s.run.time)), when], 7, _c(MUTED))
+		_str(_ui, Vector2(tx, row.position.y + 25.5), _fit(_ui, "%s · %s · %s · %s" % [tr(str(s.get("kind", "Save"))),
+			tr(_g.DIFFICULTY[int(s.difficulty)].name), _g._clock(float(s.run.time)), when], 7, row.size.x - 52.0), 7, _c(MUTED))
 	if _top + LOAD_ROWS < _saves.size():
-		_str(_ui, Vector2(r.position.x, r.end.y - 2), "%d more below" % (_saves.size() - _top - LOAD_ROWS), 7, _c(MUTED),
+		_str(_ui, Vector2(r.position.x, r.end.y - 2), tr("%d more below") % (_saves.size() - _top - LOAD_ROWS), 7, _c(MUTED),
 			r.size.x, HORIZONTAL_ALIGNMENT_CENTER)
 
 
@@ -621,7 +637,7 @@ func _page_extra(r: Rect2) -> void:
 	var got := 0
 	for id in ids:
 		got += int(_g.unlocked(id))
-	_heading(r.position.x, r.position.y + 16, "Extra", "%d of %d" % [got, ids.size()])
+	_heading(r.position.x, r.position.y + 16, tr("Extra"), tr("%d of %d") % [got, ids.size()])
 	var track := Rect2(r.position.x, r.position.y + 24, r.size.x, 3.5)
 	Icons.fill_round(_deco, track, 1.75, _c(BONE, 0.1))
 	if got > 0:
@@ -639,16 +655,16 @@ func _page_extra(r: Rect2) -> void:
 		_hits.append([cell, "row", i])
 	var show := pick if pick >= 0 else -1
 	if show < 0:
-		_wrap(_ui, Vector2(r.position.x, r.position.y + 202), "What you've done in Hollowmere, kept across every run.", 7, _c(MUTED), r.size.x, 2)
+		_wrap(_ui, Vector2(r.position.x, r.position.y + 202), tr("What you've done in Hollowmere, kept across every run."), 7, _c(MUTED), r.size.x, 2)
 		return
 	var a: Array = _g.ACHIEVEMENTS[ids[show]]
 	var on2: bool = _g.unlocked(ids[show])
-	_str(_bold, Vector2(r.position.x, r.position.y + 204), a[0] if on2 else "Locked", 9, _c(BONE if on2 else MUTED))
-	_wrap(_ui, Vector2(r.position.x, r.position.y + 216), a[1], 7, _c(MUTED), r.size.x, 2)
+	_str(_bold, Vector2(r.position.x, r.position.y + 204), tr(a[0]) if on2 else tr("Locked"), 9, _c(BONE if on2 else MUTED))
+	_wrap(_ui, Vector2(r.position.x, r.position.y + 216), tr(a[1]), 7, _c(MUTED), r.size.x, 2)
 
 
 func _page_options(r: Rect2) -> void:
-	_heading(r.position.x, r.position.y + 16, "Options")
+	_heading(r.position.x, r.position.y + 16, tr("Options"))
 	var sel_id: String = _opt_ids[_sel] if _focus == "page" else ""
 	var y := r.position.y + 30.0
 	for li in range(_top, mini(_top + OPT_LINES, _opt_lines.size())):
@@ -656,7 +672,7 @@ func _page_options(r: Rect2) -> void:
 		if line[0] == "h":
 			if li == _top + OPT_LINES - 1:
 				break
-			_str(_caps, Vector2(r.position.x, y + 11), line[1], 7, _c(MUTED))
+			_str(_caps, Vector2(r.position.x, y + 11), tr(line[1]), 7, _c(MUTED))
 		else:
 			var id: String = line[1]
 			var row := Rect2(r.position.x - 4, y, r.size.x + 8, LINE_H - 1)
@@ -664,10 +680,10 @@ func _page_options(r: Rect2) -> void:
 				_row_box(row, true)
 			_hits.append([row, "row", _opt_ids.find(id)])
 			var spec := Settings.row(id)
-			_str(_ui, Vector2(r.position.x + 2, y + 11), spec[2], 7, _c(BONE if id == sel_id else MUTED))
+			_str(_ui, Vector2(r.position.x + 2, y + 11), _fit(_ui, tr(spec[2]), 7, r.size.x - 66.0), 7, _c(BONE if id == sel_id else MUTED))
 			_value(Rect2(r.end.x - 62, y, 60, LINE_H - 1), id, spec)
 		y += LINE_H
-	var help: String = Settings.row(sel_id)[6] if sel_id != "" else "Changes apply at once and are kept."
+	var help: String = tr(Settings.row(sel_id)[6]) if sel_id != "" else tr("Changes apply at once and are kept.")
 	_wrap(_ui, Vector2(r.position.x, r.end.y - 12), help, 7, _c(MUTED), r.size.x, 2)
 
 
@@ -699,17 +715,17 @@ func _value(r: Rect2, id: String, spec: Array) -> void:
 
 func _dev_items() -> Array:
 	## [label, help, callback]
-	var items := [["All 12 evidence: %s" % ("on" if _g.dev_evidence else "off"),
-		"Start holding every piece of evidence: the transmitter and the Signal ending (try III · Static).",
+	var items := [[tr("All 12 evidence: %s") % (tr("on") if _g.dev_evidence else tr("off")),
+		tr("Start holding every piece of evidence: the transmitter and the Signal ending (try III · Static)."),
 		func() -> void: _g.dev_evidence = not _g.dev_evidence],
-		["Start Mark: %s" % ("as the story has it" if _g.dev_mark < 0.0 else "%d%%" % int(_g.dev_mark)),
-		"Start with the Mark at a set level (its notices, whispers, the heartbeat, the sightings).",
+		[tr("Start Mark: %s") % (tr("as the story has it") if _g.dev_mark < 0.0 else "%d%%" % int(_g.dev_mark)),
+		tr("Start with the Mark at a set level (its notices, whispers, the heartbeat, the sightings)."),
 		func() -> void:
 			var steps := [-1.0, 30.0, 60.0, 95.0]
 			_g.dev_mark = steps[(steps.find(_g.dev_mark) + 1) % steps.size()]]]
 	for ch in DEV_STEPS:
 		for st in ch[2]:
-			items.append(["%s · %s" % [ch[0], st.trim_prefix("c2_").trim_prefix("c3_").capitalize()], "Chapter %s — %s. Normal, nothing saved." % [ch[0], ch[1]],
+			items.append(["%s · %s" % [ch[0], st.trim_prefix("c2_").trim_prefix("c3_").capitalize()], tr("Chapter %s — %s. Normal, nothing saved.") % [ch[0], tr(ch[1])],
 				func() -> void:
 					_g.difficulty = 1
 					_g.start(st, "dev")])
@@ -717,7 +733,7 @@ func _dev_items() -> Array:
 
 
 func _page_dev(r: Rect2) -> void:
-	_heading(r.position.x, r.position.y + 16, "Dev mode")
+	_heading(r.position.x, r.position.y + 16, tr("Dev mode"))
 	var items := _dev_items()
 	var y := r.position.y + 28.0
 	for i in range(_top, mini(_top + OPT_LINES, items.size())):
@@ -728,17 +744,17 @@ func _page_dev(r: Rect2) -> void:
 		_hits.append([row, "row", i])
 		_str(_ui, Vector2(r.position.x + 2, y + 11), items[i][0], 7, _c(BONE if on else MUTED))
 		y += LINE_H
-	var help: String = items[_sel][1] if _focus == "page" else "Start any step of any chapter. Nothing is saved, nothing unlocks."
+	var help: String = items[_sel][1] if _focus == "page" else tr("Start any step of any chapter. Nothing is saved, nothing unlocks.")
 	_wrap(_ui, Vector2(r.position.x, r.end.y - 12), help, 7, _c(MUTED), r.size.x, 2)
 
 
 func _page_quit(r: Rect2) -> void:
-	_heading(r.position.x, r.position.y + 16, "Leave Hollowmere?")
-	_wrap(_serif_it, Vector2(r.position.x, r.position.y + 36), "Check out of room six. Your saves stay where you left them.", 10, _c(MUTED), r.size.x, 3)
+	_heading(r.position.x, r.position.y + 16, tr("Leave Hollowmere?"))
+	_wrap(_serif_it, Vector2(r.position.x, r.position.y + 36), tr("Check out of room six. Your saves stay where you left them."), 10, _c(MUTED), r.size.x, 3)
 	if not _saves.is_empty():  # where you'd be leaving off
 		var pos: Variant = _saves[0][1].get("pos", null)
-		_photo(Rect2(r.position.x + 10, r.position.y + 70, r.size.x - 20, 104), pos, 0.03, _place(pos))
-	_bar(Rect2(r.position.x, r.end.y - BAR_H, r.size.x, BAR_H), "QUIT TO DESKTOP", "quit", _focus == "tabs")
+		_photo(Rect2(r.position.x + 10, r.position.y + 70, r.size.x - 20, 104), pos, 0.03, tr(_place(pos)))
+	_bar(Rect2(r.position.x, r.end.y - BAR_H, r.size.x, BAR_H), tr("QUIT TO DESKTOP"), "quit", _focus == "tabs")
 
 
 # ------------------------------------------------------------------ input
