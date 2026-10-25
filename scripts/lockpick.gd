@@ -179,8 +179,8 @@ func _draw() -> void:
 		draw_line(p, p + Vector2(0, 14), c, 2.0)
 		draw_line(p + Vector2(4, 0), p + Vector2(4, 14), c, 2.0)
 		draw_arc(p + Vector2(2, 0), 2.0, PI, TAU, 4, c, 2.0)
-	_text(Vector2(-150, 66), 80, "PICKS x%d" % maxi(picks, 0), 8, PAPER, false, HORIZONTAL_ALIGNMENT_LEFT)
-	_text(Vector2(-60, 66), 120, "PIN %d / %d" % [mini(_cur + 1, pins), pins], 8, PAPER)
+	_text(Vector2(-150, 66), 80, tr("PICKS x%d") % maxi(picks, 0), 8, PAPER, false, HORIZONTAL_ALIGNMENT_LEFT)
+	_text(Vector2(-60, 66), 120, tr("PIN %d / %d") % [mini(_cur + 1, pins), pins], 8, PAPER)
 	var sc := Color(0.4, 1.0, 0.45) if _won else (Color(1, 0.3, 0.2) if _snap > 0.0 or _end_t >= 0.0 else Color(1, 0.8, 0.4))
 	_text(Vector2(-150, 88), 300, _status, 12, sc, true)
 	_text(Vector2(-200, 112), 400, "A/D or mouse — feel for the pin · hold W / click — lift · Esc — quit", 9, PAPER, true)
@@ -241,6 +241,12 @@ func _draw_pick() -> void:
 
 func _text(pos: Vector2, width: float, s: String, fsize: int, col: Color, outline := false,
 		align := HORIZONTAL_ALIGNMENT_CENTER) -> void:
+	## s: an English id (drawn translated) or text already put together with tr(). A translation too wide for
+	## `width` is drawn a size or two smaller (never below 7, or its own size if that's smaller).
+	var t := tr(s)
+	if t != s and width > 0.0:
+		while fsize > 7 and _font.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x > width:
+			fsize -= 1
 	if outline:
-		draw_string_outline(_font, pos, s, align, width, fsize, 3, Color(0, 0, 0, 0.85))
-	draw_string(_font, pos, s, align, width, fsize, col)
+		draw_string_outline(_font, pos, t, align, width, fsize, 3, Color(0, 0, 0, 0.85))
+	draw_string(_font, pos, t, align, width, fsize, col)
