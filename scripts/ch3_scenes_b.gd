@@ -164,7 +164,7 @@ func quarry_arrive() -> void:
 
 
 func gate_locked(have: int) -> void:
-	hud.subtitle("Alex", "%d of 3 key parts. It won't turn." % have, 2.2)
+	hud.subtitle("Alex", "%d of 3 key parts. It won't turn.", 2.2, [have])
 
 
 func cage_freed(who: Actor, n: int) -> void:
@@ -694,9 +694,9 @@ func end_card() -> void:
 	await d.wait(4.5)
 	var f: Dictionary = d.flags
 	var st: Array = Chapter3Director.MEMBERS.map(func(m: String) -> String: return str(f.get(m, "active")))
-	await hud.say([["", "Ending: %s.  Spared %d · Killed %d · Evidence %d/12 · Tokens %d" % [
-		{"run": "RUN", "signal": "SIGNAL", "unveiled": "UNVEILED", "new_eye": "THE NEW EYE", "mixed": "MIXED"}[f.ending],
-		st.count("spared"), st.count("killed"), f.evidence.size(), f.tokens], 5.0]])
+	await hud.say([["", "Ending: %s.  Spared %d · Killed %d · Evidence %d/12 · Tokens %d", 5.0, [
+		tr({"run": "RUN", "signal": "SIGNAL", "unveiled": "UNVEILED", "new_eye": "THE NEW EYE", "mixed": "MIXED"}[f.ending]),
+		st.count("spared"), st.count("killed"), f.evidence.size(), f.tokens]]])
 
 
 # ------------------------------------------------------------------ C3.4 Pop. 1413 (post-end)

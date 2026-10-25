@@ -242,7 +242,7 @@ func bell_dropped(crushed: bool) -> void:
 
 
 func marcus_phase(n: int) -> void:
-	hud.banner("PHASE %d" % n, Color(1.0, 0.4, 0.3), 1.0)
+	hud.banner(tr("PHASE %d") % n, Color(1.0, 0.4, 0.3), 1.0)
 	hud.say([["", "He rings the hand bell. The doors bang open behind you.", 2.4],
 		["Marcus", "Into the house of God! All of you!" if n == 2 else "Nobody leaves! Nobody ever leaves!", 2.2]])
 
@@ -377,10 +377,10 @@ func register_found() -> void:
 func candle_lit(who: String, left: int) -> void:
 	## Bark (Empty Chairs). Not awaited.
 	if left > 0:
-		hud.subtitle("Alex", "For %s." % who, 1.6)
+		hud.subtitle("Alex", "For %s.", 1.6, [tr(who)])
 		return
 	hud.banner("MARK -20%  ·  +2 ELENA'S TEA", Color(0.8, 0.9, 0.6), 1.6)
-	hud.say([["Alex", "For %s." % who, 1.4], ["Alex", "Five chairs. Five candles. It's all I've got.", 2.4]])
+	hud.say([["Alex", "For %s.", 1.4, [tr(who)]], ["Alex", "Five chairs. Five candles. It's all I've got.", 2.4]])
 
 
 # ------------------------------------------------------------------ M3 Static
@@ -513,7 +513,7 @@ func last_recording() -> void:
 
 func transmitter_locked(have: int) -> void:
 	## Bark: not enough evidence for the broadcast (needs all 12).
-	hud.say([["Alex", "%d of 12. She said all of it or nothing." % have, 2.4],
+	hud.say([["Alex", "%d of 12. She said all of it or nothing.", 2.4, [have]],
 		["Alex", "One gap and they call it a hoax.", 2.0]])
 
 
