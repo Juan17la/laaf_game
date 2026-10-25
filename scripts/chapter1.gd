@@ -16,6 +16,8 @@ extends Node3D
 ## After the blackout the sibling Chapter2 node takes over (Chapter2Director.begin); a Chapter 2 step
 ## name (`-- --step=zones`) or `-- --chapter=2` jumps straight there (armed, key part 1); Chapter 3 the
 ## same way (`-- --step=harvester`, `-- --chapter=3`), Chapter 2 hands over to it after the traitor.
+## Text: objectives, prompts, banners and lines are English ids, translated where the HUD shows them (hud.gd), so
+## flags, saves and the tests keep the English; a line with numbers in it goes as a template + args.
 
 @export var start_step := "intro"
 
@@ -32,6 +34,8 @@ const STEP_START := {  ## where the player stands when a run starts at that step
 ## Dying in a boss fight never comes back without a way to hurt it: at least these rounds (loaded + reserve) for
 ## every gun carried, the magazine full. (The checkpoint's own kit is restored first; this only tops up.)
 const BOSS_MIN_AMMO := {"revolver": 12, "flare": 3, "shotgun": 6, "bow": 6}
+const TAKE := {"revolver": "Take the revolver", "flare": "Take the flare gun", "shotgun": "Take the shotgun",
+	"bow": "Take the hunting bow", "axe": "Take the fire axe", "bat": "Take the nail bat"}  ## weapon_pickup's prompt
 const OWEN_LINES := ["I can hear you breathing.", "Dad used to say the forest keeps everything.",
 	"Come out. It's quicker if you don't run.", "You're not the first outsider. You won't be the last.",
 	"The grass won't hide you forever."]
@@ -299,10 +303,10 @@ func weapon_pickup(pos: Vector3, id: String, rounds := 0, yaw := 0.0) -> Interac
 		var w: Weapons = player.weapons
 		w.give(id, rounds)
 		w.swap(w.owned.find(id))
-		hud.banner(Weapons.GUNS[id].name.to_upper(), Weapons.GUNS[id].color, 1.2)
+		hud.banner(tr(Weapons.GUNS[id].name).to_upper(), Weapons.GUNS[id].color, 1.2)
 		hud.note({"axe": "Fire swings.", "bat": "Fire swings.", "bow": "Hold aim to draw.",
 			"shotgun": "Close range."}.get(id, ""), "", 3.0)
-	return Interactable.make(self, pos, "Take the " + Weapons.GUNS[id].name.to_lower(), take,
+	return Interactable.make(self, pos, TAKE[id], take,
 		Weapons.GUNS[id].color, false, id).lay(yaw)
 
 
@@ -738,7 +742,7 @@ func _drop_loot(at: Vector3) -> void:
 		var n := maxi(int(round((6 if id == "shotgun" else 5) * G.settings().ammo)), 2)
 		Interactable.make(self, at + Vector3.UP * 0.3, "Shells" if id == "shotgun" else "Arrows", func(_b: Node) -> void:
 			player.weapons.give(id, n)
-			hud.banner("+%d %s" % [n, "SHELLS" if id == "shotgun" else "ARROWS"], Weapons.GUNS[id].color, 0.6),
+			hud.banner((tr("+%d SHELLS") if id == "shotgun" else tr("+%d ARROWS")) % n, Weapons.GUNS[id].color, 0.6),
 			Weapons.GUNS[id].color, true, "shells" if id == "shotgun" else "arrow")
 		return
 	if roll < 0.25 and "flare" in player.weapons.owned:  # the second gun needs its own rounds too
@@ -751,7 +755,7 @@ func _drop_loot(at: Vector3) -> void:
 	var take := func(_b: Node) -> void:
 		if ammo:
 			player.weapons.give("revolver", rounds)
-			hud.banner("+%d ROUNDS" % rounds, Color(0.9, 0.85, 0.6), 0.6)
+			hud.banner(tr("+%d ROUNDS") % rounds, Color(0.9, 0.85, 0.6), 0.6)
 		else:
 			player.heal(25)
 			hud.banner("+25 HEALTH", Color(0.8, 0.3, 0.3), 0.6)

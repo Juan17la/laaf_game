@@ -210,11 +210,17 @@ func _boss_fight(e: Enemy, title: String, spawn: Vector3, hint: String, phase2: 
 	_on_reset = _reset_marked
 
 
+const SPARE := {"Nora": ["SPARE Nora (E) — or shoot to KILL", "Spare Nora"],
+	"Julian": ["SPARE Julian (E) — or shoot to KILL", "Spare Julian"],
+	"Marcus": ["SPARE Marcus (E) — or shoot to KILL", "Spare Marcus"]}  ## who: [objective, prompt]
+
+
 func _spare_or_kill(e: Enemy, who: String) -> String:
 	## Coroutine: E on the kneeling boss spares, a shot kills. Returns "spared" / "killed".
-	objective("SPARE %s (E) — or shoot to KILL" % who, e)
+	var text: Array = SPARE[who]
+	objective(text[0], e)
 	var choice := [""]
-	var spare := Interactable.make(self, e.global_position + Vector3.UP, "Spare " + who,
+	var spare := Interactable.make(self, e.global_position + Vector3.UP, text[1],
 		func(_b: Node) -> void: choice[0] = "spared")
 	e.died.connect(func(_e: Enemy) -> void: choice[0] = "killed")
 	while choice[0] == "":
@@ -292,7 +298,8 @@ func _step_zones() -> void:
 		if left.size() == 2:
 			objective("Get the key parts: Nora at the school — or Julian at the clinic", target)
 		else:
-			objective("Go to the %s — %s has the last key part" % [near, "Nora" if near == "school" else "Julian"], target)
+			objective("Go to the school — Nora has the last key part" if near == "school"
+				else "Go to the clinic — Julian has the last key part", target)
 		var which := ""
 		while which == "":
 			await get_tree().physics_frame
@@ -332,7 +339,7 @@ func _old_tom() -> void:
 			hud.banner("IT GOT AWAY", Color(0.8, 0.8, 0.8), 1.0)
 			continue
 		flags.tokens += r[1]
-		hud.banner("%s  +%d TOKENS" % [fish.to_upper(), r[1]], Color(0.9, 0.8, 0.4), 1.2)
+		hud.banner(tr("%s  +%d TOKENS") % [tr(fish).to_upper(), r[1]], Color(0.9, 0.8, 0.4), 1.2)
 		if fish != "Old Tom":
 			scenes2b.fish_caught(false)  # bark
 		else:
@@ -377,7 +384,7 @@ func _arcade() -> void:
 		_minigame_on(false)
 		var pay := mini(score / 100, 60)
 		flags.tokens += pay
-		hud.banner("SCORE %d  +%d TOKENS" % [score, pay], Color(0.9, 0.8, 0.4), 1.5)
+		hud.banner(tr("SCORE %d  +%d TOKENS") % [score, pay], Color(0.9, 0.8, 0.4), 1.5)
 
 
 # ------------------------------------------------------------------ M2 The Teacher (school)
