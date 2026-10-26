@@ -4,6 +4,8 @@ extends Node
 ## time) and the pause menu. The main menu (scripts/main_menu.gd) starts a run through start(); the world's
 ## directors report in with at_step() and read `pending` (what to start: a step, maybe a save to restore).
 ## Only story runs (from the menu) autosave and unlock achievements: dev jumps and the headless tests don't.
+## Text: the names here (difficulty, achievements, save kinds) are English ids, shown through tr(); a save keeps
+## the ids (its "objective", "kind"), never translated text, so it loads and reads right in either language.
 
 signal achievement_unlocked(id: String)
 
@@ -50,6 +52,7 @@ var dev_mark := -1.0  ## Dev Mode: runs start with the Mark at this % (< 0: as t
 var _unlocked := {}
 var _check_t := 0.0
 var _pause: CanvasLayer
+var _options := false  ## the pause menu's Options page is open (Esc goes back to the pause menu)
 
 
 func _ready() -> void:
@@ -134,6 +137,7 @@ func snapshot() -> Dictionary:
 	return {"version": 1, "time": Time.get_unix_time_from_system(), "chapter": chapter, "step": str(d.step),
 		"difficulty": difficulty, "flags": (d.flags as Dictionary).duplicate(true), "run": run.duplicate(true),
 		"label": "Ch.%d · %s" % [chapter, str(d.get("_objective_text")) if str(d.get("_objective_text")) != "" else str(d.step)],
+		"objective": str(d.get("_objective_text")) if d.get("_objective_text") != null else "",  # (English id)
 		"player": {"health": p.health, "mark": p.mark, "bottles": p.bottles, "smokes": p.smokes, "teas": p.teas,
 			"gas_mask": p.gas_mask, "mask_filter": p.mask_filter, "mark_resist": p.mark_resist},
 		"pos": [p.global_position.x, p.global_position.z],  # where it was saved (the menu's map photo pins it)
@@ -277,13 +281,16 @@ func notify(text: String, title := "", time := 4.0) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause") and director and is_instance_valid(director):
 		get_viewport().set_input_as_handled()
-		if _pause:
+		if _options:
+			_open_pause()
+		elif _pause:
 			resume()
 		else:
 			_open_pause()
 
 
 func resume() -> void:
+	_options = false
 	if _pause:
 		_pause.queue_free()
 		_pause = null
@@ -291,17 +298,25 @@ func resume() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
-func _open_pause() -> void:
-	get_tree().paused = true
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+func _pause_layer() -> CanvasLayer:
+	## A fresh pause layer (the previous page, if any, goes).
+	if _pause:
+		_pause.queue_free()
 	_pause = CanvasLayer.new()
 	_pause.layer = 50
 	_pause.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_pause)
-	var ui := MenuUI.panel(_pause, "PAUSED", "%s · %s" % [settings().name, _clock(run.time)])
+	return _pause
+
+
+func _open_pause() -> void:
+	get_tree().paused = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_options = false
+	var ui := MenuUI.panel(_pause_layer(), "PAUSED", "%s · %s" % [tr(settings().name), _clock(run.time)])
 	var p: Node = director.get("player")
 	if p:  # the exact Mark (the HUD only flashes its rises)
-		var mark := MenuUI.label("MARK  %.1f%%" % float(p.mark), 11, Feel.MARK_NOTICE_RED, true)
+		var mark := MenuUI.label(tr("MARK  %.1f%%") % float(p.mark), 11, Feel.MARK_NOTICE_RED, true)
 		mark.name = "Mark"
 		ui.add_child(mark)
 	MenuUI.button(ui, "Resume", resume)
@@ -310,8 +325,21 @@ func _open_pause() -> void:
 		save_game(manual_slot(), "Manual save")
 		resume())
 	save.disabled = not can_save
+	MenuUI.button(ui, "Options", _open_options)
 	MenuUI.button(ui, "Main menu", to_menu)
 	MenuUI.focus(ui)
+
+
+func _open_options(focus_id := "") -> void:
+	## The pause menu's Options page: every setting (scripts/settings.gd), changed in place and kept. A language
+	## change builds the page again, so it reads in the new language at once.
+	_options = true
+	var ui := MenuUI.panel(_pause_layer(), "OPTIONS", "", 300.0)
+	var list := MenuUI.settings_list(ui, func(id: String) -> void:
+		if id == "general/language":
+			_open_options(id))
+	MenuUI.button(ui, "Back", _open_pause)
+	MenuUI.focus(list if focus_id == "" else list.find_child(focus_id.replace("/", "_"), true, false))
 
 
 static func _clock(t: float) -> String:

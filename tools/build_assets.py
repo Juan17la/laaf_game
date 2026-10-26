@@ -16,6 +16,7 @@ import math
 import os
 import random
 import struct
+import unicodedata
 import zlib
 from contextlib import contextmanager
 
@@ -1823,12 +1824,18 @@ def _cut(strip, k, obstacles):
 class World:
     def __init__(self):
         self.ext, self.subs, self.nodes, self.names = {}, [], [], {}
+        self.ext_named = {}
         self.rects = [(min(a[0], b[0]) - w / 2, min(a[1], b[1]) - w / 2, max(a[0], b[0]) + w / 2, max(a[1], b[1]) + w / 2)
                       for a, b, w, _ in ROADS] + [l[:4] for l in LOTS]
         self.circles = []
         self.buildings = []  # (model, x, z, yaw) of every building(): their floors are cut out of the roads
 
-    def res(self, path, typ):
+    def res(self, path, typ, rid=None):
+        """An ext_resource's reference. rid: a fixed id, written after the numbered ones (a resource added later
+        then doesn't renumber every other one)."""
+        if rid:
+            self.ext_named[path] = (typ, rid)
+            return 'ExtResource("%s")' % rid
         if path not in self.ext:
             self.ext[path] = (typ, "r%d" % (len(self.ext) + 1))
         return 'ExtResource("%s")' % self.ext[path][1]
@@ -1880,20 +1887,31 @@ class World:
             props["script"] = self.res("res://scripts/flicker.gd", "Script")
         self.add("Omni", parent, "OmniLight3D", **props)
 
-    def label(self, text, x, y, z, yaw=0, size=64, color=(0.8, 0.78, 0.7), board=None):
+    def label(self, text, x, y, z, yaw=0, size=64, color=(0.8, 0.78, 0.7), board=None, localize=False):
         """World text (a Label3D, single-sided, facing yaw). board=(w, h): the board it is painted on, centred on
         (x, y) just behind it: the text is sized to fit inside it with LABEL_MARGIN to spare (and never above `size`
         px at 1 cm a pixel). Rasterised at about LABEL_TEXEL a texel, filtered with mipmaps: chunky up close,
-        still whole letters across the square at 640x360 (tests/signs_test.gd checks every sign)."""
+        still whole letters across the square at 640x360 (tests/signs_test.gd checks every sign).
+        localize: a notice the player has to read (a warning, a plaque): it reads in the player's language, the
+        English text being the message id (locale/es.po), sized per language by scripts/sign_label.gd (`ems`).
+        Anything else (a shop, a street, a brand) is the town's own English and never translates."""
         em = size * 0.01
         if board:
             em = min(em, label_em(text, *board))
         fs = max(12, min(96, round(em / LABEL_TEXEL)))
+        props = {}
+        if localize:
+            es = sign_translations().get(text, text)
+            em_es = min(size * 0.01, label_em(es, *board)) if board else em
+            props = dict(script=self.res("res://scripts/sign_label.gd", "Script", "sign_label"),
+                         ems='{"en": %.5f, "es": %.5f}' % (em, em_es))
+        else:
+            props = dict(auto_translate_mode=2)
         self.add("Sign", "Signs", "Label3D", transform=xform(x, y, z, yaw), text=json.dumps(text),
                  font_size=fs, pixel_size="%.5f" % (em / fs), modulate=color4(color), outline_size=0,
-                 double_sided="false", texture_filter=3)
+                 double_sided="false", texture_filter=3, **props)
 
-    def board_label(self, text, inst, at, board, color=(0.8, 0.78, 0.7), size=96, back=None):
+    def board_label(self, text, inst, at, board, color=(0.8, 0.78, 0.7), size=96, back=None, localize=False):
         """Text on a board of a placed model: inst = (x, z, yaw) of the instance, at = (x, y, z) of the middle of
         the board's front face in model space (front facing +Z), board = (w, h) of its lettering area. back = the
         model-space z of its back face, for a board lettered on both sides (it reads from behind too)."""
@@ -1902,7 +1920,8 @@ class World:
         faces = [(at[2], 0, LABEL_GAP)] + ([(back, 180, -LABEL_GAP)] if back is not None else [])
         for face, turn, off in faces:
             px, pz = at[0], face + off
-            self.label(text, ix + c * px + s_ * pz, at[1], iz - s_ * px + c * pz, iyaw + turn, size, color, board)
+            self.label(text, ix + c * px + s_ * pz, at[1], iz - s_ * px + c * pz, iyaw + turn, size, color, board,
+                       localize)
 
     def zone(self, name, x0, z0, x1, z1):
         n = self.add("Zone", "Zones", "Area3D", script=self.res("res://scripts/zone.gd", "Script"),
@@ -1924,7 +1943,7 @@ class World:
 
     def text(self):
         out = ["[gd_scene format=3]\n"]
-        for path, (typ, rid) in self.ext.items():
+        for path, (typ, rid) in list(self.ext.items()) + list(self.ext_named.items()):
             out.append('[ext_resource type="%s" path="%s" id="%s"]\n' % (typ, path, rid))
         out += [""] + self.subs + self.nodes
         return "\n".join(out)
@@ -1946,9 +1965,27 @@ LABEL_TEXEL = 0.012  # m per font texel (the raster size follows from it)
 def label_em(text, w, h):
     """The largest em (m) at which text fits a w x h board with LABEL_MARGIN (and 15 % slack) round it."""
     lines = text.split(chr(10))
-    adv = max(sum(FONT_DIGIT if ch.isdigit() else FONT_ADV.get(ch.upper(), 0.7) for ch in ln) for ln in lines)
+    adv = max(sum(FONT_DIGIT if ch.isdigit() else FONT_ADV.get(_base_letter(ch.upper()), 0.7) for ch in ln)
+              for ln in lines)
     m = min(max(LABEL_MARGIN[1] * h, LABEL_MARGIN[0]), LABEL_MARGIN[2]) * 1.15
     return min((w - 2 * m) / adv / 1.03, (h - 2 * m) / (FONT_LINE * len(lines)))
+
+
+def _base_letter(ch):
+    """An accented capital measures as its letter (the accent sits above it): Á -> A, Ñ -> N."""
+    return unicodedata.normalize("NFD", ch)[0] if ch.isalpha() else ch
+
+
+_SIGN_ES = None
+
+
+def sign_translations():
+    """{English sign text: Spanish} from locale/es.po (the localized signs are sized for both)."""
+    global _SIGN_ES
+    if _SIGN_ES is None:
+        import l10n
+        _SIGN_ES = {msgid: e["str"][0] for (ctx, msgid), e in l10n.read_po(l10n.PO).items() if not ctx and e["str"][0]}
+    return _SIGN_ES
 
 
 def xform(x, y, z, yaw=0.0, s=(1, 1, 1)):
@@ -2123,9 +2160,10 @@ def build_world():
     # --- Collapsed Bridge
     W.inst("bridge", -100, RAVINE_Z - 4, y=0)
     # (on the barricade board's ravine side, z 11.615 in the bridge's space: between its two posts, over the lamp)
-    W.label("BRIDGE OUT", -100, 1.56, RAVINE_Z - 4 + 11.615 - LABEL_GAP, 180, 48, (0.9, 0.85, 0.7), board=(2.5, 0.52))
+    W.label("BRIDGE OUT", -100, 1.56, RAVINE_Z - 4 + 11.615 - LABEL_GAP, 180, 48, (0.9, 0.85, 0.7), board=(2.5, 0.52),
+            localize=True)
     W.inst("ext_town_sign", -104.6, 140, 90)  # (the board the welcome text stands on, not floating in the air)
-    W.board_label("HOLLOWMERE  POP. 1413", (-104.6, 140, 90), (0, 2.2, 0.0), (4.9, 0.68), size=40)
+    W.board_label("HOLLOWMERE  POP. 1413", (-104.6, 140, 90), (0, 2.2, 0.0), (4.9, 0.68), size=40, localize=True)
     W.light(-100, 2, RAVINE_Z + 6, RED, 0.7, 8, flicker=True)
     W.zone("Collapsed Bridge", -125, 128, -75, 190)
 

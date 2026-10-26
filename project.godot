@@ -232,6 +232,11 @@ melee={
 ]
 }
 
+[internationalization]
+
+locale/translations=PackedStringArray("res://locale/es.po")
+locale/fallback="en"
+
 [physics]
 
 3d/physics_engine="Jolt Physics"

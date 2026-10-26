@@ -84,6 +84,7 @@ modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -15, 3, 2)
@@ -107,6 +108,7 @@ modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni2" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12.5, 3, 2)
@@ -130,6 +132,7 @@ modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni3" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10, 3, 2)
@@ -153,6 +156,7 @@ modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni4" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -7.5, 3, 2)
@@ -176,6 +180,7 @@ modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni5" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -5, 3, 2)
@@ -199,6 +204,7 @@ modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni6" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -2.5, 3, 2)
@@ -222,6 +228,7 @@ modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni7" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 3, 2)
@@ -245,6 +252,7 @@ modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni8" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 2.5, 3, 2)
@@ -268,6 +276,7 @@ modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni9" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 5, 3, 2)
@@ -291,6 +300,7 @@ modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni10" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7.5, 3, 2)
@@ -314,6 +324,7 @@ modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni11" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 10, 3, 2)
@@ -337,6 +348,7 @@ modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni12" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 12.5, 3, 2)
@@ -360,6 +372,7 @@ modulate = Color(0.8, 0.78, 0.7, 1)
 outline_size = 0
 double_sided = false
 texture_filter = 3
+auto_translate_mode = 2
 
 [node name="Omni13" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 15, 3, 2)

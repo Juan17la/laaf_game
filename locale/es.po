@@ -1,0 +1,4489 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: LAAF\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8-bit\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+
+#: scripts/bell.gd:60
+msgid "Release the bell rope"
+msgstr "Soltar la cuerda de la campana"
+
+#: scripts/ch1_scenes_a.gd:8 scripts/chapter1.gd:39
+msgid "I can hear you breathing."
+msgstr "Te oigo respirar."
+
+#: scripts/ch1_scenes_a.gd:8
+msgid "The forest keeps everything."
+msgstr "El bosque se lo queda todo."
+
+#: scripts/ch1_scenes_a.gd:8
+msgid "Come out, outsider."
+msgstr "Sal, forastero."
+
+#: scripts/ch1_scenes_a.gd:9
+msgid "It's quicker if you don't run."
+msgstr "Es más rápido si no corres."
+
+#: scripts/ch1_scenes_a.gd:9
+msgid "You're not the first."
+msgstr "No eres el primero."
+
+#: scripts/ch1_scenes_a.gd:9 scripts/chapter1.gd:41
+msgid "The grass won't hide you forever."
+msgstr "La hierba no te va a esconder para siempre."
+
+#: scripts/ch1_scenes_a.gd:10
+msgid "I see where you've been."
+msgstr "Veo por dónde has pasado."
+
+#: scripts/ch1_scenes_a.gd:10
+msgid "Dad taught me to track deer."
+msgstr "Papá me enseñó a rastrear venados."
+
+#: scripts/ch1_scenes_a.gd:10
+msgid "Your hand's burning, isn't it?"
+msgstr "Te arde la mano, ¿verdad?"
+
+#: scripts/ch1_scenes_a.gd:11
+msgid "Nobody's coming for you."
+msgstr "Nadie va a venir por ti."
+
+#: scripts/ch1_scenes_a.gd:11
+msgid "Closer…"
+msgstr "Más cerca…"
+
+#: scripts/ch1_scenes_a.gd:11
+msgid "I hear the grass move."
+msgstr "Oigo moverse la hierba."
+
+#: scripts/ch1_scenes_a.gd:12
+msgid "Not yet. Run."
+msgstr "Todavía no. Corre."
+
+#: scripts/ch1_scenes_a.gd:12
+msgid "I like it better when you run."
+msgstr "Me gusta más cuando corres."
+
+#: scripts/ch1_scenes_a.gd:12
+msgid "Got you. Again."
+msgstr "Te tengo. Otra vez."
+
+#: scripts/ch1_scenes_a.gd:13
+msgid "Go on. Crawl."
+msgstr "Anda. Arrástrate."
+
+#: scripts/ch1_scenes_a.gd:13
+msgid "Too slow, outsider."
+msgstr "Muy lento, forastero."
+
+#: scripts/ch1_scenes_a.gd:164
+msgid "Dusk. The road into Hollowmere."
+msgstr "Anochece. El camino a Hollowmere."
+
+#: scripts/ch1_scenes_a.gd:177 scripts/ch1_scenes_a.gd:181 scripts/ch1_scenes_a.gd:189 scripts/ch1_scenes_a.gd:200 scripts/ch1_scenes_a.gd:228 scripts/ch1_scenes_a.gd:241 …
+msgid "Alex"
+msgstr "Alex"
+
+#: scripts/ch1_scenes_a.gd:177
+msgid "No. No, no, no—"
+msgstr "No. No, no, no—"
+
+#: scripts/ch1_scenes_a.gd:181
+msgid "Not here. Not now."
+msgstr "Aquí no. Ahora no."
+
+#: scripts/ch1_scenes_a.gd:189
+msgid "Bridge out. Great."
+msgstr "Sin puente. Genial."
+
+#: scripts/ch1_scenes_a.gd:197
+msgid "\"Hollowmere is beautiful. Don't come.\" — L."
+msgstr "\"Hollowmere es hermoso. No vengas.\" — L."
+
+#: scripts/ch1_scenes_a.gd:200
+msgid "Three weeks, Lucía. Not one call."
+msgstr "Tres semanas, Lucía. Ni una llamada."
+
+#: scripts/ch1_scenes_a.gd:228
+msgid "Hello? Are you open?"
+msgstr "¿Hola? ¿Está abierto?"
+
+#: scripts/ch1_scenes_a.gd:237 scripts/ch1_scenes_a.gd:248 scripts/ch1_scenes_a.gd:257 scripts/ch1_scenes_a.gd:262 scripts/ch1_scenes_a.gd:268 scripts/ch1_scenes_a.gd:274 …
+msgid "Grady"
+msgstr "Grady"
+
+#: scripts/ch1_scenes_a.gd:237
+msgid "Closed. Always, after dark."
+msgstr "Cerrado. Siempre, de noche."
+
+#: scripts/ch1_scenes_a.gd:241
+msgid "I'm looking for my sister. Lucía."
+msgstr "Busco a mi hermana. Lucía."
+
+#: scripts/ch1_scenes_a.gd:244
+msgid "She sent this. From here."
+msgstr "Ella mandó esto. Desde aquí."
+
+#: scripts/ch1_scenes_a.gd:248
+msgid "Never seen her."
+msgstr "Nunca la he visto."
+
+#: scripts/ch1_scenes_a.gd:252
+msgid "You didn't even look."
+msgstr "Ni siquiera miraste."
+
+#: scripts/ch1_scenes_a.gd:257
+msgid "Motel. Lake road, west."
+msgstr "El motel. Carretera del lago, al oeste."
+
+#: scripts/ch1_scenes_a.gd:262
+msgid "Room six. One night."
+msgstr "Habitación seis. Una noche."
+
+#: scripts/ch1_scenes_a.gd:268
+msgid "Then you go back the way you came."
+msgstr "Y después te vas por donde viniste."
+
+#: scripts/ch1_scenes_a.gd:270
+msgid "The bridge is out."
+msgstr "El puente se cayó."
+
+#: scripts/ch1_scenes_a.gd:274
+msgid "Then walk."
+msgstr "Entonces camina."
+
+#: scripts/ch1_scenes_a.gd:296
+msgid "23:00. Lakeview Motel, room six."
+msgstr "23:00. Lakeview Motel, habitación seis."
+
+#: scripts/ch1_scenes_a.gd:323
+msgid "Tsssss…"
+msgstr "Tsssss…"
+
+#: scripts/ch1_scenes_a.gd:332
+msgid "Agh—!"
+msgstr "¡Agh—!"
+
+#: scripts/ch1_scenes_a.gd:337
+msgid "Who's there?!"
+msgstr "¡¿Quién anda ahí?!"
+
+#: scripts/ch1_scenes_a.gd:348
+msgid "My hand…"
+msgstr "Mi mano…"
+
+#: scripts/ch1_scenes_a.gd:364
+msgid "An eye… inside a spiral."
+msgstr "Un ojo… dentro de una espiral."
+
+#: scripts/ch1_scenes_a.gd:367
+msgid "Burned in. What did they do to me?"
+msgstr "Quemado en la piel. ¿Qué me hicieron?"
+
+#: scripts/ch1_scenes_a.gd:392
+msgid "The same eye. On my door."
+msgstr "El mismo ojo. En mi puerta."
+
+#: scripts/ch1_scenes_a.gd:394
+msgid "Still wet."
+msgstr "Todavía está fresca."
+
+#: scripts/ch1_scenes_a.gd:397
+msgid "And a note."
+msgstr "Y una nota."
+
+#: scripts/ch1_scenes_a.gd:416 scripts/ch1_scenes_a.gd:445 scripts/ch1_scenes_a.gd:450 scripts/ch1_scenes_a.gd:452 scripts/ch1_scenes_a.gd:456 scripts/ch1_scenes_a.gd:458 …
+msgid "Moth"
+msgstr "Polilla"
+
+#: scripts/ch1_scenes_a.gd:416
+msgid "\"Don't let them see you after dark. Radio, channel 7.\""
+msgstr "\"Que no te vean después del anochecer. Radio, canal 7.\""
+
+#: scripts/ch1_scenes_a.gd:418
+msgid "Channel 7…"
+msgstr "Canal 7…"
+
+#: scripts/ch1_scenes_a.gd:445
+msgid "You're awake. Good."
+msgstr "Despertaste. Bien."
+
+#: scripts/ch1_scenes_a.gd:447
+msgid "Who is this? Who did this to me?"
+msgstr "¿Quién habla? ¿Quién me hizo esto?"
+
+#: scripts/ch1_scenes_a.gd:450
+msgid "No names on open air. Listen."
+msgstr "Nada de nombres al aire. Escucha."
+
+#: scripts/ch1_scenes_a.gd:452
+msgid "They marked you. Owen comes to collect."
+msgstr "Te marcaron. Owen viene a cobrar."
+
+#: scripts/ch1_scenes_a.gd:454
+msgid "Collect what?"
+msgstr "¿A cobrar qué?"
+
+#: scripts/ch1_scenes_a.gd:456
+msgid "You. Get to the town square."
+msgstr "A ti. Ve a la plaza del pueblo."
+
+#: scripts/ch1_scenes_a.gd:458
+msgid "Stay in the tall grass. Stay low."
+msgstr "Quédate en la hierba alta. Agachado."
+
+#: scripts/ch1_scenes_a.gd:460
+msgid "And if he sees me?"
+msgstr "¿Y si me ve?"
+
+#: scripts/ch1_scenes_a.gd:462
+msgid "Don't let him. Go. Now."
+msgstr "No lo dejes. Ve. Ya."
+
+#: scripts/ch1_scenes_a.gd:488 scripts/ch1_scenes_a.gd:500 scripts/ch1_scenes_a.gd:505 scripts/ch1_scenes_b.gd:217 scripts/ch1_scenes_b.gd:222 scripts/ch1_scenes_b.gd:228 …
+msgid "Owen"
+msgstr "Owen"
+
+#: scripts/ch1_scenes_a.gd:488
+msgid "Little outsider… where'd you go?"
+msgstr "Forasterito… ¿adónde te fuiste?"
+
+#: scripts/ch1_scenes_a.gd:494
+msgid "HIDE"
+msgstr "ESCÓNDETE"
+
+#: scripts/ch1_scenes_a.gd:495
+msgid "C in tall grass: hidden."
+msgstr "C en la hierba alta: escondido."
+
+#: scripts/ch1_scenes_a.gd:517
+msgid "He stopped…"
+msgstr "Se detuvo…"
+
+#: scripts/ch1_scenes_a.gd:520
+msgid "The lights. He won't come into the lights."
+msgstr "Las luces. No se mete en la luz."
+
+#: scripts/ch1_scenes_a.gd:529
+msgid "Room 4. Same eye on the door."
+msgstr "Habitación 4. El mismo ojo en la puerta."
+
+#: scripts/ch1_scenes_a.gd:530
+msgid "Lucía's postcards were on this motel's paper."
+msgstr "Las postales de Lucía eran del papel de este motel."
+
+#: scripts/ch1_scenes_a.gd:535
+msgid "ROOM 4"
+msgstr "HABITACIÓN 4"
+
+#: scripts/ch1_scenes_a.gd:536
+msgid "Chained on the inside. It gives an inch."
+msgstr "Encadenada por dentro. Cede un poco."
+
+#: scripts/ch1_scenes_a.gd:537
+msgid "Her camera's hanging off the handle."
+msgstr "Su cámara cuelga de la manija."
+
+#: scripts/ch1_scenes_a.gd:542
+msgid "EVIDENCE #11"
+msgstr "EVIDENCIA #11"
+
+#: scripts/ch1_scenes_a.gd:543
+msgid "Lucía's camera. One frame left."
+msgstr "La cámara de Lucía. Le queda una foto."
+
+#: scripts/ch1_scenes_a.gd:544
+msgid "Her last photo: a chapel. In a quarry."
+msgstr "Su última foto: una capilla. En una cantera."
+
+#: scripts/ch1_scenes_b.gd:67
+msgid "You. From the motel. You made it through the night."
+msgstr "Tú. El del motel. Sobreviviste a la noche."
+
+#: scripts/ch1_scenes_b.gd:69
+msgid "Barely. Someone burned this into my hand."
+msgstr "Apenas. Alguien me quemó esto en la mano."
+
+#: scripts/ch1_scenes_b.gd:73
+msgid "Put that away. They count the lit windows."
+msgstr "Guarda eso. Ellos cuentan las ventanas encendidas."
+
+#: scripts/ch1_scenes_b.gd:75
+msgid "Marked folk pay in tokens. Everyone else is already paid for."
+msgstr "La gente marcada paga en fichas. Los demás ya están pagados."
+
+#: scripts/ch1_scenes_b.gd:76
+msgid "I'm not paying for anything. I'm finding my sister."
+msgstr "No voy a pagar nada. Voy a encontrar a mi hermana."
+
+#: scripts/ch1_scenes_b.gd:78
+msgid "Then you'll need more than a flashlight. Wait here."
+msgstr "Entonces vas a necesitar más que una linterna. Espera aquí."
+
+#: scripts/ch1_scenes_b.gd:93
+msgid "My brother's revolver. He won't be needing it."
+msgstr "El revólver de mi hermano. Él ya no lo va a necesitar."
+
+#: scripts/ch1_scenes_b.gd:98
+msgid "And a flare pistol. Off a harbor boat."
+msgstr "Y una pistola de bengalas. De un bote del puerto."
+
+#: scripts/ch1_scenes_b.gd:100
+msgid "Flares? Against a bow?"
+msgstr "¿Bengalas? ¿Contra un arco?"
+
+#: scripts/ch1_scenes_b.gd:103
+msgid "Owen's scared of fire. Everybody knows it. Nobody says it."
+msgstr "Owen le tiene miedo al fuego. Todos lo saben. Nadie lo dice."
+
+#: scripts/ch1_scenes_b.gd:105
+msgid "Practice on the stall. Then come back to me."
+msgstr "Practica en el puesto. Después vuelves conmigo."
+
+#: scripts/ch1_scenes_b.gd:110
+msgid "REVOLVER + FLARE GUN"
+msgstr "REVÓLVER + PISTOLA DE BENGALAS"
+
+#: scripts/ch1_scenes_b.gd:114
+msgid "RMB aim · LMB fire · R reload"
+msgstr "Clic der. apuntar · Clic izq. disparar · R recargar"
+
+#: scripts/ch1_scenes_b.gd:123
+msgid "I'm ready. Where do I find him?"
+msgstr "Estoy listo. ¿Dónde lo encuentro?"
+
+#: scripts/ch1_scenes_b.gd:125
+msgid "You don't. He finds you."
+msgstr "No lo encuentras. Él te encuentra a ti."
+
+#: scripts/ch1_scenes_b.gd:132 scripts/ch1_scenes_b.gd:420 scripts/ch1_scenes_b.gd:423 scripts/ch2_scenes_a.gd:303 scripts/ch2_scenes_a.gd:315 scripts/ch3_scenes_a.gd:432 …
+msgid "Radio"
+msgstr "Radio"
+
+#: scripts/ch1_scenes_b.gd:132
+msgid "Kshhh... channel seven..."
+msgstr "Kshhh... canal siete..."
+
+#: scripts/ch1_scenes_b.gd:133
+msgid "You found Grady. Good."
+msgstr "Encontraste a Grady. Bien."
+
+#: scripts/ch1_scenes_b.gd:134
+msgid "Moth? Who is Owen?"
+msgstr "¿Polilla? ¿Quién es Owen?"
+
+#: scripts/ch1_scenes_b.gd:136
+msgid "The hunter at your window. He carries a piece of the gate key."
+msgstr "El cazador de tu ventana. Lleva una pieza de la llave de la reja."
+
+#: scripts/ch1_scenes_b.gd:137
+msgid "What key?"
+msgstr "¿Qué llave?"
+
+#: scripts/ch1_scenes_b.gd:138
+msgid "The tunnel gate. Three pieces. Three hunters. It's your only way out."
+msgstr "La reja del túnel. Tres piezas. Tres cazadores. Es tu única salida."
+
+#: scripts/ch1_scenes_b.gd:143
+msgid "The sawmill. West road, into the forest."
+msgstr "El aserradero. Carretera del oeste, bosque adentro."
+
+#: scripts/ch1_scenes_b.gd:147
+msgid "Gunshots carry. Be quick, or be quiet."
+msgstr "Los disparos se oyen lejos. Sé rápido, o sé silencioso."
+
+#: scripts/ch1_scenes_b.gd:150
+msgid "Quick it is."
+msgstr "Rápido, entonces."
+
+#: scripts/ch1_scenes_b.gd:160
+msgid "Pine and smoke. Stay off the gravel."
+msgstr "Pino y humo. Lejos de la grava."
+
+#: scripts/ch1_scenes_b.gd:165
+msgid "OWEN'S PARENTS' LANTERN"
+msgstr "EL FAROL DE LOS PADRES DE OWEN"
+
+#: scripts/ch1_scenes_b.gd:166
+msgid "A festival lantern. Burnt black."
+msgstr "Un farol del festival. Negro de quemado."
+
+#: scripts/ch1_scenes_b.gd:167
+msgid "Two names scratched in the brass. Clarke."
+msgstr "Dos nombres rayados en el bronce. Clarke."
+
+#: scripts/ch1_scenes_b.gd:172
+msgid "EVIDENCE #1"
+msgstr "EVIDENCIA #1"
+
+#: scripts/ch1_scenes_b.gd:173
+msgid "A hunting ledger. Names, dates..."
+msgstr "Un registro de caza. Nombres, fechas..."
+
+#: scripts/ch1_scenes_b.gd:174
+msgid "Last column says delivered. God."
+msgstr "La última columna dice entregado. Dios."
+
+#: scripts/ch1_scenes_b.gd:192
+msgid "KEY PART 1 / 3"
+msgstr "PARTE DE LA LLAVE 1 / 3"
+
+#: scripts/ch1_scenes_b.gd:193
+msgid "One of three. Now get out."
+msgstr "Una de tres. Ahora, a salir de aquí."
+
+#: scripts/ch1_scenes_b.gd:217
+msgid "That's not yours."
+msgstr "Eso no es tuyo."
+
+#: scripts/ch1_scenes_b.gd:219
+msgid "Owen. You marked me."
+msgstr "Owen. Tú me marcaste."
+
+#: scripts/ch1_scenes_b.gd:222
+msgid "I delivered you. There's a difference."
+msgstr "Yo te entregué. Hay una diferencia."
+
+#: scripts/ch1_scenes_b.gd:224
+msgid "Where's my sister?"
+msgstr "¿Dónde está mi hermana?"
+
+#: scripts/ch1_scenes_b.gd:228 scripts/chapter1.gd:39
+msgid "Dad used to say the forest keeps everything."
+msgstr "Papá decía que el bosque se lo queda todo."
+
+#: scripts/ch1_scenes_b.gd:235
+msgid "It'll keep you too."
+msgstr "Contigo también se va a quedar."
+
+#: scripts/ch1_scenes_b.gd:246 scripts/ch2_scenes_a.gd:587 scripts/ch2_scenes_b.gd:570 scripts/ch3_scenes_b.gd:347
+msgid "PHASE 2"
+msgstr "FASE 2"
+
+#: scripts/ch1_scenes_b.gd:252
+msgid "ENOUGH! You don't walk out of here!"
+msgstr "¡BASTA! ¡De aquí no sales!"
+
+#: scripts/ch1_scenes_b.gd:265
+msgid "Go on. Do it."
+msgstr "Anda. Hazlo."
+
+#: scripts/ch1_scenes_b.gd:268
+msgid "Everyone else did."
+msgstr "Todos los demás lo hicieron."
+
+#: scripts/ch1_scenes_b.gd:299
+msgid "Mom's lantern."
+msgstr "El farol de mamá."
+
+#: scripts/ch1_scenes_b.gd:301
+msgid "You found it."
+msgstr "Lo encontraste."
+
+#: scripts/ch1_scenes_b.gd:302
+msgid "It was in the loft. With their names."
+msgstr "Estaba en el altillo. Con sus nombres."
+
+#: scripts/ch1_scenes_b.gd:305
+msgid "Take the key. It's yours now."
+msgstr "Toma la llave. Ahora es tuya."
+
+#: scripts/ch1_scenes_b.gd:307
+msgid "Tell me it wasn't for nothing."
+msgstr "Dime que no fue para nada."
+
+#: scripts/ch1_scenes_b.gd:309
+msgid "It won't be."
+msgstr "No lo será."
+
+#: scripts/ch1_scenes_b.gd:313 scripts/ch2_scenes_a.gd:688
+msgid "No. Not like them."
+msgstr "No. No como ellos."
+
+#: scripts/ch1_scenes_b.gd:315
+msgid "Why?"
+msgstr "¿Por qué?"
+
+#: scripts/ch1_scenes_b.gd:316
+msgid "Because somebody has to stop."
+msgstr "Porque alguien tiene que parar."
+
+#: scripts/ch1_scenes_b.gd:318
+msgid "Then go. Before the lights go out."
+msgstr "Entonces vete. Antes de que se apaguen las luces."
+
+#: scripts/ch1_scenes_b.gd:348
+msgid "M-mom..."
+msgstr "M-mamá..."
+
+#: scripts/ch1_scenes_b.gd:353 scripts/ch2_scenes_a.gd:735
+msgid "What did I just do."
+msgstr "Qué acabo de hacer."
+
+#: scripts/ch1_scenes_b.gd:359
+msgid "The key. Just take the key."
+msgstr "La llave. Solo toma la llave."
+
+#: scripts/ch1_scenes_b.gd:379
+msgid "The lights..."
+msgstr "Las luces..."
+
+#: scripts/ch1_scenes_b.gd:402
+msgid "What is that..."
+msgstr "Qué es eso..."
+
+#: scripts/ch1_scenes_b.gd:420 scripts/ch1_scenes_b.gd:423
+msgid "Kshhh..."
+msgstr "Kshhh..."
+
+#: scripts/ch1_scenes_b.gd:421
+msgid "Harbor. Tomorrow. Come alone."
+msgstr "El puerto. Mañana. Ven solo."
+
+#: scripts/ch1_scenes_b.gd:422
+msgid "Moth, what was that thing?"
+msgstr "Polilla, ¿qué era esa cosa?"
+
+#: scripts/ch1_scenes_b.gd:424
+msgid "I · THE MARK"
+msgstr "I · LA MARCA"
+
+#: scripts/ch1_scenes_b.gd:427
+msgid "Owen: spared"
+msgstr "Owen: perdonado"
+
+#: scripts/ch1_scenes_b.gd:427
+msgid "Owen: killed"
+msgstr "Owen: muerto"
+
+#: scripts/ch1_scenes_b.gd:427
+msgid "Owen: fled"
+msgstr "Owen: huyó"
+
+#: scripts/ch1_scenes_b.gd:428
+msgid "End of Chapter 1.  %s · Evidence %d · Tokens %d · Key part %s"
+msgstr "Fin del capítulo 1.  %s · Evidencias %d · Fichas %d · Parte de la llave %s"
+
+#: scripts/ch1_scenes_b.gd:439
+msgid "Bells on a wire across the trail. Crouch (C) to get close without ringing them; E cuts the wire."
+msgstr "Campanas en un cable que cruza el sendero. Agáchate (C) para acercarte sin hacerlas sonar; E corta el cable."
+
+#: scripts/ch1_scenes_b.gd:440
+msgid "TRIPWIRE"
+msgstr "CABLE TRAMPA"
+
+#: scripts/ch1_scenes_b.gd:441
+msgid "Bells on a wire. Owen's doorbell."
+msgstr "Campanas en un cable. El timbre de Owen."
+
+#: scripts/ch1_scenes_b.gd:446
+msgid "Damn it. Everyone heard that."
+msgstr "Maldita sea. Todos oyeron eso."
+
+#: scripts/ch1_scenes_b.gd:451
+msgid "WIRE CUT  ·  %d LEFT"
+msgstr "CABLE CORTADO  ·  QUEDAN %d"
+
+#: scripts/ch1_scenes_b.gd:456 scripts/ch2_scenes_a.gd:423
+msgid "EVIDENCE #%d"
+msgstr "EVIDENCIA #%d"
+
+#: scripts/ch1_scenes_b.gd:456
+msgid "+%d TOKENS"
+msgstr "+%d FICHAS"
+
+#: scripts/ch1_scenes_b.gd:457
+msgid "Oilcloth, tied under the stake. Moth's handwriting."
+msgstr "Hule, atado bajo la estaca. La letra de Polilla."
+
+#: scripts/ch1_scenes_b.gd:458
+msgid "\"His wires. He marks whoever gets through.\" Photos of doors."
+msgstr "\"Sus cables. Marca a quien logre pasar.\" Fotos de puertas."
+
+#: scripts/ch2_scenes_a.gd:21 scripts/ch2_scenes_a.gd:386
+msgid "Lily, sweetheart, we have a guest."
+msgstr "Lily, cariño, tenemos visita."
+
+#: scripts/ch2_scenes_a.gd:21
+msgid "Recess is over. Come back to class."
+msgstr "Se acabó el recreo. Vuelvan a clase."
+
+#: scripts/ch2_scenes_a.gd:22
+msgid "No running in the halls, please."
+msgstr "No se corre en los pasillos, por favor."
+
+#: scripts/ch2_scenes_a.gd:22
+msgid "Everyone to the auditorium. Quietly."
+msgstr "Todos al auditorio. En silencio."
+
+#: scripts/ch2_scenes_a.gd:23
+msgid "I can hear your shoes, new student."
+msgstr "Oigo tus zapatos, estudiante nuevo."
+
+#: scripts/ch2_scenes_a.gd:23
+msgid "Lily, don't talk to strangers."
+msgstr "Lily, no hables con extraños."
+
+#: scripts/ch2_scenes_a.gd:24
+msgid "Line up by the door. Hands to yourselves."
+msgstr "En fila junto a la puerta. Las manos quietas."
+
+#: scripts/ch2_scenes_a.gd:25 scripts/ch2_scenes_a.gd:342
+msgid "Lily?"
+msgstr "¿Lily?"
+
+#: scripts/ch2_scenes_a.gd:25
+msgid "Lily, answer Mommy."
+msgstr "Lily, contéstale a mami."
+
+#: scripts/ch2_scenes_a.gd:25
+msgid "It's only the dark, sweetheart."
+msgstr "Es solo la oscuridad, cariño."
+
+#: scripts/ch2_scenes_a.gd:26
+msgid "Lily? Count with me. One… two…"
+msgstr "¿Lily? Cuenta conmigo. Uno… dos…"
+
+#: scripts/ch2_scenes_a.gd:26
+msgid "Don't hide from me. Not again."
+msgstr "No te escondas de mí. Otra vez no."
+
+#: scripts/ch2_scenes_a.gd:26
+msgid "Baby, where are you?"
+msgstr "Mi amor, ¿dónde estás?"
+
+#: scripts/ch2_scenes_a.gd:27
+msgid "I left the light on for you. I did."
+msgstr "Te dejé la luz prendida. Te la dejé."
+
+#: scripts/ch2_scenes_a.gd:147
+msgid "09:00. The harbor."
+msgstr "09:00. El puerto."
+
+#: scripts/ch2_scenes_a.gd:151
+msgid "A yellow rain jacket at the end of the dock."
+msgstr "Un impermeable amarillo al final del muelle."
+
+#: scripts/ch2_scenes_a.gd:154 scripts/ch2_scenes_a.gd:163 scripts/ch2_scenes_a.gd:166 scripts/ch2_scenes_a.gd:178 scripts/ch2_scenes_a.gd:182 scripts/ch2_scenes_a.gd:186 …
+msgid "Elena"
+msgstr "Elena"
+
+#: scripts/ch2_scenes_a.gd:154
+msgid "You came alone. Good."
+msgstr "Viniste solo. Bien."
+
+#: scripts/ch2_scenes_a.gd:158
+msgid "Moth?"
+msgstr "¿Polilla?"
+
+#: scripts/ch2_scenes_a.gd:163
+msgid "Elena. Moth is for the radio."
+msgstr "Elena. Polilla es para la radio."
+
+#: scripts/ch2_scenes_a.gd:164
+msgid "You left the note. And the eye on my door?"
+msgstr "Tú dejaste la nota. ¿Y el ojo en mi puerta?"
+
+#: scripts/ch2_scenes_a.gd:166
+msgid "The note was me. The eye was Owen."
+msgstr "La nota fui yo. El ojo fue Owen."
+
+#: scripts/ch2_scenes_a.gd:172
+msgid "She unwinds the bandage."
+msgstr "Ella se quita la venda."
+
+#: scripts/ch2_scenes_a.gd:175
+msgid "The same mark."
+msgstr "La misma marca."
+
+#: scripts/ch2_scenes_a.gd:178
+msgid "I'm one of them."
+msgstr "Soy una de ellos."
+
+#: scripts/ch2_scenes_a.gd:182
+msgid "I'm also the only one who wants them gone."
+msgstr "También soy la única que quiere que desaparezcan."
+
+#: scripts/ch2_scenes_a.gd:183
+msgid "Then tell me where my sister is."
+msgstr "Entonces dime dónde está mi hermana."
+
+#: scripts/ch2_scenes_a.gd:186
+msgid "The quarry. They took Lucía there."
+msgstr "La cantera. Se llevaron a Lucía allá."
+
+#: scripts/ch2_scenes_a.gd:200
+msgid "Alive."
+msgstr "Viva."
+
+#: scripts/ch2_scenes_a.gd:210
+msgid "Alive…"
+msgstr "Viva…"
+
+#: scripts/ch2_scenes_a.gd:214
+msgid "One way out. The tunnel gate on the Old Pass."
+msgstr "Una sola salida. La reja del túnel, en el Paso Viejo."
+
+#: scripts/ch2_scenes_a.gd:216
+msgid "Its key comes in three parts. Owen. Nora. Julian."
+msgstr "Su llave viene en tres partes. Owen. Nora. Julian."
+
+#: scripts/ch2_scenes_a.gd:221
+msgid "Owen's is in my pocket."
+msgstr "La de Owen está en mi bolsillo."
+
+#: scripts/ch2_scenes_a.gd:225
+msgid "Then you're a third of the way out."
+msgstr "Entonces ya llevas un tercio de la salida."
+
+#: scripts/ch2_scenes_a.gd:226
+msgid "And Lucía?"
+msgstr "¿Y Lucía?"
+
+#: scripts/ch2_scenes_a.gd:227
+msgid "Locked in the Veil's chapel. Marcus holds that key."
+msgstr "Encerrada en la capilla del Velo. Marcus tiene esa llave."
+
+#: scripts/ch2_scenes_a.gd:229
+msgid "Marcus comes last. Trust me."
+msgstr "Marcus va de último. Confía en mí."
+
+#: scripts/ch2_scenes_a.gd:230
+msgid "Why help me?"
+msgstr "¿Por qué me ayudas?"
+
+#: scripts/ch2_scenes_a.gd:233
+msgid "You're an outsider with nothing to lose. That's useful."
+msgstr "Eres un forastero sin nada que perder. Eso me sirve."
+
+#: scripts/ch2_scenes_a.gd:239
+msgid "My radio's in the lighthouse. Dead since the blackout."
+msgstr "Mi radio está en el faro. Muerta desde el apagón."
+
+#: scripts/ch2_scenes_a.gd:243
+msgid "There's a car battery in the boathouse. Bring it."
+msgstr "Hay una batería de carro en el cobertizo de botes. Tráela."
+
+#: scripts/ch2_scenes_a.gd:247
+msgid "And you?"
+msgstr "¿Y tú?"
+
+#: scripts/ch2_scenes_a.gd:248
+msgid "I'll be there. Don't drop it."
+msgstr "Ahí estaré. No la dejes caer."
+
+#: scripts/ch2_scenes_a.gd:282
+msgid "Heavy. Walk, don't run."
+msgstr "Pesa. Camina, no corras."
+
+#: scripts/ch2_scenes_a.gd:282
+msgid "Lighthouse. North, along the shore."
+msgstr "El faro. Al norte, por la orilla."
+
+#: scripts/ch2_scenes_a.gd:303 scripts/ch3_scenes_b.gd:677 scripts/ch3_scenes_b.gd:796
+msgid "Kshhh… channel seven…"
+msgstr "Kshhh… canal siete…"
+
+#: scripts/ch2_scenes_a.gd:304
+msgid "A recording, hidden under the static."
+msgstr "Una grabación, escondida bajo la estática."
+
+#: scripts/ch2_scenes_a.gd:307
+msgid "\"Night of the Lanterns. Three years on.\""
+msgstr "\"La Noche de los Faroles. Tres años después.\""
+
+#: scripts/ch2_scenes_a.gd:309
+msgid "\"Trucks on the quarry road. Every Tuesday, lights off.\""
+msgstr "\"Camiones en el camino de la cantera. Cada martes, con las luces apagadas.\""
+
+#: scripts/ch2_scenes_a.gd:312
+msgid "\"He calls the taken 'recruited'. I call them buried.\""
+msgstr "\"Él dice que los llevados son 'reclutados'. Yo digo que están enterrados.\""
+
+#: scripts/ch2_scenes_a.gd:314
+msgid "\"If anyone hears this: he's lying to us.\""
+msgstr "\"Si alguien oye esto: nos está mintiendo.\""
+
+#: scripts/ch2_scenes_a.gd:315 scripts/ch3_scenes_a.gd:432 scripts/ch3_scenes_a.gd:533 scripts/ch3_scenes_b.gd:236 scripts/ch3_scenes_b.gd:470
+msgid "Kshhh…"
+msgstr "Kshhh…"
+
+#: scripts/ch2_scenes_a.gd:316
+msgid "EVIDENCE #9"
+msgstr "EVIDENCIA #9"
+
+#: scripts/ch2_scenes_a.gd:322
+msgid "That's your voice."
+msgstr "Esa es tu voz."
+
+#: scripts/ch2_scenes_a.gd:323
+msgid "The week I stopped believing him."
+msgstr "La semana en que dejé de creerle."
+
+#: scripts/ch2_scenes_a.gd:330
+msgid "Your map."
+msgstr "Tu mapa."
+
+#: scripts/ch2_scenes_a.gd:336
+msgid "The school. Nora."
+msgstr "La escuela. Nora."
+
+#: scripts/ch2_scenes_a.gd:337
+msgid "The clinic. Julian. Either order."
+msgstr "La clínica. Julian. En el orden que quieras."
+
+#: scripts/ch2_scenes_a.gd:340
+msgid "Nora keeps the lights on for a reason."
+msgstr "Nora deja las luces prendidas por una razón."
+
+#: scripts/ch2_scenes_a.gd:341
+msgid "In the dark she only looks for Lily. Use that."
+msgstr "En la oscuridad solo busca a Lily. Úsalo."
+
+#: scripts/ch2_scenes_a.gd:344
+msgid "Her daughter. Six. The festival."
+msgstr "Su hija. Seis años. El festival."
+
+#: scripts/ch2_scenes_a.gd:345
+msgid "Julian gasses his halls. He's asthmatic."
+msgstr "Julian llena de gas sus pasillos. Es asmático."
+
+#: scripts/ch2_scenes_a.gd:348
+msgid "The vents are on the roof."
+msgstr "La ventilación está en la azotea."
+
+#: scripts/ch2_scenes_a.gd:350
+msgid "You know them well."
+msgstr "Los conoces bien."
+
+#: scripts/ch2_scenes_a.gd:354
+msgid "Nora was my best friend."
+msgstr "Nora era mi mejor amiga."
+
+#: scripts/ch2_scenes_a.gd:356
+msgid "Go. I'll call when I have what I need."
+msgstr "Ve. Te llamo cuando tenga lo que necesito."
+
+#: scripts/ch2_scenes_a.gd:382 scripts/ch2_scenes_a.gd:401 scripts/ch2_scenes_a.gd:453 player/hud.gd:17
+msgid "PA"
+msgstr "Altavoz"
+
+#: scripts/ch2_scenes_a.gd:382
+msgid "*ding-dong*"
+msgstr "*din-don*"
+
+#: scripts/ch2_scenes_a.gd:386 scripts/ch2_scenes_a.gd:391 scripts/ch2_scenes_a.gd:398 scripts/ch2_scenes_a.gd:417 scripts/ch2_scenes_a.gd:452 scripts/ch2_scenes_a.gd:540 …
+msgid "Nora"
+msgstr "Nora"
+
+#: scripts/ch2_scenes_a.gd:388
+msgid "Nora."
+msgstr "Nora."
+
+#: scripts/ch2_scenes_a.gd:391
+msgid "The children want to play."
+msgstr "Los niños quieren jugar."
+
+#: scripts/ch2_scenes_a.gd:395
+msgid "The music boxes. She heard me."
+msgstr "Las cajas de música. Me oyó."
+
+#: scripts/ch2_scenes_a.gd:398
+msgid "It's so quiet outside today. Did you do that?"
+msgstr "Afuera está tan callado hoy. ¿Fuiste tú?"
+
+#: scripts/ch2_scenes_a.gd:400
+msgid "Guilty."
+msgstr "Culpable."
+
+#: scripts/ch2_scenes_a.gd:401
+msgid "*click*"
+msgstr "*clic*"
+
+#: scripts/ch2_scenes_a.gd:409
+msgid "Quiet now. %d to go."
+msgstr "Silencio. Faltan %d."
+
+#: scripts/ch2_scenes_a.gd:411
+msgid "RECESS: ALL QUIET"
+msgstr "RECREO: TODO EN SILENCIO"
+
+#: scripts/ch2_scenes_a.gd:412
+msgid "That's all of them. She won't hear me coming."
+msgstr "Son todas. No me va a oír llegar."
+
+#: scripts/ch2_scenes_a.gd:425
+msgid "Attendance, the week of the festival."
+msgstr "La lista de asistencia de la semana del festival."
+
+#: scripts/ch2_scenes_a.gd:426
+msgid "Six names crossed out in red. 'Recruited.'"
+msgstr "Seis nombres tachados en rojo. 'Reclutados.'"
+
+#: scripts/ch2_scenes_a.gd:428
+msgid "A letter in Nora's hand. Never sent."
+msgstr "Una carta con la letra de Nora. Nunca la envió."
+
+#: scripts/ch2_scenes_a.gd:429
+msgid "\"He says if I serve, she might come back.\""
+msgstr "\"Dice que si sirvo, ella podría volver.\""
+
+#: scripts/ch2_scenes_a.gd:446
+msgid "CLUNK."
+msgstr "CLONC."
+
+#: scripts/ch2_scenes_a.gd:452
+msgid "Lily? Lily, stay where you a—"
+msgstr "¿Lily? Lily, quédate donde est—"
+
+#: scripts/ch2_scenes_a.gd:453
+msgid "*kzzt*"
+msgstr "*kzzt*"
+
+#: scripts/ch2_scenes_a.gd:456
+msgid "Lights out, Nora."
+msgstr "Se fue la luz, Nora."
+
+#: scripts/ch2_scenes_a.gd:457
+msgid "Now you can't see me either."
+msgstr "Ahora tú tampoco me ves."
+
+#: scripts/ch2_scenes_a.gd:474
+msgid "LILY'S DRAWING"
+msgstr "EL DIBUJO DE LILY"
+
+#: scripts/ch2_scenes_a.gd:475
+msgid "Crayon: a lighthouse, a boat, two stick figures holding hands."
+msgstr "En crayola: un faro, un bote, dos figuras de palitos tomadas de la mano."
+
+#: scripts/ch2_scenes_a.gd:476
+msgid "\"ME AND MOMMY. LILY, 6.\""
+msgstr "\"MI MAMI Y YO. LILY, 6.\""
+
+#: scripts/ch2_scenes_a.gd:479
+msgid "She'll want this back."
+msgstr "Ella va a querer recuperarlo."
+
+#: scripts/ch2_scenes_a.gd:506 scripts/ch2_scenes_b.gd:484
+msgid "KEY PART %d / 3"
+msgstr "PARTE DE LA LLAVE %d / 3"
+
+#: scripts/ch2_scenes_a.gd:507
+msgid "Taped under a child's desk. Nora's piece."
+msgstr "Pegada bajo un pupitre. La pieza de Nora."
+
+#: scripts/ch2_scenes_a.gd:508
+msgid "One more."
+msgstr "Falta una."
+
+#: scripts/ch2_scenes_a.gd:508
+msgid "All three. The tunnel gate."
+msgstr "Las tres. La reja del túnel."
+
+#: scripts/ch2_scenes_a.gd:537
+msgid "The corridor. Pitch dark."
+msgstr "El pasillo. Oscuridad total."
+
+#: scripts/ch2_scenes_a.gd:540
+msgid "Lily? The lights went out, baby."
+msgstr "¿Lily? Se fue la luz, mi amor."
+
+#: scripts/ch2_scenes_a.gd:542
+msgid "Where are you? Mommy's here."
+msgstr "¿Dónde estás? Mami está aquí."
+
+#: scripts/ch2_scenes_a.gd:547
+msgid "Nora. Lily isn't here."
+msgstr "Nora. Lily no está aquí."
+
+#: scripts/ch2_scenes_a.gd:552
+msgid "You. You turned off her lights."
+msgstr "Tú. Tú le apagaste las luces."
+
+#: scripts/ch2_scenes_a.gd:554
+msgid "She hates the dark. She was so scared that night."
+msgstr "Odia la oscuridad. Tenía tanto miedo esa noche."
+
+#: scripts/ch2_scenes_a.gd:556 scripts/ch2_scenes_a.gd:682
+msgid "I'm sorry."
+msgstr "Lo siento."
+
+#: scripts/ch2_scenes_a.gd:560
+msgid "Then hold still, sweetheart."
+msgstr "Entonces quédate quieto, cariño."
+
+#: scripts/ch2_scenes_a.gd:568
+msgid "It's quicker in the dark."
+msgstr "En la oscuridad es más rápido."
+
+#: scripts/ch2_scenes_a.gd:600
+msgid "GIVE HER BACK!"
+msgstr "¡DEVUÉLVEMELA!"
+
+#: scripts/ch2_scenes_a.gd:614 scripts/ch2_scenes_b.gd:508
+msgid "Get off me!"
+msgstr "¡Suéltame!"
+
+#: scripts/ch2_scenes_a.gd:619
+msgid "Shh. Shh. Sleep now."
+msgstr "Shh. Shh. A dormir."
+
+#: scripts/ch2_scenes_a.gd:641
+msgid "Lily… Mommy's tired."
+msgstr "Lily… mami está cansada."
+
+#: scripts/ch2_scenes_a.gd:644
+msgid "I only wanted to find her."
+msgstr "Solo quería encontrarla."
+
+#: scripts/ch2_scenes_a.gd:647
+msgid "Go on. They all think I'm mad anyway."
+msgstr "Anda. Igual todos creen que estoy loca."
+
+#: scripts/ch2_scenes_a.gd:670
+msgid "She drew you. You and her."
+msgstr "Te dibujó. A ti y a ella."
+
+#: scripts/ch2_scenes_a.gd:677
+msgid "Her lighthouse. She drew it the day before."
+msgstr "Su faro. Lo dibujó el día anterior."
+
+#: scripts/ch2_scenes_a.gd:678
+msgid "The scissors slip from her fingers."
+msgstr "Las tijeras se le resbalan de los dedos."
+
+#: scripts/ch2_scenes_a.gd:680
+msgid "She's gone. She's really gone."
+msgstr "Se fue. De verdad se fue."
+
+#: scripts/ch2_scenes_a.gd:684
+msgid "Tell Elena… tell her I'm sorry."
+msgstr "Dile a Elena… dile que lo siento."
+
+#: scripts/ch2_scenes_a.gd:690
+msgid "She'd be nine now."
+msgstr "Ahora tendría nueve."
+
+#: scripts/ch2_scenes_a.gd:691
+msgid "Then someone should remember her."
+msgstr "Entonces alguien debería recordarla."
+
+#: scripts/ch2_scenes_a.gd:693
+msgid "Go. Before I remember what I am."
+msgstr "Vete. Antes de que recuerde lo que soy."
+
+#: scripts/ch2_scenes_a.gd:728
+msgid "Lily… put your jacket on…"
+msgstr "Lily… ponte la chaqueta…"
+
+#: scripts/ch2_scenes_a.gd:732
+msgid "Somewhere in the school, a music box winds down. And stops."
+msgstr "En algún lugar de la escuela, una caja de música se va apagando. Y se detiene."
+
+#: scripts/ch2_scenes_a.gd:735
+msgid "Two of them now."
+msgstr "Ya van dos."
+
+#: scripts/ch2_scenes_b.gd:25 scripts/ch2_scenes_b.gd:558
+msgid "Hold still. This is easier if you don't fight it."
+msgstr "Quieto. Es más fácil si no te resistes."
+
+#: scripts/ch2_scenes_b.gd:25 scripts/ch2_scenes_b.gd:538
+msgid "I lost her on this table."
+msgstr "La perdí en esta mesa."
+
+#: scripts/ch2_scenes_b.gd:26 scripts/ch3_scenes_b.gd:30
+msgid "Breathe in. Deeper."
+msgstr "Inhala. Más hondo."
+
+#: scripts/ch2_scenes_b.gd:26
+msgid "You're bleeding on my floor."
+msgstr "Estás sangrando en mi piso."
+
+#: scripts/ch2_scenes_b.gd:26
+msgid "Triage, outsider. Somebody always loses."
+msgstr "Triaje, forastero. Alguien siempre pierde."
+
+#: scripts/ch2_scenes_b.gd:27
+msgid "Every room in here is mine."
+msgstr "Cada cuarto de aquí es mío."
+
+#: scripts/ch2_scenes_b.gd:27
+msgid "I can hear you wheezing."
+msgstr "Oigo cómo te silba el pecho."
+
+#: scripts/ch2_scenes_b.gd:28
+msgid "Not Old Tom. Still counts."
+msgstr "No es Old Tom. Igual cuenta."
+
+#: scripts/ch2_scenes_b.gd:28
+msgid "Dinner, at least."
+msgstr "Al menos, la cena."
+
+#: scripts/ch2_scenes_b.gd:28
+msgid "Something's still down there. Bigger."
+msgstr "Todavía hay algo ahí abajo. Más grande."
+
+#: scripts/ch2_scenes_b.gd:214
+msgid "Somebody's rod. Still baited."
+msgstr "La caña de alguien. Todavía con carnada."
+
+#: scripts/ch2_scenes_b.gd:224 scripts/ch2_scenes_b.gd:225 scripts/ch2_scenes_b.gd:229 player/hud.gd:18
+msgid "Tom"
+msgstr "Tom"
+
+#: scripts/ch2_scenes_b.gd:224
+msgid "\"Gone to the meeting. Rod's yours if you can hold it.\""
+msgstr "\"Me fui a la reunión. La caña es tuya si la aguantas.\""
+
+#: scripts/ch2_scenes_b.gd:225
+msgid "\"Old Tom's still under the dock. The Ruiz boy named him.\""
+msgstr "\"Old Tom sigue bajo el muelle. El muchacho Ruiz le puso el nombre.\""
+
+#: scripts/ch2_scenes_b.gd:229
+msgid "\"Tomás fed him every morning. Nobody's fed him since.\""
+msgstr "\"Tomás le daba de comer cada mañana. Desde entonces nadie lo alimenta.\""
+
+#: scripts/ch2_scenes_b.gd:230
+msgid "Tomás. Elena's brother."
+msgstr "Tomás. El hermano de Elena."
+
+#: scripts/ch2_scenes_b.gd:251
+msgid "OLD TOM"
+msgstr "OLD TOM"
+
+#: scripts/ch2_scenes_b.gd:252
+msgid "Old Tom himself. Look at you."
+msgstr "El mismísimo Old Tom. Mírate nomás."
+
+#: scripts/ch2_scenes_b.gd:254
+msgid "Something's snagged on his jaw. A box."
+msgstr "Algo se le enganchó en la mandíbula. Una caja."
+
+#: scripts/ch2_scenes_b.gd:260
+msgid "Go on, old man. Back under."
+msgstr "Anda, viejo. De vuelta abajo."
+
+#: scripts/ch2_scenes_b.gd:266
+msgid "EVIDENCE #10"
+msgstr "EVIDENCIA #10"
+
+#: scripts/ch2_scenes_b.gd:267
+msgid "Photos. Sealed in wax. The festival night..."
+msgstr "Fotos. Selladas en cera. La noche del festival..."
+
+#: scripts/ch2_scenes_b.gd:268
+msgid "Every boat in the harbor chained. Nobody was meant to leave."
+msgstr "Todos los botes del puerto encadenados. Nadie debía irse."
+
+#: scripts/ch2_scenes_b.gd:288 scripts/ch2_scenes_b.gd:292 scripts/ch2_scenes_b.gd:294 scripts/ch2_scenes_b.gd:297 scripts/ch2_scenes_b.gd:317 scripts/ch2_scenes_b.gd:318 …
+msgid "Silas"
+msgstr "Silas"
+
+#: scripts/ch2_scenes_b.gd:288
+msgid "Sit. Sit! Nobody sits with Silas anymore."
+msgstr "Siéntate. ¡Siéntate! Ya nadie se sienta con Silas."
+
+#: scripts/ch2_scenes_b.gd:289
+msgid "What are we playing?"
+msgstr "¿Qué vamos a jugar?"
+
+#: scripts/ch2_scenes_b.gd:292
+msgid "Lantern Hi-Lo. Higher or lower. Like the lanterns that night."
+msgstr "Hi-Lo de los Faroles. Mayor o menor. Como los faroles esa noche."
+
+#: scripts/ch2_scenes_b.gd:294
+msgid "My boy always bet high."
+msgstr "Mi muchacho siempre apostaba alto."
+
+#: scripts/ch2_scenes_b.gd:297
+msgid "Beat me three hands and I'll tell you something worth more than tokens."
+msgstr "Gáname tres manos y te digo algo que vale más que las fichas."
+
+#: scripts/ch2_scenes_b.gd:299
+msgid "Deal."
+msgstr "Trato hecho."
+
+#: scripts/ch2_scenes_b.gd:317
+msgid "Ha! The lanterns like me tonight."
+msgstr "¡Ja! Esta noche los faroles me quieren."
+
+#: scripts/ch2_scenes_b.gd:318
+msgid "Come back when your luck sobers up."
+msgstr "Vuelve cuando a tu suerte se le pase la borrachera."
+
+#: scripts/ch2_scenes_b.gd:321
+msgid "Three hands. Nobody's done that since my boy."
+msgstr "Tres manos. Nadie lo hacía desde mi muchacho."
+
+#: scripts/ch2_scenes_b.gd:325
+msgid "Took this off the Shepherd's man. Never had the nerve to read it twice."
+msgstr "Se lo quité al hombre del Pastor. Nunca tuve valor para leerlo dos veces."
+
+#: scripts/ch2_scenes_b.gd:330
+msgid "EVIDENCE #12"
+msgstr "EVIDENCIA #12"
+
+#: scripts/ch2_scenes_b.gd:333
+msgid "\"The harvest keeps the valley. Deliver the outsiders.\""
+msgstr "\"La cosecha sostiene el valle. Entreguen a los forasteros.\""
+
+#: scripts/ch2_scenes_b.gd:334
+msgid "Signed... the Shepherd."
+msgstr "Firmado... el Pastor."
+
+#: scripts/ch2_scenes_b.gd:338
+msgid "And the medic. The lot, the back wall, the ambulance bay. Same loop, every time."
+msgstr "Y el médico. El estacionamiento, el muro de atrás, el muelle de ambulancias. La misma ronda, siempre."
+
+#: scripts/ch2_scenes_b.gd:340
+msgid "He never checks the same room twice in a row."
+msgstr "Nunca revisa el mismo cuarto dos veces seguidas."
+
+#: scripts/ch2_scenes_b.gd:363 scripts/ch2_scenes_b.gd:370 scripts/ch2_scenes_b.gd:373 player/hud.gd:18
+msgid "Patient"
+msgstr "Paciente"
+
+#: scripts/ch2_scenes_b.gd:363
+msgid "You... you're not him."
+msgstr "Tú... tú no eres él."
+
+#: scripts/ch2_scenes_b.gd:365
+msgid "Easy. The straps are off."
+msgstr "Tranquila. Ya te quité las correas."
+
+#: scripts/ch2_scenes_b.gd:370
+msgid "He keeps things cold downstairs. In the morgue."
+msgstr "Él guarda cosas en frío, abajo. En la morgue."
+
+#: scripts/ch2_scenes_b.gd:373
+msgid "Third drawer. Something he doesn't want found."
+msgstr "El tercer cajón. Algo que no quiere que encuentren."
+
+#: scripts/ch2_scenes_b.gd:375
+msgid "Get out of here. Stay off the halls."
+msgstr "Sal de aquí. No te metas en los pasillos."
+
+#: scripts/ch2_scenes_b.gd:390
+msgid "ELENA'S TEA ×2 · EVIDENCE #5"
+msgstr "TÉ DE ELENA ×2 · EVIDENCIA #5"
+
+#: scripts/ch2_scenes_b.gd:391
+msgid "Elena's tea. Two tins, her name on the lids."
+msgstr "El té de Elena. Dos latas, con su nombre en las tapas."
+
+#: scripts/ch2_scenes_b.gd:392
+msgid "And a delivery list. Sedatives, signed J.P."
+msgstr "Y una lista de entregas. Sedantes, firmada J.P."
+
+#: scripts/ch2_scenes_b.gd:393
+msgid "Destination: the quarry."
+msgstr "Destino: la cantera."
+
+#: scripts/ch2_scenes_b.gd:399
+msgid "EVIDENCE #6"
+msgstr "EVIDENCIA #6"
+
+#: scripts/ch2_scenes_b.gd:400
+msgid "An empty body bag. Just a toe tag."
+msgstr "Una bolsa para cadáveres, vacía. Solo una etiqueta."
+
+#: scripts/ch2_scenes_b.gd:401
+msgid "\"Tomás R. Transferred. Quarry.\""
+msgstr "\"Tomás R. Trasladado. Cantera.\""
+
+#: scripts/ch2_scenes_b.gd:402
+msgid "Transferred. Not dead."
+msgstr "Trasladado. No muerto."
+
+#: scripts/ch2_scenes_b.gd:415
+msgid "St. Agnes Clinic."
+msgstr "Clínica St. Agnes."
+
+#: scripts/ch2_scenes_b.gd:417 scripts/ch2_scenes_b.gd:462 scripts/ch2_scenes_b.gd:466 scripts/ch2_scenes_b.gd:471 scripts/ch2_scenes_b.gd:515 scripts/ch2_scenes_b.gd:538 …
+msgid "Julian"
+msgstr "Julian"
+
+#: scripts/ch2_scenes_b.gd:417
+msgid "Visiting hours are over."
+msgstr "Se acabó el horario de visitas."
+
+#: scripts/ch2_scenes_b.gd:420
+msgid "Intercom. He knows I'm here."
+msgstr "El intercomunicador. Sabe que estoy aquí."
+
+#: scripts/ch2_scenes_b.gd:424
+msgid "Gas mask first. Then the vents on the roof."
+msgstr "Primero la máscara de gas. Luego la ventilación de la azotea."
+
+#: scripts/ch2_scenes_b.gd:432
+msgid "GAS MASK"
+msgstr "MÁSCARA DE GAS"
+
+#: scripts/ch2_scenes_b.gd:433
+msgid "Old filters. They'll hold. For a while."
+msgstr "Filtros viejos. Van a aguantar. Un rato."
+
+#: scripts/ch2_scenes_b.gd:446
+msgid "The valve grinds..."
+msgstr "La válvula rechina..."
+
+#: scripts/ch2_scenes_b.gd:452
+msgid "VENTS REVERSED"
+msgstr "VENTILACIÓN INVERTIDA"
+
+#: scripts/ch2_scenes_b.gd:453
+msgid "The fans shudder, and run backwards."
+msgstr "Los ventiladores se estremecen y giran al revés."
+
+#: scripts/ch2_scenes_b.gd:456
+msgid "Your gas, your lungs, Julian."
+msgstr "Tu gas, tus pulmones, Julian."
+
+#: scripts/ch2_scenes_b.gd:466
+msgid "I saw you go in there."
+msgstr "Te vi meterte ahí."
+
+#: scripts/ch2_scenes_b.gd:471
+msgid "Not here. You'll come to my table, outsider."
+msgstr "Aquí no. Vas a venir a mi mesa, forastero."
+
+#: scripts/ch2_scenes_b.gd:472
+msgid "JULIAN FALLS BACK"
+msgstr "JULIAN RETROCEDE"
+
+#: scripts/ch2_scenes_b.gd:476
+msgid "SAM'S FILE"
+msgstr "EL EXPEDIENTE DE SAM"
+
+#: scripts/ch2_scenes_b.gd:477
+msgid "\"Samantha Kim. Admitted 22:10, Night of Lanterns.\""
+msgstr "\"Samantha Kim. Ingresó a las 22:10, Noche de los Faroles.\""
+
+#: scripts/ch2_scenes_b.gd:478
+msgid "\"Released to the Shepherd. Alive.\""
+msgstr "\"Entregada al Pastor. Viva.\""
+
+#: scripts/ch2_scenes_b.gd:479
+msgid "She didn't die on his table. They took her."
+msgstr "No murió en su mesa. Se la llevaron."
+
+#: scripts/ch2_scenes_b.gd:485
+msgid "Julian's piece. Cold, like everything in here."
+msgstr "La pieza de Julian. Fría, como todo aquí."
+
+#: scripts/ch2_scenes_b.gd:515
+msgid "There. Now you'll slow down."
+msgstr "Listo. Ahora vas a ir más lento."
+
+#: scripts/ch2_scenes_b.gd:542
+msgid "Every night since, I scrub. It never comes off."
+msgstr "Desde entonces me lavo cada noche. Nunca sale."
+
+#: scripts/ch2_scenes_b.gd:546
+msgid "I read Sam's file, Julian."
+msgstr "Leí el expediente de Sam, Julian."
+
+#: scripts/ch2_scenes_b.gd:550
+msgid "You don't get to say her name."
+msgstr "Tú no tienes derecho a decir su nombre."
+
+#: scripts/ch2_scenes_b.gd:553
+msgid "You gassed a whole building for one outsider?"
+msgstr "¿Llenaste de gas un edificio entero por un forastero?"
+
+#: scripts/ch2_scenes_b.gd:555
+msgid "Triage. Some are lost so the rest survive."
+msgstr "Triaje. Algunos se pierden para que el resto sobreviva."
+
+#: scripts/ch2_scenes_b.gd:580
+msgid "Not again. I won't lose on this table again!"
+msgstr "Otra vez no. ¡No voy a perder en esta mesa otra vez!"
+
+#: scripts/ch2_scenes_b.gd:596
+msgid "He wheezes. Every breath a whistle."
+msgstr "Jadea. Cada respiro, un silbido."
+
+#: scripts/ch2_scenes_b.gd:598
+msgid "Go on. It's only triage."
+msgstr "Anda. Es solo triaje."
+
+#: scripts/ch2_scenes_b.gd:601
+msgid "One for the rest."
+msgstr "Uno por el resto."
+
+#: scripts/ch2_scenes_b.gd:621
+msgid "Read it. Released to the Shepherd. Alive."
+msgstr "Léelo. Entregada al Pastor. Viva."
+
+#: scripts/ch2_scenes_b.gd:627
+msgid "They told me she bled out. Here. On this table."
+msgstr "Me dijeron que se desangró. Aquí. En esta mesa."
+
+#: scripts/ch2_scenes_b.gd:629
+msgid "She was alive when they took her."
+msgstr "Estaba viva cuando se la llevaron."
+
+#: scripts/ch2_scenes_b.gd:633
+msgid "Take the key. And my keys. Every door in here."
+msgstr "Toma la llave. Y mis llaves. Todas las puertas de aquí."
+
+#: scripts/ch2_scenes_b.gd:637
+msgid "Find out where they took her."
+msgstr "Averigua adónde se la llevaron."
+
+#: scripts/ch2_scenes_b.gd:639
+msgid "The quarry. It's always the quarry."
+msgstr "La cantera. Siempre es la cantera."
+
+#: scripts/ch2_scenes_b.gd:643
+msgid "No. I'm not doing your triage for you."
+msgstr "No. No voy a hacer tu triaje por ti."
+
+#: scripts/ch2_scenes_b.gd:645
+msgid "Mercy. How unclinical."
+msgstr "Piedad. Qué poco clínico."
+
+#: scripts/ch2_scenes_b.gd:647
+msgid "Go. Before I change my mind."
+msgstr "Vete. Antes de que cambie de opinión."
+
+#: scripts/ch2_scenes_b.gd:677
+msgid "S-Sam..."
+msgstr "S-Sam..."
+
+#: scripts/ch2_scenes_b.gd:682
+msgid "Another one. God."
+msgstr "Otro más. Dios."
+
+#: scripts/ch2_scenes_b.gd:688
+msgid "The key. Take the key and go."
+msgstr "La llave. Toma la llave y vete."
+
+#: scripts/ch2_scenes_b.gd:721
+msgid "Seven, she said. I'm late."
+msgstr "A las siete, dijo. Llego tarde."
+
+#: scripts/ch2_scenes_b.gd:731
+msgid "The quarry map. Stolen from the Shepherd's own ledger room."
+msgstr "El mapa de la cantera. Robado del archivo del mismísimo Pastor."
+
+#: scripts/ch2_scenes_b.gd:736
+msgid "Alex. I've got it. The whole quarry—"
+msgstr "Alex. Lo tengo. Toda la cantera—"
+
+#: scripts/ch2_scenes_b.gd:743
+msgid "Don't. Hide."
+msgstr "No. Escóndete."
+
+#: scripts/ch2_scenes_b.gd:755 scripts/ch2_scenes_b.gd:860 scripts/ch2_scenes_b.gd:897
+msgid "BONG."
+msgstr "BONG."
+
+#: scripts/ch2_scenes_b.gd:758
+msgid "The bell. Once."
+msgstr "La campana. Una vez."
+
+#: scripts/ch2_scenes_b.gd:771
+msgid "You sent him to my sawmill."
+msgstr "Lo mandaste a mi aserradero."
+
+#: scripts/ch2_scenes_b.gd:772
+msgid "Elena... why?"
+msgstr "Elena... ¿por qué?"
+
+#: scripts/ch2_scenes_b.gd:773
+msgid "Triage. One for the rest."
+msgstr "Triaje. Uno por el resto."
+
+#: scripts/ch2_scenes_b.gd:784
+msgid "Lanterns in the fog."
+msgstr "Faroles en la niebla."
+
+#: scripts/ch2_scenes_b.gd:795 scripts/ch2_scenes_b.gd:807 scripts/ch2_scenes_b.gd:817 scripts/ch2_scenes_b.gd:829 scripts/ch2_scenes_b.gd:888 scripts/ch2_scenes_b.gd:893 …
+msgid "Marcus"
+msgstr "Marcus"
+
+#: scripts/ch2_scenes_b.gd:795
+msgid "Three years, Elena."
+msgstr "Tres años, Elena."
+
+#: scripts/ch2_scenes_b.gd:797
+msgid "Three years, Marcus. Tomás was fourteen."
+msgstr "Tres años, Marcus. Tomás tenía catorce."
+
+#: scripts/ch2_scenes_b.gd:807
+msgid "The map."
+msgstr "El mapa."
+
+#: scripts/ch2_scenes_b.gd:817
+msgid "I kept them alive. All of them. Until you."
+msgstr "Yo los mantuve vivos. A todos. Hasta que llegaste tú."
+
+#: scripts/ch2_scenes_b.gd:823
+msgid "Don't breathe."
+msgstr "No respires."
+
+#: scripts/ch2_scenes_b.gd:829
+msgid "...Who else is here?"
+msgstr "...¿Quién más está aquí?"
+
+#: scripts/ch2_scenes_b.gd:832
+msgid "Look at me, Marcus. Not the dead."
+msgstr "Mírame a mí, Marcus. No a los muertos."
+
+#: scripts/ch2_scenes_b.gd:839
+msgid "Channel seven… one-four-one-three."
+msgstr "Canal siete… uno-cuatro-uno-tres."
+
+#: scripts/ch2_scenes_b.gd:844
+msgid "Tell them his name was Tomás."
+msgstr "Diles que se llamaba Tomás."
+
+#: scripts/ch2_scenes_b.gd:877
+msgid "Nobody says anything."
+msgstr "Nadie dice nada."
+
+#: scripts/ch2_scenes_b.gd:888
+msgid "Go to sleep, Elena."
+msgstr "Duérmete, Elena."
+
+#: scripts/ch2_scenes_b.gd:893
+msgid "Ring it again. So the town knows who it lost."
+msgstr "Tócala otra vez. Que el pueblo sepa a quién perdió."
+
+#: scripts/ch2_scenes_b.gd:901
+msgid "Her lantern gutters out on the grave. The yellow coat is the last thing the fog takes."
+msgstr "Su farol se apaga sobre la tumba. El impermeable amarillo es lo último que se traga la niebla."
+
+#: scripts/ch2_scenes_b.gd:904
+msgid "...Tomás. His name was Tomás."
+msgstr "...Tomás. Se llamaba Tomás."
+
+#: scripts/ch2_scenes_b.gd:920
+msgid "II · MOTH"
+msgstr "II · POLILLA"
+
+#: scripts/ch2_scenes_b.gd:922
+msgid "Nora: spared"
+msgstr "Nora: perdonada"
+
+#: scripts/ch2_scenes_b.gd:922
+msgid "Nora: killed"
+msgstr "Nora: muerta"
+
+#: scripts/ch2_scenes_b.gd:922
+msgid "Nora: fled"
+msgstr "Nora: huyó"
+
+#: scripts/ch2_scenes_b.gd:923
+msgid "Julian: spared"
+msgstr "Julian: perdonado"
+
+#: scripts/ch2_scenes_b.gd:923
+msgid "Julian: killed"
+msgstr "Julian: muerto"
+
+#: scripts/ch2_scenes_b.gd:924
+msgid "Julian: fled"
+msgstr "Julian: huyó"
+
+#: scripts/ch2_scenes_b.gd:925
+msgid "End of Chapter 2.  %s · %s · Evidence %d · Tokens %d · Key parts %d/3"
+msgstr "Fin del capítulo 2.  %s · %s · Evidencias %d · Fichas %d · Partes de la llave %d/3"
+
+#: scripts/ch3_scenes_a.gd:18
+msgid "There! By the graves!"
+msgstr "¡Ahí! ¡Junto a las tumbas!"
+
+#: scripts/ch3_scenes_a.gd:18
+msgid "The Deacon wants them breathing!"
+msgstr "¡El Diácono lo quiere vivo!"
+
+#: scripts/ch3_scenes_a.gd:18
+msgid "Don't let them reach the road!"
+msgstr "¡Que no llegue al camino!"
+
+#: scripts/ch3_scenes_a.gd:19
+msgid "I hear them! Left!"
+msgstr "¡Lo oigo! ¡A la izquierda!"
+
+#: scripts/ch3_scenes_a.gd:19
+msgid "Lanterns up! Look under the angels!"
+msgstr "¡Arriba los faroles! ¡Busquen bajo los ángeles!"
+
+#: scripts/ch3_scenes_a.gd:19
+msgid "You can't hide from the bell."
+msgstr "De la campana no te puedes esconder."
+
+#: scripts/ch3_scenes_a.gd:20 scripts/ch3_scenes_a.gd:188
+msgid "Clara sang in this choir."
+msgstr "Clara cantaba en este coro."
+
+#: scripts/ch3_scenes_a.gd:20
+msgid "I kept them alive. All of them."
+msgstr "Yo los mantuve vivos. A todos."
+
+#: scripts/ch3_scenes_a.gd:20
+msgid "Hold still. It's a church."
+msgstr "Quieto. Esto es una iglesia."
+
+#: scripts/ch3_scenes_a.gd:21
+msgid "I hear your heart, outsider."
+msgstr "Oigo tu corazón, forastero."
+
+#: scripts/ch3_scenes_a.gd:21
+msgid "Every bell in here has a name."
+msgstr "Cada campana de aquí tiene un nombre."
+
+#: scripts/ch3_scenes_a.gd:21
+msgid "She'd have liked you. That's the worst of it."
+msgstr "Le habrías caído bien. Eso es lo peor."
+
+#: scripts/ch3_scenes_a.gd:102
+msgid "The last note of the bell dies in the rain."
+msgstr "La última nota de la campana muere en la lluvia."
+
+#: scripts/ch3_scenes_a.gd:108
+msgid "Go on ahead, Elena. Tell Clara I tried."
+msgstr "Adelántate, Elena. Dile a Clara que lo intenté."
+
+#: scripts/ch3_scenes_a.gd:115 scripts/ch3_scenes_a.gd:171 scripts/ch3_scenes_b.gd:180 scripts/ch3_scenes_b.gd:183 scripts/chapter1.gd:724 scripts/enemy.gd:30 …
+msgid "Marked One"
+msgstr "Marcado"
+
+#: scripts/ch3_scenes_a.gd:115
+msgid "Deacon. The angels. Something moved."
+msgstr "Diácono. Los ángeles. Algo se movió."
+
+#: scripts/ch3_scenes_a.gd:126
+msgid "Channel seven. She wasn't talking to us."
+msgstr "Canal siete. No nos hablaba a nosotros."
+
+#: scripts/ch3_scenes_a.gd:128
+msgid "The outsider. Bring them."
+msgstr "El forastero. Tráiganlo."
+
+#: scripts/ch3_scenes_a.gd:141
+msgid "Elena…"
+msgstr "Elena…"
+
+#: scripts/ch3_scenes_a.gd:142
+msgid "Not here. Not yet."
+msgstr "Aquí no. Todavía no."
+
+#: scripts/ch3_scenes_a.gd:157
+msgid "+2 SMOKE CANS · BANDAGE"
+msgstr "+2 BOTES DE HUMO · VENDA"
+
+#: scripts/ch3_scenes_a.gd:158
+msgid "A moth scratched into the marble. Under the step, Elena's tin."
+msgstr "Una polilla rayada en el mármol. Bajo el escalón, la lata de Elena."
+
+#: scripts/ch3_scenes_a.gd:159
+msgid "Smoke cans. She thought of everything."
+msgstr "Botes de humo. Pensó en todo."
+
+#: scripts/ch3_scenes_a.gd:160
+msgid "T throws smoke."
+msgstr "T lanza humo."
+
+#: scripts/ch3_scenes_a.gd:166 scripts/ch3_scenes_a.gd:341 scripts/ch3_scenes_b.gd:772
+msgid "BONG"
+msgstr "BONG"
+
+#: scripts/ch3_scenes_a.gd:167
+msgid "The bell. They all heard it."
+msgstr "La campana. Todos la oyeron."
+
+#: scripts/ch3_scenes_a.gd:182
+msgid "The nave. Candles on every pew."
+msgstr "La nave. Velas en cada banco."
+
+#: scripts/ch3_scenes_a.gd:184
+msgid "Three bells hang over the aisle on chains, brought down from the tower."
+msgstr "Tres campanas cuelgan de cadenas sobre el pasillo, bajadas del campanario."
+
+#: scripts/ch3_scenes_a.gd:186
+msgid "Their ropes are tied off at the wall."
+msgstr "Sus cuerdas están amarradas a la pared."
+
+#: scripts/ch3_scenes_a.gd:189
+msgid "Every Sunday. Third row. Off-key, and loud."
+msgstr "Cada domingo. Tercera fila. Desafinada, y fuerte."
+
+#: scripts/ch3_scenes_a.gd:192
+msgid "Marcus."
+msgstr "Marcus."
+
+#: scripts/ch3_scenes_a.gd:209
+msgid "He's lighting candles. One for every bell rung since the festival."
+msgstr "Está encendiendo velas. Una por cada campanada desde el festival."
+
+#: scripts/ch3_scenes_a.gd:213
+msgid "She was my sister in everything but blood."
+msgstr "Era mi hermana en todo, menos en la sangre."
+
+#: scripts/ch3_scenes_a.gd:215
+msgid "I held the hammer. Do you understand? Me."
+msgstr "Yo sostuve el martillo. ¿Entiendes? Yo."
+
+#: scripts/ch3_scenes_a.gd:217
+msgid "Then put it down."
+msgstr "Entonces suéltalo."
+
+#: scripts/ch3_scenes_a.gd:218
+msgid "He said if we served, they'd come back. Clara. Tomás. Lily."
+msgstr "Dijo que si servíamos, volverían. Clara. Tomás. Lily."
+
+#: scripts/ch3_scenes_a.gd:220
+msgid "Three years I rang that bell for him."
+msgstr "Tres años toqué esa campana para él."
+
+#: scripts/ch3_scenes_a.gd:222
+msgid "Tonight I ring it for you."
+msgstr "Esta noche la toco por ti."
+
+#: scripts/ch3_scenes_a.gd:226
+msgid "(memory) Marcus hears everything. Make the bells scream."
+msgstr "(recuerdo) Marcus lo oye todo. Haz gritar a las campanas."
+
+#: scripts/ch3_scenes_a.gd:237
+msgid "BELL"
+msgstr "CAMPANA"
+
+#: scripts/ch3_scenes_a.gd:238
+msgid "AAGH—!"
+msgstr "¡AAGH—!"
+
+#: scripts/ch3_scenes_a.gd:238
+msgid "Clara— no—"
+msgstr "Clara— no—"
+
+#: scripts/ch3_scenes_a.gd:238
+msgid "You'd bring the church down on me?"
+msgstr "¿Me tirarías la iglesia encima?"
+
+#: scripts/ch3_scenes_a.gd:240 player/player.gd:1095
+msgid "CLANG"
+msgstr "CLANG"
+
+#: scripts/ch3_scenes_a.gd:241
+msgid "My ears— where are you—"
+msgstr "Mis oídos— dónde estás—"
+
+#: scripts/ch3_scenes_a.gd:245
+msgid "PHASE %d"
+msgstr "FASE %d"
+
+#: scripts/ch3_scenes_a.gd:246
+msgid "He rings the hand bell. The doors bang open behind you."
+msgstr "Toca la campanilla. Las puertas se abren de golpe a tu espalda."
+
+#: scripts/ch3_scenes_a.gd:247
+msgid "Into the house of God! All of you!"
+msgstr "¡A la casa de Dios! ¡Todos!"
+
+#: scripts/ch3_scenes_a.gd:247
+msgid "Nobody leaves! Nobody ever leaves!"
+msgstr "¡Nadie se va! ¡Nadie se va nunca!"
+
+#: scripts/ch3_scenes_a.gd:259
+msgid "Clara… I'm so tired."
+msgstr "Clara… estoy tan cansado."
+
+#: scripts/ch3_scenes_a.gd:262
+msgid "Go on. I did it to Elena. I've earned it."
+msgstr "Anda. Se lo hice a Elena. Me lo gané."
+
+#: scripts/ch3_scenes_a.gd:288
+msgid "It was on the choir pew. Third row."
+msgstr "Estaba en el banco del coro. Tercera fila."
+
+#: scripts/ch3_scenes_a.gd:295
+msgid "Her Sunday dress. She hated this picture."
+msgstr "Su vestido de domingo. Odiaba esta foto."
+
+#: scripts/ch3_scenes_a.gd:296
+msgid "The sledgehammer rolls out of his hand."
+msgstr "El mazo se le escapa de la mano y rueda."
+
+#: scripts/ch3_scenes_a.gd:298
+msgid "Elena was right. She was always right."
+msgstr "Elena tenía razón. Siempre tenía razón."
+
+#: scripts/ch3_scenes_a.gd:300
+msgid "The quarry. I'll be there. Whatever's left of me."
+msgstr "La cantera. Ahí estaré. Lo que quede de mí."
+
+#: scripts/ch3_scenes_a.gd:304
+msgid "No. She wouldn't have. So I won't."
+msgstr "No. Ella no lo habría hecho. Así que yo tampoco."
+
+#: scripts/ch3_scenes_a.gd:306
+msgid "Mercy. From you. In here."
+msgstr "Piedad. De ti. Aquí dentro."
+
+#: scripts/ch3_scenes_a.gd:308
+msgid "Take the key. I don't want to hold anything anymore."
+msgstr "Toma la llave. Ya no quiero cargar con nada."
+
+#: scripts/ch3_scenes_a.gd:338
+msgid "Clara… sing it for me…"
+msgstr "Clara… cántala por mí…"
+
+#: scripts/ch3_scenes_a.gd:342
+msgid "Somewhere above, a bell rings once more. Nobody is pulling it."
+msgstr "En algún lugar, arriba, una campana suena una vez más. Nadie tira de ella."
+
+#: scripts/ch3_scenes_a.gd:345
+msgid "I'm sorry, Elena. I couldn't."
+msgstr "Lo siento, Elena. No pude."
+
+#: scripts/ch3_scenes_a.gd:354
+msgid "CHAPEL KEY · EVIDENCE #8"
+msgstr "LLAVE DE LA CAPILLA · EVIDENCIA #8"
+
+#: scripts/ch3_scenes_a.gd:355
+msgid "Iron. Heavy. An eye cast into the bow."
+msgstr "Hierro. Pesada. Un ojo fundido en la cabeza."
+
+#: scripts/ch3_scenes_a.gd:356
+msgid "And Elena's map. He couldn't burn it."
+msgstr "Y el mapa de Elena. No pudo quemarlo."
+
+#: scripts/ch3_scenes_a.gd:357
+msgid "The quarry, every cell and cage. One circled in red: \"L.M. — chapel, beside the altar.\""
+msgstr "La cantera, cada celda y cada jaula. Una, encerrada en rojo: \"L.M. — capilla, junto al altar.\""
+
+#: scripts/ch3_scenes_a.gd:362
+msgid "CLARA'S PHOTO"
+msgstr "LA FOTO DE CLARA"
+
+#: scripts/ch3_scenes_a.gd:363
+msgid "A woman in a choir robe, laughing at whoever held the camera."
+msgstr "Una mujer con túnica de coro, riéndose de quien sostenía la cámara."
+
+#: scripts/ch3_scenes_a.gd:364
+msgid "On the back: \"Marcus — sing with me. C.\""
+msgstr "Al reverso: \"Marcus — canta conmigo. C.\""
+
+#: scripts/ch3_scenes_a.gd:370
+msgid "EVIDENCE #7"
+msgstr "EVIDENCIA #7"
+
+#: scripts/ch3_scenes_a.gd:371
+msgid "The bell register. Every blackout rung since the festival."
+msgstr "El registro de las campanas. Cada apagón tocado desde el festival."
+
+#: scripts/ch3_scenes_a.gd:372
+msgid "A date, and a count. Hundreds of lines."
+msgstr "Una fecha y un número. Cientos de líneas."
+
+#: scripts/ch3_scenes_a.gd:373
+msgid "The last one is tonight. \"One. Elena.\""
+msgstr "La última es de esta noche. \"Una. Elena.\""
+
+#: scripts/ch3_scenes_a.gd:380 scripts/ch3_scenes_a.gd:383
+msgid "For %s."
+msgstr "Por %s."
+
+#: scripts/ch3_scenes_a.gd:382
+msgid "MARK -20%  ·  +2 ELENA'S TEA"
+msgstr "MARCA -20%  ·  +2 TÉ DE ELENA"
+
+#: scripts/ch3_scenes_a.gd:383
+msgid "Five chairs. Five candles. It's all I've got."
+msgstr "Cinco sillas. Cinco velas. Es todo lo que tengo."
+
+#: scripts/ch3_scenes_a.gd:397
+msgid "You're alive. I heard the bell. Everyone heard."
+msgstr "Estás vivo. Oí la campana. Todos la oyeron."
+
+#: scripts/ch3_scenes_a.gd:398
+msgid "They killed her, Grady."
+msgstr "La mataron, Grady."
+
+#: scripts/ch3_scenes_a.gd:401
+msgid "Three years I sold that girl her tea. Asked her nothing."
+msgstr "Tres años le vendí su té a esa muchacha. No le pregunté nada."
+
+#: scripts/ch3_scenes_a.gd:406
+msgid "Flares. A smoke can. Don't pay."
+msgstr "Bengalas. Un bote de humo. No pagues."
+
+#: scripts/ch3_scenes_a.gd:409
+msgid "Just end it."
+msgstr "Solo termina con esto."
+
+#: scripts/ch3_scenes_a.gd:410
+msgid "You said you don't pick sides."
+msgstr "Dijiste que no tomas partido."
+
+#: scripts/ch3_scenes_a.gd:412
+msgid "I pick prices. Tonight the price went up."
+msgstr "Yo pongo precios. Esta noche el precio subió."
+
+#: scripts/ch3_scenes_a.gd:433
+msgid "Still on channel seven. Still waiting for her."
+msgstr "Sigue en el canal siete. Sigue esperándola."
+
+#: scripts/ch3_scenes_a.gd:438
+msgid "A thermos, half full. Pencil ticks on the dial: 7, 7, 7."
+msgstr "Un termo, a medias. Marcas de lápiz en el dial: 7, 7, 7."
+
+#: scripts/ch3_scenes_a.gd:441
+msgid "You said you'd call when you had what you needed."
+msgstr "Dijiste que llamarías cuando tuvieras lo que necesitabas."
+
+#: scripts/ch3_scenes_a.gd:448
+msgid "They left it in the mud."
+msgstr "La dejaron en el barro."
+
+#: scripts/ch3_scenes_a.gd:455
+msgid "I buried her by the harbor wall. Where the boats can see."
+msgstr "La enterré junto al muro del puerto. Donde la vean los botes."
+
+#: scripts/ch3_scenes_a.gd:459
+msgid "She'd want it worn."
+msgstr "Ella querría que alguien la usara."
+
+#: scripts/ch3_scenes_a.gd:463
+msgid "It still smells like the sea."
+msgstr "Todavía huele a mar."
+
+#: scripts/ch3_scenes_a.gd:465
+msgid "ELENA'S JACKET · MARK SLOWER"
+msgstr "CHAQUETA DE ELENA · MARCA MÁS LENTA"
+
+#: scripts/ch3_scenes_a.gd:466
+msgid "Her transmitter's there. Channel seven. The code she gave you."
+msgstr "Su transmisor está ahí. Canal siete. El código que te dio."
+
+#: scripts/ch3_scenes_a.gd:469
+msgid "And the quarry's north. Whatever you decide, decide it before three."
+msgstr "Y la cantera está al norte. Decidas lo que decidas, decídelo antes de las tres."
+
+#: scripts/ch3_scenes_a.gd:470
+msgid "Before three."
+msgstr "Antes de las tres."
+
+#: scripts/ch3_scenes_a.gd:499 scripts/ch3_scenes_a.gd:508
+msgid "Click."
+msgstr "Clic."
+
+#: scripts/ch3_scenes_a.gd:500
+msgid "Test. Test. If you're hearing this, I didn't come back."
+msgstr "Prueba. Prueba. Si estás oyendo esto, no volví."
+
+#: scripts/ch3_scenes_a.gd:502
+msgid "Alex. It's you, isn't it. Stubborn."
+msgstr "Alex. Eres tú, ¿verdad? Terco."
+
+#: scripts/ch3_scenes_a.gd:504
+msgid "The thing at the quarry flinches from the lighthouse beam. Every night."
+msgstr "La cosa de la cantera retrocede ante el haz del faro. Todas las noches."
+
+#: scripts/ch3_scenes_a.gd:505
+msgid "That's why they cut the power at three. Light hurts it."
+msgstr "Por eso cortan la luz a las tres. La luz la lastima."
+
+#: scripts/ch3_scenes_a.gd:507
+msgid "Tell Tomás… no. Just find him."
+msgstr "Dile a Tomás… no. Solo encuéntralo."
+
+#: scripts/ch3_scenes_a.gd:516
+msgid "%d of 12. She said all of it or nothing."
+msgstr "%d de 12. Dijo que todo o nada."
+
+#: scripts/ch3_scenes_a.gd:517
+msgid "One gap and they call it a hoax."
+msgstr "Un solo hueco y dirán que es un engaño."
+
+#: scripts/ch3_scenes_a.gd:527
+msgid "This is Hollowmere. Population thirty-one. It used to be fourteen thirteen."
+msgstr "Aquí Hollowmere. Población: treinta y uno. Antes era mil cuatrocientos trece."
+
+#: scripts/ch3_scenes_a.gd:529
+msgid "Ledgers. Photos. A bell register. Everything is on this channel."
+msgstr "Libros de registro. Fotos. El registro de las campanas. Todo va por este canal."
+
+#: scripts/ch3_scenes_a.gd:530
+msgid "Her name was Elena Ruiz. Her brother's name is Tomás."
+msgstr "Se llamaba Elena Ruiz. Su hermano se llama Tomás."
+
+#: scripts/ch3_scenes_a.gd:531
+msgid "Somebody out there. Please."
+msgstr "Alguien, allá afuera. Por favor."
+
+#: scripts/ch3_scenes_a.gd:532
+msgid "BROADCAST SENT"
+msgstr "TRANSMISIÓN ENVIADA"
+
+#: scripts/ch3_scenes_b.gd:27
+msgid "The sword takes it — get behind it!"
+msgstr "¡La espada lo para — ponte detrás!"
+
+#: scripts/ch3_scenes_b.gd:27
+msgid "It blocks from the front."
+msgstr "Bloquea de frente."
+
+#: scripts/ch3_scenes_b.gd:27
+msgid "Its back. Hit its back."
+msgstr "La espalda. Pégale en la espalda."
+
+#: scripts/ch3_scenes_b.gd:28
+msgid "Not the sword. Around it."
+msgstr "La espada no. Rodéala."
+
+#: scripts/ch3_scenes_b.gd:29
+msgid "It's only fire. I'm not scared of it anymore!"
+msgstr "¡Es solo fuego! ¡Ya no le tengo miedo!"
+
+#: scripts/ch3_scenes_b.gd:30
+msgid "Lanterns out, children. Everyone in the dark."
+msgstr "Apaguen los faroles, niños. Todos a la oscuridad."
+
+#: scripts/ch3_scenes_b.gd:31
+msgid "I've got the road! Nobody else comes down!"
+msgstr "¡Yo cuido el camino! ¡Nadie más baja!"
+
+#: scripts/ch3_scenes_b.gd:32
+msgid "You said tell me it wasn't for nothing. Let's make it something."
+msgstr "Te pedí que me dijeras que no fue para nada. Hagamos que valga la pena."
+
+#: scripts/ch3_scenes_b.gd:33
+msgid "Nobody else goes in a cage. Not one more."
+msgstr "Nadie más va a una jaula. Ni uno más."
+
+#: scripts/ch3_scenes_b.gd:33
+msgid "Triage. Tonight it's him."
+msgstr "Triaje. Esta noche le toca a él."
+
+#: scripts/ch3_scenes_b.gd:34
+msgid "Elena drew that map for you. We'll follow it."
+msgstr "Elena dibujó ese mapa para ti. Lo vamos a seguir."
+
+#: scripts/ch3_scenes_b.gd:36
+msgid "Owen keeps a fire going at the sawmill. Nobody is afraid of it."
+msgstr "Owen mantiene un fuego encendido en el aserradero. Nadie le tiene miedo."
+
+#: scripts/ch3_scenes_b.gd:36
+msgid "Owen is buried by the harbor wall, next to Elena."
+msgstr "Owen está enterrado junto al muro del puerto, al lado de Elena."
+
+#: scripts/ch3_scenes_b.gd:37
+msgid "Owen still walks the forest at night, whistling."
+msgstr "Owen todavía recorre el bosque de noche, silbando."
+
+#: scripts/ch3_scenes_b.gd:38
+msgid "Nora opened the school again. The lights stay on."
+msgstr "Nora volvió a abrir la escuela. Las luces siguen prendidas."
+
+#: scripts/ch3_scenes_b.gd:38
+msgid "Nora is buried by the harbor wall, a yellow jacket folded on the stone."
+msgstr "Nora está enterrada junto al muro del puerto, con una chaqueta amarilla doblada sobre la piedra."
+
+#: scripts/ch3_scenes_b.gd:39
+msgid "Nora still talks to Lily on the school PA."
+msgstr "Nora todavía le habla a Lily por el altavoz de la escuela."
+
+#: scripts/ch3_scenes_b.gd:40
+msgid "Julian runs the clinic. He signs every file with both names."
+msgstr "Julian dirige la clínica. Firma cada expediente con los dos nombres."
+
+#: scripts/ch3_scenes_b.gd:40
+msgid "Julian is buried by the harbor wall. No one wrote the time."
+msgstr "Julian está enterrado junto al muro del puerto. Nadie anotó la hora."
+
+#: scripts/ch3_scenes_b.gd:41
+msgid "Julian still keeps the clinic sealed."
+msgstr "Julian todavía mantiene la clínica sellada."
+
+#: scripts/ch3_scenes_b.gd:42
+msgid "Marcus rings the bell at dawn now. It calls no one."
+msgstr "Ahora Marcus toca la campana al amanecer. No llama a nadie."
+
+#: scripts/ch3_scenes_b.gd:42
+msgid "Marcus lies under the bell he rang for three years."
+msgstr "Marcus yace bajo la campana que tocó durante tres años."
+
+#: scripts/ch3_scenes_b.gd:43
+msgid "Marcus still holds the chapel key."
+msgstr "Marcus todavía guarda la llave de la capilla."
+
+#: scripts/ch3_scenes_b.gd:152
+msgid "The quarry. Festival lanterns strung over the pit like trophies."
+msgstr "La cantera. Faroles del festival colgados sobre el foso como trofeos."
+
+#: scripts/ch3_scenes_b.gd:153
+msgid "The Veil's Chapel, cut into the rock. Somewhere in there: Lucía."
+msgstr "La Capilla del Velo, tallada en la roca. En algún lugar ahí adentro: Lucía."
+
+#: scripts/ch3_scenes_b.gd:155
+msgid "And the Old Pass gate. Three slots."
+msgstr "Y la reja del Paso Viejo. Tres ranuras."
+
+#: scripts/ch3_scenes_b.gd:158
+msgid "Three parts in my pocket. I could just go."
+msgstr "Tres partes en el bolsillo. Podría irme sin más."
+
+#: scripts/ch3_scenes_b.gd:160
+msgid "…No. I came for her."
+msgstr "…No. Vine por ella."
+
+#: scripts/ch3_scenes_b.gd:167
+msgid "%d of 3 key parts. It won't turn."
+msgstr "%d de 3 partes de la llave. No gira."
+
+#: scripts/ch3_scenes_b.gd:180
+msgid "You opened it. Nobody opens them."
+msgstr "La abriste. Nadie las abre."
+
+#: scripts/ch3_scenes_b.gd:183
+msgid "The floodlights. The old generators. We'll get them turning over."
+msgstr "Los reflectores. Los generadores viejos. Los vamos a poner en marcha."
+
+#: scripts/ch3_scenes_b.gd:185
+msgid "FLOODLIGHTS PRIMED — NO CRANKING"
+msgstr "REFLECTORES LISTOS — SIN ARRANCAR A MANO"
+
+#: scripts/ch3_scenes_b.gd:186
+msgid "Then stay in the dark till it's over."
+msgstr "Entonces quédate en la oscuridad hasta que termine."
+
+#: scripts/ch3_scenes_b.gd:212
+msgid "Candles. Festival lanterns. An eye as tall as a man on the far wall."
+msgstr "Velas. Faroles del festival. Un ojo tan alto como un hombre en la pared del fondo."
+
+#: scripts/ch3_scenes_b.gd:214 scripts/ch3_scenes_b.gd:225 scripts/ch3_scenes_b.gd:266 scripts/ch3_scenes_b.gd:510 scripts/ch3_scenes_b.gd:582 scripts/ch3_scenes_b.gd:612 …
+msgid "Lucía"
+msgstr "Lucía"
+
+#: scripts/ch3_scenes_b.gd:214
+msgid "…Alex?"
+msgstr "…¿Alex?"
+
+#: scripts/ch3_scenes_b.gd:224
+msgid "Lucía."
+msgstr "Lucía."
+
+#: scripts/ch3_scenes_b.gd:225
+msgid "You came. You idiot. I told you not to come."
+msgstr "Viniste. Idiota. Te dije que no vinieras."
+
+#: scripts/ch3_scenes_b.gd:226
+msgid "You told me it was beautiful."
+msgstr "Me dijiste que era hermoso."
+
+#: scripts/ch3_scenes_b.gd:231
+msgid "Her hand through the bars. The same eye."
+msgstr "Su mano entre los barrotes. El mismo ojo."
+
+#: scripts/ch3_scenes_b.gd:237 scripts/ch3_scenes_b.gd:238 scripts/ch3_scenes_b.gd:243 scripts/ch3_scenes_b.gd:247 scripts/ch3_scenes_b.gd:352 scripts/ch3_scenes_b.gd:365 …
+msgid "Shepherd"
+msgstr "El Pastor"
+
+#: scripts/ch3_scenes_b.gd:237
+msgid "You came for her."
+msgstr "Viniste por ella."
+
+#: scripts/ch3_scenes_b.gd:238
+msgid "They all come for someone."
+msgstr "Todos vienen por alguien."
+
+#: scripts/ch3_scenes_b.gd:241
+msgid "Where are you?"
+msgstr "¿Dónde estás?"
+
+#: scripts/ch3_scenes_b.gd:243
+msgid "Close. I'm always close."
+msgstr "Cerca. Siempre estoy cerca."
+
+#: scripts/ch3_scenes_b.gd:246
+msgid "The padlock has no keyhole. Just an eye."
+msgstr "El candado no tiene cerradura. Solo un ojo."
+
+#: scripts/ch3_scenes_b.gd:247
+msgid "Only my boy opens the cages. It's nearly three."
+msgstr "Solo mi muchacho abre las jaulas. Ya casi son las tres."
+
+#: scripts/ch3_scenes_b.gd:261
+msgid "Footsteps, and something heavy scraping along behind them."
+msgstr "Pasos, y algo pesado que se arrastra detrás."
+
+#: scripts/ch3_scenes_b.gd:263
+msgid "It drags a Taken by the ankle. Face up, arms trailing through the dirt."
+msgstr "Arrastra a un Llevado por el tobillo. Boca arriba, los brazos rozando la tierra."
+
+#: scripts/ch3_scenes_b.gd:266
+msgid "Alex, don't go out there. It's not what you think it is."
+msgstr "Alex, no salgas. No es lo que crees."
+
+#: scripts/ch3_scenes_b.gd:282
+msgid "It drops the body like a sack of feed. And looks at you."
+msgstr "Suelta el cuerpo como un costal de alimento. Y te mira."
+
+#: scripts/ch3_scenes_b.gd:296
+msgid "Lanterns on the rock path. Not the group's. Not anymore."
+msgstr "Faroles en el sendero de roca. No son del grupo. Ya no."
+
+#: scripts/ch3_scenes_b.gd:306
+msgid "The skull sword comes up."
+msgstr "La espada de cráneos se alza."
+
+#: scripts/ch3_scenes_b.gd:326 scripts/chapter3.gd:580
+msgid "THE HARVESTER"
+msgstr "EL SEGADOR"
+
+#: scripts/ch3_scenes_b.gd:338
+msgid "LIGHT"
+msgstr "LUZ"
+
+#: scripts/ch3_scenes_b.gd:339
+msgid "It can't stand the light!"
+msgstr "¡No soporta la luz!"
+
+#: scripts/ch3_scenes_b.gd:339
+msgid "Now — while it's blind!"
+msgstr "¡Ahora — mientras está ciego!"
+
+#: scripts/ch3_scenes_b.gd:339
+msgid "Hit it! Hit it now!"
+msgstr "¡Pégale! ¡Pégale ya!"
+
+#: scripts/ch3_scenes_b.gd:352
+msgid "Three o'clock. Lights out, children."
+msgstr "Las tres. A apagar las luces, niños."
+
+#: scripts/ch3_scenes_b.gd:355
+msgid "It plants the sword in the stone. Up on the rim, lanterns answer."
+msgstr "Clava la espada en la piedra. Arriba, en el borde, los faroles responden."
+
+#: scripts/ch3_scenes_b.gd:357
+msgid "Only the old floodlights have their own generators."
+msgstr "Solo los viejos reflectores tienen generador propio."
+
+#: scripts/ch3_scenes_b.gd:364
+msgid "PHASE 3"
+msgstr "FASE 3"
+
+#: scripts/ch3_scenes_b.gd:365
+msgid "Leave him be! He only does what I ask!"
+msgstr "¡Déjenlo en paz! ¡Solo hace lo que yo le pido!"
+
+#: scripts/ch3_scenes_b.gd:366
+msgid "Its guard breaks into a wild sweep. Roll through it."
+msgstr "Su guardia se rompe en un barrido salvaje. Rueda bajo él."
+
+#: scripts/ch3_scenes_b.gd:383
+msgid "It kneels. The sword slides out of its hands."
+msgstr "Se arrodilla. La espada se le resbala de las manos."
+
+#: scripts/ch3_scenes_b.gd:387
+msgid "The skulls scatter over the stone."
+msgstr "Los cráneos se esparcen por la piedra."
+
+#: scripts/ch3_scenes_b.gd:389
+msgid "Kshhh— no. No, no, no—"
+msgstr "Kshhh— no. No, no, no—"
+
+#: scripts/ch3_scenes_b.gd:390
+msgid "Caleb—"
+msgstr "Caleb—"
+
+#: scripts/ch3_scenes_b.gd:397
+msgid "…Caleb?"
+msgstr "…¿Caleb?"
+
+#: scripts/ch3_scenes_b.gd:428
+msgid "He'd been sitting there the whole time. Three metres from the cage."
+msgstr "Estuvo sentado ahí todo el tiempo. A tres metros de la jaula."
+
+#: scripts/ch3_scenes_b.gd:431
+msgid "An old man. A radio. A brand iron on the altar, still warm."
+msgstr "Un viejo. Una radio. Un hierro de marcar en el altar, todavía tibio."
+
+#: scripts/ch3_scenes_b.gd:432
+msgid "I never took anyone."
+msgstr "Yo nunca me llevé a nadie."
+
+#: scripts/ch3_scenes_b.gd:433
+msgid "They brought them to me."
+msgstr "Ellos me los traían."
+
+#: scripts/ch3_scenes_b.gd:437
+msgid "Open the cage."
+msgstr "Abre la jaula."
+
+#: scripts/ch3_scenes_b.gd:441
+msgid "Take them. I'm finished with keys."
+msgstr "Tómalas. Ya terminé con las llaves."
+
+#: scripts/ch3_scenes_b.gd:455
+msgid "The cage swings open."
+msgstr "La jaula se abre."
+
+#: scripts/ch3_scenes_b.gd:460
+msgid "Is he breathing? My boy. Is he breathing?"
+msgstr "¿Respira? Mi muchacho. ¿Respira?"
+
+#: scripts/ch3_scenes_b.gd:461
+msgid "Your boy."
+msgstr "Tu muchacho."
+
+#: scripts/ch3_scenes_b.gd:463
+msgid "He only ever did what I asked. He always did what I asked."
+msgstr "Él solo hacía lo que yo le pedía. Siempre hizo lo que yo le pedí."
+
+#: scripts/ch3_scenes_b.gd:471 scripts/ch3_scenes_b.gd:472 player/hud.gd:19
+msgid "Dispatch"
+msgstr "Central"
+
+#: scripts/ch3_scenes_b.gd:471
+msgid "…Hollowmere, this is county dispatch. We hear you."
+msgstr "…Hollowmere, aquí la central del condado. Los escuchamos."
+
+#: scripts/ch3_scenes_b.gd:472
+msgid "We heard all of it. Units are on the Old Pass."
+msgstr "Lo oímos todo. Hay unidades en el Paso Viejo."
+
+#: scripts/ch3_scenes_b.gd:475
+msgid "They'll come now. Let them."
+msgstr "Ahora vendrán. Que vengan."
+
+#: scripts/ch3_scenes_b.gd:507
+msgid "03:41. Lights over the lake."
+msgstr "03:41. Luces sobre el lago."
+
+#: scripts/ch3_scenes_b.gd:508
+msgid "They come up out of the lower cells, blinking at the searchlights."
+msgstr "Salen de las celdas de abajo, parpadeando ante los reflectores."
+
+#: scripts/ch3_scenes_b.gd:510
+msgid "That one. He kept asking about his sister."
+msgstr "Ese. No paraba de preguntar por su hermana."
+
+#: scripts/ch3_scenes_b.gd:516 scripts/chapter3.gd:37 scripts/chapter3.gd:40 player/hud.gd:19
+msgid "Tomás"
+msgstr "Tomás"
+
+#: scripts/ch3_scenes_b.gd:516
+msgid "Is Elena with you?"
+msgstr "¿Elena está contigo?"
+
+#: scripts/ch3_scenes_b.gd:520
+msgid "She sent me."
+msgstr "Ella me envió."
+
+#: scripts/ch3_scenes_b.gd:526
+msgid "ELENA RUIZ"
+msgstr "ELENA RUIZ"
+
+#: scripts/ch3_scenes_b.gd:544
+msgid "Footsteps at the door. Four of them."
+msgstr "Pasos en la puerta. Son cuatro."
+
+#: scripts/ch3_scenes_b.gd:547
+msgid "It's over, Elias."
+msgstr "Se acabó, Elias."
+
+#: scripts/ch3_scenes_b.gd:549
+msgid "Is it? You'll see him in every dark room for the rest of your lives."
+msgstr "¿Ah, sí? Lo van a ver en cada cuarto oscuro por el resto de sus vidas."
+
+#: scripts/ch3_scenes_b.gd:552
+msgid "Then we'll leave the lights on."
+msgstr "Entonces dejaremos las luces prendidas."
+
+#: scripts/ch3_scenes_b.gd:571
+msgid "Dawn. They carry its sword out of the pit between them."
+msgstr "Amanecer. Entre todos sacan su espada del foso."
+
+#: scripts/ch3_scenes_b.gd:577
+msgid "At dawn they scrape the eyes off the doors. Every door in the valley."
+msgstr "Al amanecer raspan los ojos de las puertas. Todas las puertas del valle."
+
+#: scripts/ch3_scenes_b.gd:582
+msgid "Can we go home now?"
+msgstr "¿Ya podemos ir a casa?"
+
+#: scripts/ch3_scenes_b.gd:583
+msgid "Yeah. We can go home."
+msgstr "Sí. Ya podemos ir a casa."
+
+#: scripts/ch3_scenes_b.gd:598
+msgid "He looks at the blood on you. Then he smiles."
+msgstr "Mira la sangre que llevas encima. Luego sonríe."
+
+#: scripts/ch3_scenes_b.gd:601
+msgid "Four of them. I never had one who could do that."
+msgstr "Los cuatro. Nunca tuve a nadie capaz de eso."
+
+#: scripts/ch3_scenes_b.gd:603
+msgid "You did their work better than they did."
+msgstr "Hiciste su trabajo mejor que ellos."
+
+#: scripts/ch3_scenes_b.gd:612
+msgid "Alex…?"
+msgstr "¿Alex…?"
+
+#: scripts/ch3_scenes_b.gd:626
+msgid "A car stalls at the bridge."
+msgstr "Un carro se apaga en el puente."
+
+#: scripts/ch3_scenes_b.gd:627
+msgid "Room 6 is ready."
+msgstr "La habitación 6 está lista."
+
+#: scripts/ch3_scenes_b.gd:638
+msgid "I can't feel my legs. Three weeks in that box."
+msgstr "No siento las piernas. Tres semanas en esa caja."
+
+#: scripts/ch3_scenes_b.gd:639
+msgid "Then I'll carry you. Like when you were six."
+msgstr "Entonces te cargo. Como cuando tenías seis años."
+
+#: scripts/ch3_scenes_b.gd:648
+msgid "She can barely stand. Alex carries her most of the way."
+msgstr "Apenas puede tenerse en pie. Alex la carga casi todo el camino."
+
+#: scripts/ch3_scenes_b.gd:667
+msgid "I'm sorry, Lucía."
+msgstr "Lo siento, Lucía."
+
+#: scripts/ch3_scenes_b.gd:670
+msgid "Three parts turn in three slots. The gate grinds open."
+msgstr "Tres partes giran en tres ranuras. La reja se abre rechinando."
+
+#: scripts/ch3_scenes_b.gd:675
+msgid "The Old Pass. Three kilometres of dark."
+msgstr "El Paso Viejo. Tres kilómetros de oscuridad."
+
+#: scripts/ch3_scenes_b.gd:676
+msgid "The mark on the back of the hand itches all the way."
+msgstr "La marca en el dorso de la mano pica todo el camino."
+
+#: scripts/ch3_scenes_b.gd:678
+msgid "Lucía is not found."
+msgstr "Lucía nunca aparece."
+
+#: scripts/ch3_scenes_b.gd:693
+msgid "III · THE VEIL"
+msgstr "III · EL VELO"
+
+#: scripts/ch3_scenes_b.gd:697
+msgid "Ending: %s.  Spared %d · Killed %d · Evidence %d/12 · Tokens %d"
+msgstr "Final: %s.  Perdonados %d · Muertos %d · Evidencias %d/12 · Fichas %d"
+
+#: scripts/ch3_scenes_b.gd:698
+msgid "RUN"
+msgstr "HUIDA"
+
+#: scripts/ch3_scenes_b.gd:698
+msgid "SIGNAL"
+msgstr "SEÑAL"
+
+#: scripts/ch3_scenes_b.gd:698
+msgid "UNVEILED"
+msgstr "SIN VELO"
+
+#: scripts/ch3_scenes_b.gd:698
+msgid "THE NEW EYE"
+msgstr "EL NUEVO OJO"
+
+#: scripts/ch3_scenes_b.gd:698
+msgid "MIXED"
+msgstr "MIXTO"
+
+#: scripts/ch3_scenes_b.gd:713 scripts/main_menu.gd:398
+msgid "HOLLOWMERE  ·  POP. 1413"
+msgstr "HOLLOWMERE  ·  POB. 1413"
+
+#: scripts/ch3_scenes_b.gd:715
+msgid "Alex. I heard the gate. I hope it was you."
+msgstr "Alex. Oí la reja. Ojalá hayas sido tú."
+
+#: scripts/ch3_scenes_b.gd:716
+msgid "I'll tell you anyway. Somebody should know."
+msgstr "Te lo voy a contar de todos modos. Alguien tiene que saberlo."
+
+#: scripts/ch3_scenes_b.gd:718
+msgid "Twenty-two days in that cage. He talked to me every night."
+msgstr "Veintidós días en esa jaula. Me hablaba todas las noches."
+
+#: scripts/ch3_scenes_b.gd:719
+msgid "I think I was the first one who ever listened."
+msgstr "Creo que fui la primera que lo escuchó de verdad."
+
+#: scripts/ch3_scenes_b.gd:722
+msgid "His name is Elias Morrow. He was the quarry's chaplain."
+msgstr "Se llama Elias Morrow. Era el capellán de la cantera."
+
+#: scripts/ch3_scenes_b.gd:723
+msgid "Thirty-one years ago the pit fell in. Nine men under the rock."
+msgstr "Hace treinta y un años el foso se derrumbó. Nueve hombres bajo la roca."
+
+#: scripts/ch3_scenes_b.gd:724
+msgid "His son Caleb was one of them."
+msgstr "Su hijo Caleb era uno de ellos."
+
+#: scripts/ch3_scenes_b.gd:726
+msgid "The town voted to seal it. Save the pass. Save the rest."
+msgstr "El pueblo votó por sellarlo. Salvar el paso. Salvar al resto."
+
+#: scripts/ch3_scenes_b.gd:736
+msgid "On the ninth day Caleb dug himself out. Blind to any light. No words left."
+msgstr "Al noveno día Caleb salió cavando. Ciego a cualquier luz. Sin palabras."
+
+#: scripts/ch3_scenes_b.gd:739
+msgid "The red eyes were a lamp's lenses. The tar was pitch from the pit."
+msgstr "Los ojos rojos eran los lentes de una lámpara. El alquitrán era brea del foso."
+
+#: scripts/ch3_scenes_b.gd:740
+msgid "The sword was the nine he couldn't dig out. And everyone since."
+msgstr "La espada eran los nueve que no pudo sacar. Y todos los que vinieron después."
+
+#: scripts/ch3_scenes_b.gd:743
+msgid "Elias told the valley the pit had kept his boy. That it keeps everyone — if you feed it."
+msgstr "Elias le dijo al valle que el foso se había quedado con su muchacho. Que protege a todos — si lo alimentan."
+
+#: scripts/ch3_scenes_b.gd:744
+msgid "Light hurt Caleb. So every night at three, the town turned its lights off for him."
+msgstr "La luz lastimaba a Caleb. Así que cada noche, a las tres, el pueblo apagaba sus luces por él."
+
+#: scripts/ch3_scenes_b.gd:745
+msgid "That's all the Veil ever was. A father who couldn't let go. A town that owed him."
+msgstr "Eso fue el Velo, nada más. Un padre que no supo soltar. Un pueblo en deuda con él."
+
+#: scripts/ch3_scenes_b.gd:746
+msgid "The ones who broke went out in the Tuesday trucks. The rest stayed in the pit."
+msgstr "Los que se quebraban se iban en los camiones del martes. El resto se quedaba en el foso."
+
+#: scripts/ch3_scenes_b.gd:749
+msgid "The sign still says 1413. That's how many lived here the year the pit fell."
+msgstr "El letrero todavía dice 1413. Esos eran los habitantes el año en que cayó el foso."
+
+#: scripts/ch3_scenes_b.gd:750
+msgid "Elena made it her code. The one number he couldn't make smaller."
+msgstr "Elena lo volvió su código. El único número que él no pudo achicar."
+
+#: scripts/ch3_scenes_b.gd:755
+msgid "Thank you for playing."
+msgstr "Gracias por jugar."
+
+#: scripts/ch3_scenes_b.gd:762
+msgid "The broadcast reached a county trucker at 03:14. By noon, forty cars on the Old Pass."
+msgstr "La transmisión le llegó a un camionero del condado a las 03:14. Al mediodía, cuarenta carros en el Paso Viejo."
+
+#: scripts/ch3_scenes_b.gd:763
+msgid "Eleven alive in the lower cells. Tomás Ruiz asked for his sister first."
+msgstr "Once vivos en las celdas de abajo. Tomás Ruiz preguntó primero por su hermana."
+
+#: scripts/ch3_scenes_b.gd:765
+msgid "Grady painted a moth on the lighthouse door. Nobody has painted over it."
+msgstr "Grady pintó una polilla en la puerta del faro. Nadie la ha tapado."
+
+#: scripts/ch3_scenes_b.gd:769
+msgid "Owen, Nora, Julian and Marcus stayed. Every eye was off every door by the first frost."
+msgstr "Owen, Nora, Julian y Marcus se quedaron. Para la primera helada no quedaba un ojo en ninguna puerta."
+
+#: scripts/ch3_scenes_b.gd:770
+msgid "Elias sat with Caleb in the pit until they both went quiet. Nobody stopped him."
+msgstr "Elias se sentó con Caleb en el foso hasta que los dos se quedaron en silencio. Nadie lo detuvo."
+
+#: scripts/ch3_scenes_b.gd:773
+msgid "Marcus rings the bell at dawn now. It doesn't call anyone."
+msgstr "Ahora Marcus toca la campana al amanecer. Ya no llama a nadie."
+
+#: scripts/ch3_scenes_b.gd:777
+msgid "Alex stayed. I left alone."
+msgstr "Alex se quedó. Yo me fui sola."
+
+#: scripts/ch3_scenes_b.gd:778
+msgid "Sometimes a car stalls at the bridge, and a new eye turns up on a door at the motel."
+msgstr "A veces un carro se apaga en el puente, y aparece un ojo nuevo en una puerta del motel."
+
+#: scripts/ch3_scenes_b.gd:780
+msgid "I don't read the news from Hollowmere anymore."
+msgstr "Ya no leo las noticias de Hollowmere."
+
+#: scripts/ch3_scenes_b.gd:785
+msgid "Some of them came back to themselves. Some are under the harbor wall. We don't talk about which."
+msgstr "Algunos volvieron a ser ellos mismos. Otros están bajo el muro del puerto. No hablamos de cuáles."
+
+#: scripts/ch3_scenes_b.gd:786
+msgid "Elias is still up there with his boy."
+msgstr "Elias sigue allá arriba con su muchacho."
+
+#: scripts/ch3_scenes_b.gd:786
+msgid "Elias went down into the pit."
+msgstr "Elias bajó al foso."
+
+#: scripts/ch3_scenes_b.gd:788
+msgid "The lights in Hollowmere still go out at three. Just not all of them."
+msgstr "Las luces de Hollowmere todavía se apagan a las tres. Pero ya no todas."
+
+#: scripts/ch3_scenes_b.gd:795
+msgid "I hope you made it through. I hope you don't come back."
+msgstr "Ojalá hayas salido. Ojalá no vuelvas."
+
+#: scripts/ch3_scenes_b.gd:799
+msgid "The lantern gutters out."
+msgstr "El farol se apaga."
+
+#: scripts/chapter1.gd:37
+msgid "Take the revolver"
+msgstr "Tomar el revólver"
+
+#: scripts/chapter1.gd:37
+msgid "Take the flare gun"
+msgstr "Tomar la pistola de bengalas"
+
+#: scripts/chapter1.gd:37
+msgid "Take the shotgun"
+msgstr "Tomar la escopeta"
+
+#: scripts/chapter1.gd:38
+msgid "Take the hunting bow"
+msgstr "Tomar el arco de caza"
+
+#: scripts/chapter1.gd:38
+msgid "Take the fire axe"
+msgstr "Tomar el hacha de bombero"
+
+#: scripts/chapter1.gd:38
+msgid "Take the nail bat"
+msgstr "Tomar el bate con clavos"
+
+#: scripts/chapter1.gd:40
+msgid "Come out. It's quicker if you don't run."
+msgstr "Sal. Es más rápido si no corres."
+
+#: scripts/chapter1.gd:40
+msgid "You're not the first outsider. You won't be the last."
+msgstr "No eres el primer forastero. Tampoco serás el último."
+
+#: scripts/chapter1.gd:307 scripts/chapter1.gd:307
+msgid "Fire swings."
+msgstr "El botón de disparo golpea."
+
+#: scripts/chapter1.gd:307
+msgid "Hold aim to draw."
+msgstr "Mantén apuntar para tensar."
+
+#: scripts/chapter1.gd:308
+msgid "Close range."
+msgstr "De cerca."
+
+#: scripts/chapter1.gd:374
+msgid "You black out…"
+msgstr "Pierdes el conocimiento…"
+
+#: scripts/chapter1.gd:743
+msgid "Shells"
+msgstr "Cartuchos"
+
+#: scripts/chapter1.gd:743
+msgid "Arrows"
+msgstr "Flechas"
+
+#: scripts/chapter1.gd:745
+msgid "+%d SHELLS"
+msgstr "+%d CARTUCHOS"
+
+#: scripts/chapter1.gd:745
+msgid "+%d ARROWS"
+msgstr "+%d FLECHAS"
+
+#: scripts/chapter1.gd:749
+msgid "Flares"
+msgstr "Bengalas"
+
+#: scripts/chapter1.gd:751
+msgid "+3 FLARES"
+msgstr "+3 BENGALAS"
+
+#: scripts/chapter1.gd:758
+msgid "+%d ROUNDS"
+msgstr "+%d BALAS"
+
+#: scripts/chapter1.gd:761
+msgid "+25 HEALTH"
+msgstr "+25 SALUD"
+
+#: scripts/chapter1.gd:762
+msgid "Ammo"
+msgstr "Munición"
+
+#: scripts/chapter1.gd:762
+msgid "Bandage"
+msgstr "Venda"
+
+#: scripts/chapter1.gd:781
+msgid "Lakeview Motel — Room 6"
+msgstr "Lakeview Motel — Habitación 6"
+
+#: scripts/chapter1.gd:783
+msgid "Check the door"
+msgstr "Revisa la puerta"
+
+#: scripts/chapter1.gd:784
+msgid "Examine the door"
+msgstr "Examinar la puerta"
+
+#: scripts/chapter1.gd:786 scripts/chapter1.gd:787
+msgid "Read the note"
+msgstr "Leer la nota"
+
+#: scripts/chapter1.gd:789 scripts/chapter2.gd:271
+msgid "Tune the radio to channel 7"
+msgstr "Sintoniza la radio en el canal 7"
+
+#: scripts/chapter1.gd:790
+msgid "Use the radio"
+msgstr "Usar la radio"
+
+#: scripts/chapter1.gd:818
+msgid "Reach the town square — crouch (C) in tall grass to hide"
+msgstr "Llega a la plaza del pueblo — agáchate (C) en la hierba alta para esconderte"
+
+#: scripts/chapter1.gd:840 player/guide.gd:16
+msgid "Town Square"
+msgstr "Plaza del pueblo"
+
+#: scripts/chapter1.gd:841
+msgid "Talk to Grady at the General Store"
+msgstr "Habla con Grady en su tienda"
+
+#: scripts/chapter1.gd:842 scripts/chapter3.gd:433
+msgid "Talk to Grady"
+msgstr "Hablar con Grady"
+
+#: scripts/chapter1.gd:847
+msgid "Optional: knock down the 5 tin moths · Talk to Grady when ready"
+msgstr "Opcional: tumba las 5 polillas de lata · Habla con Grady cuando estés listo"
+
+#: scripts/chapter1.gd:858
+msgid "+25 TOKENS"
+msgstr "+25 FICHAS"
+
+#: scripts/chapter1.gd:865
+msgid "Tell Grady you're ready"
+msgstr "Decirle a Grady que estás listo"
+
+#: scripts/chapter1.gd:881
+msgid "Go west to the sawmill and find Owen's key part"
+msgstr "Ve al oeste, al aserradero, y encuentra la parte de la llave de Owen"
+
+#: scripts/chapter1.gd:893
+msgid "Take the burnt festival lantern"
+msgstr "Tomar el farol quemado del festival"
+
+#: scripts/chapter1.gd:900
+msgid "Read the ledger"
+msgstr "Leer el registro"
+
+#: scripts/chapter1.gd:908 player/guide.gd:17
+msgid "Pinewood Forest & Sawmill"
+msgstr "Bosque de Pinos y Aserradero"
+
+#: scripts/chapter1.gd:910
+msgid "Find the key part in the sawmill yard"
+msgstr "Encuentra la parte de la llave en el patio del aserradero"
+
+#: scripts/chapter1.gd:911 scripts/chapter2.gd:453 scripts/chapter2.gd:708
+msgid "Take the key part"
+msgstr "Tomar la parte de la llave"
+
+#: scripts/chapter1.gd:942
+msgid "OWEN CLARKE — THE WOODSMAN"
+msgstr "OWEN CLARKE — EL LEÑADOR"
+
+#: scripts/chapter1.gd:960
+msgid "Survive Owen — flares and burning barrels freeze him (fire)"
+msgstr "Sobrevive a Owen — las bengalas y los barriles en llamas lo paralizan (fuego)"
+
+#: scripts/chapter1.gd:967
+msgid "SPARE him (E) — or shoot to KILL"
+msgstr "PERDÓNALO (E) — o dispara para MATARLO"
+
+#: scripts/chapter1.gd:968
+msgid "Spare Owen"
+msgstr "Perdonar a Owen"
+
+#: scripts/chapter1.gd:1021
+msgid "Pick the lock — Room 4"
+msgstr "Forzar la cerradura — Habitación 4"
+
+#: scripts/chapter1.gd:1028 scripts/chapter2.gd:581 scripts/chapter3.gd:543
+msgid "THE PICK SLIPPED"
+msgstr "LA GANZÚA RESBALÓ"
+
+#: scripts/chapter1.gd:1031
+msgid "Take Lucía's camera"
+msgstr "Tomar la cámara de Lucía"
+
+#: scripts/chapter1.gd:1045
+msgid "Cut the tripwire"
+msgstr "Cortar el cable trampa"
+
+#: scripts/chapter2.gd:118
+msgid "+1 BOTTLE"
+msgstr "+1 BOTELLA"
+
+#: scripts/chapter2.gd:119 player/hud.gd:276
+msgid "Bottle"
+msgstr "Botella"
+
+#: scripts/chapter2.gd:213
+msgid "SPARE Nora (E) — or shoot to KILL"
+msgstr "PERDONA a Nora (E) — o dispara para MATARLA"
+
+#: scripts/chapter2.gd:213
+msgid "Spare Nora"
+msgstr "Perdonar a Nora"
+
+#: scripts/chapter2.gd:214
+msgid "SPARE Julian (E) — or shoot to KILL"
+msgstr "PERDONA a Julian (E) — o dispara para MATARLO"
+
+#: scripts/chapter2.gd:214
+msgid "Spare Julian"
+msgstr "Perdonar a Julian"
+
+#: scripts/chapter2.gd:215
+msgid "SPARE Marcus (E) — or shoot to KILL"
+msgstr "PERDONA a Marcus (E) — o dispara para MATARLO"
+
+#: scripts/chapter2.gd:215
+msgid "Spare Marcus"
+msgstr "Perdonar a Marcus"
+
+#: scripts/chapter2.gd:238
+msgid "G throws a bottle."
+msgstr "G lanza una botella."
+
+#: scripts/chapter2.gd:238
+msgid "+3 bottles"
+msgstr "+3 botellas"
+
+#: scripts/chapter2.gd:247
+msgid "Get the car battery from the boathouse"
+msgstr "Saca la batería del carro del cobertizo de botes"
+
+#: scripts/chapter2.gd:248
+msgid "Take the car battery"
+msgstr "Tomar la batería del carro"
+
+#: scripts/chapter2.gd:262
+msgid "Carry the battery to the lighthouse radio room"
+msgstr "Lleva la batería a la sala de radio del faro"
+
+#: scripts/chapter2.gd:263
+msgid "Wire the battery to the radio"
+msgstr "Conectar la batería a la radio"
+
+#: scripts/chapter2.gd:299
+msgid "Get the key parts: Nora at the school — or Julian at the clinic"
+msgstr "Consigue las partes de la llave: Nora en la escuela — o Julian en la clínica"
+
+#: scripts/chapter2.gd:301
+msgid "Go to the school — Nora has the last key part"
+msgstr "Ve a la escuela — Nora tiene la última parte de la llave"
+
+#: scripts/chapter2.gd:302
+msgid "Go to the clinic — Julian has the last key part"
+msgstr "Ve a la clínica — Julian tiene la última parte de la llave"
+
+#: scripts/chapter2.gd:329
+msgid "Read the note by the fishing rod"
+msgstr "Leer la nota junto a la caña"
+
+#: scripts/chapter2.gd:333
+msgid "Fish (Old Tom's rod)"
+msgstr "Pescar (la caña de Old Tom)"
+
+#: scripts/chapter2.gd:339 scripts/fishing.gd:118
+msgid "IT GOT AWAY"
+msgstr "SE ESCAPÓ"
+
+#: scripts/chapter2.gd:342
+msgid "%s  +%d TOKENS"
+msgstr "%s  +%d FICHAS"
+
+#: scripts/chapter2.gd:343 scripts/fishing.gd:15 scripts/game.gd:32
+msgid "Old Tom"
+msgstr "Old Tom"
+
+#: scripts/chapter2.gd:356
+msgid "Sit at Silas' table"
+msgstr "Sentarte a la mesa de Silas"
+
+#: scripts/chapter2.gd:366
+msgid "SILAS PAYS UP"
+msgstr "SILAS PAGA"
+
+#: scripts/chapter2.gd:376
+msgid "Play Moth Run (1 token)"
+msgstr "Jugar a Moth Run (1 ficha)"
+
+#: scripts/chapter2.gd:378
+msgid "NEED 1 TOKEN"
+msgstr "NECESITAS 1 FICHA"
+
+#: scripts/chapter2.gd:387
+msgid "SCORE %d  +%d TOKENS"
+msgstr "PUNTAJE %d  +%d FICHAS"
+
+#: scripts/chapter2.gd:419
+msgid "Search the desk"
+msgstr "Revisar el escritorio"
+
+#: scripts/chapter2.gd:435
+msgid "Get inside the school"
+msgstr "Entra a la escuela"
+
+#: scripts/chapter2.gd:444
+msgid "Find the basement power room and cut the power"
+msgstr "Encuentra el cuarto eléctrico del sótano y corta la luz"
+
+#: scripts/chapter2.gd:445
+msgid "Pull the basement breaker"
+msgstr "Bajar el interruptor del sótano"
+
+#: scripts/chapter2.gd:452
+msgid "Find key part 2 (Lily's drawing is in classroom 3)"
+msgstr "Encuentra la parte 2 de la llave (el dibujo de Lily está en el aula 3)"
+
+#: scripts/chapter2.gd:461
+msgid "Take Lily's drawing"
+msgstr "Tomar el dibujo de Lily"
+
+#: scripts/chapter2.gd:509
+msgid "NORA VANCE — THE TEACHER"
+msgstr "NORA VANCE — LA MAESTRA"
+
+#: scripts/chapter2.gd:510
+msgid "Nora hunts in the dark — hit her when she calls for Lily"
+msgstr "Nora caza en la oscuridad — golpéala cuando llame a Lily"
+
+#: scripts/chapter2.gd:543
+msgid "Mask filter"
+msgstr "Filtro de máscara"
+
+#: scripts/chapter2.gd:554
+msgid "Free the strapped patient"
+msgstr "Liberar a la paciente amarrada"
+
+#: scripts/chapter2.gd:561
+msgid "THE STRAPS HOLD"
+msgstr "LAS CORREAS AGUANTAN"
+
+#: scripts/chapter2.gd:564
+msgid "+MEDKIT"
+msgstr "+BOTIQUÍN"
+
+#: scripts/chapter2.gd:566
+msgid "Open the morgue freezer"
+msgstr "Abrir el congelador de la morgue"
+
+#: scripts/chapter2.gd:574
+msgid "Pick the pharmacy cabinet lock"
+msgstr "Forzar el gabinete de la farmacia"
+
+#: scripts/chapter2.gd:585
+msgid "+2 ELENA'S TEA"
+msgstr "+2 TÉ DE ELENA"
+
+#: scripts/chapter2.gd:590
+msgid "Search the records cabinet"
+msgstr "Revisar el archivador"
+
+#: scripts/chapter2.gd:678
+msgid "Silas: he walks the lot, the back wall, then the bay"
+msgstr "Silas: recorre el estacionamiento, el muro de atrás y luego el muelle de ambulancias"
+
+#: scripts/chapter2.gd:680
+msgid "Get a gas mask from the ambulance bay"
+msgstr "Consigue una máscara de gas en el muelle de ambulancias"
+
+#: scripts/chapter2.gd:681
+msgid "Take the gas mask"
+msgstr "Tomar la máscara de gas"
+
+#: scripts/chapter2.gd:685
+msgid "X: mask on / off."
+msgstr "X: ponerte / quitarte la máscara."
+
+#: scripts/chapter2.gd:689
+msgid "Reverse the vents on the roof — upstairs, up the ladder to the roof hatch"
+msgstr "Invierte la ventilación de la azotea — arriba, por la escalera hasta la escotilla"
+
+#: scripts/chapter2.gd:693
+msgid "Climb up through the roof hatch"
+msgstr "Subir por la escotilla del techo"
+
+#: scripts/chapter2.gd:695
+msgid "Climb the fire ladder"
+msgstr "Subir por la escalera de incendios"
+
+#: scripts/chapter2.gd:697
+msgid "Reverse the vents"
+msgstr "Invertir la ventilación"
+
+#: scripts/chapter2.gd:707
+msgid "Find key part 3 in the clinic (Sam's file is in the records cabinet)"
+msgstr "Encuentra la parte 3 de la llave en la clínica (el expediente de Sam está en el archivador)"
+
+#: scripts/chapter2.gd:750
+msgid "JULIAN MARSH — THE MEDIC"
+msgstr "JULIAN MARSH — EL MÉDICO"
+
+#: scripts/chapter2.gd:751
+msgid "Survive Julian — the reversed vents choke him in his own gas (mask on: X)"
+msgstr "Sobrevive a Julian — la ventilación invertida lo ahoga en su propio gas (máscara: X)"
+
+#: scripts/chapter2.gd:766
+msgid "Meet Elena at the church at 19:00"
+msgstr "Encuéntrate con Elena en la iglesia a las 19:00"
+
+#: scripts/chapter3.gd:37 scripts/chapter3.gd:40
+msgid "Clara"
+msgstr "Clara"
+
+#: scripts/chapter3.gd:38 scripts/chapter3.gd:41
+msgid "the Clarkes"
+msgstr "los Clarke"
+
+#: scripts/chapter3.gd:38 scripts/chapter3.gd:41
+msgid "Lily"
+msgstr "Lily"
+
+#: scripts/chapter3.gd:39 scripts/chapter3.gd:41
+msgid "Sam"
+msgstr "Sam"
+
+#: scripts/chapter3.gd:40
+msgid "Light a candle for Tomás"
+msgstr "Encender una vela por Tomás"
+
+#: scripts/chapter3.gd:40
+msgid "Light a candle for Clara"
+msgstr "Encender una vela por Clara"
+
+#: scripts/chapter3.gd:41
+msgid "Light a candle for the Clarkes"
+msgstr "Encender una vela por los Clarke"
+
+#: scripts/chapter3.gd:41
+msgid "Light a candle for Lily"
+msgstr "Encender una vela por Lily"
+
+#: scripts/chapter3.gd:41
+msgid "Light a candle for Sam"
+msgstr "Encender una vela por Sam"
+
+#: scripts/chapter3.gd:204
+msgid "Smoke can"
+msgstr "Bote de humo"
+
+#: scripts/chapter3.gd:206
+msgid "+1 SMOKE CAN"
+msgstr "+1 BOTE DE HUMO"
+
+#: scripts/chapter3.gd:237 player/guide.gd:17
+msgid "Church & Cemetery"
+msgstr "Iglesia y Cementerio"
+
+#: scripts/chapter3.gd:254
+msgid "Grab Elena's stash — the moth on the mausoleum step"
+msgstr "Toma el escondite de Elena — la polilla en el escalón del mausoleo"
+
+#: scripts/chapter3.gd:255
+msgid "Open Elena's stash"
+msgstr "Abrir el escondite de Elena"
+
+#: scripts/chapter3.gd:259
+msgid "Run for the church — smoke (T) breaks their sight, crouch (C) in a mausoleum to hide"
+msgstr "Corre a la iglesia — el humo (T) les corta la vista; agáchate (C) en un mausoleo para esconderte"
+
+#: scripts/chapter3.gd:318
+msgid "Find Marcus — down the aisle, to the altar"
+msgstr "Encuentra a Marcus — por el pasillo, hasta el altar"
+
+#: scripts/chapter3.gd:343
+msgid "MARCUS HALE — THE DEACON"
+msgstr "MARCUS HALE — EL DIÁCONO"
+
+#: scripts/chapter3.gd:344
+msgid "Drop a bell on Marcus — shoot its chain or release the rope — the clang deafens him"
+msgstr "Déjale caer una campana a Marcus — dispara a su cadena o suelta la cuerda — el estruendo lo ensordece"
+
+#: scripts/chapter3.gd:395
+msgid "Take the photo from the choir pew"
+msgstr "Tomar la foto del banco del coro"
+
+#: scripts/chapter3.gd:401
+msgid "Read the bell register"
+msgstr "Leer el registro de las campanas"
+
+#: scripts/chapter3.gd:436
+msgid "Go to Elena's lighthouse (Grady's store is on the way)"
+msgstr "Ve al faro de Elena (la tienda de Grady queda de camino)"
+
+#: scripts/chapter3.gd:437
+msgid "Elena's radio — still on"
+msgstr "La radio de Elena — sigue encendida"
+
+#: scripts/chapter3.gd:447
+msgid "North to the quarry — Lucía is in the Veil's Chapel (the transmitter and recorder are optional)"
+msgstr "Al norte, a la cantera — Lucía está en la Capilla del Velo (el transmisor y la grabadora son opcionales)"
+
+#: scripts/chapter3.gd:457
+msgid "+2 FLARES · +1 SMOKE CAN"
+msgstr "+2 BENGALAS · +1 BOTE DE HUMO"
+
+#: scripts/chapter3.gd:461
+msgid "Play Elena's recorder"
+msgstr "Reproducir la grabadora de Elena"
+
+#: scripts/chapter3.gd:465
+msgid "+1 FLARE"
+msgstr "+1 BENGALA"
+
+#: scripts/chapter3.gd:470
+msgid "Transmitter — channel 7, code 1413"
+msgstr "Transmisor — canal 7, código 1413"
+
+#: scripts/chapter3.gd:489
+msgid "North to the quarry — Lucía is in the Veil's Chapel"
+msgstr "Al norte, a la cantera — Lucía está en la Capilla del Velo"
+
+#: scripts/chapter3.gd:492 player/guide.gd:20
+msgid "Quarry & Veil's Chapel"
+msgstr "Cantera y Capilla del Velo"
+
+#: scripts/chapter3.gd:502
+msgid "Pick the cage lock"
+msgstr "Forzar el candado de la jaula"
+
+#: scripts/chapter3.gd:508
+msgid "Unlock the Veil's Chapel"
+msgstr "Abrir la Capilla del Velo"
+
+#: scripts/chapter3.gd:510
+msgid "Tunnel gate — leave now, without her?"
+msgstr "Reja del túnel — ¿irte ahora, sin ella?"
+
+#: scripts/chapter3.gd:516
+msgid "The Veil's Chapel — or the Old Pass tunnel gate, if you're leaving"
+msgstr "La Capilla del Velo — o la reja del túnel del Paso Viejo, si te vas"
+
+#: scripts/chapter3.gd:578 scripts/chapter3.gd:581
+msgid "Get behind it — the skull sword blocks from the front. Light hurts it: flares, the flashlight (F)"
+msgstr "Ponte detrás — la espada de cráneos bloquea de frente. La luz lo hiere: bengalas, la linterna (F)"
+
+#: scripts/chapter3.gd:594
+msgid "Throw the floodlight switches — lure it into the light, then shoot"
+msgstr "Activa los reflectores — atráelo a la luz y luego dispara"
+
+#: scripts/chapter3.gd:612
+msgid "Roll through its sweep, then shoot the red cracks — a flare in its face opens it up"
+msgstr "Rueda bajo su barrido y dispara a las grietas rojas — una bengala en la cara lo deja expuesto"
+
+#: scripts/enemy.gd:129
+msgid "They've learned you roll on cue. They'll hold their strikes, and follow up."
+msgstr "Aprendieron que ruedas cuando atacan. Ahora retienen el golpe y te rematan."
+
+#: scripts/enemy.gd:130
+msgid "They've learned you shoot from afar. They weave in and dive out of your aim."
+msgstr "Aprendieron que disparas de lejos. Zigzaguean y se salen de tu mira."
+
+#: scripts/enemy.gd:131
+msgid "They've learned you sneak. Patrols check behind them."
+msgstr "Aprendieron que te escabulles. Las patrullas miran a sus espaldas."
+
+#: scripts/enemy.gd:132
+msgid "They've learned you hide. They search the hiding spots first."
+msgstr "Aprendieron que te escondes. Revisan primero los escondites."
+
+#: scripts/enemy.gd:133
+msgid "They've learned you fight up close. They step out of your swings and pounce back."
+msgstr "Aprendieron que peleas de cerca. Esquivan tus golpes y se te lanzan encima."
+
+#: scripts/enemy.gd:134
+msgid "They've learned you stun them. Each stun wears off faster, and leaves them angrier."
+msgstr "Aprendieron que los aturdes. Cada aturdimiento dura menos y los deja más furiosos."
+
+#: scripts/enemy.gd:197
+msgid "THEY ADAPT"
+msgstr "SE ADAPTAN"
+
+#: scripts/fishing.gd:14
+msgid "Perch"
+msgstr "Perca"
+
+#: scripts/fishing.gd:14
+msgid "Trout"
+msgstr "Trucha"
+
+#: scripts/fishing.gd:14
+msgid "Pike"
+msgstr "Lucio"
+
+#: scripts/fishing.gd:89
+msgid "CHARGING"
+msgstr "CARGANDO"
+
+#: scripts/fishing.gd:102
+msgid "TOO EARLY — IT SPOOKED"
+msgstr "DEMASIADO PRONTO — SE ESPANTÓ"
+
+#: scripts/fishing.gd:115
+msgid "HOOKED!"
+msgstr "¡PICÓ!"
+
+#: scripts/fishing.gd:149
+msgid "REEL"
+msgstr "RECOGE"
+
+#: scripts/fishing.gd:149
+msgid "EASE OFF"
+msgstr "AFLOJA"
+
+#: scripts/fishing.gd:149
+msgid "IT'S GOING TO SNAP"
+msgstr "SE VA A ROMPER"
+
+#: scripts/fishing.gd:151
+msgid "THE LINE SNAPPED"
+msgstr "SE ROMPIÓ EL SEDAL"
+
+#: scripts/fishing.gd:153
+msgid "IT SPAT THE HOOK"
+msgstr "ESCUPIÓ EL ANZUELO"
+
+#: scripts/fishing.gd:155
+msgid "%s! +%d TOKENS"
+msgstr "¡%s! +%d FICHAS"
+
+#: scripts/fishing.gd:266
+msgid "CAST DISTANCE"
+msgstr "DISTANCIA DE LANCE"
+
+#: scripts/fishing.gd:274
+msgid "LINE %d m"
+msgstr "SEDAL %d m"
+
+#: scripts/fishing.gd:275
+msgid "<<< PULLS LEFT"
+msgstr "<<< TIRA A LA IZQUIERDA"
+
+#: scripts/fishing.gd:275
+msgid "PULLS RIGHT >>>"
+msgstr "TIRA A LA DERECHA >>>"
+
+#: scripts/fishing.gd:280
+msgid "Something big is down there."
+msgstr "Hay algo grande ahí abajo."
+
+#: scripts/fishing.gd:281
+msgid "Hold click / Space — charge · release — cast · Esc — quit"
+msgstr "Mantén clic / Espacio — cargar · suelta — lanzar · Esc — salir"
+
+#: scripts/fishing.gd:282
+msgid "Wait for the bobber to go under…"
+msgstr "Espera a que el corcho se hunda…"
+
+#: scripts/fishing.gd:282
+msgid "NOW — click / Space!"
+msgstr "¡AHORA — clic / Espacio!"
+
+#: scripts/fishing.gd:283
+msgid "Hold click / Space — reel · let go when it strains · A/D — lean against the pull"
+msgstr "Mantén clic / Espacio — recoger · suelta cuando se tense · A/D — inclínate contra el tirón"
+
+#: scripts/floodlight.gd:80 scripts/floodlight.gd:119
+msgid "Throw the floodlight switch"
+msgstr "Activar el reflector"
+
+#: scripts/floodlight.gd:119
+msgid "Crank the generator"
+msgstr "Arrancar el generador"
+
+#: scripts/game.gd:18
+msgid "Easy"
+msgstr "Fácil"
+
+#: scripts/game.gd:19
+msgid "Normal"
+msgstr "Normal"
+
+#: scripts/game.gd:20
+msgid "Hard"
+msgstr "Difícil"
+
+#: scripts/game.gd:23
+msgid "The Woodsman"
+msgstr "El Leñador"
+
+#: scripts/game.gd:23
+msgid "Finish Chapter 1."
+msgstr "Termina el capítulo 1."
+
+#: scripts/game.gd:24
+msgid "Finish Chapter 2."
+msgstr "Termina el capítulo 2."
+
+#: scripts/game.gd:25
+msgid "Pop. 1413"
+msgstr "Pob. 1413"
+
+#: scripts/game.gd:25
+msgid "Finish Chapter 3: the whole story."
+msgstr "Termina el capítulo 3: la historia completa."
+
+#: scripts/game.gd:26
+msgid "Paper Trail"
+msgstr "Rastro de papel"
+
+#: scripts/game.gd:26
+msgid "Collect all 12 pieces of evidence."
+msgstr "Reúne las 12 evidencias."
+
+#: scripts/game.gd:27
+msgid "Three Pieces"
+msgstr "Tres piezas"
+
+#: scripts/game.gd:27
+msgid "Hold all three parts of the gate key."
+msgstr "Ten las tres partes de la llave de la reja."
+
+#: scripts/game.gd:28
+msgid "Untouched"
+msgstr "Intacto"
+
+#: scripts/game.gd:28
+msgid "Finish the game without taking any damage."
+msgstr "Termina el juego sin recibir ningún daño."
+
+#: scripts/game.gd:29
+msgid "Mercy"
+msgstr "Piedad"
+
+#: scripts/game.gd:29
+msgid "Spare Owen, Nora, Julian and Marcus."
+msgstr "Perdona a Owen, Nora, Julian y Marcus."
+
+#: scripts/game.gd:30
+msgid "Nightmare"
+msgstr "Pesadilla"
+
+#: scripts/game.gd:30
+msgid "Finish the game on Hard."
+msgstr "Termina el juego en Difícil."
+
+#: scripts/game.gd:31
+msgid "Arsenal"
+msgstr "Arsenal"
+
+#: scripts/game.gd:31
+msgid "Carry all six weapons."
+msgstr "Lleva las seis armas."
+
+#: scripts/game.gd:32
+msgid "Catch the legendary catfish."
+msgstr "Atrapa el bagre legendario."
+
+#: scripts/game.gd:33
+msgid "Empty Chairs"
+msgstr "Sillas vacías"
+
+#: scripts/game.gd:33
+msgid "Light a candle for all five families."
+msgstr "Enciende una vela por las cinco familias."
+
+#: scripts/game.gd:34
+msgid "House Always Loses"
+msgstr "La casa siempre pierde"
+
+#: scripts/game.gd:34
+msgid "Beat Silas at his own table."
+msgstr "Gánale a Silas en su propia mesa."
+
+#: scripts/game.gd:35
+msgid "Hands On"
+msgstr "Cuerpo a cuerpo"
+
+#: scripts/game.gd:35
+msgid "Put an enemy down with a melee weapon or your fists."
+msgstr "Derriba a un enemigo con un arma cuerpo a cuerpo o con tus puños."
+
+#: scripts/game.gd:121 scripts/game.gd:171
+msgid "Autosave"
+msgstr "Autoguardado"
+
+#: scripts/game.gd:162 scripts/main_menu.gd:616
+msgid "Save"
+msgstr "Partida"
+
+#: scripts/game.gd:172
+msgid "Saved."
+msgstr "Guardado."
+
+#: scripts/game.gd:230
+msgid "Achievement"
+msgstr "Logro"
+
+#: scripts/game.gd:316
+msgid "PAUSED"
+msgstr "PAUSA"
+
+#: scripts/game.gd:319
+msgid "MARK  %.1f%%"
+msgstr "MARCA  %.1f%%"
+
+#: scripts/game.gd:322
+msgid "Resume"
+msgstr "Continuar"
+
+#: scripts/game.gd:324
+msgid "Save game"
+msgstr "Guardar partida"
+
+#: scripts/game.gd:325
+msgid "Manual save"
+msgstr "Guardado manual"
+
+#: scripts/game.gd:328 scripts/main_menu.gd:667
+msgid "Options"
+msgstr "Opciones"
+
+#: scripts/game.gd:329
+msgid "Main menu"
+msgstr "Menú principal"
+
+#: scripts/game.gd:337 scripts/main_menu.gd:50
+msgid "OPTIONS"
+msgstr "OPCIONES"
+
+#: scripts/game.gd:341 scripts/main_menu.gd:502
+msgid "Back"
+msgstr "Volver"
+
+#: scripts/harvester.gd:43
+msgid "The Harvester"
+msgstr "El Segador"
+
+#: scripts/hilo.gd:15
+msgid "Sit. Lanterns don't light themselves."
+msgstr "Siéntate. Los faroles no se encienden solos."
+
+#: scripts/hilo.gd:15
+msgid "Higher or lower. Like the lake."
+msgstr "Mayor o menor. Como el lago."
+
+#: scripts/hilo.gd:15
+msgid "Your money. My table."
+msgstr "Tu dinero. Mi mesa."
+
+#: scripts/hilo.gd:16
+msgid "Hm. Lucky."
+msgstr "Hm. Suerte."
+
+#: scripts/hilo.gd:16
+msgid "The lake gives..."
+msgstr "El lago da..."
+
+#: scripts/hilo.gd:16
+msgid "Don't get used to it."
+msgstr "No te acostumbres."
+
+#: scripts/hilo.gd:17
+msgid "House always wins. I'm the house."
+msgstr "La casa siempre gana. Yo soy la casa."
+
+#: scripts/hilo.gd:17
+msgid "My boy used to guess like that."
+msgstr "Mi muchacho adivinaba así."
+
+#: scripts/hilo.gd:17
+msgid "Pour one out for your tokens."
+msgstr "Brinda por tus fichas."
+
+#: scripts/hilo.gd:18
+msgid "The Veil. It takes everything, eventually."
+msgstr "El Velo. Tarde o temprano se lo lleva todo."
+
+#: scripts/hilo.gd:18
+msgid "Fog card. Nobody sees through it."
+msgstr "Carta de niebla. Nadie ve a través."
+
+#: scripts/hilo.gd:19
+msgid "Smart. Smarter than me."
+msgstr "Listo. Más listo que yo."
+
+#: scripts/hilo.gd:19
+msgid "Walk away while you can. Nobody here does."
+msgstr "Vete mientras puedas. Aquí nadie lo hace."
+
+#: scripts/hilo.gd:20
+msgid "...the doctor walks his rounds on the hour. Regular as a heart."
+msgstr "...el doctor hace su ronda cada hora en punto. Regular como un corazón."
+
+#: scripts/hilo.gd:21
+msgid "...the teacher can't see in the dark. She only listens for her girl."
+msgstr "...la maestra no ve en la oscuridad. Solo escucha, buscando a su niña."
+
+#: scripts/hilo.gd:22
+msgid "...Julian wheezes on the stairs. Always did."
+msgstr "...Julian jadea en las escaleras. Siempre fue así."
+
+#: scripts/hilo.gd:143
+msgid "Take it. You earned more than tokens tonight."
+msgstr "Tómalo. Esta noche ganaste más que fichas."
+
+#: scripts/hilo.gd:144
+msgid "Last call. Come back when your luck sobers up."
+msgstr "Última ronda. Vuelve cuando se le pase la borrachera a tu suerte."
+
+#: scripts/hilo.gd:181
+msgid "Same card. Nobody wins, kid. Again."
+msgstr "La misma carta. Nadie gana, muchacho. Otra vez."
+
+#: scripts/hilo.gd:209
+msgid "DEAL  %d"
+msgstr "REPARTIR  %d"
+
+#: scripts/hilo.gd:209
+msgid "DEAL  (a drink)"
+msgstr "REPARTIR  (un trago)"
+
+#: scripts/hilo.gd:210
+msgid "HIGHER  W"
+msgstr "MAYOR  W"
+
+#: scripts/hilo.gd:210
+msgid "LOWER  S"
+msgstr "MENOR  S"
+
+#: scripts/hilo.gd:211
+msgid "CASH OUT  E"
+msgstr "COBRAR  E"
+
+#: scripts/hilo.gd:212
+msgid "LEAVE THE TABLE"
+msgstr "DEJAR LA MESA"
+
+#: scripts/hilo.gd:233
+msgid "SILAS: %s"
+msgstr "SILAS: %s"
+
+#: scripts/hilo.gd:234
+msgid "BANK  %d"
+msgstr "BANCA  %d"
+
+#: scripts/hilo.gd:235
+msgid "STAKE %d"
+msgstr "APUESTA %d"
+
+#: scripts/hilo.gd:236
+msgid "HANDS WON %d/%d"
+msgstr "MANOS GANADAS %d/%d"
+
+#: scripts/hilo.gd:237
+msgid "HAND %d/%d"
+msgstr "MANO %d/%d"
+
+#: scripts/hilo.gd:251
+msgid "Place your stake"
+msgstr "Haz tu apuesta"
+
+#: scripts/hilo.gd:264
+msgid "A/D stake · E deal"
+msgstr "A/D apostar · E repartir"
+
+#: scripts/hilo.gd:264
+msgid "W higher · S lower · E cash out"
+msgstr "W mayor · S menor · E cobrar"
+
+#: scripts/hilo.gd:264
+msgid "E leave"
+msgstr "E irte"
+
+#: scripts/hilo.gd:265
+msgid "%s · Esc quit"
+msgstr "%s · Esc salir"
+
+#: scripts/hilo.gd:276
+msgid "VEIL"
+msgstr "VELO"
+
+#: scripts/interactable.gd:19
+msgid "Use"
+msgstr "Usar"
+
+#: scripts/lockpick.gd:99
+msgid "CLICK"
+msgstr "CLIC"
+
+#: scripts/lockpick.gd:102
+msgid "UNLOCKED"
+msgstr "ABIERTO"
+
+#: scripts/lockpick.gd:116
+msgid "THE PICK SNAPPED"
+msgstr "LA GANZÚA SE ROMPIÓ"
+
+#: scripts/lockpick.gd:119
+msgid "OUT OF PICKS"
+msgstr "SIN GANZÚAS"
+
+#: scripts/lockpick.gd:158
+msgid "SHEAR"
+msgstr "CORTE"
+
+#: scripts/lockpick.gd:174
+msgid "TENSION"
+msgstr "TENSIÓN"
+
+#: scripts/lockpick.gd:182
+msgid "PICKS x%d"
+msgstr "GANZÚAS x%d"
+
+#: scripts/lockpick.gd:183
+msgid "PIN %d / %d"
+msgstr "PERNO %d / %d"
+
+#: scripts/lockpick.gd:186
+msgid "A/D or mouse — feel for the pin · hold W / click — lift · Esc — quit"
+msgstr "A/D o mouse — busca el perno · mantén W / clic — levantar · Esc — salir"
+
+#: scripts/main_menu.gd:18
+msgid "Last Postcard"
+msgstr "Última postal"
+
+#: scripts/main_menu.gd:18
+msgid "\"Hollowmere is beautiful. Don't come.\""
+msgstr "\"Hollowmere es hermoso. No vengas.\""
+
+#: scripts/main_menu.gd:21
+msgid "Room 6"
+msgstr "Habitación 6"
+
+#: scripts/main_menu.gd:21
+msgid "A shape behind the glass. A hiss. The smell of burning."
+msgstr "Una silueta tras el vidrio. Un siseo. Olor a quemado."
+
+#: scripts/main_menu.gd:24
+msgid "For The Nine"
+msgstr "Por los nueve"
+
+#: scripts/main_menu.gd:24
+msgid "Who never came home."
+msgstr "Que nunca volvieron a casa."
+
+#: scripts/main_menu.gd:27 scripts/main_menu.gd:47
+msgid "Channel 7"
+msgstr "Canal 7"
+
+#: scripts/main_menu.gd:27
+msgid "\"They marked you. Stay in the grass.\""
+msgstr "\"Te marcaron. Quédate en la hierba.\""
+
+#: scripts/main_menu.gd:30
+msgid "St. Brendan"
+msgstr "St. Brendan"
+
+#: scripts/main_menu.gd:30
+msgid "The doors were never locked. Nobody leaves."
+msgstr "Las puertas nunca tuvieron llave. Nadie se va."
+
+#: scripts/main_menu.gd:33 scripts/main_menu.gd:41
+msgid "The Harvest"
+msgstr "La Cosecha"
+
+#: scripts/main_menu.gd:33
+msgid "It never talks. Its footsteps are the only loud thing."
+msgstr "Nunca habla. Sus pasos son lo único que suena fuerte."
+
+#: scripts/main_menu.gd:39
+msgid "The Mark"
+msgstr "La Marca"
+
+#: scripts/main_menu.gd:43
+msgid "I — The Mark"
+msgstr "I — La Marca"
+
+#: scripts/main_menu.gd:43
+msgid "II — Moth"
+msgstr "II — Polilla"
+
+#: scripts/main_menu.gd:43
+msgid "III — The Harvest"
+msgstr "III — La Cosecha"
+
+#: scripts/main_menu.gd:46
+msgid "Intro"
+msgstr "Llegada"
+
+#: scripts/main_menu.gd:46
+msgid "Room"
+msgstr "Habitación 6"
+
+#: scripts/main_menu.gd:46
+msgid "Hunt"
+msgstr "La cacería"
+
+#: scripts/main_menu.gd:46
+msgid "Square"
+msgstr "La plaza"
+
+#: scripts/main_menu.gd:46
+msgid "Sawmill"
+msgstr "El aserradero"
+
+#: scripts/main_menu.gd:46
+msgid "Boss"
+msgstr "El Leñador"
+
+#: scripts/main_menu.gd:46
+msgid "Blackout"
+msgstr "El apagón"
+
+#: scripts/main_menu.gd:46
+msgid "Free"
+msgstr "Libre"
+
+#: scripts/main_menu.gd:46
+msgid "C 2 Intro"
+msgstr "El muelle"
+
+#: scripts/main_menu.gd:47
+msgid "Zones"
+msgstr "Escuela y clínica"
+
+#: scripts/main_menu.gd:47
+msgid "Traitor"
+msgstr "La traidora"
+
+#: scripts/main_menu.gd:47
+msgid "C 3 Bell"
+msgstr "La campana"
+
+#: scripts/main_menu.gd:47
+msgid "Run"
+msgstr "La carrera"
+
+#: scripts/main_menu.gd:47
+msgid "Static"
+msgstr "Estática"
+
+#: scripts/main_menu.gd:47
+msgid "Gate"
+msgstr "La reja"
+
+#: scripts/main_menu.gd:47
+msgid "Harvest"
+msgstr "La Cosecha"
+
+#: scripts/main_menu.gd:47
+msgid "Harvester"
+msgstr "El Segador"
+
+#: scripts/main_menu.gd:48
+msgid "Epilogue"
+msgstr "Epílogo"
+
+#: scripts/main_menu.gd:49
+msgid "CONTINUE"
+msgstr "CONTINUAR"
+
+#: scripts/main_menu.gd:49
+msgid "NEW"
+msgstr "NUEVA"
+
+#: scripts/main_menu.gd:49
+msgid "LOAD"
+msgstr "CARGAR"
+
+#: scripts/main_menu.gd:49
+msgid "EXTRA"
+msgstr "EXTRA"
+
+#: scripts/main_menu.gd:50
+msgid "DEV"
+msgstr "DEV"
+
+#: scripts/main_menu.gd:50
+msgid "QUIT"
+msgstr "SALIR"
+
+#: scripts/main_menu.gd:338 scripts/main_menu.gd:342 scripts/main_menu.gd:521
+msgid "Hollowmere"
+msgstr "Hollowmere"
+
+#: scripts/main_menu.gd:392
+msgid "PRESS ANY KEY"
+msgstr "PULSA CUALQUIER TECLA"
+
+#: scripts/main_menu.gd:502
+msgid "Title"
+msgstr "Portada"
+
+#: scripts/main_menu.gd:502
+msgid "Select"
+msgstr "Elegir"
+
+#: scripts/main_menu.gd:504
+msgid "Adjust"
+msgstr "Ajustar"
+
+#: scripts/main_menu.gd:505
+msgid "Move"
+msgstr "Mover"
+
+#: scripts/main_menu.gd:505
+msgid "Tabs"
+msgstr "Pestañas"
+
+#: scripts/main_menu.gd:519
+msgid "No case open"
+msgstr "Ningún caso abierto"
+
+#: scripts/main_menu.gd:520
+msgid "Nothing saved yet. Start a new case and Hollowmere will keep your place."
+msgstr "Nada guardado aún. Abre un caso nuevo y Hollowmere guardará tu lugar."
+
+#: scripts/main_menu.gd:522
+msgid "NEW CASE"
+msgstr "CASO NUEVO"
+
+#: scripts/main_menu.gd:528
+msgid "Chapter %s"
+msgstr "Capítulo %s"
+
+#: scripts/main_menu.gd:534
+msgid "Mark %d%%"
+msgstr "Marca %d%%"
+
+#: scripts/main_menu.gd:538
+msgid "NEXT"
+msgstr "SIGUE"
+
+#: scripts/main_menu.gd:542
+msgid "RESUME"
+msgstr "CONTINUAR"
+
+#: scripts/main_menu.gd:549
+msgid "Empty-handed."
+msgstr "Con las manos vacías."
+
+#: scripts/main_menu.gd:565
+msgid "A new case"
+msgstr "Un caso nuevo"
+
+#: scripts/main_menu.gd:566
+msgid "Dusk. The bridge is out. Your sister's postcard says don't come."
+msgstr "Anochece. El puente cayó. La postal de tu hermana dice que no vengas."
+
+#: scripts/main_menu.gd:568
+msgid "Forgiving. For the story."
+msgstr "Indulgente. Para la historia."
+
+#: scripts/main_menu.gd:568
+msgid "As it was meant to be."
+msgstr "Como fue pensado."
+
+#: scripts/main_menu.gd:568
+msgid "Every round counts."
+msgstr "Cada bala cuenta."
+
+#: scripts/main_menu.gd:580
+msgid "Damage you take"
+msgstr "Daño que recibes"
+
+#: scripts/main_menu.gd:580
+msgid "Enemy toughness"
+msgstr "Aguante enemigo"
+
+#: scripts/main_menu.gd:580
+msgid "Ammo you find"
+msgstr "Munición que hallas"
+
+#: scripts/main_menu.gd:590
+msgid "BEGIN"
+msgstr "EMPEZAR"
+
+#: scripts/main_menu.gd:594
+msgid "Load game"
+msgstr "Cargar partida"
+
+#: scripts/main_menu.gd:594
+msgid "%d saved"
+msgstr "%d guardadas"
+
+#: scripts/main_menu.gd:596
+msgid "Nothing saved yet. Save from the pause menu; the game also saves on its own as you go."
+msgstr "Nada guardado aún. Guarda desde el menú de pausa; el juego también guarda solo mientras avanzas."
+
+#: scripts/main_menu.gd:614
+msgid "Ch.%s · %s"
+msgstr "Cap. %s · %s"
+
+#: scripts/main_menu.gd:619
+msgid "%d more below"
+msgstr "%d más abajo"
+
+#: scripts/main_menu.gd:640
+msgid "Extra"
+msgstr "Extra"
+
+#: scripts/main_menu.gd:640
+msgid "%d of %d"
+msgstr "%d de %d"
+
+#: scripts/main_menu.gd:658
+msgid "What you've done in Hollowmere, kept across every run."
+msgstr "Lo que hiciste en Hollowmere, guardado en cada partida."
+
+#: scripts/main_menu.gd:662
+msgid "Locked"
+msgstr "Bloqueado"
+
+#: scripts/main_menu.gd:686
+msgid "Changes apply at once and are kept."
+msgstr "Los cambios se aplican al instante y se guardan."
+
+#: scripts/main_menu.gd:718
+msgid "All 12 evidence: %s"
+msgstr "Las 12 evidencias: %s"
+
+#: scripts/main_menu.gd:718
+msgid "on"
+msgstr "sí"
+
+#: scripts/main_menu.gd:718
+msgid "off"
+msgstr "no"
+
+#: scripts/main_menu.gd:719
+msgid "Start holding every piece of evidence: the transmitter and the Signal ending (try III · Static)."
+msgstr "Empieza con todas las evidencias: el transmisor y el final Señal (prueba III · Static)."
+
+#: scripts/main_menu.gd:721
+msgid "Start Mark: %s"
+msgstr "Marca inicial: %s"
+
+#: scripts/main_menu.gd:721
+msgid "as the story has it"
+msgstr "la de la historia"
+
+#: scripts/main_menu.gd:722
+msgid "Start with the Mark at a set level (its notices, whispers, the heartbeat, the sightings)."
+msgstr "Empieza con la Marca a un nivel fijo (sus avisos, susurros, el latido, las apariciones)."
+
+#: scripts/main_menu.gd:728
+msgid "Chapter %s — %s. Normal, nothing saved."
+msgstr "Capítulo %s — %s. Normal, sin guardar."
+
+#: scripts/main_menu.gd:736
+msgid "Dev mode"
+msgstr "Modo dev"
+
+#: scripts/main_menu.gd:747
+msgid "Start any step of any chapter. Nothing is saved, nothing unlocks."
+msgstr "Empieza cualquier paso de cualquier capítulo. Nada se guarda, nada se desbloquea."
+
+#: scripts/main_menu.gd:752
+msgid "Leave Hollowmere?"
+msgstr "¿Dejar Hollowmere?"
+
+#: scripts/main_menu.gd:753
+msgid "Check out of room six. Your saves stay where you left them."
+msgstr "Entrega la habitación seis. Tus partidas se quedan donde las dejaste."
+
+#: scripts/main_menu.gd:757
+msgid "QUIT TO DESKTOP"
+msgstr "SALIR AL ESCRITORIO"
+
+#: scripts/moth_run.gd:18
+msgid "ALEX. IF YOU GOT THIS FAR YOU'RE WASTING DAYLIGHT. GOOD. SOMEBODY SHOULD. TRUST THE RADIO, NOT THE LANTERNS. CH 7.  - E."
+msgstr "ALEX. SI LLEGASTE HASTA AQUI ESTAS PERDIENDO LA LUZ DEL DIA. BIEN. ALGUIEN TIENE QUE HACERLO. CONFIA EN LA RADIO, NO EN LOS FAROLES. CANAL 7.  - E."
+
+#: scripts/moth_run.gd:19
+msgid "ALEX. IF YOU'RE READING THIS, I'M ALREADY GONE. I'M SORRY. FIND LUCIA. TELL THEM HIS NAME WAS TOMAS.  - E."
+msgstr "ALEX. SI ESTAS LEYENDO ESTO, YA NO ESTOY. LO SIENTO. ENCUENTRA A LUCIA. DILES QUE SE LLAMABA TOMAS.  - E."
+
+#: scripts/moth_run.gd:190
+msgid "1 TOKEN · NOISE 15 m"
+msgstr "1 FICHA · RUIDO 15 m"
+
+#: scripts/moth_run.gd:204
+msgid "W/S or mouse — fly · Esc quit"
+msgstr "W/S o mouse — volar · Esc salir"
+
+#: scripts/moth_run.gd:204
+msgid "E — leave the cabinet"
+msgstr "E — dejar la máquina"
+
+#: scripts/moth_run.gd:242
+msgid "READY"
+msgstr "LISTO"
+
+#: scripts/moth_run.gd:247 scripts/moth_run.gd:252 scripts/moth_run.gd:254
+msgid "YOU"
+msgstr "TU"
+
+#: scripts/moth_run.gd:250
+msgid "HIGH SCORES"
+msgstr "MEJORES PUNTAJES"
+
+#: scripts/moth_run.gd:263
+msgid "GAME OVER"
+msgstr "FIN DEL JUEGO"
+
+#: scripts/music_box.gd:23
+msgid "Silence the music box"
+msgstr "Callar la caja de música"
+
+#: scripts/radio_tuning.gd:64
+msgid "SIGNAL LOCKED"
+msgstr "SEÑAL FIJADA"
+
+#: scripts/radio_tuning.gd:76
+msgid "HOLD STEADY"
+msgstr "NO TE MUEVAS"
+
+#: scripts/radio_tuning.gd:115
+msgid "A/D or mouse — tune · hold on the signal"
+msgstr "A/D o mouse — sintonizar · quédate en la señal"
+
+#: scripts/settings.gd:13
+msgid "GENERAL"
+msgstr "GENERAL"
+
+#: scripts/settings.gd:13
+msgid "AUDIO"
+msgstr "AUDIO"
+
+#: scripts/settings.gd:13
+msgid "CONTROLS"
+msgstr "CONTROLES"
+
+#: scripts/settings.gd:13
+msgid "GAMEPLAY & ACCESSIBILITY"
+msgstr "JUEGO Y ACCESIBILIDAD"
+
+#: scripts/settings.gd:13
+msgid "VIDEO"
+msgstr "VIDEO"
+
+#: scripts/settings.gd:17
+msgid "Language"
+msgstr "Idioma"
+
+#: scripts/settings.gd:17
+msgid "The game's text: menus, subtitles, notes, signs."
+msgstr "El texto del juego: menús, subtítulos, notas, carteles."
+
+#: scripts/settings.gd:18
+msgid "Master volume"
+msgstr "Volumen general"
+
+#: scripts/settings.gd:18
+msgid "Everything you hear."
+msgstr "Todo lo que oyes."
+
+#: scripts/settings.gd:19 scripts/settings.gd:39 scripts/settings.gd:40
+msgid "Music"
+msgstr "Música"
+
+#: scripts/settings.gd:19
+msgid "The score: exploring, the hunts, the bosses."
+msgstr "La banda sonora: exploración, cacerías, jefes."
+
+#: scripts/settings.gd:20
+msgid "Sound effects"
+msgstr "Efectos de sonido"
+
+#: scripts/settings.gd:20
+msgid "Steps, shots, doors, the town around you."
+msgstr "Pasos, disparos, puertas, el pueblo a tu alrededor."
+
+#: scripts/settings.gd:21
+msgid "Voices"
+msgstr "Voces"
+
+#: scripts/settings.gd:21
+msgid "The characters' babble and the Mark's whispers."
+msgstr "El balbuceo de los personajes y los susurros de la Marca."
+
+#: scripts/settings.gd:22
+msgid "Mouse sensitivity"
+msgstr "Sensibilidad del mouse"
+
+#: scripts/settings.gd:22
+msgid "How far the camera turns per mouse move."
+msgstr "Cuánto gira la cámara con cada movimiento del mouse."
+
+#: scripts/settings.gd:23
+msgid "Gamepad look sensitivity"
+msgstr "Sensibilidad del control"
+
+#: scripts/settings.gd:23
+msgid "How fast the right stick turns the camera."
+msgstr "Qué tan rápido gira la cámara el stick derecho."
+
+#: scripts/settings.gd:24
+msgid "Invert look up / down"
+msgstr "Invertir arriba / abajo"
+
+#: scripts/settings.gd:24
+msgid "Mouse and right stick: up looks down."
+msgstr "Mouse y stick derecho: arriba mira abajo."
+
+#: scripts/settings.gd:25
+msgid "Camera shake"
+msgstr "Vibración de cámara"
+
+#: scripts/settings.gd:25
+msgid "Shots, blows and hits shaking the view. 0% = none."
+msgstr "Disparos, golpes e impactos que sacuden la vista. 0% = nada."
+
+#: scripts/settings.gd:26
+msgid "Hit-stop"
+msgstr "Pausa de impacto"
+
+#: scripts/settings.gd:26
+msgid "The split-second freeze when a blow or a shot lands."
+msgstr "La congelación de un instante cuando entra un golpe o un disparo."
+
+#: scripts/settings.gd:27
+msgid "Mark screen effects"
+msgstr "Efectos de la Marca"
+
+#: scripts/settings.gd:27
+msgid "The Mark's vignette, pulse, colour split and wobble."
+msgstr "La viñeta, el pulso, el corrimiento de color y la ondulación de la Marca."
+
+#: scripts/settings.gd:28
+msgid "Hurt screen edges"
+msgstr "Bordes de dolor"
+
+#: scripts/settings.gd:28
+msgid "The red, blurred edges when you're hurt."
+msgstr "Los bordes rojos y borrosos cuando estás herido."
+
+#: scripts/settings.gd:29
+msgid "Mark whispers"
+msgstr "Susurros de la Marca"
+
+#: scripts/settings.gd:29
+msgid "Voices behind you as the Mark grows (past 25%)."
+msgstr "Voces a tu espalda cuando la Marca crece (más de 25%)."
+
+#: scripts/settings.gd:30
+msgid "Mark sightings"
+msgstr "Apariciones de la Marca"
+
+#: scripts/settings.gd:30
+msgid "A figure standing far off in the dark (past 70%). Cosmetic."
+msgstr "Una figura de pie, lejos, en la oscuridad (más de 70%). Solo visual."
+
+#: scripts/settings.gd:31
+msgid "Enemy alert icons"
+msgstr "Iconos de alerta"
+
+#: scripts/settings.gd:31
+msgid "\"?\" and \"!\" over enemies that notice you."
+msgstr "\"?\" y \"!\" sobre los enemigos que te notan."
+
+#: scripts/settings.gd:32
+msgid "Off-screen threat arcs"
+msgstr "Arcos de amenaza"
+
+#: scripts/settings.gd:32
+msgid "Red arcs at the screen edge toward enemies onto you."
+msgstr "Arcos rojos en el borde de la pantalla hacia los enemigos que te persiguen."
+
+#: scripts/settings.gd:33
+msgid "Visibility eye"
+msgstr "Ojo de visibilidad"
+
+#: scripts/settings.gd:33
+msgid "The HUD eye showing how visible you are."
+msgstr "El ojo del HUD que muestra qué tan visible eres."
+
+#: scripts/settings.gd:34
+msgid "Fullscreen"
+msgstr "Pantalla completa"
+
+#: scripts/settings.gd:34
+msgid "Fullscreen or a window."
+msgstr "Pantalla completa o ventana."
+
+#: scripts/settings.gd:35
+msgid "VSync"
+msgstr "VSync"
+
+#: scripts/settings.gd:35
+msgid "Sync to the monitor: no tearing (a frame of latency)."
+msgstr "Sincroniza con el monitor: sin cortes de imagen (un cuadro de retraso)."
+
+#: scripts/settings.gd:36
+msgid "Film grain & vignette"
+msgstr "Grano y viñeta"
+
+#: scripts/settings.gd:36
+msgid "The grain and the dark corners over the picture."
+msgstr "El grano y las esquinas oscuras sobre la imagen."
+
+#: scripts/settings.gd:194
+msgid "ON"
+msgstr "SÍ"
+
+#: scripts/settings.gd:194
+msgid "OFF"
+msgstr "NO"
+
+#: player/guide.gd:16
+msgid "Lakeview Motel"
+msgstr "Lakeview Motel"
+
+#: player/guide.gd:18
+msgid "St. Agnes Clinic"
+msgstr "Clínica St. Agnes"
+
+#: player/guide.gd:18
+msgid "Hollowmere Elementary"
+msgstr "Escuela Primaria de Hollowmere"
+
+#: player/guide.gd:19
+msgid "Harbor & Lighthouse"
+msgstr "Puerto y Faro"
+
+#: player/guide.gd:19
+msgid "Collapsed Bridge"
+msgstr "Puente derrumbado"
+
+#: player/guide.gd:222 player/guide.gd:223
+msgid "NESW"
+msgstr "NESO"
+
+#: player/guide.gd:269
+msgid ""
+"HOLLOWMERE\n"
+"\n"
+"%s\n"
+"\n"
+"OBJECTIVE\n"
+"%s%s\n"
+"\n"
+"\n"
+"[M] close"
+msgstr ""
+"HOLLOWMERE\n"
+"\n"
+"%s\n"
+"\n"
+"OBJETIVO\n"
+"%s%s\n"
+"\n"
+"\n"
+"[M] cerrar"
+
+#: player/guide.gd:270
+msgid "You are near: %s"
+msgstr "Estás cerca de: %s"
+
+#: player/guide.gd:270
+msgid "Outside town"
+msgstr "Fuera del pueblo"
+
+#: player/guide.gd:271
+msgid "%s away"
+msgstr "a %s"
+
+#: player/hud.gd:76
+msgid "WASD move · Shift run · F light"
+msgstr "WASD moverte · Shift correr · F linterna"
+
+#: player/hud.gd:276
+msgid "Smoke"
+msgstr "Humo"
+
+#: player/hud.gd:276
+msgid "Tea"
+msgstr "Té"
+
+#: player/hud.gd:297
+msgid "EMPTY"
+msgstr "VACÍO"
+
+#: player/hud.gd:300
+msgid "Empty. B strikes."
+msgstr "Vacía. B para golpear."
+
+#: player/hud.gd:302
+msgid "nocking"
+msgstr "cargando flecha"
+
+#: player/hud.gd:302
+msgid "reloading"
+msgstr "recargando"
+
+#: player/hud.gd:327
+msgid "Takedown"
+msgstr "Derribo"
+
+#: player/hud.gd:436
+msgid "MARK +%s%%"
+msgstr "MARCA +%s%%"
+
+#: player/hud.gd:545
+msgid "REVOLVER"
+msgstr "REVÓLVER"
+
+#: player/hud.gd:545
+msgid "FLARE"
+msgstr "BENGALAS"
+
+#: player/hud.gd:545
+msgid "SHOTGUN"
+msgstr "ESCOPETA"
+
+#: player/hud.gd:545
+msgid "BOW"
+msgstr "ARCO"
+
+#: player/hud.gd:546
+msgid "AXE"
+msgstr "HACHA"
+
+#: player/hud.gd:546
+msgid "BAT"
+msgstr "BATE"
+
+#: player/hud.gd:546
+msgid "FISTS"
+msgstr "PUÑOS"
+
+#: player/hud.gd:686
+msgid "MASH!"
+msgstr "¡MACHACA!"
+
+#: player/hud.gd:723
+msgid "OK"
+msgstr "BIEN"
+
+#: player/hud.gd:723
+msgid "FAILED"
+msgstr "FALLASTE"
+
+#: player/player.gd:665
+msgid "DOUBLE TAP"
+msgstr "DOBLE TIRO"
+
+#: player/player.gd:1271
+msgid "MASK ON"
+msgstr "MÁSCARA PUESTA"
+
+#: player/player.gd:1271
+msgid "MASK OFF"
+msgstr "SIN MÁSCARA"
+
+#: player/player.gd:1276
+msgid "FILTER REPLACED"
+msgstr "FILTRO CAMBIADO"
+
+#: player/player.gd:1292
+msgid "FILTER EMPTY"
+msgstr "FILTRO AGOTADO"
+
+#: player/player.gd:1320
+msgid "SMOKE"
+msgstr "HUMO"
+
+#: player/player.gd:1330
+msgid "ELENA'S TEA  ·  MARK -15%"
+msgstr "TÉ DE ELENA  ·  MARCA -15%"
+
+#: player/player.gd:1435
+msgid "TAKEDOWN"
+msgstr "DERRIBO"
+
+#: player/weapons.gd:21
+msgid "Revolver"
+msgstr "Revólver"
+
+#: player/weapons.gd:23
+msgid "Flare gun"
+msgstr "Pistola de bengalas"
+
+#: player/weapons.gd:25
+msgid "Shotgun"
+msgstr "Escopeta"
+
+#: player/weapons.gd:28
+msgid "Hunting bow"
+msgstr "Arco de caza"
+
+#: player/weapons.gd:30
+msgid "Fire axe"
+msgstr "Hacha de bombero"
+
+#: player/weapons.gd:32
+msgid "Nail bat"
+msgstr "Bate con clavos"
+
+#: player/weapons.gd:36
+msgid "Fists"
+msgstr "Puños"
+
+#: player/weapons.gd:38
+msgid "Bash"
+msgstr "Culatazo"
+
+#: maps/hollowmere.tscn:2865
+msgid "BRIDGE OUT"
+msgstr "PUENTE CAÍDO"
+
+#: maps/hollowmere.tscn:2880
+msgid "HOLLOWMERE  POP. 1413"
+msgstr "HOLLOWMERE  POB. 1413"
+
+#: maps/hollowmere.tscn:4194
+msgid "DANGER"
+msgstr "PELIGRO"
+
+#: maps/hollowmere.tscn:4209
+msgid "KEEP OUT"
+msgstr "NO PASAR"
+
+#: maps/hollowmere.tscn:4224
+msgid "PRIVATE LAND"
+msgstr "PROPIEDAD PRIVADA"
+
+#: maps/hollowmere.tscn:4870
+msgid ""
+"FOR THE NINE\n"
+"WHO NEVER\n"
+"CAME HOME"
+msgstr ""
+"POR LOS NUEVE\n"
+"QUE NUNCA\n"
+"VOLVIERON"
+
+#: maps/hollowmere.tscn:4938
+msgid ""
+"HOLLOWMERE MEMORIAL PARK\n"
+"CLOSED AT DUSK"
+msgstr ""
+"HOLLOWMERE MEMORIAL PARK\n"
+"CERRADO AL ANOCHECER"

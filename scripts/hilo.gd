@@ -206,7 +206,7 @@ func _origin() -> Vector2:
 func _buttons() -> Array:
 	match _phase:
 		"bet": return [[Rect2(-150, 66, 40, 18), "left", "<"], [Rect2(110, 66, 40, 18), "right", ">"],
-			[Rect2(-50, 66, 100, 18), "deal", "DEAL  %d" % _stake() if _stake_i >= 0 else "DEAL  (a drink)"]]
+			[Rect2(-50, 66, 100, 18), "deal", tr("DEAL  %d") % _stake() if _stake_i >= 0 else "DEAL  (a drink)"]]
 		"guess": return [[Rect2(-150, 66, 90, 18), "hi", "HIGHER  W"], [Rect2(-45, 66, 90, 18), "lo", "LOWER  S"],
 			[Rect2(60, 66, 90, 18), "cash", "CASH OUT  E" if _chain > 0 else "--"]]
 		"end": return [[Rect2(-50, 66, 100, 18), "ok", "LEAVE THE TABLE"]]
@@ -230,11 +230,11 @@ func _draw() -> void:
 	draw_circle(Vector2(150, -50), 14.0, Color(0.06, 0.15, 0.1))  # glass ring stain
 	draw_arc(Vector2(150, -50), 14.0, 0, TAU, 20, Color(0.05, 0.12, 0.08), 2.0)
 	# Silas's line + stats
-	_text(Vector2(-200, -104), 400, "SILAS: " + _line, 8, CREAM, true)
-	_text(Vector2(-186, -66), 120, "BANK  %d" % _bank(), 8, BRASS, false, HORIZONTAL_ALIGNMENT_LEFT)
-	_text(Vector2(-186, -54), 120, "STAKE %d" % (_bet if _phase != "bet" else _stake()), 8, BRASS, false, HORIZONTAL_ALIGNMENT_LEFT)
-	_text(Vector2(66, -66), 120, "HANDS WON %d/%d" % [_wins, wins_needed], 8, CREAM, false, HORIZONTAL_ALIGNMENT_RIGHT)
-	_text(Vector2(66, -54), 120, "HAND %d/%d" % [_hands, MAX_HANDS], 8, CREAM, false, HORIZONTAL_ALIGNMENT_RIGHT)
+	_text(Vector2(-200, -104), 400, tr("SILAS: %s") % tr(_line), 8, CREAM, true)
+	_text(Vector2(-186, -66), 120, tr("BANK  %d") % _bank(), 8, BRASS, false, HORIZONTAL_ALIGNMENT_LEFT)
+	_text(Vector2(-186, -54), 120, tr("STAKE %d") % (_bet if _phase != "bet" else _stake()), 8, BRASS, false, HORIZONTAL_ALIGNMENT_LEFT)
+	_text(Vector2(66, -66), 120, tr("HANDS WON %d/%d") % [_wins, wins_needed], 8, CREAM, false, HORIZONTAL_ALIGNMENT_RIGHT)
+	_text(Vector2(66, -54), 120, tr("HAND %d/%d") % [_hands, MAX_HANDS], 8, CREAM, false, HORIZONTAL_ALIGNMENT_RIGHT)
 	# Silas's token stack (shrinks as you win)
 	for i in clampi(12 - int(_delta / 10.0), 2, 20):
 		draw_rect(Rect2(-178, 40 - i * 3, 18, 3), BRASS if i % 2 else BRASS.darkened(0.3))
@@ -262,7 +262,7 @@ func _draw() -> void:
 		draw_rect(b[0], BRASS, false)
 		_text(b[0].position + Vector2(0, 13), b[0].size.x, b[2], 8, CREAM)
 	var hint := "A/D stake · E deal" if _phase == "bet" else ("W higher · S lower · E cash out" if _phase != "end" else "E leave")
-	_text(Vector2(-200, 104), 400, hint + " · Esc quit", 8, Color(0.85, 0.82, 0.72), true)
+	_text(Vector2(-200, 104), 400, tr("%s · Esc quit") % tr(hint), 8, Color(0.85, 0.82, 0.72), true)
 
 
 func _card(p: Vector2, v: int) -> void:
@@ -297,6 +297,12 @@ func _card_back(p: Vector2) -> void:
 
 func _text(pos: Vector2, width: float, s: String, fsize: int, col: Color, outline := false,
 		align := HORIZONTAL_ALIGNMENT_CENTER) -> void:
+	## s: an English id (drawn translated) or text already put together with tr(). A translation too wide for
+	## `width` is drawn a size or two smaller (never below 7, or its own size if that's smaller).
+	var t := tr(s)
+	if t != s and width > 0.0:
+		while fsize > 7 and _font.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x > width:
+			fsize -= 1
 	if outline:
-		draw_string_outline(_font, pos, s, align, width, fsize, 3, Color(0, 0, 0, 0.85))
-	draw_string(_font, pos, s, align, width, fsize, col)
+		draw_string_outline(_font, pos, t, align, width, fsize, 3, Color(0, 0, 0, 0.85))
+	draw_string(_font, pos, t, align, width, fsize, col)

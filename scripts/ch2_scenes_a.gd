@@ -406,7 +406,7 @@ func school_arrive(boxes_silenced: int) -> void:
 func music_box_silenced(left: int) -> void:
 	## Bark: a playground music box was just silenced; `left` still playing.
 	if left > 0:
-		hud.subtitle("Alex", "Quiet now. %d to go." % left, 2.0)
+		hud.subtitle("Alex", "Quiet now. %d to go.", 2.0, [left])
 	else:
 		hud.banner("RECESS: ALL QUIET", Color(0.8, 0.8, 0.7), 1.2)
 		hud.subtitle("Alex", "That's all of them. She won't hear me coming.", 2.4)
@@ -420,7 +420,7 @@ func pa_bark() -> void:
 func desk_evidence(n: int) -> void:
 	## Short read of a desk find (evidence #3 / #4). Not a cinematic.
 	_add_evidence(n)
-	hud.banner("EVIDENCE #%d" % n, Color(0.8, 0.8, 0.9), 1.0)
+	hud.banner(tr("EVIDENCE #%d") % n, Color(0.8, 0.8, 0.9), 1.0)
 	if n == 3:
 		hud.say([["Alex", "Attendance, the week of the festival.", 2.2],
 			["Alex", "Six names crossed out in red. 'Recruited.'", 2.6]])
@@ -503,7 +503,7 @@ func key_part2_found() -> void:
 		await d.wait(0.5)
 	c1a._read_shot(alex)
 	var n: int = d.flags.get("key_parts", 2)
-	hud.banner("KEY PART %d / 3" % n, Color(0.6, 0.9, 1.0), 1.5)
+	hud.banner(tr("KEY PART %d / 3") % n, Color(0.6, 0.9, 1.0), 1.5)
 	await hud.subtitle("Alex", "Taped under a child's desk. Nora's piece.", 2.4)
 	await hud.subtitle("Alex", "One more." if n < 3 else "All three. The tunnel gate.", 1.8)
 	key.queue_free()

@@ -425,7 +425,7 @@ func blackout() -> void:
 	await d.wait(2.5)
 	var f: Dictionary = d.flags
 	var owen_text: String = {"spared": "Owen: spared", "killed": "Owen: killed"}.get(f.owen, "Owen: fled")
-	await hud.say([["", "End of Chapter 1.  %s · Evidence %d · Tokens %d · Key part %s" % [owen_text,
+	await hud.say([["", "End of Chapter 1.  %s · Evidence %d · Tokens %d · Key part %s", -1.0, [tr(owen_text),
 		f.evidence.size(), f.tokens, "1/3" if f.key_part else "0/3"]]])
 	d.release_stand_in()
 	d.cinematic(false)
@@ -448,11 +448,11 @@ func tripwire_rang() -> void:
 
 func tripwire_cut(left: int) -> void:
 	## One wire cut, `left` to go. Not awaited.
-	hud.banner("WIRE CUT  ·  %d LEFT" % left, Color(0.85, 0.8, 0.6), 0.9)
+	hud.banner(tr("WIRE CUT  ·  %d LEFT") % left, Color(0.85, 0.8, 0.6), 0.9)
 
 
 func tripwire_done(clean: bool, tokens: int) -> void:
 	## The last wire: evidence #2 was tied under its stake. Not awaited.
-	hud.banner("EVIDENCE #2" + ("  +%d TOKENS" % tokens if clean else ""), Color(0.8, 0.8, 0.9), 1.2)
+	hud.banner(tr("EVIDENCE #%d") % 2 + ("  " + tr("+%d TOKENS") % tokens if clean else ""), Color(0.8, 0.8, 0.9), 1.2)
 	hud.say([["Alex", "Oilcloth, tied under the stake. Moth's handwriting.", 2.6],
 		["Alex", "\"His wires. He marks whoever gets through.\" Photos of doors.", 3.0]])

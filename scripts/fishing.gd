@@ -152,7 +152,7 @@ func _reel(delta: float, held: bool) -> void:
 	elif _slack > 2.5:
 		_finish("", 0, "IT SPAT THE HOOK")
 	elif line <= 0.0:
-		_finish(_fish[0], _fish[1], "%s! +%d TOKENS" % [String(_fish[0]).to_upper(), _fish[1]])
+		_finish(_fish[0], _fish[1], tr("%s! +%d TOKENS") % [tr(String(_fish[0])).to_upper(), _fish[1]])
 
 
 func _finish(fish: String, tokens: int, text: String) -> void:
@@ -271,7 +271,7 @@ func _draw_ui() -> void:
 		draw_rect(Rect2(-120 + 24, 90, 240 * 0.75, 8), Color(0.2, 0.5, 0.22))
 		var mx := roundf(-120.0 + 240.0 * minf(tension, 1.0))
 		draw_rect(Rect2(mx - 1, 86, 3, 16), Color(1, 0.95, 0.8))
-		_text(Vector2(-120, 110), 90, "LINE %d m" % roundi(line * _cast * 30.0 + 2.0), 8, PAPER, false, HORIZONTAL_ALIGNMENT_LEFT)
+		_text(Vector2(-120, 110), 90, tr("LINE %d m") % roundi(line * _cast * 30.0 + 2.0), 8, PAPER, false, HORIZONTAL_ALIGNMENT_LEFT)
 		var arrow := "<<< PULLS LEFT" if pull < 0.0 else "PULLS RIGHT >>>"
 		_text(Vector2(0, 110), 120, arrow, 8, Color(1, 0.8, 0.4), false, HORIZONTAL_ALIGNMENT_RIGHT)
 	var col := Color(0.4, 1.0, 0.45) if _result[1] > 0 else (Color(1, 0.35, 0.25) if _end_t >= 0.0 or tension > 0.85 else Color(1, 0.85, 0.5))
@@ -286,6 +286,12 @@ func _draw_ui() -> void:
 
 func _text(pos: Vector2, width: float, s: String, fsize: int, col: Color, outline := false,
 		align := HORIZONTAL_ALIGNMENT_CENTER) -> void:
+	## s: an English id (drawn translated) or text already put together with tr(). A translation too wide for
+	## `width` is drawn a size or two smaller (never below 7, or its own size if that's smaller).
+	var t := tr(s)
+	if t != s and width > 0.0:
+		while fsize > 7 and _font.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x > width:
+			fsize -= 1
 	if outline:
-		draw_string_outline(_font, pos, s, align, width, fsize, 3, Color(0, 0, 0, 0.85))
-	draw_string(_font, pos, s, align, width, fsize, col)
+		draw_string_outline(_font, pos, t, align, width, fsize, 3, Color(0, 0, 0, 0.85))
+	draw_string(_font, pos, t, align, width, fsize, col)

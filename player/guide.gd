@@ -2,6 +2,7 @@ extends CanvasLayer
 ## Navigation aids: minimap, full map (M / Back), compass and objective waypoint. HUD.objective() calls
 ## set_target(target, text) with a Vector3, a Node3D (follows it) or null (no waypoint).
 ## Everything hides while player.controls_enabled is false (cinematics).
+## Zone names and the panel's words are English ids, drawn through tr() every frame (a language switch shows at once).
 
 ## maps/hollowmere_map.png is made by tools/map_image.py: square, north (-Z) up,
 ## px = (x - MAP_X0) * PPM, py = (z - MAP_Z0) * PPM. Keep these in sync with that script.
@@ -201,7 +202,7 @@ func _draw_compass(goal: Variant) -> void:
 			continue
 		var x := cx + rel / HALF_A * HALF_W
 		if i % 6 == 0:
-			_text(c, Vector2(x, y + 11), "NESW"[int(i / 6.0)], 10, Color(0.9, 0.35, 0.28) if i == 0 else PAPER, 14)
+			_text(c, Vector2(x, y + 11), _bearings()[int(i / 6.0)], 10, Color(0.9, 0.35, 0.28) if i == 0 else PAPER, 14)
 		else:
 			c.draw_line(Vector2(x, y + (8 if i % 3 == 0 else 10)), Vector2(x, y + 14), Color(PAPER, 0.6))
 	c.draw_line(Vector2(cx, y - 2), Vector2(cx, y + 2), PAPER, 1.0)
@@ -214,6 +215,12 @@ func _draw_compass(goal: Variant) -> void:
 		else:
 			_diamond(c, Vector2(x, y + 7), 3.5)
 		_text(c, Vector2(x, y + 25), _dist(goal), 9, MARK, 40)
+
+
+func _bearings() -> String:
+	## N E S W as the language writes them (four letters: Spanish's west is O).
+	var b := tr("NESW")
+	return b if b.length() == 4 else "NESW"
 
 
 func _draw_waypoint(goal: Vector3) -> void:
@@ -248,7 +255,7 @@ func _draw_map(goal: Variant) -> void:
 	var here := ""
 	for z in ZONES:
 		var mid: Vector2 = to_screen.call((z[1] + z[3]) / 2.0, (z[2] + z[4]) / 2.0)
-		_text(c, mid + Vector2(0, 3), z[0].to_upper(), 8, Color(0.2, 0.12, 0.08), 110, Color(PAPER, 0.8))
+		_zone_label(c, mid + Vector2(0, 3), tr(z[0]).to_upper())
 		if p.x > z[1] and p.x < z[3] and p.z > z[2] and p.z < z[4]:
 			here = z[0]
 	_text(c, r.position + Vector2(side - 14, 16), "N", 11, Color(0.6, 0.12, 0.1), 12)
@@ -259,6 +266,26 @@ func _draw_map(goal: Variant) -> void:
 	var px := r.end.x + 14
 	_panel.position = Vector2(px, r.position.y + 10)
 	_panel.size = Vector2(c.size.x - px - 12, 0)
-	_panel.text = "HOLLOWMERE\n\n%s\n\nOBJECTIVE\n%s%s\n\n\n[M] close" % [
-		"You are near: " + here if here != "" else "Outside town", text if text != "" else "—",
-		"\n" + _dist(goal) + " away" if goal != null else ""]
+	_panel.text = tr("HOLLOWMERE\n\n%s\n\nOBJECTIVE\n%s%s\n\n\n[M] close") % [
+		tr("You are near: %s") % tr(here) if here != "" else tr("Outside town"), tr(text) if text != "" else "—",
+		"\n" + tr("%s away") % _dist(goal) if goal != null else ""]
+
+
+func _zone_label(c: Control, at: Vector2, s: String) -> void:
+	## A zone's name on the paper map, centred on at; one too wide for its 110 px breaks onto a second line.
+	if _font.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x <= 110.0 or not " " in s:
+		_text(c, at, s, 8, Color(0.2, 0.12, 0.08), 110, Color(PAPER, 0.8))
+		return
+	var words := s.split(" ")
+	var best := 1
+	for i in range(1, words.size()):  # the break that leaves the longer line shortest
+		var a := " ".join(words.slice(0, i))
+		var b := " ".join(words.slice(i))
+		var w := maxf(_font.get_string_size(a, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x,
+			_font.get_string_size(b, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x)
+		var bw := maxf(_font.get_string_size(" ".join(words.slice(0, best)), HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x,
+			_font.get_string_size(" ".join(words.slice(best)), HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x)
+		if w < bw:
+			best = i
+	_text(c, at - Vector2(0, 4.5), " ".join(words.slice(0, best)), 8, Color(0.2, 0.12, 0.08), 110, Color(PAPER, 0.8))
+	_text(c, at + Vector2(0, 4.5), " ".join(words.slice(best)), 8, Color(0.2, 0.12, 0.08), 110, Color(PAPER, 0.8))

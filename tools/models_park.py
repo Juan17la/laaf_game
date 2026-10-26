@@ -681,7 +681,7 @@ def place(W, rng):
     W.light(gx, 2.3, gz, B.WARM, 0.7, 6, flicker=True)
     W.inst("park_statue", -19, -7.3)
     W.board_label("FOR THE NINE\nWHO NEVER\nCAME HOME", (-19, -7.3, 0), (0, 1.0, 0.615), (0.8, 0.42), (0.55, 0.62, 0.5),
-                  12)
+                  12, localize=True)
     W.inst("park_kiosk", 23, -7.5, -90)
     W.board_label("REFRESHMENTS", (23, -7.5, -90), (0, 2.555, 1.255), (2.2, 0.29), (0.75, 0.7, 0.55), 28)  # (above
     #                                                                       the shutter box hiding its lower edge)
@@ -697,7 +697,7 @@ def place(W, rng):
     W.board_label("HOLLOWMERE MEMORIAL PARK", (-29.3, 0, -90), (0, 3.02, 0.025), (6.9, 0.52), (0.62, 0.6, 0.5), 34)
     W.inst("park_sign", -4.8, 28.3)
     W.board_label("HOLLOWMERE MEMORIAL PARK\nCLOSED AT DUSK", (-4.8, 28.3, 0), (0, 1.28, 0.02), (1.8, 0.72),
-                  (0.7, 0.68, 0.58), 16)
+                  (0.7, 0.68, 0.58), 16, localize=True)
     W.inst("park_gate", -17.25, 29.3)
 
     # --- wrought-iron fence round the lawns: gaps for the lanes, planters and a pulled-out panel

@@ -8,6 +8,8 @@ extends SceneTree
 ##   not clipped: nothing in front of the text within CLEAR (an awning, a header, the roof)
 ##   faces out: single-sided, its front toward open air
 ##   readable at 640x360: capitals at least MIN_CAP tall, glyphs rasterised no coarser than MAX_TEXEL per texel
+## In every language (LANGUAGES): the notices that translate (scripts/sign_label.gd) are measured as they read in
+## English and in Spanish, the town's own names (auto_translate off) are the same in both.
 ## Prints each sign's board and text box.  godot --headless --path . -s tests/signs_test.gd [-- --verbose]
 
 const BOARD_GAP := 0.08  ## m: the board is at most this far behind the text...
@@ -19,6 +21,7 @@ const MIN_CAP := 0.05  ## m: smallest capitals (a plaque read up close)
 const MAX_TEXEL := 0.02  ## m per font texel: coarser and the letters break up into blocks
 const CAP := 0.72  ## the default font's capital height, in ems
 const STAND_IN := 1 << 18  ## collision layer of the meshes' stand-in shapes
+const LANGUAGES := ["en", "es"]
 
 var _space: PhysicsDirectSpaceState3D
 var _verbose := false
@@ -92,6 +95,25 @@ func _run() -> void:
 		await physics_frame
 	_space = world.get_world_3d().direct_space_state
 	var bad := 0
+	var boot := TranslationServer.get_locale()
+	for lang in LANGUAGES:
+		TranslationServer.set_locale(lang)  # (Label3D re-shapes its text, sign_label.gd its size, on the next frame)
+		for i in 2:
+			await process_frame
+		print("-- %s" % lang)
+		bad += _check_signs(labels)
+	TranslationServer.set_locale(boot)
+	if bad > 0:
+		push_error("SIGNS FAIL: %d sign checks (of %d signs, %d languages)" % [bad, labels.size(), LANGUAGES.size()])
+		quit(1)
+		return
+	print("SIGNS OK (%d, in %s)" % [labels.size(), ", ".join(LANGUAGES)])
+	quit(0)
+
+
+func _check_signs(labels: Array[Label3D]) -> int:
+	## Every sign as it reads in the current language; returns how many have a problem.
+	var bad := 0
 	for l in labels:
 		var problems: Array[String] = []
 		var text := l.get_aabb()  # (local: x along the text, y up, centred on the origin)
@@ -130,7 +152,7 @@ func _run() -> void:
 				problems.append("text %.2f x %.2f overruns its board %.2f x %.2f (margin %.3f, want %.2f)" %
 					[text.size.x, text.size.y, left + right, up + down, short, margin])
 			if _verbose:
-				print("  %s: board x %.2f..%.2f y %.2f..%.2f at %.3f; text %s" % [l.text.replace("\n", " / "),
+				print("  %s: board x %.2f..%.2f y %.2f..%.2f at %.3f; text %s" % [l.tr(l.text).replace("\n", " / "),
 					-left, right, -down, up, d0, text])
 		# nothing in front of the text: corners and middle
 		var front := l.global_basis.z.normalized()
@@ -141,14 +163,10 @@ func _run() -> void:
 			if not hit.is_empty():
 				problems.append("clipped: geometry %.2f m in front of the text" % (at.distance_to(hit.position)))
 				break
+		var shown := l.tr(l.text) if l.auto_translate_mode != Node.AUTO_TRANSLATE_MODE_DISABLED else l.text
 		if problems.is_empty():
-			print("ok  %s" % l.text.replace("\n", " / "))
+			print("ok  %s" % shown.replace("\n", " / "))
 		else:
 			bad += 1
-			print("BAD %s at %s: %s" % [l.text.replace("\n", " / "), l.global_position, "; ".join(problems)])
-	if bad > 0:
-		push_error("SIGNS FAIL: %d of %d signs" % [bad, labels.size()])
-		quit(1)
-		return
-	print("SIGNS OK (%d)" % labels.size())
-	quit(0)
+			print("BAD %s at %s: %s" % [shown.replace("\n", " / "), l.global_position, "; ".join(problems)])
+	return bad

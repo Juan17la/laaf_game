@@ -73,7 +73,7 @@ func _process(delta: float) -> void:
 		modulate.a = minf(_t / 0.25, 1.0)
 		_clean = _clean + delta if clean else maxf(_clean - delta * 2.0, 0.0)
 		if clean:
-			_status = "HOLD STEADY " + ".".repeat(int(_clean / HOLD * 4.0))
+			_status = tr("HOLD STEADY") + " " + ".".repeat(int(_clean / HOLD * 4.0))
 		elif Engine.get_process_frames() % 3 == 0:  # static text flicker
 			_status = ""
 			for i in 18:
@@ -172,8 +172,8 @@ func _draw_speaker() -> void:
 	draw_rect(Rect2(-154, 34, 100, 16), Color(0.42, 0.3, 0.12))
 	draw_rect(Rect2(-153, 35, 98, 14), Color(0.72, 0.56, 0.26))
 	draw_rect(Rect2(-153, 35, 98, 1), Color(0.9, 0.78, 0.45))
-	_text(Vector2(-153, 45), 98, "LANTERN RADIO CO.", 8, Color(0.25, 0.15, 0.05))
-	_text(Vector2(-153, 62), 98, "MODEL 7 · SHORT WAVE", 6, Color(0.55, 0.48, 0.38))
+	_plate(Vector2(-153, 45), 98, "LANTERN RADIO CO.", 8, Color(0.25, 0.15, 0.05))
+	_plate(Vector2(-153, 62), 98, "MODEL 7 · SHORT WAVE", 6, Color(0.55, 0.48, 0.38))
 
 
 func _dial_x(v: float) -> float:
@@ -187,8 +187,8 @@ func _draw_dial() -> void:
 	draw_rect(r, AMBER.darkened(0.25))
 	draw_rect(r.grow(-4), AMBER)
 	draw_rect(Rect2(r.position.x + 30, r.position.y + 8, r.size.x - 60, 20), AMBER.lightened(0.18))  # bulb glow
-	_text(Vector2(-42, -65), 60, "SW  CH", 6, INK)
-	_text(Vector2(98, -65), 60, "MHz", 6, INK, false, HORIZONTAL_ALIGNMENT_RIGHT)
+	_plate(Vector2(-42, -65), 60, "SW  CH", 6, INK)
+	_plate(Vector2(98, -65), 60, "MHz", 6, INK, false, HORIZONTAL_ALIGNMENT_RIGHT)
 	draw_line(Vector2(-40, -40), Vector2(156, -40), INK)
 	for i in 41:  # fine ticks
 		var x := roundf(_dial_x(i / 40.0))
@@ -200,10 +200,10 @@ func _draw_dial() -> void:
 		var x := roundf(_dial_x(v))
 		var col := Color(0.75, 0.08, 0.05) if ch == 7 else INK
 		draw_rect(Rect2(x, -48, 1, 8), col)
-		_text(Vector2(x - 8, -51), 16, str(ch), 8, col)
+		_plate(Vector2(x - 8, -51), 16, str(ch), 8, col)
 		if ch == 7:
 			draw_colored_polygon(PackedVector2Array([Vector2(x - 3, -36), Vector2(x + 4, -36), Vector2(x, -32)]), col)
-			_text(Vector2(x - 10, -26.5), 20, "CH 7", 6, col)
+			_plate(Vector2(x - 10, -26.5), 20, "CH 7", 6, col)
 	# static specks on the glass while off-station
 	for i in int((1.0 - _strength) * 14.0):
 		draw_rect(Rect2(Vector2(randf_range(-42, 156), randf_range(-70, -28)).floor(), Vector2(1, 1)), Color(1, 0.95, 0.8, 0.8))
@@ -226,11 +226,11 @@ func _draw_meter() -> void:
 		var inner := 22.0 if i % 5 else 19.0
 		draw_line(pivot + Vector2.from_angle(a) * inner, pivot + Vector2.from_angle(a) * 26.0, Color(0.7, 0.1, 0.05) if i >= 8 else INK)
 	draw_arc(pivot, 26.0, -PI * 0.8, -PI * 0.2, 16, INK)
-	_text(Vector2(-44, -8), 64, "SIGNAL", 6, INK)
+	_plate(Vector2(-44, -8), 64, "SIGNAL", 6, INK)
 	var a := lerpf(-PI * 0.8, -PI * 0.2, _meter)
 	draw_line(pivot, pivot + Vector2.from_angle(a) * 27.0, Color(0.6, 0.05, 0.03), 2.0)
 	draw_rect(Rect2(pivot - Vector2(3, 2), Vector2(7, 4)), Color(0.15, 0.12, 0.1))
-	_text(Vector2(-44, 44), 64, "S-METER", 6, CHROME)
+	_plate(Vector2(-44, 44), 64, "S-METER", 6, CHROME)
 
 
 func _draw_scope() -> void:
@@ -248,7 +248,7 @@ func _draw_scope() -> void:
 		pts.append(Vector2(27 + i, clampf(6.0 + clean + noise, -14.0, 26.0)).floor())
 	draw_polyline(pts, Color(0.3, 1.0, 0.45, 0.35), 3.0)
 	draw_polyline(pts, Color(0.55, 1.0, 0.6))
-	_text(Vector2(26, 44), 64, "WAVE", 6, CHROME)
+	_plate(Vector2(26, 44), 64, "WAVE", 6, CHROME)
 
 
 func _draw_lock_and_band() -> void:
@@ -264,13 +264,13 @@ func _draw_lock_and_band() -> void:
 		draw_circle(p, 9.0, Color(col, 0.25))
 	draw_circle(p, 4.0, col)
 	draw_rect(Rect2(p - Vector2(2, 2), Vector2(1, 1)), Color(1, 1, 1, 0.6))
-	_text(Vector2(95, 10), 24, "LOCK", 6, CHROME)
+	_plate(Vector2(95, 10), 24, "LOCK", 6, CHROME)
 	# band switch (stuck on SW)
 	draw_rect(Rect2(126, -12, 30, 10), Color(0.04, 0.03, 0.02))
 	draw_rect(Rect2(142, -11, 13, 8), CHROME)
 	draw_rect(Rect2(142, -11, 13, 1), Color(0.9, 0.9, 0.85))
-	_text(Vector2(122, 4), 20, "MW", 6, Color(0.45, 0.4, 0.35))
-	_text(Vector2(139, 4), 20, "SW", 6, AMBER)
+	_plate(Vector2(122, 4), 20, "MW", 6, Color(0.45, 0.4, 0.35))
+	_plate(Vector2(139, 4), 20, "SW", 6, AMBER)
 
 
 func _draw_knobs() -> void:
@@ -279,7 +279,7 @@ func _draw_knobs() -> void:
 	draw_circle(v, 8.0, Color(0.05, 0.04, 0.03))
 	draw_circle(v, 6.0, Color(0.25, 0.2, 0.16))
 	draw_line(v, v + Vector2.from_angle(-PI * 0.3) * 6.0, Color(0.9, 0.85, 0.7))
-	_text(Vector2(-40, 76), 24, "VOL", 6, CHROME)
+	_plate(Vector2(-40, 76), 24, "VOL", 6, CHROME)
 	# big tuning knob, rotates with the dial
 	var c := Vector2(128, 40)
 	var rot := dial * TAU * 1.75
@@ -294,7 +294,7 @@ func _draw_knobs() -> void:
 	draw_circle(c, 5.0, CHROME)
 	var tip := c + Vector2.from_angle(rot - PI / 2.0) * 17.0
 	draw_line(c + Vector2.from_angle(rot - PI / 2.0) * 8.0, tip, Color(0.95, 0.9, 0.75), 2.0)
-	_text(Vector2(108, 77), 40, "TUNING", 6, CHROME)
+	_plate(Vector2(108, 77), 40, "TUNING", 6, CHROME)
 
 
 func _draw_status() -> void:
@@ -307,8 +307,22 @@ func _draw_status() -> void:
 	_text(Vector2(-10, 60), 96, _status, 8, col)
 
 
-func _text(pos: Vector2, width: float, s: String, fsize: int, col: Color, outline := false,
+func _plate(pos: Vector2, width: float, s: String, fsize: int, col: Color, outline := false,
 		align := HORIZONTAL_ALIGNMENT_CENTER) -> void:
+	## What's printed on the set itself (maker, bands, dials, meters): the radio's own English, never translated.
 	if outline:
 		draw_string_outline(_font, pos, s, align, width, fsize, 3, Color(0, 0, 0, 0.85))
 	draw_string(_font, pos, s, align, width, fsize, col)
+
+
+func _text(pos: Vector2, width: float, s: String, fsize: int, col: Color, outline := false,
+		align := HORIZONTAL_ALIGNMENT_CENTER) -> void:
+	## s: an English id (drawn translated) or text already put together with tr(). A translation too wide for
+	## `width` is drawn a size or two smaller (never below 7, or its own size if that's smaller).
+	var t := tr(s)
+	if t != s and width > 0.0:
+		while fsize > 7 and _font.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x > width:
+			fsize -= 1
+	if outline:
+		draw_string_outline(_font, pos, t, align, width, fsize, 3, Color(0, 0, 0, 0.85))
+	draw_string(_font, pos, t, align, width, fsize, col)
