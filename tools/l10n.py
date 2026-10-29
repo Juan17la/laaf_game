@@ -25,7 +25,7 @@ PO = os.path.join(ROOT, "locale", "es.po")
 SOURCES = ["scripts", "player"]
 FILES_SKIPPED = {"humanoid_anim.gd", "actor.gd", "icons.gd", "item_fx.gd", "arrow.gd", "spin.gd", "zone.gd",
                  "flicker.gd", "feel.gd", "fuel_barrel.gd", "gas_cloud.gd", "smoke_cloud.gd", "threat_arcs.gd",
-                 "hud_eyes.gd", "alert_icon.gd", "g.gd", "snd.gd", "audio.gd"}  # (audio.gd: bus names, the
+                 "hud_eyes.gd", "alert_icon.gd", "g.gd", "snd.gd", "audio.gd", "menu_draw.gd"}  # (audio.gd: bus names, the
 # sound captions' keywords, matched against the English id and never shown)
 SCENES = ["maps/hollowmere.tscn"]
 BS = chr(92)
