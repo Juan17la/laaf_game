@@ -1,7 +1,8 @@
 class_name Weapons
 extends Node
 ## What the player carries: guns (revolver, flare gun, shotgun), Owen's bow, melee weapons (fire axe, bat) and
-## always the fists (FISTS: not a slot, it's what an empty hand or an empty gun hits with). Guns are hitscan
+## always the fists (FISTS: what an empty hand or an empty gun hits with; current == HOLSTERED puts every weapon
+## away, the always-there first slot of the cycle: key 0, Q / wheel past the last weapon, hold Y). Guns are hitscan
 ## from the camera (the shotgun casts `pellets` rays); the bow fires a real Arrow; melee is a timed strike the
 ## player swings (see player.gd _strike). "kind" picks the logic, "hold" the arms (player.gd _hold).
 ## SWAP-SHOT: fire, then swap within SWAP_WINDOW → the swap is instant and the first shot of the
@@ -16,6 +17,7 @@ const SWAP_WINDOW := 0.45  ## after a shot, a swap in this window is instant
 const DOUBLE_TAP_MULT := 1.5
 const SWAP_TIME := 0.35  ## normal holster/draw time
 const FIRE_BUFFER := 0.15
+const HOLSTERED := -1  ## `current` with bare fists in hand (the weapons stay carried)
 
 const GUNS := {  # gun damage: +15% over the first balance pass (34 / 20 / 11)
 	"revolver": {"name": "Revolver", "kind": "gun", "hold": "pistol", "damage": 39.1, "cooldown": 0.32, "mag": 6,
@@ -53,7 +55,12 @@ var _buffer := 0.0
 
 
 func gun() -> String:
-	return owned[current] if owned.size() > current else ""
+	return owned[current] if current >= 0 and current < owned.size() else ""
+
+
+func holstered() -> bool:
+	## Fists in hand by choice (or nothing carried yet).
+	return gun() == ""
 
 
 func spec() -> Dictionary:
@@ -93,6 +100,7 @@ func restore(snap: Dictionary) -> void:
 	## Back to a snapshot(). A weapon picked up since stays (its pickup is gone from the world) with the rounds it
 	## came with; the one in hand stays in hand if it's still carried. Reloads / swaps in progress are dropped.
 	var held := gun()
+	var fists := held == "" and not owned.is_empty()  # put away on purpose: fists stay in hand
 	var since := owned.filter(func(id: String) -> bool: return id not in snap.owned)
 	owned.assign(snap.owned)
 	loaded = (snap.loaded as Dictionary).duplicate()
@@ -101,7 +109,10 @@ func restore(snap: Dictionary) -> void:
 		owned.append(id)
 		loaded[id] = picked.get(id, [0, 0])[0]
 		reserve[id] = picked.get(id, [0, 0])[1]
-	current = owned.find(held) if held in owned else clampi(int(snap.current), 0, maxi(owned.size() - 1, 0))
+	if fists or (int(snap.current) == HOLSTERED and held not in owned):
+		current = HOLSTERED
+	else:
+		current = owned.find(held) if held in owned else clampi(int(snap.current), 0, maxi(owned.size() - 1, 0))
 	_reload = 0.0
 	_swap = 0.0
 	_buffer = 0.0
@@ -154,10 +165,24 @@ func can_fire() -> bool:
 
 
 func swap(to := -1) -> void:
-	if owned.size() < 2:
+	## to < 0: the next one round the cycle (fists, then each weapon carried, then fists again); else that slot.
+	var next := to
+	if to < 0:
+		if owned.is_empty():
+			return
+		next = 0 if holstered() else (HOLSTERED if current + 1 >= owned.size() else current + 1)
+	elif to >= owned.size():
 		return
-	var next := (current + 1) % owned.size() if to < 0 else to
-	if next == current or next >= owned.size():
+	_draw(next)
+
+
+func holster() -> void:
+	## Every weapon away: bare fists (key 0, holding Y).
+	_draw(HOLSTERED)
+
+
+func _draw(next: int) -> void:
+	if next == current or (next == HOLSTERED and holstered()):
 		return
 	current = next
 	_reload = 0.0
