@@ -40,6 +40,10 @@ const STEP_MUSIC := {  ## base track per mission step (anything else: "explore")
 	"shepherd": "melancholy", "epilogue": "melancholy", "harvester": "boss"}
 
 const STEP_MOOD := {"c2_intro": "overcast", "channel7": "overcast", "zones": "overcast"}  ## the rest: night
+const STEP_WEATHER := {  ## scripts/weather.gd per mission step; the rest: "fog" (dry, the ground fog rolling)
+	"blackout": "storm", "c2_intro": "drizzle", "channel7": "drizzle", "traitor": "rain",
+	"c3_bell": "rain", "run": "rain", "marcus": "rain", "static": "drizzle", "gate": "storm", "harvest": "storm",
+	"harvester": "storm", "shepherd": "rain"}
 
 var difficulty := 1
 var mode := ""  ## "story" (menu run: saves + achievements), "dev" (menu jump), "" (the world run directly)
@@ -114,10 +118,14 @@ func settings() -> Dictionary:
 func at_step(d: Node) -> void:
 	## A chapter director is starting a step: it's the one to save from; story runs autosave here.
 	director = d
+	var restored := loading
 	loading = false
 	Snd.music(STEP_MUSIC.get(str(d.step), "explore"), 2.5)
 	if d.has_method("mood") and str(d.step) != "epilogue":  # (the epilogue's dawn() is its own look)
 		d.mood(STEP_MOOD.get(str(d.step), "night"), 2.0)
+	var sky := d.get_parent().get_node_or_null("Weather") as Weather
+	if sky:
+		sky.set_weather(STEP_WEATHER.get(str(d.step), "fog"), 0.1 if restored else 6.0)
 	if mode == "story" and str(d.step) != "free":
 		save_game(_next_autosave(), "Autosave")
 
@@ -281,7 +289,7 @@ func notify(text: String, title := "", time := 4.0) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	## Esc / Start opens the pause menu; once it's open, the menu takes its own keys (Esc goes back, then resumes).
-	## Tab / I / Back open the inventory, M on its Map tab, while Alex is in control (never in a cinematic, a minigame
+	## I / Back open the inventory, M on its Map tab, while Alex is in control (never in a cinematic, a minigame
 	## or a death).
 	if event.is_action_pressed("pause") and director and is_instance_valid(director) and not _pause:
 		get_viewport().set_input_as_handled()
@@ -312,11 +320,10 @@ func open_inventory(tab := "") -> void:
 
 
 func _freeze() -> void:
-	## The game stops under a menu: paused, the mouse free with the menus' pointer, the crisp canvas_items scale.
+	## The game stops under a menu: paused, the mouse free with the menus' pointer.
 	get_tree().paused = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	MenuDraw.cursor(true)
-	get_window().content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
 
 
 func resume() -> void:
@@ -325,7 +332,6 @@ func resume() -> void:
 		_pause = null
 		_pause_menu = null
 	get_tree().paused = false
-	get_window().content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT  # the game's own low-res look again
 	MenuDraw.cursor(false)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	var p: Node = director.get("player") if director and is_instance_valid(director) else null
