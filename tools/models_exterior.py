@@ -578,9 +578,8 @@ def m_watchtower():
 def m_burnt_car():
     """Torched station wagon: charred shell on bare rims, windows blown out (soot inside)."""
     m = B.Model("ext_burnt_car")
-    m.node("body-col")
-    m.box("hs_dark", (4.1, 0.4, 1.2), (0, 0.45, 0))
-    m.box("hs_dark", (2.4, 0.35, 1.2), (-0.8, 0.95, 0))
+    m.node("body-colonly")
+    H.body_col(m, H.WAGON, burnt=True)
     m.node("detail")
     rng = random.Random(21)
     H.sedan(m, "ext_char", H.WAGON, rng, burnt=True)
