@@ -194,6 +194,26 @@ def arch_xs(x0, x1, step, arches):
 
 # ============================================================== sedan
 
+def body_col(m, spec, burnt=False):
+    """Collision for a sedan / wagon built by sedan() with the same spec, into the current ("-col") node: the lower
+    body from just over the road to the belt, out to the bumpers' tips and the flanks' trim, and the greenhouse
+    (full height under the roof, half height over the windshield / rear glass slopes), so nobody walks into the
+    hood, a bumper or a door. Boxes, so they stand proud of the curves here and there: a "-colonly" node."""
+    drop = spec["wr"] * 0.38 if burnt else 0.0
+    L, hw, belt, ry = spec["L"], spec["hw"], spec["belt"] - drop, spec["roof_y"] - drop
+    lo = 0.12
+    m.box("hs_dark", (L + 0.2, belt + 0.02 - lo, 2 * hw + 0.1), (0, (belt + 0.02 + lo) / 2, 0))
+    cab = spec["cabin"]
+    roof = [x for x, top in cab if top >= spec["roof_y"] - 0.01]
+    xf, xr = roof[0], roof[-1]
+    gw = 2 * hw * 0.93
+    m.box("hs_dark", (xf - xr, ry + 0.03 - belt, gw), ((xf + xr) / 2, (ry + 0.03 + belt) / 2, 0))
+    mid = belt + (ry - belt) / 2
+    for a, b in ((cab[0][0], xf), (xr, cab[-1][0])):
+        if abs(a - b) > 0.05:
+            m.box("hs_dark", (abs(a - b), mid - belt, gw), ((a + b) / 2, (mid + belt) / 2, 0))
+
+
 def sedan(m, paint, spec, rng, burnt=False):
     """Boxy late-70s sedan / wagon. spec keys: L, hw, wx, wr, keys (body profile), cabin (x, top) list,
     roof_w. Adds geometry to the current node. burnt: tires gone, sits on its rims, windows blown out."""
@@ -321,9 +341,8 @@ def dents(m, rng, paint, hw, n, xr=(-2.0, 2.0), yr=(0.45, 0.85)):
 def m_car_wreck():
     m = B.Model("car_wreck")
     rng = random.Random(11)
-    m.node("body-col")
-    m.box("hs_dark", (4.0, 0.4, 1.2), (0, 0.6, 0))  # collision core hidden inside the body
-    m.box("hs_dark", (1.3, 0.4, 1.2), (-0.35, 1.1, 0))
+    m.node("body-colonly")  # (collision only: the boxes stand proud of the curved body)
+    body_col(m, SEDAN)
     m.node("detail")
     sedan(m, "hs_sedan", SEDAN, rng)
     # shattered side window + windshield
