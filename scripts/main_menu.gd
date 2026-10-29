@@ -329,26 +329,11 @@ func _draw_page(tab: int, inner: Rect2) -> void:
 
 
 func _tab_shape(r: Rect2, col: Color, stroke := true) -> void:
-	## An index tab: rounded on the outside (left) edge, square where it meets the folder. The open one has no
-	## stroke: it's the folder's own leaf.
-	var pts := Icons.round_rect(Rect2(r.position, r.size + Vector2(10, 0)), 7.0, false)
-	var edge := PackedVector2Array([r.end])
-	for i in pts.size():
-		pts[i].x = minf(pts[i].x, r.end.x)
-		if i >= 10:  # the bottom-left and top-left corners, in order
-			edge.append(pts[i])
-	edge.append(Vector2(r.end.x, r.position.y))
-	_deco.draw_colored_polygon(pts, col)
-	if stroke:
-		_deco.draw_polyline(edge, Color(BONE, 0.08 * col.a), 1.0, true)
+	_d.index_tab(r, col, stroke)  # (scripts/menu_draw.gd: the inventory's tabs are the same)
 
 
 func _tab_face(r: Rect2, i: int, open: bool, e: float) -> void:
-	var c := r.get_center() + Vector2(0 if open else -2, -3.5)
-	var ink := AMBER if open else MUTED
-	Icons.draw(_deco, TABS[i][0], c, 12.0, Color(ink, (1.0 if open else 0.75) * e), 1.3)
-	_d.text(_bold, Vector2(r.position.x, r.end.y - 3.5), tr(TABS[i][1]), 7, Color(BONE if open else MUTED, e),
-		r.size.x - (0 if open else 4), HORIZONTAL_ALIGNMENT_CENTER)
+	_d.tab_face(r, TABS[i][0], tr(TABS[i][1]), open, e)
 
 
 func _draw_help(W: float, H: float, e: float) -> void:
