@@ -1,5 +1,6 @@
 extends CanvasLayer
-## Navigation aids: minimap, full map (M / Back), compass and objective waypoint. HUD.objective() calls
+## Navigation aids: minimap, compass and objective waypoint; the full paper map is the inventory's Map tab (M opens
+## it there: scripts/inventory.gd, drawn by draw_paper_map below). HUD.objective() calls
 ## set_target(target, text) with a Vector3, a Node3D (follows it) or null (no waypoint).
 ## Everything hides while player.controls_enabled is false (cinematics).
 ## Zone names and the panel's words are English ids, drawn through tr() every frame (a language switch shows at once).
@@ -42,12 +43,10 @@ void fragment() {
 
 var target: Variant = null
 var text := ""
-var map_open := false
 
 @onready var player: Node = get_parent()
 var _mini: ColorRect
 var _canvas: Control
-var _panel: Label
 var _font: Font = ThemeDB.fallback_font
 
 
@@ -67,14 +66,6 @@ func _ready() -> void:
 	_canvas.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_canvas.draw.connect(_draw_all)
 	add_child(_canvas)
-	_panel = Label.new()
-	_panel.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_panel.add_theme_font_size_override("font_size", 10)
-	_panel.add_theme_color_override("font_color", PAPER)
-	_panel.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.8))
-	_panel.add_theme_constant_override("outline_size", 3)
-	_panel.visible = false
-	add_child(_panel)
 
 
 func set_target(t: Variant, objective_text: String) -> void:
@@ -82,25 +73,13 @@ func set_target(t: Variant, objective_text: String) -> void:
 	text = objective_text
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("map") and (map_open or player.controls_enabled):
-		map_open = not map_open
-		get_viewport().set_input_as_handled()
-	elif map_open and event.is_action_pressed("pause"):
-		map_open = false
-		get_viewport().set_input_as_handled()
-
-
 func _process(_delta: float) -> void:
 	var on: bool = player.controls_enabled
-	if not on:
-		map_open = false
 	var view := _canvas.size
-	_mini.visible = on and not map_open
+	_mini.visible = on
 	_mini.position = Vector2(view.x - 10 - MINI_R * 2, 8)  # the Mark meter and clock sit under it (hud.gd)
 	_mini.material.set_shader_parameter("center", _to_uv(player.global_position))
 	_mini.material.set_shader_parameter("angle", -_yaw())
-	_panel.visible = map_open
 	_canvas.visible = on
 	_canvas.queue_redraw()
 
@@ -128,9 +107,6 @@ func _facing() -> Vector2:
 
 func _draw_all() -> void:
 	var goal: Variant = _goal()
-	if map_open:
-		_draw_map(goal)
-		return
 	_draw_minimap(goal)
 	var hud := player.get_node_or_null("HUD")
 	if not (hud and hud._boss and hud._boss.visible):  # the boss bar sits in the same spot
@@ -241,51 +217,65 @@ func _draw_waypoint(goal: Vector3) -> void:
 	_text(c, e - (s - ctr).normalized() * 16 + Vector2(0, 3), _dist(goal), 9, MARK, 40)
 
 
-func _draw_map(goal: Variant) -> void:
-	var c := _canvas
-	c.draw_rect(Rect2(Vector2.ZERO, c.size), Color(0.03, 0.03, 0.03, 0.88))
-	var side := minf(c.size.y - 16, c.size.x * 0.6)
-	var r := Rect2(Vector2(10, (c.size.y - side) / 2), Vector2(side, side))
+func goal() -> Variant:
+	## The objective's world position, or null (the inventory's Map tab pins it).
+	return _goal()
+
+
+func distance(to: Vector3) -> String:
+	return _dist(to)
+
+
+func here() -> String:
+	## The zone (its English id) the player stands in, "" outside every one.
+	var p: Vector3 = player.global_position
+	for z in ZONES:
+		if p.x > z[1] and p.x < z[3] and p.z > z[2] and p.z < z[4]:
+			return z[0]
+	return ""
+
+
+func draw_paper_map(c: Control, r: Rect2, tint := Color.WHITE) -> void:
+	## The whole town on paper in r (square): north, the objective's diamond, Alex's arrow, and the names of the zone
+	## he's in and the objective's (all nine crowd each other at this size).
+	var side := r.size.x
 	var k := side / (MAP_PX / PPM)  # screen px per metre
 	var to_screen := func(x: float, z: float) -> Vector2: return r.position + Vector2(x - MAP_X0, z - MAP_Z0) * k
-	c.draw_rect(r.grow(2), INK)
-	c.draw_texture_rect(MAP_TEX, r, false)
-	c.draw_rect(r.grow(1), Color(PAPER, 0.5), false, 1.0)
+	c.draw_rect(r.grow(2), Color(INK, tint.a))
+	c.draw_texture_rect(MAP_TEX, r, false, tint)
+	c.draw_rect(r.grow(1), Color(PAPER, 0.5 * tint.a), false, 1.0)
+	var size := 8 if side >= 300.0 else 7
+	var g: Variant = _goal()
 	var p: Vector3 = player.global_position
-	var here := ""
 	for z in ZONES:
+		var named := func(at: Variant) -> bool: return at != null and at.x > z[1] and at.x < z[3] and at.z > z[2] and at.z < z[4]
+		if not (named.call(p) or named.call(g)):
+			continue
 		var mid: Vector2 = to_screen.call((z[1] + z[3]) / 2.0, (z[2] + z[4]) / 2.0)
-		_zone_label(c, mid + Vector2(0, 3), tr(z[0]).to_upper())
-		if p.x > z[1] and p.x < z[3] and p.z > z[2] and p.z < z[4]:
-			here = z[0]
-	_text(c, r.position + Vector2(side - 14, 16), "N", 11, Color(0.6, 0.12, 0.1), 12)
-	c.draw_line(r.position + Vector2(side - 14, 19), r.position + Vector2(side - 14, 30), Color(0.6, 0.12, 0.1), 1.5)
-	if goal != null:
-		_diamond(c, to_screen.call(goal.x, goal.z), 4.5)
-	_arrow(c, to_screen.call(p.x, p.z), _facing(), 6.5, Color(0.95, 0.25, 0.2))
-	var px := r.end.x + 14
-	_panel.position = Vector2(px, r.position.y + 10)
-	_panel.size = Vector2(c.size.x - px - 12, 0)
-	_panel.text = tr("HOLLOWMERE\n\n%s\n\nOBJECTIVE\n%s%s\n\n\n[M] close") % [
-		tr("You are near: %s") % tr(here) if here != "" else tr("Outside town"), tr(text) if text != "" else "—",
-		"\n" + tr("%s away") % _dist(goal) if goal != null else ""]
+		_zone_label(c, mid + Vector2(0, 3), tr(z[0]).to_upper(), size, side * 0.32)
+	_text(c, r.position + Vector2(side - 12, 14), "N", size + 2, Color(0.6, 0.12, 0.1), 12)
+	c.draw_line(r.position + Vector2(side - 12, 17), r.position + Vector2(side - 12, 27), Color(0.6, 0.12, 0.1), 1.5)
+	if g != null:
+		_diamond(c, to_screen.call(g.x, g.z), 4.0)
+	_arrow(c, to_screen.call(p.x, p.z), _facing(), 6.0, Color(0.95, 0.25, 0.2))
 
 
-func _zone_label(c: Control, at: Vector2, s: String) -> void:
-	## A zone's name on the paper map, centred on at; one too wide for its 110 px breaks onto a second line.
-	if _font.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x <= 110.0 or not " " in s:
-		_text(c, at, s, 8, Color(0.2, 0.12, 0.08), 110, Color(PAPER, 0.8))
+func _zone_label(c: Control, at: Vector2, s: String, size := 8, wide := 110.0) -> void:
+	## A zone's name on the paper map, centred on at; one too wide for its `wide` px breaks onto a second line.
+	if _font.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x <= wide or not " " in s:
+		_text(c, at, s, size, Color(0.2, 0.12, 0.08), wide, Color(PAPER, 0.8))
 		return
 	var words := s.split(" ")
 	var best := 1
 	for i in range(1, words.size()):  # the break that leaves the longer line shortest
 		var a := " ".join(words.slice(0, i))
 		var b := " ".join(words.slice(i))
-		var w := maxf(_font.get_string_size(a, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x,
-			_font.get_string_size(b, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x)
-		var bw := maxf(_font.get_string_size(" ".join(words.slice(0, best)), HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x,
-			_font.get_string_size(" ".join(words.slice(best)), HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x)
+		var w := maxf(_font.get_string_size(a, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x,
+			_font.get_string_size(b, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x)
+		var bw := maxf(_font.get_string_size(" ".join(words.slice(0, best)), HORIZONTAL_ALIGNMENT_LEFT, -1, size).x,
+			_font.get_string_size(" ".join(words.slice(best)), HORIZONTAL_ALIGNMENT_LEFT, -1, size).x)
 		if w < bw:
 			best = i
-	_text(c, at - Vector2(0, 4.5), " ".join(words.slice(0, best)), 8, Color(0.2, 0.12, 0.08), 110, Color(PAPER, 0.8))
-	_text(c, at + Vector2(0, 4.5), " ".join(words.slice(best)), 8, Color(0.2, 0.12, 0.08), 110, Color(PAPER, 0.8))
+	var half := size * 0.56
+	_text(c, at - Vector2(0, half), " ".join(words.slice(0, best)), size, Color(0.2, 0.12, 0.08), wide, Color(PAPER, 0.8))
+	_text(c, at + Vector2(0, half), " ".join(words.slice(best)), size, Color(0.2, 0.12, 0.08), wide, Color(PAPER, 0.8))
