@@ -107,6 +107,7 @@ var mark_cap: float = Feel.MARK_SOFT_CAP[3]  ## this chapter's soft cap (set by 
 var crouching := false
 var aiming := false
 var controls_enabled := true
+var look_hold := 0  ## mouse moves to drop: the first after the mouse is captured again can carry the cursor's jump
 var dead := false
 var hidden_spots: Array[Vector3] = []  ## tall grass: crouching within 1.3 m hides the player
 var carrying := ""  ## item held in both hands ("" = none): walk only, no guns
@@ -204,10 +205,13 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		if controls_enabled:
+		if look_hold > 0:
+			look_hold -= 1
+		elif controls_enabled:
 			_look(event.relative * mouse_sensitivity * Settings.number("controls/mouse_sensitivity") * (0.6 if aiming else 1.0))
 	elif event is InputEventMouseButton and event.pressed and Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		look_hold = 2
 		get_viewport().set_input_as_handled()
 	if not controls_enabled or dead:
 		return
