@@ -180,6 +180,18 @@ func _run() -> void:
 		await _frames(2)
 	h.queue_free()
 
+	# the final boss fight: the light moves to a flashlight in his left hand, lit, the headlamp off his head; and back
+	player.hold_torch(true)
+	await _frames(2)
+	var hand := player.model.find_child("HandL", true, false) as Node3D
+	if not player.torch or player.flashlight.get_parent() != player.torch or not hand.is_ancestor_of(player.torch) \
+			or not player.flashlight.visible or player.headlamp.visible or player.headlamp.lit:
+		_bad("hold_torch(true): the light is not a lit flashlight in his left hand")
+	player.hold_torch(false)
+	await _frames(2)
+	if player.flashlight.get_parent() != player.headlamp or player.torch.visible or not player.headlamp.visible:
+		_bad("hold_torch(false): the light did not go back to the headlamp")
+
 	# a cinematic stand-in wears it, unlit
 	var a := Actor.make(world, "res://models/char_alex.glb", Vector3(-45, 0, 3))
 	await _frames(2)

@@ -77,8 +77,24 @@ const CROUCH_GAIT := 0.45
 const CROUCH_HIP_MAX := 1.75  ## rad, crouched: the most a swinging thigh comes forward...
 const CROUCH_KNEE_MAX := 2.2  ## ...and the most a knee folds
 
+## Skinned models (tools/psx_chars.py): the bones each joint carries exactly; the rest follow their parents, except
+## SKIN_SHARE ones, which take a share of a joint's turn about their own head (the waist bends in two places, the
+## collarbones lift a little with the arms), and the fingers (a mitten's one, or four), which close by GRIP (rad per
+## knuckle) on top of their relaxed bind curl whenever the hand holds something (part way running).
+const SKIN := {"Hips": "m_Hips", "Spine": "m_Spine2", "Neck": "m_Neck", "Head": "m_Head",
+	"UpperArmL": "m_LeftArm", "ForearmL": "m_LeftForeArm", "HandL": "m_LeftHand",
+	"UpperArmR": "m_RightArm", "ForearmR": "m_RightForeArm", "HandR": "m_RightHand",
+	"ThighL": "m_LeftUpLeg", "ShinL": "m_LeftLeg", "FootL": "m_LeftFoot",
+	"ThighR": "m_RightUpLeg", "ShinR": "m_RightLeg", "FootR": "m_RightFoot"}
+const SKIN_SHARE := {"m_Spine": ["Spine", 0.5], "m_LeftShoulder": ["UpperArmL", 0.2], "m_RightShoulder": ["UpperArmR", 0.2]}
+const GRIP := [0.85, 0.82, 0.62]
+var grip := {"L": 0.0, "R": 0.0}  ## 0..1 how closed each hand is, eased toward whether it holds anything
+
 var _j := {}
 var _neck: Node3D
+var _skel: Skeleton3D
+var _FINGER := RegEx.create_from_string("Hand(Index|Middle|Ring|Pinky)[123]$")  ## (the thumb keeps its bind pose)
+var _bind := []  ## per bone: [] (follows its parent), [joint, offset], [joint, share, offset in the joint's parent], [hand, side, knuckles]
 var _skirt := {}  ## optional "L" / "R" coat-tail halves on the hips (tools/rig.py), they follow the thighs
 var _spd := 0.0  ## speed through a critically damped spring: gait blends stay smooth when speed jumps
 var _spd_v := 0.0
@@ -121,6 +137,10 @@ func _ready() -> void:
 		if sk:
 			_skirt[k] = sk
 	_time = randf() * 10.0
+	var skels := model.find_children("*", "Skeleton3D", true, false)
+	if skels:
+		_skel = skels[0]
+		_bind_skin()
 
 
 func _process(delta: float) -> void:
@@ -228,10 +248,12 @@ func _process(delta: float) -> void:
 		var d: float = drive[k]
 		var sh := deg_to_rad(lerpf(-8.0, -24.0, run) * g + lerpf(0.64, 1.08, run) * d)
 		var elbow := deg_to_rad(lerpf(15.0, 75.0, run) * g + lerpf(0.35, 0.55, run) * (d + 20.0 * g))
-		_j["UpperArm" + k].rotation = Vector3(-sh - 0.3 * _crouch - 0.4 * _land, -0.1 * ph * maxf(0.0, sh) * run,
+		# crouched, the arms come forward of the bent-over chest (it carries them back) and the elbows soften: the hands
+		# hang by the knees, not behind the thighs
+		_j["UpperArm" + k].rotation = Vector3(-sh - 0.75 * _crouch - 0.4 * _land, -0.1 * ph * maxf(0.0, sh) * run,
 				ph * (0.1 + 0.08 * run + 0.25 * _land + 0.02 * breath * idle))
 		# whole rotations (not just .x): the arm IK leaves twist on these that must not linger
-		_j["Forearm" + k].rotation = Vector3(-0.15 * (1.0 - g) - elbow, 0, 0)
+		_j["Forearm" + k].rotation = Vector3(-0.15 * (1.0 - g) - elbow - 0.35 * _crouch, 0, 0)
 		_j["Hand" + k].rotation = Vector3(-0.1 * g - 0.1 * run, 0, 0)
 
 	# head: look target; steady in the world: undoes the thorax turn, the pelvis tilt and most of the lean
@@ -425,6 +447,74 @@ func _process(delta: float) -> void:
 		var r := head.rotation
 		_neck.rotation = r * 0.4
 		head.rotation = r * 0.6
+	if _skel:
+		_skin(delta)
+
+
+func _in_skel(n: Node3D) -> Transform3D:
+	return _skel.global_transform.affine_inverse() * n.global_transform
+
+
+func _bind_skin() -> void:
+	## Ties each bone to the joints at rest (both are in the bind pose now), so _skin can carry it from them.
+	for i in _skel.get_bone_count():
+		var bone := _skel.get_bone_name(i)
+		var rest := _skel.get_bone_global_rest(i)
+		var b := []
+		var joint: String = SKIN.find_key(bone) if SKIN.find_key(bone) != null else ""
+		if joint != "" and _j_or_neck(joint):
+			b = [joint, _in_skel(_j_or_neck(joint)).affine_inverse() * rest]
+		elif SKIN_SHARE.has(bone) and _j.has(SKIN_SHARE[bone][0]):
+			var j: Node3D = _j[SKIN_SHARE[bone][0]]
+			b = [SKIN_SHARE[bone][0], SKIN_SHARE[bone][1], _in_skel(j.get_parent()).affine_inverse() * rest]
+		elif _FINGER.search(bone):
+			var k := "L" if bone.begins_with("m_Left") else "R"
+			var hand: Node3D = _j["Hand" + k]
+			var knuckles := []  # [rest pose in the hand, its head] from the base knuckle out to this one
+			for n in int(bone.right(1)):
+				knuckles.append(_in_skel(hand).affine_inverse() * _skel.get_bone_global_rest(_skel.find_bone(bone.left(-1) + str(n + 1))))
+			b = ["Hand" + k, k, knuckles]
+		_bind.append(b)
+
+
+func _j_or_neck(joint: String) -> Node3D:
+	return _neck if joint == "Neck" else _j.get(joint)
+
+
+func _skin(delta: float) -> void:
+	## Poses the skeleton from the joints (bones in index order: parents first).
+	for k in grip:
+		var hand: Node3D = _j["Hand" + k]
+		var holds: bool = ik_w[k] > 0.3 or strike >= 0.0 or (k == "R" and _holding)
+		for c in hand.get_children():
+			holds = holds or (c is Node3D and (c as Node3D).visible)
+		grip[k] = move_toward(grip[k], 1.0 if holds else 0.6 * _run, delta * 6.0)  # runners carry loose fists
+	var g := []
+	g.resize(_skel.get_bone_count())
+	for i in g.size():
+		var p := _skel.get_bone_parent(i)
+		var pg: Transform3D = g[p] if p >= 0 else Transform3D()
+		var b: Array = _bind[i]
+		var t: Transform3D
+		if b.is_empty():
+			t = pg * _skel.get_bone_rest(i)
+		elif b.size() == 2:
+			t = _in_skel(_j_or_neck(b[0])) * b[1]
+		elif b[1] is float:  # a share of the joint's turn, about this bone's own head
+			var j: Node3D = _j[b[0]]
+			var r := Basis(Quaternion.IDENTITY.slerp(j.quaternion, b[1]))
+			var c: Vector3 = b[2].origin
+			t = _in_skel(j.get_parent()) * Transform3D(r, c - r * c) * b[2]
+		else:  # a finger knuckle: each one before it turns the rest about its head, around the hand's front axis
+			var m := Transform3D()
+			var ks: Array = b[2]
+			for n in ks.size():
+				var r := Basis(Vector3.BACK, (1.0 if b[1] == "R" else -1.0) * GRIP[n] * grip[b[1]])
+				var c: Vector3 = ks[n].origin
+				m = m * Transform3D(r, c - r * c)
+			t = _in_skel(_j[b[0]]) * m * ks[-1]
+		g[i] = t
+		_skel.set_bone_pose(i, pg.affine_inverse() * t)
 
 
 func joint(name: String) -> Node3D:

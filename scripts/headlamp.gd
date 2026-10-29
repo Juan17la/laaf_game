@@ -7,7 +7,10 @@ extends Node3D
 ##   var lamp := Headlamp.wear(model)   # null if the model has no Head joint
 
 const SCENE := "res://models/item_headlamp.glb"
-const LENS := Vector3(-0.001, 0.188, 0.157)  ## lens face centre, Head space (tools/models_items.py headlamp_lens())
+## The lamp was modelled on the old built Alex's head; FIT sits it on the PSX pack one (tools/psx_chars.py):
+## a smaller head with its crown lower. LENS is the lens face centre (tools/models_items.py headlamp_lens()) after FIT.
+const FIT := Transform3D(Basis(Vector3(0.9, 0, 0), Vector3(0, 0.9, 0), Vector3(0, 0, 0.84)), Vector3(0, -0.035, 0.022))
+const LENS := Vector3(-0.001 * 0.9, 0.188 * 0.9 - 0.035, 0.157 * 0.84 + 0.022)
 const GLOW := Color(1.0, 0.94, 0.8)
 
 var lit := false:
@@ -26,7 +29,9 @@ static func wear(model: Node3D) -> Headlamp:
 	var h := Headlamp.new()
 	h.name = "Headlamp"
 	if ResourceLoader.exists(SCENE):
-		h.add_child((load(SCENE) as PackedScene).instantiate())
+		var lamp := (load(SCENE) as PackedScene).instantiate() as Node3D
+		lamp.transform = FIT
+		h.add_child(lamp)
 	head.add_child(h)
 	h._lens = h.find_child("lens", true, false) as MeshInstance3D
 	h._mat = StandardMaterial3D.new()

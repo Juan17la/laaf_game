@@ -2004,18 +2004,24 @@ WARM, COLD, SICK, RED = (1.0, 0.68, 0.38), (0.55, 0.68, 1.0), (0.7, 1.0, 0.75), 
 def build_world():
     W = World()
     rng = random.Random(1413)
-    # (the night's look as tuned in the editor: a colder, clearer moonlit fog)
-    env = W.sub("Environment", background_mode=1, background_color="Color(0.055, 0.065, 0.06, 1)",
+    # (the night's look: a wall of cold fog the dark melts into, lamps haloed in it (forward-scattering
+    # volumetrics), contact shadows (SSAO). SSR is off here: scripts/weather.gd turns it on for wet ground)
+    env = W.sub("Environment", background_mode=1, background_color="Color(0.075, 0.085, 0.088, 1)",
                 ambient_light_source=2, ambient_light_color="Color(0.4, 0.5, 0.58, 1)", ambient_light_energy=0.8,
-                tonemap_mode=2, fog_enabled="true", fog_light_color="Color(0.12, 0.16, 0.19, 1)",
-                fog_density=0.024, fog_sky_affect=1.0, volumetric_fog_enabled="true",
-                volumetric_fog_density=0.022, volumetric_fog_albedo="Color(0.72, 0.8, 0.74, 1)",
-                volumetric_fog_length=60.0, glow_enabled="true", glow_intensity=0.6,
-                adjustment_enabled="true", adjustment_contrast=1.18, adjustment_saturation=0.55)
+                tonemap_mode=2, tonemap_white=6.0, ssr_max_steps=48, ssr_fade_out=1.5, ssr_depth_tolerance=0.4,
+                ssao_enabled="true", ssao_radius=1.4, ssao_intensity=1.8, ssao_power=1.6,
+                fog_enabled="true", fog_light_color="Color(0.17, 0.19, 0.2, 1)",
+                fog_density=0.038, fog_sky_affect=1.0, volumetric_fog_enabled="true",
+                volumetric_fog_density=0.03, volumetric_fog_albedo="Color(0.7, 0.74, 0.72, 1)",
+                volumetric_fog_anisotropy=0.55, volumetric_fog_length=64.0, volumetric_fog_detail_spread=1.5,
+                volumetric_fog_ambient_inject=0.45, glow_enabled="true", glow_intensity=0.7, glow_bloom=0.05,
+                glow_hdr_threshold=0.9, adjustment_enabled="true", adjustment_contrast=1.18,
+                adjustment_saturation=0.55)
     W.add("Hollowmere", None, "Node3D")
     W.add("WorldEnvironment", typ="WorldEnvironment", environment=env)
     W.add("Moon", typ="DirectionalLight3D", transform="Transform3D(0.8, 0.35, -0.48, 0, 0.81, 0.59, 0.6, -0.47, 0.64, 0, 30, 0)",
-          light_color=color4((0.55, 0.66, 0.8)), light_energy=0.3)
+          light_color=color4((0.55, 0.66, 0.8)), light_energy=0.3, shadow_enabled="true", shadow_blur=1.5,
+          directional_shadow_max_distance=50.0)
     for group in ("Terrain", "Buildings", "Props", "Lights", "Signs", "Zones"):
         W.add(group, typ="Node3D")
     W.add("Bounds", typ="StaticBody3D")
@@ -2229,6 +2235,7 @@ def build_world():
     W.add("Chapter2", typ="Node3D", script=W.res("res://scripts/chapter2.gd", "Script"))  # dormant until ch1 hands over
     W.add("Chapter3", typ="Node3D", script=W.res("res://scripts/chapter3.gd", "Script"))  # dormant until ch2 hands over
     W.add("Player", instance=W.res("res://player/player.tscn", "PackedScene"), transform=xform(-100.2, 0.1, 49.6))
+    W.add("Weather", typ="Node3D", script=W.res("res://scripts/weather.gd", "Script"))  # rain, wind, rolling fog
     return W
 
 

@@ -1,4 +1,4 @@
-"""Shared humanoid rig for every LAAF character (segmented PS2-style, no skinning).
+"""Shared humanoid rig for every LAAF character (built ones segmented PS2-style; tools/psx_chars.py ones skinned on it).
 
 All characters face +Z, Y up, feet on y=0. The character's LEFT side is +X.
 Each joint is a glTF node; geometry added after m.use("<Joint>") is in that
