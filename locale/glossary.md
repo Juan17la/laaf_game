@@ -155,6 +155,11 @@ HOLLOWMERE MEMORIAL PARK, HOLLOWMERE ARMS, LAUNDROMAT 24H, PAWN & LOAN, GAS - FO
 | Achievement | Logro |
 | objective (map panel) | objetivo |
 | Takedown | Derribo |
+| Inventory (screen, caps: INVENTORY) | Inventario (INVENTARIO) |
+| inventory tabs: WEAPONS / ITEMS / KEYS / EVIDENCE / MAP | ARMAS / OBJETOS / CLAVE / EVIDENCIA / MAPA |
+| Key items / Items | Objetos clave / Objetos |
+| headlamp | linterna de cabeza (a flashlight is **linterna**) |
+| EQUIP / DRINK / PUT ON / TAKE OFF / TURN ON / TURN OFF | EQUIPAR / BEBER / PONER / QUITAR / ENCENDER / APAGAR |
 | HIDE | ESCÓNDETE |
 | THEY ADAPT | SE ADAPTAN |
 | click / Space / Esc / Shift | clic / Espacio / Esc / Shift (key letters W A S D E F C G T H X R B M stay) |
