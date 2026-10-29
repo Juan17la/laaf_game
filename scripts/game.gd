@@ -281,9 +281,42 @@ func notify(text: String, title := "", time := 4.0) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	## Esc / Start opens the pause menu; once it's open, the menu takes its own keys (Esc goes back, then resumes).
+	## Tab / I / Back open the inventory, M on its Map tab, while Alex is in control (never in a cinematic, a minigame
+	## or a death).
 	if event.is_action_pressed("pause") and director and is_instance_valid(director) and not _pause:
 		get_viewport().set_input_as_handled()
 		_open_pause()
+	elif (event.is_action_pressed("inventory") or event.is_action_pressed("map")) and can_open_inventory():
+		get_viewport().set_input_as_handled()
+		open_inventory("map" if event.is_action_pressed("map") else "")
+
+
+func can_open_inventory() -> bool:
+	if not director or not is_instance_valid(director) or _pause or get_tree().paused:
+		return false
+	var p: Node = director.get("player")
+	return p != null and bool(p.controls_enabled) and not bool(p.dead)
+
+
+func open_inventory(tab := "") -> void:
+	## The inventory (scripts/inventory.gd) over the frozen game, on the pause layer like the pause menu; `tab` an
+	## InventoryMenu.TABS id ("" = Weapons).
+	_freeze()
+	var inv := InventoryMenu.new()
+	inv.game = self
+	inv.player = director.get("player")
+	inv.director = director
+	inv.tab = InventoryMenu.tab_index(tab) if tab != "" else 0
+	_pause_layer().add_child(inv)
+	_pause_menu = null
+
+
+func _freeze() -> void:
+	## The game stops under a menu: paused, the mouse free with the menus' pointer, the crisp canvas_items scale.
+	get_tree().paused = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	MenuDraw.cursor(true)
+	get_window().content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
 
 
 func resume() -> void:
@@ -314,10 +347,7 @@ func _pause_layer() -> CanvasLayer:
 func _open_pause() -> void:
 	## The pause menu (scripts/pause_menu.gd): the main menu's dossier over the frozen game, in the menus' crisp
 	## canvas_items scale until it closes. Saving only in a story run with the player in control.
-	get_tree().paused = true
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	MenuDraw.cursor(true)
-	get_window().content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
+	_freeze()
 	var p: Node = director.get("player")
 	var objective: Variant = director.get("_objective_text")
 	_pause_menu = PauseMenu.new()
