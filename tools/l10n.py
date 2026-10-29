@@ -34,7 +34,7 @@ BS = chr(92)
 IGNORE = {
     "Node3D", "WorldEnvironment", "Moon", "OmniLight3D", "Light3D", "MeshInstance3D", "GeometryInstance3D",
     "CPUParticles3D", "Button", "Label", "HUD", "Guide", "Chapter1", "Chapter2", "Chapter3", "Player", "Body",
-    "Props/Boss", "HandL", "HandR", "Head", "Headlamp", "Model", "Anim", "SFX", "Voice", "Master", "Game",
+    "Props/Boss", "HandL", "HandR", "Head", "Spine", "Headlamp", "Model", "Anim", "SFX", "Voice", "Master", "Game",
     "Audio", "L", "R", "*", "#loop", ".!?", ",;:—-…", "áàä", "éè", "íì", "óò", "%s %s", "[i]%s[/i]",
     "[b][color=#%s]%s:[/color][/b] %s", "%d / %d", "%s ×%d [%s]", "[%d %s]", "%d %s", "%d. %s", "~#%*=:/" + BS * 2,
     "A", "J", "Q", "K", "G", "T", "H", "E", "N", "<", ">", "+", "x", "?", "!", "#", "—", "♪", "MHz", "%d·%d", "~#%*=:/" + BS,
@@ -42,6 +42,7 @@ IGNORE = {
     "Marked Man", "Marked Woman", "marked one", "lucía", "tomás", "I", "II", "III", "…", " · ", "— ", "  · ", "> ",
     " ▶ ", "ENTER", "ESC", "A D", "W S", "W A S D", "%s · %s", "%s · %s · %s · %s", "Mark",
     "(@)", "Hand", "Brand", "ShepLamp", "Saved",  # (hud.gd: the save sound for "Saved." notes; the note itself is its own message)
+    "Q E", "X", "F", "%d · %d", "%d × %d", "×%d", "%d / 3", "#%d", "???",  # (inventory.gd: keycaps, counts)
     "Ch.%d · %s",  # (a save's "label", kept in English for older builds; the menus show "objective" translated)
     # Moth Run's high-score table and marquee: names and title as the arcade cabinet has them
     "LILY V.", "TOMAS R.", "SAM K.", "LUCIA M.", "OWEN B.", "NORA H.", "GRADY", "M O T H   R U N",
