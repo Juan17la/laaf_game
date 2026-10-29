@@ -22,7 +22,7 @@ The game recreates the PSX/PS2 Silent Hill and Cry of Fear feel on purpose: fog,
 
 ## Operating Context
 
-- The game boots into `maps/main_menu.tscn` (`scripts/main_menu.gd`, `scripts/menu_ui.gd`). Behind the menu, the real town plays staged story scenes in heavy fog with captions.
+- The game boots into `maps/main_menu.tscn` (`scripts/main_menu.gd`, drawn with `scripts/menu_draw.gd`; the in-game pause menu is `scripts/pause_menu.gd`, sharing the Options page `scripts/options_page.gd`). Behind the menu, the real town plays staged story scenes in heavy fog with captions.
 - The in-game HUD is `player/hud.gd`, with `hud_eyes.gd` (visibility eye), `threat_arcs.gd` (off-screen threats), `screen_fx.gd` (Mark and pain effects) and `guide.gd` (minimap). Settings are in `scripts/settings.gd`.
 - Main menu pages: Continue, New Game, Load Game, Extra (achievements), Dev Mode, Quit, plus Difficulty (Story / Normal / Hard).
 - Minigame overlays: lockpick, fishing, radio tuning, hi-lo, moth run, music box.
