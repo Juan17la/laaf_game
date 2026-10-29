@@ -17,11 +17,13 @@ var look := Vector2.ZERO  ## head yaw / pitch in radians, relative to the body
 var airborne := false  ## jumping / falling: legs tuck
 var sliding := false  ## knee slide: hips drop, lead leg out, lean back
 var aim := 0.0  ## 0..1 right arm raised along aim_pitch (gun hand), left arm supports
-var aim_pitch := 0.0  ## radians, + = up
+var aim_pitch := 0.0  ## radians, + = up: toward what's aimed at, from the chest
+var aim_lean := 0.0  ## 0..1: the spine bends SPINE_AIM of aim_pitch toward it (a gun or bow aimed, not a guard)
 var aim_block := 0.0  ## 0..1 wall right in front of the muzzle: gun tucks to low ready instead of poking through
 var stance := 0.0  ## spine turn (radians) while aiming: long guns and the bow blade the shoulders to the target
 var throw := -1.0  ## 0..1 left-hand overhand throw (windup until 0.45, release after), -1 = none
 var recoil := 0.0  ## 0..1, decays by itself; set to 1 on a shot
+const SPINE_AIM := 0.35  ## the share of a steep aim the spine bends (forward aiming down, back aiming up); arms the rest
 var attack := -1.0  ## 0..1 overhead swing (windup until 0.6, strike after), -1 = none
 var flinch := 0.0  ## 0..1, decays by itself; set to 1 when hit
 var strike := -1.0  ## 0..1 a melee strike's body motion (the hands are IK'd by the player), -1 = none
@@ -273,7 +275,7 @@ func _process(delta: float) -> void:
 	# (aim_block) the gun drops to low ready and pulls in instead of poking through it.
 	recoil = move_toward(recoil, 0.0, delta * 6.0)
 	if aim > 0.0:
-		var arm_x := lerpf(-PI / 2.0 - aim_pitch, -0.55, aim_block) - 0.3 * recoil
+		var arm_x := lerpf(-PI / 2.0 - aim_pitch * (1.0 - SPINE_AIM * aim_lean), -0.55, aim_block) - 0.3 * recoil
 		var bend := -0.2 - 0.9 * aim_block - 0.25 * recoil
 		_pose("UpperArmR", Vector3(arm_x, 0.4, -0.05), aim)
 		_pose("ForearmR", Vector3(bend, 0, 0), aim)
@@ -282,6 +284,7 @@ func _process(delta: float) -> void:
 		_pose("ForearmL", Vector3(bend + 0.2, 0, 0), aim)
 		_pose("HandL", Vector3(0.1, 0, 0.3), aim)
 		spine.rotation.y = lerpf(spine.rotation.y, stance, aim)
+		spine.rotation.x -= aim_pitch * SPINE_AIM * aim_lean * aim  # (+x bends forward: a low aim stoops, a high one arches)
 		head.rotation.y -= stance * aim  # eyes stay on the target over the bladed shoulders
 
 	# overhand throw with the free (left) hand: cock it behind the head, whip it forward, follow through
@@ -422,6 +425,11 @@ func _process(delta: float) -> void:
 		var r := head.rotation
 		_neck.rotation = r * 0.4
 		head.rotation = r * 0.6
+
+
+func joint(name: String) -> Node3D:
+	## A rig joint (Hips, Spine, Head, UpperArmR...), null if the rig has none by that name.
+	return _j.get(name)
 
 
 func crouch_amount() -> float:
