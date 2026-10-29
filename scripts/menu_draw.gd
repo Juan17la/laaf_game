@@ -170,6 +170,30 @@ func bar(r: Rect2, label: String, icon: String, armed: bool) -> void:
 	key(r.end.x - 9.0, r.get_center().y, "ENTER", c(BONE, 0.9))
 
 
+func index_tab(r: Rect2, col: Color, stroke := true) -> void:
+	## An index tab on the folder's left edge: rounded on the outside (left) edge, square where it meets the folder.
+	## The open one has no stroke: it's the folder's own leaf.
+	var pts := Icons.round_rect(Rect2(r.position, r.size + Vector2(10, 0)), 7.0, false)
+	var edge := PackedVector2Array([r.end])
+	for i in pts.size():
+		pts[i].x = minf(pts[i].x, r.end.x)
+		if i >= 10:  # the bottom-left and top-left corners, in order
+			edge.append(pts[i])
+	edge.append(Vector2(r.end.x, r.position.y))
+	ci.draw_colored_polygon(pts, col)
+	if stroke:
+		ci.draw_polyline(edge, Color(BONE, 0.08 * col.a), 1.0, true)
+
+
+func tab_face(r: Rect2, icon: String, label: String, open: bool, e: float) -> void:
+	## A tab's drawn icon over its short name (amber and bright when open).
+	var at := r.get_center() + Vector2(0 if open else -2, -3.5)
+	var ink := AMBER if open else MUTED
+	Icons.draw(ci, icon, at, 12.0, Color(ink, (1.0 if open else 0.75) * e), 1.3)
+	text(bold, Vector2(r.position.x, r.end.y - 3.5), label, 7, Color(BONE if open else MUTED, e),
+		r.size.x - (0 if open else 4), HORIZONTAL_ALIGNMENT_CENTER)
+
+
 func row_box(r: Rect2, on: bool) -> void:
 	## A list row: faint fill, the selected one brighter with a fine amber outline.
 	Icons.fill_round(ci, r, 7.0, c(BONE, 0.095 if on else 0.04))

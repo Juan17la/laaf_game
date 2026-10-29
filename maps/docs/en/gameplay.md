@@ -40,7 +40,8 @@ Session target: 1 zone ≈ 30–45 min including boss. Full game ≈ 5–7 hours
 | Aim | Hold RMB | LT |
 | Shoot (also while jumping, rolling or sliding, with more spread) | LMB | RT |
 | Reload | R | RB / R1 |
-| Swap weapon | Q / mouse wheel / 1‑6 (the HUD lists what you carry) | Y / Triangle |
+| Swap weapon (fists → each weapon → fists) | Q / mouse wheel / 1‑6 (the HUD lists what you carry) | Tap Y / Triangle |
+| Fists (put every weapon away) | 0 (the HUD's first card) | Hold Y / Triangle |
 | Strike (fists, gun butt, axe, bat; fire does it too with nothing to shoot) | B / middle mouse | RT with an empty gun / melee weapon |
 | Draw the bow | Hold RMB (fire looses; a full draw hits hardest) | LT |
 | **Double tap** | Shoot, then swap and shoot again within 0.45 s: the swap is instant and that shot deals +50% | same |
@@ -48,8 +49,11 @@ Session target: 1 zone ≈ 30–45 min including boss. Full game ≈ 5–7 hours
 | Swap shoulder | V | R3 |
 | Skip dialogue line (cinematics) | Enter / E | A / X |
 | Pause menu (resume · save game · main menu) | Esc | Start |
+| Inventory (weapons · items · key items · evidence · map; pauses the game) | Tab / I | Back / View |
+| Map (the inventory's Map tab) | M | Back, then RB |
+| Inventory tabs · close | Q E · Esc / Tab / I / right click | LB RB · B / Back |
 
-> Implemented in `player/player.gd` + `player/weapons.gd`: revolver, flare gun, shotgun (Tom's, at the boathouse, ch2), Owen's bow (after his fight), fire axe (sawmill yard), nail bat (inside the school), and bare fists (alternating jabs; every third landed punch hooks harder). Axe and bat stagger what they hit. The arms hold every weapon on its real grips (arm IK). Quick heal, radio key and journal are not implemented yet.
+> Implemented in `player/player.gd` + `player/weapons.gd`: revolver, flare gun, shotgun (Tom's, at the boathouse, ch2), Owen's bow (after his fight), fire axe (sawmill yard), nail bat (inside the school), and bare fists (alternating jabs; every third landed punch hooks harder). Axe and bat stagger what they hit. The arms hold every weapon on its real grips (arm IK) and aim it at the point under the crosshair, straight down to straight up (the spine takes part of a steep aim). The inventory (`scripts/inventory.gd`) equips weapons, drinks Elena's tea, puts the gas mask on and switches the headlamp, with the hotkeys' rules. Quick heal, radio key and journal are not implemented yet.
 
 Camera: over‑the‑shoulder, switches shoulder with a key (V / R3). Camera pulls in when hiding and shakes when a hunter is near.
 

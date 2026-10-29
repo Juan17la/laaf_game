@@ -7,7 +7,7 @@ extends Node3D
 ##   var lamp := Headlamp.wear(model)   # null if the model has no Head joint
 
 const SCENE := "res://models/item_headlamp.glb"
-const LENS := Vector3(0.0, 0.176, 0.19)  ## lens face centre, Head space (models_items.py HEADLAMP_LENS)
+const LENS := Vector3(-0.001, 0.188, 0.157)  ## lens face centre, Head space (tools/models_items.py headlamp_lens())
 const GLOW := Color(1.0, 0.94, 0.8)
 
 var lit := false:

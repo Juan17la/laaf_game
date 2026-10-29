@@ -523,22 +523,22 @@ func _slip(text: String, title: String, time: float) -> void:
 
 
 func _draw_weapons() -> void:
-	## Weapon cards bottom right, one per carried weapon (number key, short name, colour stripe). The drawn one
-	## sits raised and bright with a pulsing edge in its colour, and flares when it's just been drawn; the others
-	## are dim. Under the name: a pip per round in the magazine (lit = loaded).
+	## Weapon cards bottom right: the fists first (key 0, always there), then one per carried weapon (number key,
+	## short name, colour stripe). The drawn one sits raised and bright with a pulsing edge in its colour, and
+	## flares when it's just been drawn; the others are dim. Under the name: a pip per round in the magazine.
 	var w: Weapons = player.weapons
 	var c := _wui
 	var font := ThemeDB.fallback_font
-	var owned: Array = w.owned
-	var cw := 54.0
+	var cards: Array = [""] + w.owned
+	var n := cards.size()
+	var cw := 54.0 if n <= 5 else 47.0  # (all seven still clear the health bars on the left)
 	var gap := 4.0
 	var right := c.size.x - 10.0
 	var y := c.size.y - 80.0
-	var n := maxi(owned.size(), 1)
 	for i in n:
-		var id: String = owned[i] if owned.size() > 0 else ""
+		var id: String = cards[i]
 		var sp: Dictionary = Weapons.GUNS[id] if id != "" else Weapons.FISTS
-		var sel := (i == w.current and id != "") or owned.is_empty()
+		var sel := id == w.gun()
 		var x := right - (n - i) * (cw + gap) + gap
 		var flare := clampf(1.0 - _swap_t / 0.35, 0.0, 1.0) if sel else 0.0
 		var r := Rect2(x, y - (5.0 if sel else 0.0) - flare * 3.0, cw, 22.0)
@@ -552,8 +552,7 @@ func _draw_weapons() -> void:
 		var short: String = {"revolver": "REVOLVER", "flare": "FLARE", "shotgun": "SHOTGUN", "bow": "BOW",
 			"axe": "AXE", "bat": "BAT"}.get(id, "FISTS")
 		var tc := Color(1, 0.96, 0.85) if sel else Color(0.6, 0.57, 0.5)
-		c.draw_string(font, r.position + Vector2(3, 8), str(i + 1) if id != "" else "", HORIZONTAL_ALIGNMENT_LEFT, -1, 7,
-			Color(col, 0.9))
+		c.draw_string(font, r.position + Vector2(3, 8), str(i), HORIZONTAL_ALIGNMENT_LEFT, -1, 7, Color(col, 0.9))
 		c.draw_string(font, r.position + Vector2(0, 17), tr(short), HORIZONTAL_ALIGNMENT_CENTER, cw, 7, tc)
 		if id != "" and sp.kind != "melee" and w.reserve[id] + w.loaded[id] <= 0:
 			c.draw_line(r.position + Vector2(4, 4), r.end - Vector2(4, 6), Color(0.8, 0.2, 0.15, 0.8), 1.0)  # dry

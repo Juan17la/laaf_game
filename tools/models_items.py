@@ -1183,40 +1183,132 @@ def m_handmic():
 
 # ============================================================== worn
 
-# Alex's head (char_alex, Head joint space, origin at the top of the neck, face +Z): skin and hair reach |x| 0.111,
-# z -0.128 (back) .. +0.132 (fringe) over y 0.16-0.2, where the band runs. Everything here sits clear of that.
-HEADLAMP_Y = 0.178  # band centre height over the Head pivot (above the brows, under the crown)
-HEADLAMP_LENS = (0.0, 0.176, 0.19)  # centre of the lens face (player.gd HEADLAMP_LENS: the beam starts here)
+# Alex's head (char_alex, Head joint space, origin at the top of the neck, face +Z). The band is fitted to his real
+# head and hair (models_chars_a m_alex, its Head node), not to a guess at their size: they're sliced along the band's
+# plane, tilted like a worn strap (low over the forehead, higher round the back of the skull), and the band runs
+# round that outline, touching it, over the hair's blades. The lamp unit sits on its front, on the forehead.
+HEADLAMP_Y = 0.215  # band centre height over the Head pivot, at the pivot's own z (above the brows, under the crown)
+HEADLAMP_TILT = 10.0  # degrees: the band's plane drops toward the front
+HEADLAMP_H, HEADLAMP_T = 0.024, 0.006  # band height and thickness
+HEADLAMP_N = 28  # segments round the head
+
+
+def _head_tris():
+    """Alex's head and hair triangles, Head joint space (cached: the band and the lens both read them)."""
+    if not hasattr(_head_tris, "cache"):
+        import models_chars_a
+        alex = models_chars_a.m_alex()
+        nd = next(n for n in alex.nodes if n["name"] == "Head")
+        tris = []
+        for pos, _, _ in nd["prims"].values():
+            tris += [tuple(pos[k:k + 3]) for k in range(0, len(pos) - 2, 3)]
+        _head_tris.cache = tris
+    return _head_tris.cache
+
+
+def _band_frame():
+    """The band's plane: origin, x (to Alex's left), f (forward and a touch down), n (its normal, up and back)."""
+    t = math.radians(HEADLAMP_TILT)
+    f = (0.0, -math.sin(t), math.cos(t))
+    n = (0.0, math.cos(t), math.sin(t))
+    return (0.0, HEADLAMP_Y, 0.0), (1.0, 0.0, 0.0), f, n
+
+
+def _band_outline():
+    """[(x, f)] in the band's plane: per direction round the head, how far out the head and hair reach over the
+    band's height (three slices: its top, middle and bottom edge), from the outline's own centre."""
+    o, ex, ef, en = _band_frame()
+    dot = lambda a, b: a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
+    sub = lambda a, b: (a[0] - b[0], a[1] - b[1], a[2] - b[2])
+    segs = []
+    for off in (-HEADLAMP_H / 2, 0.0, HEADLAMP_H / 2):
+        for tri in _head_tris():
+            d = [dot(sub(p, o), en) - off for p in tri]
+            pts = []
+            for k in range(3):
+                a, b, da, db = tri[k], tri[(k + 1) % 3], d[k], d[(k + 1) % 3]
+                if (da < 0) != (db < 0):
+                    q = da / (da - db)
+                    x = tuple(a[c] + (b[c] - a[c]) * q for c in range(3))
+                    pts.append((dot(sub(x, o), ex), dot(sub(x, o), ef)))
+            if len(pts) == 2:
+                segs.append(pts)
+    us = [p[0] for s_ in segs for p in s_]
+    vs = [p[1] for s_ in segs for p in s_]
+    cu, cv = (min(us) + max(us)) / 2, (min(vs) + max(vs)) / 2
+    radii = []
+    for k in range(HEADLAMP_N):
+        a = 2 * math.pi * k / HEADLAMP_N
+        du, dv = math.sin(a), math.cos(a)
+        best = 0.0
+        for (u0, v0), (u1, v1) in segs:  # the ray from the centre against every slice segment: the farthest hit
+            ex_, ev = u1 - u0, v1 - v0
+            den = du * ev - dv * ex_
+            if abs(den) < 1e-12:
+                continue
+            wu, wv = u0 - cu, v0 - cv
+            t_ = (wu * ev - wv * ex_) / den
+            s2 = (wu * dv - wv * du) / den
+            if t_ > 0 and 0.0 <= s2 <= 1.0:
+                best = max(best, t_)
+        radii.append(best)
+    # the hair's blade tips make a ragged outline: the elastic presses them in a little (never more than 4 mm) and
+    # runs smooth round them instead of kinking at each
+    smooth = [max((radii[k - 1] + 2 * radii[k] + radii[(k + 1) % HEADLAMP_N]) / 4, radii[k] - 0.004)
+              for k in range(HEADLAMP_N)]
+    out = []
+    for k, r in enumerate(smooth):
+        a = 2 * math.pi * k / HEADLAMP_N
+        r += HEADLAMP_T / 2 + 0.001  # its inside face on the hair, not in it
+        out.append((cu + r * math.sin(a), cv + r * math.cos(a)))
+    return out
+
+
+def _band_point(u, v, up=0.0):
+    """Head space point at (u, v) in the band's plane, `up` along its normal."""
+    o, ex, ef, en = _band_frame()
+    return tuple(o[c] + ex[c] * u + ef[c] * v + en[c] * up for c in range(3))
+
+
+def headlamp_lens():
+    """Centre of the lens face, Head space (scripts/headlamp.gd LENS must match: the beam starts there)."""
+    pts = _band_outline()
+    front = pts[0]
+    o, ex, ef, en = _band_frame()
+    at = _band_point(front[0], front[1] + HEADLAMP_T / 2 + 0.023)
+    t = math.radians(6.0)  # the housing's own tilt down on its hinge, in the head's frame
+    return (at[0], at[1] - 0.001 * math.cos(t) - 0.019 * math.sin(t), at[2] + 0.019 * math.cos(t) - 0.001 * math.sin(t))
 
 
 def m_headlamp():
-    """Work / camping headlamp worn on Alex's head (Head joint space, see above): a flat elastic band round the head
-    over the hair, a small boxy lamp unit on the forehead with a tilt hinge and a top button, the lens in its own
+    """Work / camping headlamp worn on Alex's head (Head joint space, see above): a flat elastic band fitted round his
+    head and hair, a small boxy lamp unit on the forehead with a tilt hinge and a top button, the lens in its own
     node ("lens") so the game can light it while the lamp is on. No markings."""
     m = B.Model("item_headlamp")
     m.node("headlamp")
-    y, h, t = HEADLAMP_Y, 0.024, 0.006
-    ax, zf, zb = 0.121, 0.145, 0.139  # half-widths of the band's ellipse: sides, front, back (outside the hair)
-    n = 20
-    pts = []
-    for k in range(n):
-        a = 2 * math.pi * k / n
-        pts.append((ax * math.sin(a), (zf if math.cos(a) > 0 else zb) * math.cos(a)))
-    for k in range(n):
-        (x0, z0), (x1, z1) = pts[k], pts[(k + 1) % n]
-        seg = math.hypot(x1 - x0, z1 - z0)
-        yaw = math.degrees(math.atan2(x1 - x0, z1 - z0)) - 90
-        m.box("itm_strap", (seg + 0.004, h, t), ((x0 + x1) / 2, y, (z0 + z1) / 2), (0, yaw, 0))
+    h, t = HEADLAMP_H, HEADLAMP_T
+    o, ex, ef, en = _band_frame()
+    pts = _band_outline()
+    tilt = HEADLAMP_TILT
+    for k in range(len(pts)):  # one flat panel per segment, standing square to the band's plane
+        (u0, v0), (u1, v1) = pts[k], pts[(k + 1) % len(pts)]
+        seg = math.hypot(u1 - u0, v1 - v0)
+        yaw = math.degrees(math.atan2(u1 - u0, v1 - v0)) - 90
+        with m.push(_band_point((u0 + u1) / 2, (v0 + v1) / 2), (tilt, 0, 0)):
+            m.box("itm_strap", (seg + 0.004, h, t), (0, 0, 0), (0, yaw, 0))
     # lamp unit on the forehead: bracket on the band, the housing tilted a touch down on its hinge, a top button
-    m.box("itm_case", (0.05, 0.03, 0.008), (0, y, zf + 0.006))
-    m.cyl("itm_grey", 0.007, 0.007, 0.064, (-0.032, y - 0.004, zf + 0.012), (0, 0, -90), seg=6)  # hinge pin
-    with m.push((0, y, zf + 0.023), (6, 0, 0)):
+    fu, fv = pts[0]
+    zf = fv + t / 2
+    with m.push(_band_point(fu, 0.0), (tilt, 0, 0)):
+        m.box("itm_case", (0.05, 0.03, 0.008), (0, 0, zf + 0.004))
+        m.cyl("itm_grey", 0.007, 0.007, 0.064, (-0.032, -0.004, zf + 0.01), (0, 0, -90), seg=6)  # hinge pin
+    with m.push(_band_point(fu, zf + 0.023), (6, 0, 0)):
         m.box("itm_case", (0.068, 0.04, 0.03), (0, 0, 0))
         m.box("itm_grey", (0.072, 0.008, 0.032), (0, 0.016, 0))  # rim
         m.box("itm_orange_dk", (0.016, 0.006, 0.012), (0, 0.023, -0.002))  # switch
         m.box("itm_grey", (0.06, 0.032, 0.004), (0, -0.001, 0.016))  # bezel
     m.node("lens")
-    with m.push((0, y, zf + 0.023), (6, 0, 0)):
+    with m.push(_band_point(fu, zf + 0.023), (6, 0, 0)):
         m.box("itm_lamp_lens", (0.046, 0.022, 0.004), (0, -0.001, 0.019))
     return m
 
