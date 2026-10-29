@@ -84,219 +84,219 @@ msgstr ""
 msgid "Dusk. The road into Hollowmere."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:177 scripts/ch1_scenes_a.gd:181 scripts/ch1_scenes_a.gd:189 scripts/ch1_scenes_a.gd:200 scripts/ch1_scenes_a.gd:228 scripts/ch1_scenes_a.gd:241 …
+#: scripts/ch1_scenes_a.gd:178 scripts/ch1_scenes_a.gd:183 scripts/ch1_scenes_a.gd:191 scripts/ch1_scenes_a.gd:202 scripts/ch1_scenes_a.gd:230 scripts/ch1_scenes_a.gd:243 …
 msgid "Alex"
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:177
+#: scripts/ch1_scenes_a.gd:178
 msgid "No. No, no, no—"
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:181
+#: scripts/ch1_scenes_a.gd:183
 msgid "Not here. Not now."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:189
+#: scripts/ch1_scenes_a.gd:191
 msgid "Bridge out. Great."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:197
+#: scripts/ch1_scenes_a.gd:199
 msgid "\"Hollowmere is beautiful. Don't come.\" — L."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:200
+#: scripts/ch1_scenes_a.gd:202
 msgid "Three weeks, Lucía. Not one call."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:228
+#: scripts/ch1_scenes_a.gd:230
 msgid "Hello? Are you open?"
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:237 scripts/ch1_scenes_a.gd:248 scripts/ch1_scenes_a.gd:257 scripts/ch1_scenes_a.gd:262 scripts/ch1_scenes_a.gd:268 scripts/ch1_scenes_a.gd:274 …
+#: scripts/ch1_scenes_a.gd:239 scripts/ch1_scenes_a.gd:250 scripts/ch1_scenes_a.gd:259 scripts/ch1_scenes_a.gd:264 scripts/ch1_scenes_a.gd:270 scripts/ch1_scenes_a.gd:276 …
 msgid "Grady"
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:237
+#: scripts/ch1_scenes_a.gd:239
 msgid "Closed. Always, after dark."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:241
+#: scripts/ch1_scenes_a.gd:243
 msgid "I'm looking for my sister. Lucía."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:244
+#: scripts/ch1_scenes_a.gd:246
 msgid "She sent this. From here."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:248
+#: scripts/ch1_scenes_a.gd:250
 msgid "Never seen her."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:252
+#: scripts/ch1_scenes_a.gd:254
 msgid "You didn't even look."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:257
+#: scripts/ch1_scenes_a.gd:259
 msgid "Motel. Lake road, west."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:262
+#: scripts/ch1_scenes_a.gd:264
 msgid "Room six. One night."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:268
+#: scripts/ch1_scenes_a.gd:270
 msgid "Then you go back the way you came."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:270
+#: scripts/ch1_scenes_a.gd:272
 msgid "The bridge is out."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:274
+#: scripts/ch1_scenes_a.gd:276
 msgid "Then walk."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:296
+#: scripts/ch1_scenes_a.gd:298
 msgid "23:00. Lakeview Motel, room six."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:323
+#: scripts/ch1_scenes_a.gd:325
 msgid "Tsssss…"
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:332
+#: scripts/ch1_scenes_a.gd:334
 msgid "Agh—!"
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:337
+#: scripts/ch1_scenes_a.gd:339
 msgid "Who's there?!"
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:348
+#: scripts/ch1_scenes_a.gd:350
 msgid "My hand…"
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:364
+#: scripts/ch1_scenes_a.gd:366
 msgid "An eye… inside a spiral."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:367
+#: scripts/ch1_scenes_a.gd:369
 msgid "Burned in. What did they do to me?"
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:392
+#: scripts/ch1_scenes_a.gd:394
 msgid "The same eye. On my door."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:394
+#: scripts/ch1_scenes_a.gd:396
 msgid "Still wet."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:397
+#: scripts/ch1_scenes_a.gd:399
 msgid "And a note."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:416 scripts/ch1_scenes_a.gd:445 scripts/ch1_scenes_a.gd:450 scripts/ch1_scenes_a.gd:452 scripts/ch1_scenes_a.gd:456 scripts/ch1_scenes_a.gd:458 …
+#: scripts/ch1_scenes_a.gd:418 scripts/ch1_scenes_a.gd:447 scripts/ch1_scenes_a.gd:452 scripts/ch1_scenes_a.gd:454 scripts/ch1_scenes_a.gd:458 scripts/ch1_scenes_a.gd:460 …
 msgid "Moth"
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:416
+#: scripts/ch1_scenes_a.gd:418
 msgid "\"Don't let them see you after dark. Radio, channel 7.\""
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:418
+#: scripts/ch1_scenes_a.gd:420
 msgid "Channel 7…"
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:445
+#: scripts/ch1_scenes_a.gd:447
 msgid "You're awake. Good."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:447
+#: scripts/ch1_scenes_a.gd:449
 msgid "Who is this? Who did this to me?"
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:450
+#: scripts/ch1_scenes_a.gd:452
 msgid "No names on open air. Listen."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:452
+#: scripts/ch1_scenes_a.gd:454
 msgid "They marked you. Owen comes to collect."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:454
+#: scripts/ch1_scenes_a.gd:456
 msgid "Collect what?"
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:456
+#: scripts/ch1_scenes_a.gd:458
 msgid "You. Get to the town square."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:458
+#: scripts/ch1_scenes_a.gd:460
 msgid "Stay in the tall grass. Stay low."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:460
+#: scripts/ch1_scenes_a.gd:462
 msgid "And if he sees me?"
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:462
+#: scripts/ch1_scenes_a.gd:464
 msgid "Don't let him. Go. Now."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:488 scripts/ch1_scenes_a.gd:500 scripts/ch1_scenes_a.gd:505 scripts/ch1_scenes_b.gd:217 scripts/ch1_scenes_b.gd:222 scripts/ch1_scenes_b.gd:228 …
+#: scripts/ch1_scenes_a.gd:490 scripts/ch1_scenes_a.gd:502 scripts/ch1_scenes_a.gd:507 scripts/ch1_scenes_b.gd:217 scripts/ch1_scenes_b.gd:222 scripts/ch1_scenes_b.gd:228 …
 msgid "Owen"
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:488
+#: scripts/ch1_scenes_a.gd:490
 msgid "Little outsider… where'd you go?"
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:494
+#: scripts/ch1_scenes_a.gd:496
 msgid "HIDE"
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:495
+#: scripts/ch1_scenes_a.gd:497
 msgid "C in tall grass: hidden."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:517
+#: scripts/ch1_scenes_a.gd:519
 msgid "He stopped…"
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:520
+#: scripts/ch1_scenes_a.gd:522
 msgid "The lights. He won't come into the lights."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:529
+#: scripts/ch1_scenes_a.gd:531
 msgid "Room 4. Same eye on the door."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:530
+#: scripts/ch1_scenes_a.gd:532
 msgid "Lucía's postcards were on this motel's paper."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:535
+#: scripts/ch1_scenes_a.gd:537
 msgid "ROOM 4"
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:536
+#: scripts/ch1_scenes_a.gd:538
 msgid "Chained on the inside. It gives an inch."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:537
+#: scripts/ch1_scenes_a.gd:539
 msgid "Her camera's hanging off the handle."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:542
+#: scripts/ch1_scenes_a.gd:544
 msgid "EVIDENCE #11"
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:543
+#: scripts/ch1_scenes_a.gd:545
 msgid "Lucía's camera. One frame left."
 msgstr ""
 
-#: scripts/ch1_scenes_a.gd:544
+#: scripts/ch1_scenes_a.gd:546
 msgid "Her last photo: a chapel. In a quarry."
 msgstr ""
 
@@ -588,7 +588,7 @@ msgstr ""
 msgid "WIRE CUT  ·  %d LEFT"
 msgstr ""
 
-#: scripts/ch1_scenes_b.gd:456 scripts/ch2_scenes_a.gd:423
+#: scripts/ch1_scenes_b.gd:456 scripts/ch2_scenes_a.gd:423 scripts/inventory.gd:431
 msgid "EVIDENCE #%d"
 msgstr ""
 
@@ -1768,7 +1768,7 @@ msgstr ""
 msgid "You'd bring the church down on me?"
 msgstr ""
 
-#: scripts/ch3_scenes_a.gd:240 player/player.gd:1099
+#: scripts/ch3_scenes_a.gd:240 player/player.gd:1188
 msgid "CLANG"
 msgstr ""
 
@@ -2752,7 +2752,7 @@ msgstr ""
 msgid "Reach the town square — crouch (C) in tall grass to hide"
 msgstr ""
 
-#: scripts/chapter1.gd:840 player/guide.gd:16
+#: scripts/chapter1.gd:840 player/guide.gd:17
 msgid "Town Square"
 msgstr ""
 
@@ -2788,7 +2788,7 @@ msgstr ""
 msgid "Read the ledger"
 msgstr ""
 
-#: scripts/chapter1.gd:908 player/guide.gd:17
+#: scripts/chapter1.gd:908 player/guide.gd:18
 msgid "Pinewood Forest & Sawmill"
 msgstr ""
 
@@ -2836,7 +2836,7 @@ msgstr ""
 msgid "+1 BOTTLE"
 msgstr ""
 
-#: scripts/chapter2.gd:119 player/hud.gd:276
+#: scripts/chapter2.gd:119 scripts/inventory.gd:186 player/hud.gd:276
 msgid "Bottle"
 msgstr ""
 
@@ -3088,7 +3088,7 @@ msgstr ""
 msgid "Light a candle for Sam"
 msgstr ""
 
-#: scripts/chapter3.gd:204
+#: scripts/chapter3.gd:204 scripts/inventory.gd:189
 msgid "Smoke can"
 msgstr ""
 
@@ -3096,7 +3096,7 @@ msgstr ""
 msgid "+1 SMOKE CAN"
 msgstr ""
 
-#: scripts/chapter3.gd:237 player/guide.gd:17
+#: scripts/chapter3.gd:237 player/guide.gd:18
 msgid "Church & Cemetery"
 msgstr ""
 
@@ -3164,7 +3164,7 @@ msgstr ""
 msgid "North to the quarry — Lucía is in the Veil's Chapel"
 msgstr ""
 
-#: scripts/chapter3.gd:492 player/guide.gd:20
+#: scripts/chapter3.gd:492 player/guide.gd:21
 msgid "Quarry & Veil's Chapel"
 msgstr ""
 
@@ -3428,7 +3428,7 @@ msgstr ""
 msgid "Autosave"
 msgstr ""
 
-#: scripts/game.gd:163 scripts/main_menu.gd:464
+#: scripts/game.gd:163 scripts/main_menu.gd:449
 msgid "Save"
 msgstr ""
 
@@ -3590,6 +3590,386 @@ msgstr ""
 
 #: scripts/interactable.gd:19
 msgid "Use"
+msgstr ""
+
+#: scripts/inventory.gd:19
+msgid "WEAPONS"
+msgstr ""
+
+#: scripts/inventory.gd:19
+msgid "Weapons"
+msgstr ""
+
+#: scripts/inventory.gd:19
+msgid "ITEMS"
+msgstr ""
+
+#: scripts/inventory.gd:19
+msgid "Items"
+msgstr ""
+
+#: scripts/inventory.gd:20
+msgid "KEYS"
+msgstr ""
+
+#: scripts/inventory.gd:20
+msgid "Key items"
+msgstr ""
+
+#: scripts/inventory.gd:20
+msgid "EVIDENCE"
+msgstr ""
+
+#: scripts/inventory.gd:20 scripts/inventory.gd:410
+msgid "Evidence"
+msgstr ""
+
+#: scripts/inventory.gd:20
+msgid "MAP"
+msgstr ""
+
+#: scripts/inventory.gd:20 scripts/inventory.gd:443
+msgid "Map"
+msgstr ""
+
+#: scripts/inventory.gd:30
+msgid "Bare hands. Alternating jabs; every third punch that lands hooks harder."
+msgstr ""
+
+#: scripts/inventory.gd:31
+msgid "Six rounds. Steady, and loud enough to bring them running."
+msgstr ""
+
+#: scripts/inventory.gd:32
+msgid "One flare at a time. It burns, and fire stuns."
+msgstr ""
+
+#: scripts/inventory.gd:33
+msgid "Two shells, seven pellets each. Close range."
+msgstr ""
+
+#: scripts/inventory.gd:34
+msgid "Owen's hunting bow. Silent; a full draw hits hardest."
+msgstr ""
+
+#: scripts/inventory.gd:35
+msgid "Heavy, slow chops that stagger."
+msgstr ""
+
+#: scripts/inventory.gd:36
+msgid "Quick swings that stagger."
+msgstr ""
+
+#: scripts/inventory.gd:40
+msgid "Hunting ledger"
+msgstr ""
+
+#: scripts/inventory.gd:40
+msgid "Names and dates from the sawmill. The last column says \"delivered\"."
+msgstr ""
+
+#: scripts/inventory.gd:41
+msgid "Moth's oilcloth"
+msgstr ""
+
+#: scripts/inventory.gd:41
+msgid "Tied under the last tripwire stake: \"His wires. He marks whoever gets through.\""
+msgstr ""
+
+#: scripts/inventory.gd:42
+msgid "Attendance list"
+msgstr ""
+
+#: scripts/inventory.gd:42
+msgid "The week of the festival. Six names crossed out in red: \"Recruited.\""
+msgstr ""
+
+#: scripts/inventory.gd:43
+msgid "Nora's letter"
+msgstr ""
+
+#: scripts/inventory.gd:43
+msgid "Never sent. \"He says if I serve, she might come back.\""
+msgstr ""
+
+#: scripts/inventory.gd:44
+msgid "Delivery list"
+msgstr ""
+
+#: scripts/inventory.gd:44
+msgid "Sedatives, signed J.P. Destination: the quarry."
+msgstr ""
+
+#: scripts/inventory.gd:45
+msgid "Toe tag"
+msgstr ""
+
+#: scripts/inventory.gd:45
+msgid "From an empty body bag: \"Tomás R. Transferred. Quarry.\""
+msgstr ""
+
+#: scripts/inventory.gd:46
+msgid "Bell register"
+msgstr ""
+
+#: scripts/inventory.gd:46
+msgid "Every blackout rung since the festival. The last line: \"One. Elena.\""
+msgstr ""
+
+#: scripts/inventory.gd:47
+msgid "Elena's quarry map"
+msgstr ""
+
+#: scripts/inventory.gd:47
+msgid "Every cell and cage. One circled in red: \"L.M. — chapel, beside the altar.\""
+msgstr ""
+
+#: scripts/inventory.gd:48
+msgid "Elena's recording"
+msgstr ""
+
+#: scripts/inventory.gd:48
+msgid "Hidden under the static on channel 7: \"He's lying to us.\""
+msgstr ""
+
+#: scripts/inventory.gd:49
+msgid "Sunken box"
+msgstr ""
+
+#: scripts/inventory.gd:49
+msgid "Photos sealed in wax: every boat in the harbor chained on the festival night."
+msgstr ""
+
+#: scripts/inventory.gd:50
+msgid "Lucía's camera"
+msgstr ""
+
+#: scripts/inventory.gd:50
+msgid "One frame left. Her last photo: a chapel, in a quarry."
+msgstr ""
+
+#: scripts/inventory.gd:51
+msgid "The Shepherd's letter"
+msgstr ""
+
+#: scripts/inventory.gd:51
+msgid "Silas took it off the Shepherd's man. He never read it twice."
+msgstr ""
+
+#: scripts/inventory.gd:165
+msgid "EQUIP"
+msgstr ""
+
+#: scripts/inventory.gd:165
+msgid "In hand."
+msgstr ""
+
+#: scripts/inventory.gd:169
+msgid "Melee"
+msgstr ""
+
+#: scripts/inventory.gd:187
+msgid "Thrown onto the crosshair. Whatever hears it shatter goes to look."
+msgstr ""
+
+#: scripts/inventory.gd:190
+msgid "Thrown onto the crosshair: a cloud that hides everything in and behind it."
+msgstr ""
+
+#: scripts/inventory.gd:194
+msgid "Elena's Tea"
+msgstr ""
+
+#: scripts/inventory.gd:195
+msgid "Lowers the Mark by 15%."
+msgstr ""
+
+#: scripts/inventory.gd:195
+msgid "DRINK"
+msgstr ""
+
+#: scripts/inventory.gd:196
+msgid "The Mark is already clear."
+msgstr ""
+
+#: scripts/inventory.gd:200
+msgid "Gas mask"
+msgstr ""
+
+#: scripts/inventory.gd:200
+msgid "Filter %d%%"
+msgstr ""
+
+#: scripts/inventory.gd:201
+msgid "Worn in the gas, the filter wears down instead of you."
+msgstr ""
+
+#: scripts/inventory.gd:201
+msgid "TAKE OFF"
+msgstr ""
+
+#: scripts/inventory.gd:201
+msgid "PUT ON"
+msgstr ""
+
+#: scripts/inventory.gd:205
+msgid "Headlamp"
+msgstr ""
+
+#: scripts/inventory.gd:205
+msgid "On"
+msgstr ""
+
+#: scripts/inventory.gd:205
+msgid "Off"
+msgstr ""
+
+#: scripts/inventory.gd:206
+msgid "Strapped to your head. It shines where you look."
+msgstr ""
+
+#: scripts/inventory.gd:206
+msgid "TURN OFF"
+msgstr ""
+
+#: scripts/inventory.gd:206
+msgid "TURN ON"
+msgstr ""
+
+#: scripts/inventory.gd:208
+msgid "Lantern Tokens"
+msgstr ""
+
+#: scripts/inventory.gd:209
+msgid "The town's festival tokens. Silas plays for them."
+msgstr ""
+
+#: scripts/inventory.gd:218
+msgid "Key parts"
+msgstr ""
+
+#: scripts/inventory.gd:219
+msgid "Pieces of the tunnel gate's key. It takes all three."
+msgstr ""
+
+#: scripts/inventory.gd:221
+msgid "Chapel key"
+msgstr ""
+
+#: scripts/inventory.gd:222
+msgid "Iron, heavy, an eye cast into the bow. Marcus kept it."
+msgstr ""
+
+#: scripts/inventory.gd:224
+msgid "The Clarkes' lantern"
+msgstr ""
+
+#: scripts/inventory.gd:225
+msgid "A festival lantern, burnt black. Two names scratched in the brass: Clarke."
+msgstr ""
+
+#: scripts/inventory.gd:227
+msgid "Lily's drawing"
+msgstr ""
+
+#: scripts/inventory.gd:228
+msgid "Crayon on paper, from classroom 3. She'll want this back."
+msgstr ""
+
+#: scripts/inventory.gd:230
+msgid "Sam's file"
+msgstr ""
+
+#: scripts/inventory.gd:231
+msgid "\"Samantha Kim. Released to the Shepherd. Alive.\""
+msgstr ""
+
+#: scripts/inventory.gd:233
+msgid "Clara's photo"
+msgstr ""
+
+#: scripts/inventory.gd:234
+msgid "A woman in a choir robe, laughing. On the back: \"Marcus — sing with me. C.\""
+msgstr ""
+
+#: scripts/inventory.gd:236
+msgid "Elena's tea tins"
+msgstr ""
+
+#: scripts/inventory.gd:237
+msgid "From the clinic pharmacy, her name on the lids. For Elena."
+msgstr ""
+
+#: scripts/inventory.gd:239
+msgid "Elena's jacket"
+msgstr ""
+
+#: scripts/inventory.gd:240
+msgid "Her yellow rain jacket. Worn, the Mark takes hold slower."
+msgstr ""
+
+#: scripts/inventory.gd:285
+msgid "INVENTORY"
+msgstr ""
+
+#: scripts/inventory.gd:302
+msgid "Close"
+msgstr ""
+
+#: scripts/inventory.gd:307 scripts/main_menu.gd:344
+msgid "Tabs"
+msgstr ""
+
+#: scripts/inventory.gd:309 scripts/main_menu.gd:344 scripts/pause_menu.gd:102 scripts/pause_menu.gd:104
+msgid "Move"
+msgstr ""
+
+#: scripts/inventory.gd:335
+msgid "%d carried"
+msgstr ""
+
+#: scripts/inventory.gd:337
+msgid "Gate key %d / 3"
+msgstr ""
+
+#: scripts/inventory.gd:340
+msgid "Nothing yet."
+msgstr ""
+
+#: scripts/inventory.gd:388
+msgid "Damage %s"
+msgstr ""
+
+#: scripts/inventory.gd:397
+msgid "Rounds loaded · in reserve"
+msgstr ""
+
+#: scripts/inventory.gd:410 scripts/main_menu.gd:473
+msgid "%d of %d"
+msgstr ""
+
+#: scripts/inventory.gd:433
+msgid "Not found yet."
+msgstr ""
+
+#: scripts/inventory.gd:435
+msgid "Elena's broadcast needs all twelve."
+msgstr ""
+
+#: scripts/inventory.gd:443
+msgid "Near: %s"
+msgstr ""
+
+#: scripts/inventory.gd:443
+msgid "Outside town"
+msgstr ""
+
+#: scripts/inventory.gd:447 scripts/main_menu.gd:371 scripts/pause_menu.gd:133
+msgid "NEXT"
+msgstr ""
+
+#: scripts/inventory.gd:450
+msgid "%s away"
 msgstr ""
 
 #: scripts/lockpick.gd:99
@@ -3792,7 +4172,7 @@ msgstr ""
 msgid "QUIT"
 msgstr ""
 
-#: scripts/main_menu.gd:227 scripts/main_menu.gd:231 scripts/main_menu.gd:369
+#: scripts/main_menu.gd:227 scripts/main_menu.gd:231 scripts/main_menu.gd:354
 msgid "Hollowmere"
 msgstr ""
 
@@ -3800,183 +4180,167 @@ msgstr ""
 msgid "PRESS ANY KEY"
 msgstr ""
 
-#: scripts/main_menu.gd:356 scripts/pause_menu.gd:104 scripts/pause_menu.gd:106
+#: scripts/main_menu.gd:341 scripts/pause_menu.gd:104 scripts/pause_menu.gd:106
 msgid "Back"
 msgstr ""
 
-#: scripts/main_menu.gd:356
+#: scripts/main_menu.gd:341
 msgid "Title"
 msgstr ""
 
-#: scripts/main_menu.gd:356 scripts/pause_menu.gd:102 scripts/pause_menu.gd:104 scripts/pause_menu.gd:106
+#: scripts/main_menu.gd:341 scripts/pause_menu.gd:102 scripts/pause_menu.gd:104 scripts/pause_menu.gd:106
 msgid "Select"
 msgstr ""
 
-#: scripts/main_menu.gd:358 scripts/pause_menu.gd:104
+#: scripts/main_menu.gd:343 scripts/pause_menu.gd:104
 msgid "Adjust"
 msgstr ""
 
-#: scripts/main_menu.gd:359 scripts/pause_menu.gd:102 scripts/pause_menu.gd:104
-msgid "Move"
-msgstr ""
-
-#: scripts/main_menu.gd:359
-msgid "Tabs"
-msgstr ""
-
-#: scripts/main_menu.gd:367
+#: scripts/main_menu.gd:352
 msgid "No case open"
 msgstr ""
 
-#: scripts/main_menu.gd:368
+#: scripts/main_menu.gd:353
 msgid "Nothing saved yet. Start a new case and Hollowmere will keep your place."
 msgstr ""
 
-#: scripts/main_menu.gd:370
+#: scripts/main_menu.gd:355
 msgid "NEW CASE"
 msgstr ""
 
-#: scripts/main_menu.gd:376 scripts/pause_menu.gd:121
+#: scripts/main_menu.gd:361 scripts/pause_menu.gd:121
 msgid "Chapter %s"
 msgstr ""
 
-#: scripts/main_menu.gd:382
+#: scripts/main_menu.gd:367
 msgid "Mark %d%%"
 msgstr ""
 
-#: scripts/main_menu.gd:386 scripts/pause_menu.gd:133
-msgid "NEXT"
-msgstr ""
-
-#: scripts/main_menu.gd:390 scripts/pause_menu.gd:158
+#: scripts/main_menu.gd:375 scripts/pause_menu.gd:158
 msgid "RESUME"
 msgstr ""
 
-#: scripts/main_menu.gd:397
+#: scripts/main_menu.gd:382
 msgid "Empty-handed."
 msgstr ""
 
-#: scripts/main_menu.gd:413
+#: scripts/main_menu.gd:398
 msgid "A new case"
 msgstr ""
 
-#: scripts/main_menu.gd:414
+#: scripts/main_menu.gd:399
 msgid "Dusk. The bridge is out. Your sister's postcard says don't come."
 msgstr ""
 
-#: scripts/main_menu.gd:416
+#: scripts/main_menu.gd:401
 msgid "Forgiving. For the story."
 msgstr ""
 
-#: scripts/main_menu.gd:416
+#: scripts/main_menu.gd:401
 msgid "As it was meant to be."
 msgstr ""
 
-#: scripts/main_menu.gd:416
+#: scripts/main_menu.gd:401
 msgid "Every round counts."
 msgstr ""
 
-#: scripts/main_menu.gd:428
+#: scripts/main_menu.gd:413
 msgid "Damage you take"
 msgstr ""
 
-#: scripts/main_menu.gd:428
+#: scripts/main_menu.gd:413
 msgid "Enemy toughness"
 msgstr ""
 
-#: scripts/main_menu.gd:428
+#: scripts/main_menu.gd:413
 msgid "Ammo you find"
 msgstr ""
 
-#: scripts/main_menu.gd:438
+#: scripts/main_menu.gd:423
 msgid "BEGIN"
 msgstr ""
 
-#: scripts/main_menu.gd:442
+#: scripts/main_menu.gd:427
 msgid "Load game"
 msgstr ""
 
-#: scripts/main_menu.gd:442
+#: scripts/main_menu.gd:427
 msgid "%d saved"
 msgstr ""
 
-#: scripts/main_menu.gd:444
+#: scripts/main_menu.gd:429
 msgid "Nothing saved yet. Save from the pause menu; the game also saves on its own as you go."
 msgstr ""
 
-#: scripts/main_menu.gd:462
+#: scripts/main_menu.gd:447
 msgid "Ch.%s · %s"
 msgstr ""
 
-#: scripts/main_menu.gd:467
+#: scripts/main_menu.gd:452
 msgid "%d more below"
 msgstr ""
 
-#: scripts/main_menu.gd:488
+#: scripts/main_menu.gd:473
 msgid "Extra"
 msgstr ""
 
-#: scripts/main_menu.gd:488
-msgid "%d of %d"
-msgstr ""
-
-#: scripts/main_menu.gd:506
+#: scripts/main_menu.gd:491
 msgid "What you've done in Hollowmere, kept across every run."
 msgstr ""
 
-#: scripts/main_menu.gd:510
+#: scripts/main_menu.gd:495
 msgid "Locked"
 msgstr ""
 
-#: scripts/main_menu.gd:520
+#: scripts/main_menu.gd:505
 msgid "All 12 evidence: %s"
 msgstr ""
 
-#: scripts/main_menu.gd:520
+#: scripts/main_menu.gd:505
 msgid "on"
 msgstr ""
 
-#: scripts/main_menu.gd:520
+#: scripts/main_menu.gd:505
 msgid "off"
 msgstr ""
 
-#: scripts/main_menu.gd:521
+#: scripts/main_menu.gd:506
 msgid "Start holding every piece of evidence: the transmitter and the Signal ending (try III · Static)."
 msgstr ""
 
-#: scripts/main_menu.gd:523
+#: scripts/main_menu.gd:508
 msgid "Start Mark: %s"
 msgstr ""
 
-#: scripts/main_menu.gd:523
+#: scripts/main_menu.gd:508
 msgid "as the story has it"
 msgstr ""
 
-#: scripts/main_menu.gd:524
+#: scripts/main_menu.gd:509
 msgid "Start with the Mark at a set level (its notices, whispers, the heartbeat, the sightings)."
 msgstr ""
 
-#: scripts/main_menu.gd:530
+#: scripts/main_menu.gd:515
 msgid "Chapter %s — %s. Normal, nothing saved."
 msgstr ""
 
-#: scripts/main_menu.gd:538
+#: scripts/main_menu.gd:523
 msgid "Dev mode"
 msgstr ""
 
-#: scripts/main_menu.gd:549
+#: scripts/main_menu.gd:534
 msgid "Start any step of any chapter. Nothing is saved, nothing unlocks."
 msgstr ""
 
-#: scripts/main_menu.gd:554
+#: scripts/main_menu.gd:539
 msgid "Leave Hollowmere?"
 msgstr ""
 
-#: scripts/main_menu.gd:555
+#: scripts/main_menu.gd:540
 msgid "Check out of room six. Your saves stay where you left them."
 msgstr ""
 
-#: scripts/main_menu.gd:559
+#: scripts/main_menu.gd:544
 msgid "QUIT TO DESKTOP"
 msgstr ""
 
@@ -4076,7 +4440,7 @@ msgstr ""
 msgid "Back to the title screen. Anything since your last save is lost."
 msgstr ""
 
-#: scripts/pause_menu.gd:296
+#: scripts/pause_menu.gd:301
 msgid "Manual save"
 msgstr ""
 
@@ -4280,53 +4644,28 @@ msgstr ""
 msgid "OFF"
 msgstr ""
 
-#: player/guide.gd:16
+#: player/guide.gd:17
 msgid "Lakeview Motel"
 msgstr ""
 
-#: player/guide.gd:18
+#: player/guide.gd:19
 msgid "St. Agnes Clinic"
 msgstr ""
 
-#: player/guide.gd:18
+#: player/guide.gd:19
 msgid "Hollowmere Elementary"
 msgstr ""
 
-#: player/guide.gd:19
+#: player/guide.gd:20
 msgid "Harbor & Lighthouse"
 msgstr ""
 
-#: player/guide.gd:19
+#: player/guide.gd:20
 msgid "Collapsed Bridge"
 msgstr ""
 
-#: player/guide.gd:222 player/guide.gd:223
+#: player/guide.gd:198 player/guide.gd:199
 msgid "NESW"
-msgstr ""
-
-#: player/guide.gd:269
-msgid ""
-"HOLLOWMERE\n"
-"\n"
-"%s\n"
-"\n"
-"OBJECTIVE\n"
-"%s%s\n"
-"\n"
-"\n"
-"[M] close"
-msgstr ""
-
-#: player/guide.gd:270
-msgid "You are near: %s"
-msgstr ""
-
-#: player/guide.gd:270
-msgid "Outside town"
-msgstr ""
-
-#: player/guide.gd:271
-msgid "%s away"
 msgstr ""
 
 #: player/hud.gd:76
@@ -4393,79 +4732,79 @@ msgstr ""
 msgid "FISTS"
 msgstr ""
 
-#: player/hud.gd:693
+#: player/hud.gd:692
 msgid "MASH!"
 msgstr ""
 
-#: player/hud.gd:730
+#: player/hud.gd:729
 msgid "OK"
 msgstr ""
 
-#: player/hud.gd:730
+#: player/hud.gd:729
 msgid "FAILED"
 msgstr ""
 
-#: player/player.gd:669
+#: player/player.gd:704
 msgid "DOUBLE TAP"
 msgstr ""
 
-#: player/player.gd:1275
+#: player/player.gd:1370
 msgid "MASK ON"
 msgstr ""
 
-#: player/player.gd:1275
+#: player/player.gd:1370
 msgid "MASK OFF"
 msgstr ""
 
-#: player/player.gd:1280
+#: player/player.gd:1375
 msgid "FILTER REPLACED"
 msgstr ""
 
-#: player/player.gd:1296
+#: player/player.gd:1391
 msgid "FILTER EMPTY"
 msgstr ""
 
-#: player/player.gd:1324
+#: player/player.gd:1419
 msgid "SMOKE"
 msgstr ""
 
-#: player/player.gd:1334
+#: player/player.gd:1429
 msgid "ELENA'S TEA  ·  MARK -15%"
 msgstr ""
 
-#: player/player.gd:1439
+#: player/player.gd:1540
 msgid "TAKEDOWN"
 msgstr ""
 
-#: player/weapons.gd:21
+#: player/weapons.gd:23
 msgid "Revolver"
 msgstr ""
 
-#: player/weapons.gd:23
+#: player/weapons.gd:25
 msgid "Flare gun"
 msgstr ""
 
-#: player/weapons.gd:25
+#: player/weapons.gd:27
 msgid "Shotgun"
 msgstr ""
 
-#: player/weapons.gd:28
+#: player/weapons.gd:30
 msgid "Hunting bow"
 msgstr ""
 
-#: player/weapons.gd:30
+#: player/weapons.gd:32
 msgid "Fire axe"
 msgstr ""
 
-#: player/weapons.gd:32
+#: player/weapons.gd:34
 msgid "Nail bat"
 msgstr ""
 
-#: player/weapons.gd:36
+#: player/weapons.gd:38
 msgid "Fists"
 msgstr ""
 
-#: player/weapons.gd:38
+#: player/weapons.gd:40
 msgid "Bash"
 msgstr ""
 
