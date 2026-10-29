@@ -1768,7 +1768,7 @@ msgstr "Clara— no—"
 msgid "You'd bring the church down on me?"
 msgstr "¿Me tirarías la iglesia encima?"
 
-#: scripts/ch3_scenes_a.gd:240 player/player.gd:1095
+#: scripts/ch3_scenes_a.gd:240 player/player.gd:1099
 msgid "CLANG"
 msgstr "CLANG"
 
@@ -2500,7 +2500,7 @@ msgstr "EL NUEVO OJO"
 msgid "MIXED"
 msgstr "MIXTO"
 
-#: scripts/ch3_scenes_b.gd:713 scripts/main_menu.gd:398
+#: scripts/ch3_scenes_b.gd:713 scripts/main_menu.gd:278
 msgid "HOLLOWMERE  ·  POP. 1413"
 msgstr "HOLLOWMERE  ·  POB. 1413"
 
@@ -3320,7 +3320,7 @@ msgstr "Arrancar el generador"
 msgid "Easy"
 msgstr "Fácil"
 
-#: scripts/game.gd:19
+#: scripts/game.gd:19 scripts/pause_menu.gd:126
 msgid "Normal"
 msgstr "Normal"
 
@@ -3424,57 +3424,21 @@ msgstr "Cuerpo a cuerpo"
 msgid "Put an enemy down with a melee weapon or your fists."
 msgstr "Derriba a un enemigo con un arma cuerpo a cuerpo o con tus puños."
 
-#: scripts/game.gd:121 scripts/game.gd:171
+#: scripts/game.gd:122 scripts/game.gd:172
 msgid "Autosave"
 msgstr "Autoguardado"
 
-#: scripts/game.gd:162 scripts/main_menu.gd:616
+#: scripts/game.gd:163 scripts/main_menu.gd:464
 msgid "Save"
 msgstr "Partida"
 
-#: scripts/game.gd:172
+#: scripts/game.gd:173
 msgid "Saved."
 msgstr "Guardado."
 
-#: scripts/game.gd:230
+#: scripts/game.gd:231
 msgid "Achievement"
 msgstr "Logro"
-
-#: scripts/game.gd:316
-msgid "PAUSED"
-msgstr "PAUSA"
-
-#: scripts/game.gd:319
-msgid "MARK  %.1f%%"
-msgstr "MARCA  %.1f%%"
-
-#: scripts/game.gd:322
-msgid "Resume"
-msgstr "Continuar"
-
-#: scripts/game.gd:324
-msgid "Save game"
-msgstr "Guardar partida"
-
-#: scripts/game.gd:325
-msgid "Manual save"
-msgstr "Guardado manual"
-
-#: scripts/game.gd:328 scripts/main_menu.gd:667
-msgid "Options"
-msgstr "Opciones"
-
-#: scripts/game.gd:329
-msgid "Main menu"
-msgstr "Menú principal"
-
-#: scripts/game.gd:337 scripts/main_menu.gd:50
-msgid "OPTIONS"
-msgstr "OPCIONES"
-
-#: scripts/game.gd:341 scripts/main_menu.gd:502
-msgid "Back"
-msgstr "Volver"
 
 #: scripts/harvester.gd:43
 msgid "The Harvester"
@@ -3664,351 +3628,355 @@ msgstr "PERNO %d / %d"
 msgid "A/D or mouse — feel for the pin · hold W / click — lift · Esc — quit"
 msgstr "A/D o mouse — busca el perno · mantén W / clic — levantar · Esc — salir"
 
-#: scripts/main_menu.gd:18
+#: scripts/main_menu.gd:19
 msgid "Last Postcard"
 msgstr "Última postal"
 
-#: scripts/main_menu.gd:18
+#: scripts/main_menu.gd:19
 msgid "\"Hollowmere is beautiful. Don't come.\""
 msgstr "\"Hollowmere es hermoso. No vengas.\""
 
-#: scripts/main_menu.gd:21
+#: scripts/main_menu.gd:22
 msgid "Room 6"
 msgstr "Habitación 6"
 
-#: scripts/main_menu.gd:21
+#: scripts/main_menu.gd:22
 msgid "A shape behind the glass. A hiss. The smell of burning."
 msgstr "Una silueta tras el vidrio. Un siseo. Olor a quemado."
 
-#: scripts/main_menu.gd:24
+#: scripts/main_menu.gd:25
 msgid "For The Nine"
 msgstr "Por los nueve"
 
-#: scripts/main_menu.gd:24
+#: scripts/main_menu.gd:25
 msgid "Who never came home."
 msgstr "Que nunca volvieron a casa."
 
-#: scripts/main_menu.gd:27 scripts/main_menu.gd:47
+#: scripts/main_menu.gd:28 scripts/main_menu.gd:48
 msgid "Channel 7"
 msgstr "Canal 7"
 
-#: scripts/main_menu.gd:27
+#: scripts/main_menu.gd:28
 msgid "\"They marked you. Stay in the grass.\""
 msgstr "\"Te marcaron. Quédate en la hierba.\""
 
-#: scripts/main_menu.gd:30
+#: scripts/main_menu.gd:31
 msgid "St. Brendan"
 msgstr "St. Brendan"
 
-#: scripts/main_menu.gd:30
+#: scripts/main_menu.gd:31
 msgid "The doors were never locked. Nobody leaves."
 msgstr "Las puertas nunca tuvieron llave. Nadie se va."
 
-#: scripts/main_menu.gd:33 scripts/main_menu.gd:41
+#: scripts/main_menu.gd:34 scripts/main_menu.gd:42
 msgid "The Harvest"
 msgstr "La Cosecha"
 
-#: scripts/main_menu.gd:33
+#: scripts/main_menu.gd:34
 msgid "It never talks. Its footsteps are the only loud thing."
 msgstr "Nunca habla. Sus pasos son lo único que suena fuerte."
 
-#: scripts/main_menu.gd:39
+#: scripts/main_menu.gd:40
 msgid "The Mark"
 msgstr "La Marca"
 
-#: scripts/main_menu.gd:43
+#: scripts/main_menu.gd:44
 msgid "I — The Mark"
 msgstr "I — La Marca"
 
-#: scripts/main_menu.gd:43
+#: scripts/main_menu.gd:44
 msgid "II — Moth"
 msgstr "II — Polilla"
 
-#: scripts/main_menu.gd:43
+#: scripts/main_menu.gd:44
 msgid "III — The Harvest"
 msgstr "III — La Cosecha"
 
-#: scripts/main_menu.gd:46
+#: scripts/main_menu.gd:47
 msgid "Intro"
 msgstr "Llegada"
 
-#: scripts/main_menu.gd:46
+#: scripts/main_menu.gd:47
 msgid "Room"
 msgstr "Habitación 6"
 
-#: scripts/main_menu.gd:46
+#: scripts/main_menu.gd:47
 msgid "Hunt"
 msgstr "La cacería"
 
-#: scripts/main_menu.gd:46
+#: scripts/main_menu.gd:47
 msgid "Square"
 msgstr "La plaza"
 
-#: scripts/main_menu.gd:46
+#: scripts/main_menu.gd:47
 msgid "Sawmill"
 msgstr "El aserradero"
 
-#: scripts/main_menu.gd:46
+#: scripts/main_menu.gd:47
 msgid "Boss"
 msgstr "El Leñador"
 
-#: scripts/main_menu.gd:46
+#: scripts/main_menu.gd:47
 msgid "Blackout"
 msgstr "El apagón"
 
-#: scripts/main_menu.gd:46
+#: scripts/main_menu.gd:47
 msgid "Free"
 msgstr "Libre"
 
-#: scripts/main_menu.gd:46
+#: scripts/main_menu.gd:47
 msgid "C 2 Intro"
 msgstr "El muelle"
 
-#: scripts/main_menu.gd:47
+#: scripts/main_menu.gd:48
 msgid "Zones"
 msgstr "Escuela y clínica"
 
-#: scripts/main_menu.gd:47
+#: scripts/main_menu.gd:48
 msgid "Traitor"
 msgstr "La traidora"
 
-#: scripts/main_menu.gd:47
+#: scripts/main_menu.gd:48
 msgid "C 3 Bell"
 msgstr "La campana"
 
-#: scripts/main_menu.gd:47
+#: scripts/main_menu.gd:48
 msgid "Run"
 msgstr "La carrera"
 
-#: scripts/main_menu.gd:47
+#: scripts/main_menu.gd:48
 msgid "Static"
 msgstr "Estática"
 
-#: scripts/main_menu.gd:47
+#: scripts/main_menu.gd:48
 msgid "Gate"
 msgstr "La reja"
 
-#: scripts/main_menu.gd:47
+#: scripts/main_menu.gd:48
 msgid "Harvest"
 msgstr "La Cosecha"
 
-#: scripts/main_menu.gd:47
+#: scripts/main_menu.gd:48
 msgid "Harvester"
 msgstr "El Segador"
 
-#: scripts/main_menu.gd:48
+#: scripts/main_menu.gd:49
 msgid "Epilogue"
 msgstr "Epílogo"
 
-#: scripts/main_menu.gd:49
+#: scripts/main_menu.gd:50
 msgid "CONTINUE"
 msgstr "CONTINUAR"
 
-#: scripts/main_menu.gd:49
+#: scripts/main_menu.gd:50
 msgid "NEW"
 msgstr "NUEVA"
 
-#: scripts/main_menu.gd:49
+#: scripts/main_menu.gd:50
 msgid "LOAD"
 msgstr "CARGAR"
 
-#: scripts/main_menu.gd:49
+#: scripts/main_menu.gd:50
 msgid "EXTRA"
 msgstr "EXTRA"
 
-#: scripts/main_menu.gd:50
+#: scripts/main_menu.gd:51
+msgid "OPTIONS"
+msgstr "OPCIONES"
+
+#: scripts/main_menu.gd:51
 msgid "DEV"
 msgstr "DEV"
 
-#: scripts/main_menu.gd:50
+#: scripts/main_menu.gd:51
 msgid "QUIT"
 msgstr "SALIR"
 
-#: scripts/main_menu.gd:338 scripts/main_menu.gd:342 scripts/main_menu.gd:521
+#: scripts/main_menu.gd:227 scripts/main_menu.gd:231 scripts/main_menu.gd:369
 msgid "Hollowmere"
 msgstr "Hollowmere"
 
-#: scripts/main_menu.gd:392
+#: scripts/main_menu.gd:272
 msgid "PRESS ANY KEY"
 msgstr "PULSA CUALQUIER TECLA"
 
-#: scripts/main_menu.gd:502
+#: scripts/main_menu.gd:356 scripts/pause_menu.gd:104 scripts/pause_menu.gd:106
+msgid "Back"
+msgstr "Volver"
+
+#: scripts/main_menu.gd:356
 msgid "Title"
 msgstr "Portada"
 
-#: scripts/main_menu.gd:502
+#: scripts/main_menu.gd:356 scripts/pause_menu.gd:102 scripts/pause_menu.gd:104 scripts/pause_menu.gd:106
 msgid "Select"
 msgstr "Elegir"
 
-#: scripts/main_menu.gd:504
+#: scripts/main_menu.gd:358 scripts/pause_menu.gd:104
 msgid "Adjust"
 msgstr "Ajustar"
 
-#: scripts/main_menu.gd:505
+#: scripts/main_menu.gd:359 scripts/pause_menu.gd:102 scripts/pause_menu.gd:104
 msgid "Move"
 msgstr "Mover"
 
-#: scripts/main_menu.gd:505
+#: scripts/main_menu.gd:359
 msgid "Tabs"
 msgstr "Pestañas"
 
-#: scripts/main_menu.gd:519
+#: scripts/main_menu.gd:367
 msgid "No case open"
 msgstr "Ningún caso abierto"
 
-#: scripts/main_menu.gd:520
+#: scripts/main_menu.gd:368
 msgid "Nothing saved yet. Start a new case and Hollowmere will keep your place."
 msgstr "Nada guardado aún. Abre un caso nuevo y Hollowmere guardará tu lugar."
 
-#: scripts/main_menu.gd:522
+#: scripts/main_menu.gd:370
 msgid "NEW CASE"
 msgstr "CASO NUEVO"
 
-#: scripts/main_menu.gd:528
+#: scripts/main_menu.gd:376 scripts/pause_menu.gd:121
 msgid "Chapter %s"
 msgstr "Capítulo %s"
 
-#: scripts/main_menu.gd:534
+#: scripts/main_menu.gd:382
 msgid "Mark %d%%"
 msgstr "Marca %d%%"
 
-#: scripts/main_menu.gd:538
+#: scripts/main_menu.gd:386 scripts/pause_menu.gd:133
 msgid "NEXT"
 msgstr "SIGUE"
 
-#: scripts/main_menu.gd:542
+#: scripts/main_menu.gd:390 scripts/pause_menu.gd:158
 msgid "RESUME"
 msgstr "CONTINUAR"
 
-#: scripts/main_menu.gd:549
+#: scripts/main_menu.gd:397
 msgid "Empty-handed."
 msgstr "Con las manos vacías."
 
-#: scripts/main_menu.gd:565
+#: scripts/main_menu.gd:413
 msgid "A new case"
 msgstr "Un caso nuevo"
 
-#: scripts/main_menu.gd:566
+#: scripts/main_menu.gd:414
 msgid "Dusk. The bridge is out. Your sister's postcard says don't come."
 msgstr "Anochece. El puente cayó. La postal de tu hermana dice que no vengas."
 
-#: scripts/main_menu.gd:568
+#: scripts/main_menu.gd:416
 msgid "Forgiving. For the story."
 msgstr "Indulgente. Para la historia."
 
-#: scripts/main_menu.gd:568
+#: scripts/main_menu.gd:416
 msgid "As it was meant to be."
 msgstr "Como fue pensado."
 
-#: scripts/main_menu.gd:568
+#: scripts/main_menu.gd:416
 msgid "Every round counts."
 msgstr "Cada bala cuenta."
 
-#: scripts/main_menu.gd:580
+#: scripts/main_menu.gd:428
 msgid "Damage you take"
 msgstr "Daño que recibes"
 
-#: scripts/main_menu.gd:580
+#: scripts/main_menu.gd:428
 msgid "Enemy toughness"
 msgstr "Aguante enemigo"
 
-#: scripts/main_menu.gd:580
+#: scripts/main_menu.gd:428
 msgid "Ammo you find"
 msgstr "Munición que hallas"
 
-#: scripts/main_menu.gd:590
+#: scripts/main_menu.gd:438
 msgid "BEGIN"
 msgstr "EMPEZAR"
 
-#: scripts/main_menu.gd:594
+#: scripts/main_menu.gd:442
 msgid "Load game"
 msgstr "Cargar partida"
 
-#: scripts/main_menu.gd:594
+#: scripts/main_menu.gd:442
 msgid "%d saved"
 msgstr "%d guardadas"
 
-#: scripts/main_menu.gd:596
+#: scripts/main_menu.gd:444
 msgid "Nothing saved yet. Save from the pause menu; the game also saves on its own as you go."
 msgstr "Nada guardado aún. Guarda desde el menú de pausa; el juego también guarda solo mientras avanzas."
 
-#: scripts/main_menu.gd:614
+#: scripts/main_menu.gd:462
 msgid "Ch.%s · %s"
 msgstr "Cap. %s · %s"
 
-#: scripts/main_menu.gd:619
+#: scripts/main_menu.gd:467
 msgid "%d more below"
 msgstr "%d más abajo"
 
-#: scripts/main_menu.gd:640
+#: scripts/main_menu.gd:488
 msgid "Extra"
 msgstr "Extra"
 
-#: scripts/main_menu.gd:640
+#: scripts/main_menu.gd:488
 msgid "%d of %d"
 msgstr "%d de %d"
 
-#: scripts/main_menu.gd:658
+#: scripts/main_menu.gd:506
 msgid "What you've done in Hollowmere, kept across every run."
 msgstr "Lo que hiciste en Hollowmere, guardado en cada partida."
 
-#: scripts/main_menu.gd:662
+#: scripts/main_menu.gd:510
 msgid "Locked"
 msgstr "Bloqueado"
 
-#: scripts/main_menu.gd:686
-msgid "Changes apply at once and are kept."
-msgstr "Los cambios se aplican al instante y se guardan."
-
-#: scripts/main_menu.gd:718
+#: scripts/main_menu.gd:520
 msgid "All 12 evidence: %s"
 msgstr "Las 12 evidencias: %s"
 
-#: scripts/main_menu.gd:718
+#: scripts/main_menu.gd:520
 msgid "on"
 msgstr "sí"
 
-#: scripts/main_menu.gd:718
+#: scripts/main_menu.gd:520
 msgid "off"
 msgstr "no"
 
-#: scripts/main_menu.gd:719
+#: scripts/main_menu.gd:521
 msgid "Start holding every piece of evidence: the transmitter and the Signal ending (try III · Static)."
 msgstr "Empieza con todas las evidencias: el transmisor y el final Señal (prueba III · Static)."
 
-#: scripts/main_menu.gd:721
+#: scripts/main_menu.gd:523
 msgid "Start Mark: %s"
 msgstr "Marca inicial: %s"
 
-#: scripts/main_menu.gd:721
+#: scripts/main_menu.gd:523
 msgid "as the story has it"
 msgstr "la de la historia"
 
-#: scripts/main_menu.gd:722
+#: scripts/main_menu.gd:524
 msgid "Start with the Mark at a set level (its notices, whispers, the heartbeat, the sightings)."
 msgstr "Empieza con la Marca a un nivel fijo (sus avisos, susurros, el latido, las apariciones)."
 
-#: scripts/main_menu.gd:728
+#: scripts/main_menu.gd:530
 msgid "Chapter %s — %s. Normal, nothing saved."
 msgstr "Capítulo %s — %s. Normal, sin guardar."
 
-#: scripts/main_menu.gd:736
+#: scripts/main_menu.gd:538
 msgid "Dev mode"
 msgstr "Modo dev"
 
-#: scripts/main_menu.gd:747
+#: scripts/main_menu.gd:549
 msgid "Start any step of any chapter. Nothing is saved, nothing unlocks."
 msgstr "Empieza cualquier paso de cualquier capítulo. Nada se guarda, nada se desbloquea."
 
-#: scripts/main_menu.gd:752
+#: scripts/main_menu.gd:554
 msgid "Leave Hollowmere?"
 msgstr "¿Dejar Hollowmere?"
 
-#: scripts/main_menu.gd:753
+#: scripts/main_menu.gd:555
 msgid "Check out of room six. Your saves stay where you left them."
 msgstr "Entrega la habitación seis. Tus partidas se quedan donde las dejaste."
 
-#: scripts/main_menu.gd:757
+#: scripts/main_menu.gd:559
 msgid "QUIT TO DESKTOP"
 msgstr "SALIR AL ESCRITORIO"
 
@@ -4051,6 +4019,66 @@ msgstr "FIN DEL JUEGO"
 #: scripts/music_box.gd:23
 msgid "Silence the music box"
 msgstr "Callar la caja de música"
+
+#: scripts/options_page.gd:36 scripts/pause_menu.gd:16
+msgid "Options"
+msgstr "Opciones"
+
+#: scripts/options_page.gd:57
+msgid "Changes apply at once and are kept."
+msgstr "Los cambios se aplican al instante y se guardan."
+
+#: scripts/pause_menu.gd:15
+msgid "Save game"
+msgstr "Guardar partida"
+
+#: scripts/pause_menu.gd:15
+msgid "Keep your place in a new save."
+msgstr "Guarda tu avance en una partida nueva."
+
+#: scripts/pause_menu.gd:16
+msgid "Sound, controls, language and video."
+msgstr "Sonido, controles, idioma y video."
+
+#: scripts/pause_menu.gd:17 scripts/pause_menu.gd:167
+msgid "Main menu"
+msgstr "Menú principal"
+
+#: scripts/pause_menu.gd:17
+msgid "Leave this run for the title screen."
+msgstr "Deja esta partida y vuelve a la portada."
+
+#: scripts/pause_menu.gd:71
+msgid "Mark %.1f%%"
+msgstr "Marca %.1f%%"
+
+#: scripts/pause_menu.gd:102
+msgid "Resume"
+msgstr "Continuar"
+
+#: scripts/pause_menu.gd:119
+msgid "Paused"
+msgstr "Pausa"
+
+#: scripts/pause_menu.gd:155
+msgid "Dev runs aren't saved."
+msgstr "En modo dev no se guarda."
+
+#: scripts/pause_menu.gd:155
+msgid "You can't save right now."
+msgstr "Ahora no puedes guardar."
+
+#: scripts/pause_menu.gd:162
+msgid "Leave this run?"
+msgstr "¿Dejar esta partida?"
+
+#: scripts/pause_menu.gd:164
+msgid "Back to the title screen. Anything since your last save is lost."
+msgstr "De vuelta a la portada. Se pierde todo lo que hiciste desde tu último guardado."
+
+#: scripts/pause_menu.gd:296
+msgid "Manual save"
+msgstr "Guardado manual"
 
 #: scripts/radio_tuning.gd:64
 msgid "SIGNAL LOCKED"
@@ -4342,79 +4370,79 @@ msgstr "recargando"
 msgid "Takedown"
 msgstr "Derribo"
 
-#: player/hud.gd:436
+#: player/hud.gd:443
 msgid "MARK +%s%%"
 msgstr "MARCA +%s%%"
 
-#: player/hud.gd:545
+#: player/hud.gd:552
 msgid "REVOLVER"
 msgstr "REVÓLVER"
 
-#: player/hud.gd:545
+#: player/hud.gd:552
 msgid "FLARE"
 msgstr "BENGALAS"
 
-#: player/hud.gd:545
+#: player/hud.gd:552
 msgid "SHOTGUN"
 msgstr "ESCOPETA"
 
-#: player/hud.gd:545
+#: player/hud.gd:552
 msgid "BOW"
 msgstr "ARCO"
 
-#: player/hud.gd:546
+#: player/hud.gd:553
 msgid "AXE"
 msgstr "HACHA"
 
-#: player/hud.gd:546
+#: player/hud.gd:553
 msgid "BAT"
 msgstr "BATE"
 
-#: player/hud.gd:546
+#: player/hud.gd:553
 msgid "FISTS"
 msgstr "PUÑOS"
 
-#: player/hud.gd:686
+#: player/hud.gd:693
 msgid "MASH!"
 msgstr "¡MACHACA!"
 
-#: player/hud.gd:723
+#: player/hud.gd:730
 msgid "OK"
 msgstr "BIEN"
 
-#: player/hud.gd:723
+#: player/hud.gd:730
 msgid "FAILED"
 msgstr "FALLASTE"
 
-#: player/player.gd:665
+#: player/player.gd:669
 msgid "DOUBLE TAP"
 msgstr "DOBLE TIRO"
 
-#: player/player.gd:1271
+#: player/player.gd:1275
 msgid "MASK ON"
 msgstr "MÁSCARA PUESTA"
 
-#: player/player.gd:1271
+#: player/player.gd:1275
 msgid "MASK OFF"
 msgstr "SIN MÁSCARA"
 
-#: player/player.gd:1276
+#: player/player.gd:1280
 msgid "FILTER REPLACED"
 msgstr "FILTRO CAMBIADO"
 
-#: player/player.gd:1292
+#: player/player.gd:1296
 msgid "FILTER EMPTY"
 msgstr "FILTRO AGOTADO"
 
-#: player/player.gd:1320
+#: player/player.gd:1324
 msgid "SMOKE"
 msgstr "HUMO"
 
-#: player/player.gd:1330
+#: player/player.gd:1334
 msgid "ELENA'S TEA  ·  MARK -15%"
 msgstr "TÉ DE ELENA  ·  MARCA -15%"
 
-#: player/player.gd:1435
+#: player/player.gd:1439
 msgid "TAKEDOWN"
 msgstr "DERRIBO"
 

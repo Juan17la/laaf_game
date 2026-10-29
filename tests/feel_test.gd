@@ -351,10 +351,9 @@ func _run() -> void:
 	if gg and gg.director:
 		player.mark = 37.4
 		gg._open_pause()
-		var shown: Array = gg._pause.find_children("Mark", "Label", true, false)
-		var txt: String = shown[0].text if not shown.is_empty() else ""
+		var txt: String = gg._pause_menu.mark_text() if gg._pause_menu else ""
 		gg.resume()
-		if txt != tr("MARK  %.1f%%") % 37.4:
+		if txt != tr("Mark %.1f%%") % 37.4:
 			return _fail("pause menu mark: '%s'" % txt)
 	player.mark = 0.0
 	# a hit: red edges that fade

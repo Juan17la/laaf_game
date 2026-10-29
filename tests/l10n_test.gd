@@ -2,7 +2,7 @@ extends SceneTree
 ## Headless check of the Spanish localization (locale/es.po, tools/l10n.py, locale/glossary.md):
 ##   every message in locale/laaf.pot has a Spanish translation in es.po, with the same placeholders (%d %s %.1f %%),
 ##   key letters ((E) [M]), bbcode and line breaks, and Godot serves it (TranslationServer, the locale es)
-##   switching the language changes the menus (tr, MenuUI, Settings), the HUD (objective, again on a live switch),
+##   switching the language changes the menus (tr, the pause menu, Settings), the HUD (objective, again on a live switch),
 ##   the compass and a world sign; switching back gives the English again
 ##   sound captions still play their sound in Spanish (they're found from the English id, scripts/audio.gd)
 ##   a translated line stays up longer than its English, never shorter (hud.gd subtitle)
@@ -128,21 +128,20 @@ func _check_po() -> void:
 
 func _run() -> void:
 	_check_po()
-	# menus: tr, the pause menu's buttons, the settings' values
+	# menus: tr, the pause menu's words, the settings' values
 	await _lang("en")
 	_check(tr("PRESS ANY KEY") == "PRESS ANY KEY", "English title prompt")
 	_check(Settings.text("video/vsync") == "ON", "English toggle: %s" % Settings.text("video/vsync"))
-	var col := VBoxContainer.new()
-	root.add_child(col)
-	var b := MenuUI.button(col, "Resume", func() -> void: pass)
-	_check(b.text.strip_edges() == "Resume", "English pause button: '%s'" % b.text)
+	var pm := PauseMenu.new()
+	pm.info = {"mark": 12.5}
+	_check(pm.tr("Paused") == "Paused" and pm.mark_text() == "Mark 12.5%", "English pause menu: '%s'" % pm.mark_text())
 	await _lang("es")
 	_check(tr("PRESS ANY KEY") == "PULSA CUALQUIER TECLA", "Spanish title prompt: %s" % tr("PRESS ANY KEY"))
 	_check(Settings.text("video/vsync") == "SÍ", "Spanish toggle: %s" % Settings.text("video/vsync"))
-	b = MenuUI.button(col, "Resume", func() -> void: pass)
-	_check(b.text.strip_edges() == "Continuar", "Spanish pause button: '%s'" % b.text)
+	_check(pm.tr("Paused") == "Pausa", "Spanish pause title: '%s'" % pm.tr("Paused"))
+	_check(pm.mark_text() == "Marca 12.5%", "Spanish pause Mark: '%s'" % pm.mark_text())
 	_check(Settings.text("general/language") in ["English", "Español"], "language row value")
-	col.queue_free()
+	pm.free()
 	# the game: HUD objective (and its live refresh), compass, a localized sign
 	var g: Node = G.game()
 	if not g:
