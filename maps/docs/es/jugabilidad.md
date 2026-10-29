@@ -41,17 +41,18 @@ Objetivo por sesión: 1 zona ≈ 30–45 min con jefe. Juego completo ≈ 5–7 
 | Disparar (también saltando, rodando o deslizándote, con más dispersión) | Clic izq. | RT |
 | Recargar | R | RB / R1 |
 | Cambiar arma (puños → cada arma → puños) | Q / rueda / 1‑6 (el HUD muestra lo que llevas) | Toca Y / Triángulo |
-| Puños (guardar todas las armas) | 0 (la primera carta del HUD) | Mantén Y / Triángulo |
+| Puños (guardar todas las armas) | 0 (la primera carta del HUD) | la casilla de arriba de la rueda de armas |
+| Rueda de selección (el juego se ralentiza y pierde el color; armas y objetos en el anillo, apunta a uno y suelta para sacarlo o usarlo; clic derecho cancela) | Mantén Tab + ratón | Mantén Y / Triángulo + stick derecho (B cancela) |
 | Golpear (puños, culata, hacha, bate; disparar también golpea si no hay nada que disparar) | B / clic central | RT con arma vacía / cuerpo a cuerpo |
 | Tensar el arco | Mantener clic der. (disparar suelta; tensado completo pega más) | LT |
 | **Doble disparo** | Dispara, cambia y vuelve a disparar en menos de 0,45 s: el cambio es instantáneo y ese disparo hace +50% | igual |
-| Linterna | F | Cruceta arriba |
+| Linterna (de cabeza; en la pelea final, una linterna en la mano) | F | Cruceta arriba |
 | Cambiar de hombro | V | R3 |
 | Saltar línea de diálogo (cinemáticas) | Enter / E | A / X |
 | Menú de pausa (continuar · guardar · menú principal) | Esc | Start |
-| Inventario (armas · objetos · objetos clave · evidencia · mapa; pausa el juego) | Tab / I | Back / View |
+| Inventario (armas · objetos · objetos clave · evidencia · mapa; pausa el juego) | I | Back / View |
 | Mapa (la pestaña Mapa del inventario) | M | Back y luego RB |
-| Pestañas del inventario · cerrar | Q E · Esc / Tab / I / clic derecho | LB RB · B / Back |
+| Pestañas del inventario · cerrar | Q E · Esc / I / clic derecho | LB RB · B / Back |
 
 > Implementado en `player/player.gd` + `player/weapons.gd`: revólver, pistola de bengalas, escopeta (de Tom, en el cobertizo, cap. 2), el arco de Owen (tras su pelea), hacha de bombero (patio del aserradero), bate con clavos (dentro de la escuela) y los puños (golpes alternos; cada tercer golpe acertado es un gancho más fuerte). El hacha y el bate aturden. Los brazos sujetan cada arma por sus empuñaduras reales (IK) y la apuntan al punto bajo la mira, de recto hacia abajo a recto hacia arriba (la espalda se dobla en los ángulos grandes). El inventario (`scripts/inventory.gd`) equipa armas, bebe el té de Elena, pone la máscara de gas y enciende la linterna de cabeza, con las mismas reglas que las teclas rápidas. Curación rápida, tecla de radio y diario aún no están implementados.
 

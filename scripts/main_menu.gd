@@ -11,9 +11,8 @@ extends Control
 ##    clicks, right-clicks back and scrolls (_gui_input).
 ##  · every word drawn goes through tr() (English ids, Spanish in locale/es.po): the page redraws each frame, so a
 ##    language switch on the Options page shows at once
-##  · grain, dither and CRT scanlines over everything. The menu draws in canvas_items scale so its type is crisp at
-##    any window size; the 3D town stays low-res (its SubViewport is 640×360) and the game's own scale comes back
-##    on the way out.
+##  · grain, dither and CRT scanlines over everything. The menu draws in canvas_items scale (as the whole game does)
+##    so its type is crisp at any window size, over the town rendered at the window's full resolution.
 
 const SCENES := [  ## caption, line, camera from → to, looking at, cast [model, pos, yaw, gesture], light [pos, colour, energy]
 	["Last Postcard", "\"Hollowmere is beautiful. Don't come.\"",
@@ -102,7 +101,6 @@ func _ready() -> void:
 	_g = G.game()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	MenuDraw.cursor(true)
-	get_window().content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
 	_saves = _g.saves() if _g else []
 	_build_town()
 	var post := ColorRect.new()  # the game's own grain / dither over the town
@@ -142,26 +140,17 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
-	get_window().content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT  # the game's own low-res look
 	MenuDraw.cursor(false)
 
 
 func _build_town() -> void:
-	var view := SubViewportContainer.new()
-	view.stretch = true
-	view.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST  # the town keeps its chunky pixels under crisp type
-	view.set_anchors_preset(Control.PRESET_FULL_RECT)
-	view.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(view)
-	var sub := SubViewport.new()
-	view.add_child(sub)
 	_town = load("res://maps/hollowmere.tscn").instantiate()
 	for n in ["Chapter1", "Chapter2", "Chapter3", "Player"]:
 		var c := _town.get_node_or_null(n)
 		if c:
 			_town.remove_child(c)
 			c.free()
-	sub.add_child(_town)
+	add_child(_town)
 	var we := _town.get_node_or_null("WorldEnvironment") as WorldEnvironment
 	if we:  # thicker, paler fog: you see a few metres and then nothing
 		var env: Environment = we.environment.duplicate()
@@ -171,9 +160,10 @@ func _build_town() -> void:
 		env.volumetric_fog_albedo = Color(0.8, 0.78, 0.74)
 		env.adjustment_saturation = 0.35
 		we.environment = env
+	(_town.get_node("Weather") as Weather).set_weather("drizzle", 0.1)
 	_cam = Camera3D.new()
 	_cam.fov = 50.0
-	sub.add_child(_cam)
+	add_child(_cam)
 	_cam.current = true
 	_light = OmniLight3D.new()
 	_light.omni_range = 7.0

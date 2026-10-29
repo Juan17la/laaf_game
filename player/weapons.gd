@@ -2,7 +2,7 @@ class_name Weapons
 extends Node
 ## What the player carries: guns (revolver, flare gun, shotgun), Owen's bow, melee weapons (fire axe, bat) and
 ## always the fists (FISTS: what an empty hand or an empty gun hits with; current == HOLSTERED puts every weapon
-## away, the always-there first slot of the cycle: key 0, Q / wheel past the last weapon, hold Y). Guns are hitscan
+## away, the always-there first slot of the cycle: key 0, Q / mouse wheel past the last weapon, the weapon wheel's top slot). Guns are hitscan
 ## from the camera (the shotgun casts `pellets` rays); the bow fires a real Arrow; melee is a timed strike the
 ## player swings (see player.gd _strike). "kind" picks the logic, "hold" the arms (player.gd _hold).
 ## SWAP-SHOT: fire, then swap within SWAP_WINDOW → the swap is instant and the first shot of the
@@ -177,7 +177,7 @@ func swap(to := -1) -> void:
 
 
 func holster() -> void:
-	## Every weapon away: bare fists (key 0, holding Y).
+	## Every weapon away: bare fists (key 0, the weapon wheel's top slot).
 	_draw(HOLSTERED)
 
 

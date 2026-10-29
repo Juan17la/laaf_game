@@ -1,6 +1,6 @@
 extends SceneTree
 ## Headless check of the inventory (scripts/inventory.gd, opened by scripts/game.gd):
-##   Tab / I / the pad's Back open it over the paused game (the pause layer, the tree paused); the same keys, Esc and a
+##   I / the pad's Back open it over the paused game (the pause layer, the tree paused); the same keys, Esc and a
 ##   right click close it and the game goes on; M opens it on the Map tab; it won't open without control (a
 ##   cinematic, a minigame) or with Alex dead
 ##   it reads the live state: weapons with their rounds, bottles / smokes / teas, the gas mask's filter, tokens, key
@@ -86,7 +86,7 @@ func _run() -> void:
 		w.reserve[id] = 0
 	w.current = 0
 
-	# open / close: Tab (the inventory action), Esc, a right click; paused while it's up
+	# open / close: I (the inventory action), Esc, a right click; paused while it's up
 	await _action("inventory")
 	var inv := _inv()
 	if not inv or not paused:

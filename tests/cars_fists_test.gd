@@ -3,8 +3,10 @@ extends SceneTree
 ##   cars (tools/models_hd_street.py body_col): Alex walking at a car from the front, back and both sides stops
 ##   outside its body (bumpers, hood, doors), for a parked car and for the intro's bridge car
 ##   a cinematic actor walking past a car stays on the road (Actor._ground: no climbing onto the hood)
-##   fists: key 0 holsters, Q / the wheel cycle fists → each weapon → fists, holding the gamepad's Y holsters and
-##   tapping it swaps, the double tap still works across a swap, a snapshot keeps fists in hand
+##   fists: key 0 holsters, Q / the mouse wheel cycle fists → each weapon → fists, holding the gamepad's Y opens the
+##   slowed wheel (its pick drawn on release) and tapping it swaps, holding Tab opens it at once with the items too
+##   (letting go draws a weapon or uses an item), the double tap still works across a swap,
+##   a snapshot keeps fists in hand
 ## godot --headless --path . -s tests/cars_fists_test.gd
 
 var player: CharacterBody3D
@@ -130,14 +132,52 @@ func _run() -> void:
 	await _frames(2)
 	if w.gun() != "revolver":
 		return _fail("tapping Y did not swap (holding %s)" % w.gun())
-	_pad_y(true)  # hold: fists
-	await _frames(int(60 * (player.HOLD_TO_FISTS + 0.15)))
-	if w.gun() != "":
-		return _fail("holding Y did not put the weapons away (holding %s)" % w.gun())
+	_pad_y(true)  # hold: the weapon wheel, the game slowed; pointing up picks the fists, letting go draws them
+	await _frames(int(60 * (player.WHEEL_HOLD + 0.15)))
+	if not player.wheel.visible or Engine.time_scale != WeaponWheel.SLOW:
+		return _fail("holding Y did not open the slowed-down weapon wheel")
+	if w.gun() != "revolver":
+		return _fail("opening the wheel swapped (holding %s)" % w.gun())
+	player.wheel.mouse(Vector2(0, -60))
 	_pad_y(false)
 	await _frames(2)
+	if player.wheel.visible or Engine.time_scale != 1.0:
+		return _fail("letting go of Y left the wheel up or the game slowed")
 	if w.gun() != "":
-		return _fail("letting go of a held Y swapped as well")
+		return _fail("the wheel's pick (fists, at the top) was not drawn (holding %s)" % w.gun())
+	_press("wheel")  # hold Tab: the wheel at once, weapons then items; the revolver (slot 1, right of the top)
+	await _frames(2)
+	if not player.wheel.visible or Engine.time_scale != WeaponWheel.SLOW:
+		return _fail("holding Tab did not open the slowed-down wheel")
+	if not player.wheel.slots().any(func(s: Dictionary) -> bool: return s.item and s.id == "headlamp"):
+		return _fail("the wheel lists no items (no headlamp)")
+	player.wheel.sel = 1
+	_press("wheel", false)
+	await _frames(2)
+	if player.wheel.visible or Engine.time_scale != 1.0 or w.gun() != "revolver":
+		return _fail("letting go of Tab: wheel %s, scale %.2f, holding %s" % [player.wheel.visible, Engine.time_scale, w.gun()])
+	var lit: bool = player.flashlight.visible
+	_press("wheel")
+	await _frames(2)
+	player.wheel.sel = player.wheel._slots.size() - 1  # the headlamp, last
+	_press("wheel", false)
+	await _frames(2)
+	if player.flashlight.visible == lit:
+		return _fail("picking the headlamp on the wheel didn't switch it")
+	_press("wheel")  # a right click cancels: nothing picked, the game back to speed
+	await _frames(2)
+	player.wheel.sel = 0
+	var rc := InputEventMouseButton.new()
+	rc.button_index = MOUSE_BUTTON_RIGHT
+	rc.pressed = true
+	Input.parse_input_event(rc)
+	await _frames(2)
+	_press("wheel", false)
+	await _frames(2)
+	if player.wheel.visible or Engine.time_scale != 1.0 or w.gun() != "revolver":
+		return _fail("a right click didn't cancel the wheel (holding %s)" % w.gun())
+	w.holster()
+	await _frames(2)
 	# with fists out the HUD's ammo counter hides
 	await process_frame
 	if player.hud._ammo.visible:

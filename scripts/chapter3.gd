@@ -567,6 +567,7 @@ func _step_harvester() -> void:
 		floods.append(fl)
 	for p in [Vector3(-26, 0.3, -196), Vector3(-16, 0.3, -196), Vector3(4, 0.3, -176)]:
 		super._drop_loot(p)
+	player.hold_torch(true)  # the last fight is lit from his hand
 	harvester = Harvester.spawn_at(self, HARV_SPAWN, PI)
 	harvester.blocked.connect(scenes3b.blocked_bark)
 	harvester.phase_changed.connect(_harvest_phase)
@@ -583,6 +584,7 @@ func _step_harvester() -> void:
 	for f in floods:
 		f.arm(false)
 	await scenes3b.harvester_down(harvester)
+	player.hold_torch(false)
 
 
 func _harvest_phase(n: int) -> void:

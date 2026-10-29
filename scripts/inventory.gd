@@ -1,6 +1,6 @@
 class_name InventoryMenu
 extends Control
-## The inventory (Game._open_inventory puts it on the pause layer: Tab, I or the pad's Back; M opens it on the Map
+## The inventory (Game._open_inventory puts it on the pause layer: I or the pad's Back; M opens it on the Map
 ## tab). The pause menu's dossier, wider, over the frozen game: the same blurred backdrop, logo, grain and
 ## scanlines, drawn with scripts/menu_draw.gd, with index tabs on the folder's edge like the main menu's:
 ##  · Weapons: fists and every weapon carried (its icon, what it does, damage, rounds loaded · in reserve); Enter /
@@ -12,7 +12,7 @@ extends Control
 ##  · Map: the town on paper (player/guide.gd draw_paper_map), where Alex is, the objective and how far
 ## Everything is read from the live game (the player, its Weapons, the director's flags) at every draw, so it's right
 ## after a save is loaded or a checkpoint restores. Q / E or LB / RB change tabs, W S (A D on Evidence) move, Enter
-## uses, Esc / B / Start / Tab / I / right click close. Icons: ui/icons/*.png (tools/shot.gd --icons), else drawn.
+## uses, Esc / B / Start / I / right click close. Icons: ui/icons/*.png (tools/shot.gd --icons), else drawn.
 ## Null-safe: with no game (a test) closing frees it; with no player or director the pages are empty.
 
 const TABS := [  ## id, tab label, page heading, tab icon
@@ -202,8 +202,11 @@ func _item_rows() -> Array:
 			"ok": true, "why": "", "filter": filt})
 	var lamp: Node = player.get("flashlight")
 	var lit := lamp != null and bool(lamp.get("visible"))
-	out.append({"id": "headlamp", "icon": "headlamp", "name": tr("Headlamp"), "sub": tr("On") if lit else tr("Off"),
-		"key": "F", "text": tr("Strapped to your head. It shines where you look."), "act": "TURN OFF" if lit else "TURN ON",
+	var torch: Node3D = player.get("torch")
+	var held := torch != null and torch.visible
+	out.append({"id": "headlamp", "icon": "headlamp", "name": tr("Flashlight") if held else tr("Headlamp"),
+		"sub": tr("On") if lit else tr("Off"), "key": "F", "text": tr("In your hand. Light hurts it.") if held
+		else tr("Strapped to your head. It shines where you look."), "act": "TURN OFF" if lit else "TURN ON",
 		"ok": lamp != null, "why": ""})
 	out.append({"id": "tokens", "icon": "", "name": tr("Lantern Tokens"), "sub": str(int(_flags().get("tokens", 0))),
 		"text": tr("The town's festival tokens. Silas plays for them."), "act": "", "ok": false, "why": ""})

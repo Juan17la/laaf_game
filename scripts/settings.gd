@@ -33,6 +33,7 @@ const ROWS := [
 	["gameplay", "visibility_eye", "Visibility eye", "toggle", true, null, "The HUD eye showing how visible you are."],
 	["video", "fullscreen", "Fullscreen", "toggle", false, null, "Fullscreen or a window."],
 	["video", "vsync", "VSync", "toggle", true, null, "Sync to the monitor: no tearing (a frame of latency)."],
+	["video", "render_scale", "Render resolution", "choice", 1.0, [[1.0, "Full"], [0.75, "75%"], [0.5, "50%"]], "The 3D picture's sharpness. Lower runs faster; the text stays crisp."],
 	["video", "post_fx", "Film grain & vignette", "percent", 1.0, [0.0, 1.0, 0.1], "The grain and the dark corners over the picture."],
 ]
 const LANGUAGES := [["en", "English"], ["es", "Español"]]  ## each in its own language (never translated)
@@ -179,6 +180,7 @@ static func _apply_window() -> void:
 	if full != is_full:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if full else DisplayServer.WINDOW_MODE_WINDOWED)
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED if flag("video/vsync") else DisplayServer.VSYNC_DISABLED)
+	(Engine.get_main_loop() as SceneTree).root.scaling_3d_scale = number("video/render_scale")
 
 
 static func text(id: String) -> String:

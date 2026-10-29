@@ -65,7 +65,7 @@ const LAMP_REACH := 1.134  ## rad (65°): the beam turns this far off the face a
 const CAM_CLEAR := 0.22  ## m kept between the camera rig and any wall (a sphere, so thin posts count too)
 const ASH_ROOF := 30.0  ## m: anything over Alex's head this close (a roof, a ceiling) and the falling ash fades out
 const ASH_FADE := 0.6  ## s
-const HOLD_TO_FISTS := 0.4  ## s: the gamepad's swap button (Y) held this long puts every weapon away
+const WHEEL_HOLD := 0.2  ## s: the pad's swap button (Y) held this long opens the selection wheel (Tab opens it at once)
 const ItemFx := preload("res://scripts/item_fx.gd")
 const WEAPON_MODELS := {"revolver": "res://models/item_revolver.glb", "flare": "res://models/item_flare_gun.glb",
 	"shotgun": "res://models/item_shotgun.glb", "bow": "res://models/item_bow.glb", "axe": "res://models/item_axe.glb",
@@ -159,12 +159,14 @@ var _carry_mesh: Node3D
 var _carry_col: CollisionShape3D  ## CARRY_BOX while carrying, turned with the model (_physics_process)
 var _was_hidden := false
 var aim_at := Vector3.ZERO  ## world: what the crosshair is on (refreshed every frame): the guns and the bow aim at it
-var _swap_held := -1.0  ## s the gamepad's swap button has been down (-1: up, or its hold already holstered)
+var _swap_held := -1.0  ## s the pad's swap button has been down (-1: up, or its hold already opened the wheel)
+var wheel: WeaponWheel  ## hold Tab / Y: the slowed-down weapon and item wheel (weapon_wheel.gd)
 var _gas_frame := -10  ## physics frame of the last gas_exposure (several clouds count once)
 var _cough_t := 0.0
 var _meshes: Array[GeometryInstance3D] = []  ## Alex's body parts: shadow-only when the camera is inside him
 var _cam_inside := false
 var headlamp: Headlamp  ## worn on the Head joint; the flashlight shines from its lens
+var torch: Node3D  ## the hand flashlight in his left hand (the final boss fight, hold_torch): the beam moves to it
 var trauma := 0.0  ## 0..1 camera shake, stacks up and decays (Feel.TRAUMA_*); add_trauma()
 var _shake_t := 0.0
 var _hitstop := 0.0  ## > 0: a landed melee blow holds the swing still (Feel.HITSTOP)
@@ -208,6 +210,8 @@ func _ready() -> void:
 	for m in model.find_children("*", "GeometryInstance3D", true, false):
 		_meshes.append(m)
 		m.layers = BODY_LAYER
+	wheel = WeaponWheel.new()
+	hud.add_child(wheel)
 	weapons.changed.connect(_update_gun_meshes)
 	weapons.fired.connect(_on_fired)
 	weapons.reload_started.connect(_on_reload)
@@ -216,7 +220,9 @@ func _ready() -> void:
 # ------------------------------------------------------------------ input
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+	if event is InputEventMouseMotion and wheel.visible:
+		wheel.mouse(event.relative)  # the mouse points at a weapon, the camera stays put
+	elif event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		if look_hold > 0:
 			look_hold -= 1
 		elif controls_enabled:
@@ -226,6 +232,19 @@ func _unhandled_input(event: InputEvent) -> void:
 		look_hold = 2
 		get_viewport().set_input_as_handled()
 	if not controls_enabled or dead:
+		return
+	if event.is_action_pressed("wheel"):
+		wheel.open(self)
+		return
+	if wheel.visible:  # the wheel takes the input: nothing fires, throws or swaps under it
+		var mb := event as InputEventMouseButton
+		var jb := event as InputEventJoypadButton
+		if (mb and mb.pressed and mb.button_index == MOUSE_BUTTON_RIGHT) or (jb and jb.pressed and jb.button_index == JOY_BUTTON_B):
+			wheel.close(false)  # cancel: nothing picked
+			_swap_held = -1.0
+		elif event.is_action_released("wheel") or (event.is_action_released("swap_weapon") and event is InputEventJoypadButton):
+			wheel.close(true)
+			_swap_held = -1.0
 		return
 	if event.is_action_pressed("flashlight"):
 		toggle_flashlight()
@@ -263,9 +282,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		weapons.reload()
 	elif event.is_action_pressed("swap_weapon"):
 		if event is InputEventJoypadButton:
-			_swap_held = 0.0  # a tap swaps on release, a hold puts the weapons away (_physics_process)
+			_swap_held = 0.0  # a tap swaps on release, a hold opens the wheel (_physics_process)
 		else:
-			weapons.swap()
+			weapons.swap()  # Q, a notch of the mouse wheel: the next weapon
 	elif event.is_action_released("swap_weapon") and event is InputEventJoypadButton:
 		if _swap_held >= 0.0:
 			weapons.swap()
@@ -317,7 +336,7 @@ func _move_dir() -> Vector3:
 
 
 func _physics_process(delta: float) -> void:
-	if controls_enabled:
+	if controls_enabled and not wheel.visible:
 		_look(Input.get_vector("look_left", "look_right", "look_up", "look_down") * stick_sensitivity
 			* Settings.number("controls/stick_sensitivity") * delta)
 	if global_position.y < FALL_Y:
@@ -337,11 +356,16 @@ func _physics_process(delta: float) -> void:
 		_fire()
 	if weapons.gun() == "bow" and weapons.loaded.bow <= 0:
 		weapons.reload()  # nock the next arrow
+	if wheel.visible:  # (a release a menu swallowed still draws the pick)
+		if controls_enabled and not dead and (Input.is_action_pressed("swap_weapon") or Input.is_action_pressed("wheel")):
+			wheel.aim(Input.get_vector("look_left", "look_right", "look_up", "look_down") * wheel.R_OUT)
+		else:
+			wheel.close(controls_enabled and not dead)
 	if _swap_held >= 0.0:
 		_swap_held = _swap_held + delta if controls_enabled and not dead else -1.0
-		if _swap_held >= HOLD_TO_FISTS:
-			_swap_held = -1.0  # (its release swaps nothing)
-			weapons.holster()
+		if _swap_held >= WHEEL_HOLD:
+			_swap_held = -1.0  # (its release draws the wheel's pick, not the next weapon)
+			wheel.open(self)
 	if _hitstop > 0.0:  # the blow landed: the swing (and the body's pose) hold for a beat
 		_hitstop -= delta
 		if _hitstop <= 0.0:
@@ -446,8 +470,9 @@ func _aim_lamp() -> void:
 	## glows while the light is on.
 	if not headlamp:
 		return
-	if headlamp.lit != flashlight.visible:
-		headlamp.lit = flashlight.visible
+	var held := torch != null and torch.visible
+	if headlamp.lit != (flashlight.visible and not held):
+		headlamp.lit = flashlight.visible and not held
 	if not flashlight.visible or not camera.is_inside_tree():
 		return
 	var fwd := -camera.global_basis.z
@@ -461,7 +486,7 @@ func _aim_lamp() -> void:
 	dir = dir.normalized()
 	var face := headlamp.global_basis.z.normalized()
 	var off := face.angle_to(dir)
-	if off > LAMP_REACH:
+	if off > LAMP_REACH and not held:  # (a hand turns a torch anywhere)
 		dir = face.slerp(dir, LAMP_REACH / off).normalized()
 	flashlight.global_basis = Basis.looking_at(dir, Vector3.BACK if absf(dir.y) > 0.98 else Vector3.UP)
 
@@ -1354,6 +1379,38 @@ func _flat_mat(c: Color) -> StandardMaterial3D:
 	m.albedo_color = c
 	m.roughness = 0.6
 	return m
+
+
+func hold_torch(on: bool) -> void:
+	## The headlamp off his head, a flashlight in his left hand instead (and lit), or back: the final boss fight.
+	var hand := model.find_child("HandL", true, false) as Node3D
+	if not hand or not headlamp:
+		return
+	if on and not torch:
+		torch = Node3D.new()
+		torch.transform = GRIP
+		for part in [[0.022, 0.18, Vector3(0, 0.03, -0.06), Color(0.12, 0.12, 0.13)],
+				[0.032, 0.05, Vector3(0, 0.03, -0.17), Color(0.2, 0.2, 0.21)]]:  # the barrel, the head
+			var mi := MeshInstance3D.new()
+			var cyl := CylinderMesh.new()
+			cyl.top_radius = part[0]
+			cyl.bottom_radius = part[0]
+			cyl.height = part[1]
+			cyl.material = _flat_mat(part[3])
+			mi.mesh = cyl
+			mi.rotation.x = PI / 2.0
+			mi.position = part[2]
+			mi.layers = BODY_LAYER
+			torch.add_child(mi)
+		hand.add_child(torch)
+	if not torch:
+		return
+	torch.visible = on
+	headlamp.visible = not on
+	flashlight.reparent(torch if on else headlamp, false)
+	flashlight.transform = Transform3D(Basis(), Vector3(0, 0.03, -0.2) if on else Headlamp.LENS + Vector3(0, 0, 0.012))
+	if on:
+		flashlight.visible = true
 
 
 func toggle_flashlight() -> void:
