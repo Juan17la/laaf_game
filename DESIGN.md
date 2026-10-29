@@ -240,7 +240,7 @@ Warm bone on near-black folder, one blood-rust action color and one lantern-ambe
 **Character:** A 17th-century printed serif with ink spread for the voice of the case file, against a narrow, sturdy grotesque that reads at 7px for every control and fact. SemiBold ships in `fonts/` but no role uses it.
 
 ### Hierarchy
-- **Logo** (IM Fell 52px, tracking +16): "LAAF" only. 1.35× and centred on the title screen, 1.0× at top left (32, 70) on the dossier, with a 1.2px Rust Hi rule under 80% of its width and HOLLOWMERE in Label Wide below.
+- **Logo** (IM Fell 52px, tracking +16, drawn at 1.12×): "LAAF" only. 1.35 × 1.12 and centred at y 150 + 4% of H on the title screen, 1.12× at top left (32, 70 + 4% of H) on the dossier and the pause menu, with a 1.2px Rust Hi rule under 80% of its width and HOLLOWMERE in Label Wide below (all three scale and move together).
 - **Headline** (IM Fell 17px): the page heading at the page's top (baseline +16). An optional right-aligned Muted label (7px) on the same line carries a count ("3 saved", "4 of 13").
 - **Chapter heading** (IM Fell 16px): the Continue page's "Chapter I — The Mark" under the print.
 - **Lede** (IM Fell Italic 10px, Muted Bone, up to 3 lines): the in-world sentence under a heading.
@@ -263,7 +263,7 @@ Warm bone on near-black folder, one blood-rust action color and one lantern-ambe
 The screen is 640×360 base units, with aspect `expand` (extra width grows the canvas and the right-anchored folder keeps its gutter).
 
 - **Letterbox:** black bars 18px tall at the top and bottom. The bottom bar holds the keycap help bar.
-- **Left field:** the fog scene. The logo sits at (32, 70). The scene caption sits at (32, H−36) and its source line at (32, H−25). Left gutter 32.
+- **Left field:** the fog scene. The logo sits at (32, 70 + 4% of H). The scene caption sits at (32, H−36) and its source line at (32, H−25). Left gutter 32.
 - **Folder:** 222 wide, from y 34 to H−34 (292 tall at 360), right edge 36 from the screen's right. Inner padding 15 on all sides, so a page is 192 wide.
 - **Index tabs:** seven, 40×28, starting 18 below the folder top with a 32 pitch, overlapping the folder by 4 and tucked behind it. The open tab is drawn over the folder, 41 wide and 4 further left: it pulls out of the folder.
 - **Page rhythm:** heading baseline at +16. Lede at +34 to +36. Primary bar pinned to the page foot (26 tall, full page width). Load rows 32 tall at a 36 pitch (6 visible). Difficulty rows 30 tall at a 34 pitch. Options and Dev lines 16 tall at a 17 pitch (12 visible), with the row's highlight bleeding 4 past the text column. Chips 14 tall with a 4 gap. Weapon cells 29×22 at a 32 pitch. Achievements in 4 columns, 36 tall at a 38 pitch.
@@ -309,6 +309,15 @@ The page's one action, pinned to the page foot at full width and 26 tall with an
 ### Keycap
 A key name in a 3-radius outline, 11 tall, its width the label plus 4 each side. Outline at 55% of the ink, label in Bone Label Caps. The title screen's PRESS ANY KEY is the large form: a 19-tall pill on black at 45%, a Bone 35% outline and Bold 8 +1 caps, pulsing between 55% and 100%.
 
+### Pause Menu
+The dossier set down over the paused game (`scripts/pause_menu.gd`). The frozen frame behind it is blurred and dimmed (`shaders/pause_blur.gdshader`), with the letterbox bars, the logo at its dossier place and `menu_crt` over everything. The folder holds "Paused", the chapter as a lede, time / difficulty / Mark chips (the Mark exact to a tenth), the NEXT panel, three list rows (Save game, Options, Main menu; a greyed row is a fainter slip with a lock and says why) and the RESUME bar. Main menu asks first on its own leaf, with the map print of where you'd leave off. Options is the very same page as the dossier's OPTIONS tab (`scripts/options_page.gd`). Both menus draw with `scripts/menu_draw.gd`.
+
+### Mouse
+### Inventory
+The pause menu's dossier, wider, over the same blurred frozen frame (`scripts/inventory.gd`, opened by Tab / I / the pad's Back, M on its Map tab). Index tabs on the folder's left edge like the main menu's (WEAPONS, ITEMS, KEYS, EVIDENCE, MAP; `MenuDraw.index_tab` / `tab_face`), INVENTORY in Label caps over the folder's top right. List pages: rows with the item's rendered icon (`ui/icons/*.png`, made by `tools/shot.gd -- --icons` from the item models in the PS2 look) and a detail card (big icon, name in the serif, chips, the line, and the rust bar for what Enter does: EQUIP, DRINK, PUT ON...; a fainter slip says why not). Evidence: a 6 × 2 grid of slips, ??? where one is missing, the x / 12 track like Extra's. Map: the town print (`player/guide.gd draw_paper_map`) under one line of NEXT. The folder takes the width the screen has beside the logo (300-420 px).
+
+One selection for keys and mouse: pointing at a row selects it (the same amber outline), a left click acts like Enter, a right click goes back like Esc, and the ESC / ENTER pairs of the help bar click too (brightening under the pointer). The wheel scrolls lists and adjusts a meter or multiplier under it; a meter's track is clicked or dragged, a multiplier dragged sideways. On New a card shows while pointed at and is picked by a click. In the pause menu, whatever resumes the game acts on the release. The pointer is a small bone arrow with a black edge in chunky pixels while a menu is open, the system arrow otherwise.
+
 ### Help Bar
 The keys that work right now, in the bottom letterbox, right-aligned: keycap then a Muted 7 word ("Tabs", "Select", "Back", "Adjust"). It changes with focus and page.
 
@@ -334,7 +343,7 @@ A photo of the town map, pinned. A Print border (4 on three sides, 15 at the foo
 A 29×22 rounded 6 cell, Bone 10% for the current weapon and 4% for the rest. Icon 16 in Bone (current) or Muted, with loaded·reserve in Body Muted under guns. Melee has no count.
 
 ### Motion
-- **Title to dossier:** 0.45s (rate 2.2/s) on an in-out ease. The logo drifts from centre to top left as it scales 1.35 to 1, its rule and HOLLOWMERE slide from centred to flush left, and the folder slides in from +260.
+- **Title to dossier:** 0.45s (rate 2.2/s) on an in-out ease. The logo drifts from centre to top left as it scales 1.35 to 1 (times its 1.12), its rule and HOLLOWMERE slide from centred to flush left, and the folder slides in from +260.
 - **Leaf turn:** 0.18s with an ease-out curve. The outgoing page slides 14 left and fades while the incoming one slides in from 14 right. The outgoing page cannot be clicked.
 - **Scenes:** each shot runs 11s with a 1.5s fade from and to black over a 20% floor. The caption fades in 2s after the shot starts and leaves 2s before it ends. The camera drifts linearly and rolls ±0.01 rad like a held camera.
 - **Pulse:** PRESS ANY KEY breathes at 2.6 rad/s.
@@ -360,7 +369,7 @@ A 29×22 rounded 6 cell, Bone 10% for the current weapon and 4% for the rest. Ic
 - **Don't** place controls on the fog. The left of the screen belongs to the scene, the logo and the caption.
 
 ### Known drift (not part of the system)
-- The in-game HUD (`player/hud.gd` and its helpers) and the pause menu (`scripts/menu_ui.gd`) have not been migrated to this system and still render in the project's `viewport` stretch scale (`project.godot`: `stretch/mode="viewport"`). They are recorded here as drift, not as precedent.
+- The in-game HUD (`player/hud.gd` and its helpers) has not been migrated to this system and still renders in the project's `viewport` stretch scale (`project.godot`: `stretch/mode="viewport"`). It is recorded here as drift, not as precedent. (The pause menu, `scripts/pause_menu.gd`, now draws with the dossier's pieces in `canvas_items` scale while it is open.)
 - Keycap labels are currently drawn at 6px (`main_menu.gd` `_key`), below the 7px floor. Label Caps 7px is the system value.
 - The Extra page marks the focused achievement with a Bone 90% ring (r 17) where the Lantern Rule calls for amber.
 - The scene caption's source line uses a one-off rust-pink (#d98070) outside the palette.

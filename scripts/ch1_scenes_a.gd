@@ -94,7 +94,7 @@ func intro() -> void:
 	hud.fade(1.0, 0.0)
 	# one stand-in for the whole intro (a second stand_in() would respawn the player mid-scene);
 	# the hidden player body is moved along with the scene so the zone titles stamp each place
-	var alex := d.stand_in(Vector3(-100.2, 0, 146.3), PI)
+	var alex := d.stand_in(Vector3(-100.4, 0, 146.0), PI)  # (by the driver's door, clear of the car: see _bridge)
 	await _bridge(alex)
 	await _store(alex)
 	await _window(alex)
@@ -170,11 +170,13 @@ func _bridge(alex: Actor) -> void:
 	car.rotation.x = 0.0
 	Snd.stop(engine)
 	Snd.sfx("scrape", car.global_position, -3.0, 0.6)
-	# Alex gets out, walks round to the nose, leans on the hood
+	# Alex gets out, walks round to the nose, leans on the hood. The car stops at (-99, 146) nose -Z: its body
+	# (bumpers, mirrors) spans x -99.95..-98.05, z 143.7..148.3; Alex keeps ~0.4 m off it on the road.
 	alex.visible = true
 	d.shot(Vector3(-102.8, 1.4, 141.6), Vector3(-99.8, 1.0, 145.4))
-	alex.walk_to(Vector3(-99.4, 0, 143.1), 1.8)
+	alex.walk_path([Vector3(-100.45, 0, 143.25), Vector3(-99.4, 0, 143.1)], 2.0)  # along the door, round the fender
 	await hud.subtitle("Alex", "No. No, no, no—", 1.8)
+	await _settle(alex)
 	await alex.face(Vector3(-99.4, 0, 146))
 	alex.gesture("lean")
 	_near(alex, Vector3(-1.4, 1.2, -1.5), Vector3(0, 1.1, 0.4))

@@ -8,12 +8,15 @@ extends Node3D
 ##   g.gesture("point", 1.5)                # body language; see HumanoidAnim.gesture
 ## Yaw: 0 faces +Z, PI/2 faces +X.
 
+const STEP := 0.35  ## m: the highest step up the feet take while walking (a stair, a kerb, a porch board)
+
 var model: Node3D
 var anim: HumanoidAnim
 var grounded := true  ## feet stay on whatever floor is under them (skipped while lying down / carried)
 var _look_at: Node3D
 var _look_point := Vector3.INF
 var _stride := 0.0
+var _last := Vector3.INF  ## where _ground() left the feet last frame
 
 
 static func make(parent: Node, scene: String, pos: Vector3, yaw := 0.0) -> Actor:
@@ -70,13 +73,19 @@ func look(target: Variant) -> void:
 
 
 func _ground() -> void:
-	## Floors inside buildings sit a few cm above the terrain: stand on the one underneath, not in it.
+	## Floors inside buildings sit a few cm above the terrain: stand on the one underneath, not in it. Placed
+	## somewhere new, the feet find the floor up to 0.7 m over them; walking, they only take a step (STEP): a
+	## scripted walk that brushes a car or a crate goes on along the road, never up onto its hood.
 	if not grounded or absf(model.rotation.x) > 0.01 or absf(model.rotation.z) > 0.01 or not is_inside_tree():
+		_last = Vector3.INF
 		return
-	var q := PhysicsRayQueryParameters3D.create(global_position + Vector3.UP * 0.7, global_position + Vector3.DOWN * 0.6, 1)
+	var walked := _last != Vector3.INF and Vector2(global_position.x - _last.x, global_position.z - _last.z).length() < 0.5
+	var rise := STEP if walked else 0.7
+	var q := PhysicsRayQueryParameters3D.create(global_position + Vector3.UP * rise, global_position + Vector3.DOWN * 0.6, 1)
 	var hit := get_world_3d().direct_space_state.intersect_ray(q)
 	if hit:
 		global_position.y = hit.position.y
+	_last = global_position
 
 
 func walk_to(p: Vector3, speed := 1.4) -> Signal:
@@ -91,6 +100,13 @@ func walk_to(p: Vector3, speed := 1.4) -> Signal:
 		global_position = Vector3(xz.x, global_position.y, xz.y), 0.0, 1.0, maxf(d / speed, 0.05))
 	tw.tween_callback(func() -> void: anim.speed = 0.0)
 	return tw.finished
+
+
+func walk_path(points: Array, speed := 1.4) -> void:
+	## Coroutine: walk_to each point in turn (round a car's nose, a table's corner). Not awaited, it walks on
+	## while the scene goes on; HumanoidAnim.speed stays up until the last leg is done.
+	for p in points:
+		await walk_to(p, speed)
 
 
 func run_to(p: Vector3) -> Signal:

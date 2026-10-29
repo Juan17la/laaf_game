@@ -52,7 +52,7 @@ var dev_mark := -1.0  ## Dev Mode: runs start with the Mark at this % (< 0: as t
 var _unlocked := {}
 var _check_t := 0.0
 var _pause: CanvasLayer
-var _options := false  ## the pause menu's Options page is open (Esc goes back to the pause menu)
+var _pause_menu: PauseMenu  ## (on _pause) scripts/pause_menu.gd
 
 
 func _ready() -> void:
@@ -93,6 +93,7 @@ func to_menu() -> void:
 	if _pause:
 		_pause.queue_free()
 		_pause = null
+		_pause_menu = null
 	director = null
 	mode = ""
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -279,27 +280,61 @@ func notify(text: String, title := "", time := 4.0) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause") and director and is_instance_valid(director):
+	## Esc / Start opens the pause menu; once it's open, the menu takes its own keys (Esc goes back, then resumes).
+	## Tab / I / Back open the inventory, M on its Map tab, while Alex is in control (never in a cinematic, a minigame
+	## or a death).
+	if event.is_action_pressed("pause") and director and is_instance_valid(director) and not _pause:
 		get_viewport().set_input_as_handled()
-		if _options:
-			_open_pause()
-		elif _pause:
-			resume()
-		else:
-			_open_pause()
+		_open_pause()
+	elif (event.is_action_pressed("inventory") or event.is_action_pressed("map")) and can_open_inventory():
+		get_viewport().set_input_as_handled()
+		open_inventory("map" if event.is_action_pressed("map") else "")
+
+
+func can_open_inventory() -> bool:
+	if not director or not is_instance_valid(director) or _pause or get_tree().paused:
+		return false
+	var p: Node = director.get("player")
+	return p != null and bool(p.controls_enabled) and not bool(p.dead)
+
+
+func open_inventory(tab := "") -> void:
+	## The inventory (scripts/inventory.gd) over the frozen game, on the pause layer like the pause menu; `tab` an
+	## InventoryMenu.TABS id ("" = Weapons).
+	_freeze()
+	var inv := InventoryMenu.new()
+	inv.game = self
+	inv.player = director.get("player")
+	inv.director = director
+	inv.tab = InventoryMenu.tab_index(tab) if tab != "" else 0
+	_pause_layer().add_child(inv)
+	_pause_menu = null
+
+
+func _freeze() -> void:
+	## The game stops under a menu: paused, the mouse free with the menus' pointer, the crisp canvas_items scale.
+	get_tree().paused = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	MenuDraw.cursor(true)
+	get_window().content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
 
 
 func resume() -> void:
-	_options = false
 	if _pause:
 		_pause.queue_free()
 		_pause = null
+		_pause_menu = null
 	get_tree().paused = false
+	get_window().content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT  # the game's own low-res look again
+	MenuDraw.cursor(false)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	var p: Node = director.get("player") if director and is_instance_valid(director) else null
+	if p:
+		p.set("look_hold", 2)  # the first mouse moves after the capture can carry the cursor's jump: not a look
 
 
 func _pause_layer() -> CanvasLayer:
-	## A fresh pause layer (the previous page, if any, goes).
+	## A fresh pause layer (the previous one, if any, goes).
 	if _pause:
 		_pause.queue_free()
 	_pause = CanvasLayer.new()
@@ -310,36 +345,19 @@ func _pause_layer() -> CanvasLayer:
 
 
 func _open_pause() -> void:
-	get_tree().paused = true
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	_options = false
-	var ui := MenuUI.panel(_pause_layer(), "PAUSED", "%s · %s" % [tr(settings().name), _clock(run.time)])
+	## The pause menu (scripts/pause_menu.gd): the main menu's dossier over the frozen game, in the menus' crisp
+	## canvas_items scale until it closes. Saving only in a story run with the player in control.
+	_freeze()
 	var p: Node = director.get("player")
-	if p:  # the exact Mark (the HUD only flashes its rises)
-		var mark := MenuUI.label(tr("MARK  %.1f%%") % float(p.mark), 11, Feel.MARK_NOTICE_RED, true)
-		mark.name = "Mark"
-		ui.add_child(mark)
-	MenuUI.button(ui, "Resume", resume)
-	var can_save := mode != "" and director and bool(director.player.controls_enabled)
-	var save := MenuUI.button(ui, "Save game", func() -> void:
-		save_game(manual_slot(), "Manual save")
-		resume())
-	save.disabled = not can_save
-	MenuUI.button(ui, "Options", _open_options)
-	MenuUI.button(ui, "Main menu", to_menu)
-	MenuUI.focus(ui)
-
-
-func _open_options(focus_id := "") -> void:
-	## The pause menu's Options page: every setting (scripts/settings.gd), changed in place and kept. A language
-	## change builds the page again, so it reads in the new language at once.
-	_options = true
-	var ui := MenuUI.panel(_pause_layer(), "OPTIONS", "", 300.0)
-	var list := MenuUI.settings_list(ui, func(id: String) -> void:
-		if id == "general/language":
-			_open_options(id))
-	MenuUI.button(ui, "Back", _open_pause)
-	MenuUI.focus(list if focus_id == "" else list.find_child(focus_id.replace("/", "_"), true, false))
+	var objective: Variant = director.get("_objective_text")
+	_pause_menu = PauseMenu.new()
+	_pause_menu.game = self
+	_pause_menu.info = {"chapter": 3 if director is Chapter3Director else (2 if director is Chapter2Director else 1),
+		"time": _clock(run.time), "difficulty": settings().name, "mark": float(p.mark) if p else 0.0,
+		"objective": str(objective) if objective != null else "", "dev": mode == "dev",
+		"pos": [p.global_position.x, p.global_position.z] if p else null,
+		"can_save": mode == "story" and p != null and bool(p.controls_enabled)}
+	_pause_layer().add_child(_pause_menu)
 
 
 static func _clock(t: float) -> String:

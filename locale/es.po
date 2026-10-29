@@ -84,219 +84,219 @@ msgstr "Muy lento, forastero."
 msgid "Dusk. The road into Hollowmere."
 msgstr "Anochece. El camino a Hollowmere."
 
-#: scripts/ch1_scenes_a.gd:177 scripts/ch1_scenes_a.gd:181 scripts/ch1_scenes_a.gd:189 scripts/ch1_scenes_a.gd:200 scripts/ch1_scenes_a.gd:228 scripts/ch1_scenes_a.gd:241 …
+#: scripts/ch1_scenes_a.gd:178 scripts/ch1_scenes_a.gd:183 scripts/ch1_scenes_a.gd:191 scripts/ch1_scenes_a.gd:202 scripts/ch1_scenes_a.gd:230 scripts/ch1_scenes_a.gd:243 …
 msgid "Alex"
 msgstr "Alex"
 
-#: scripts/ch1_scenes_a.gd:177
+#: scripts/ch1_scenes_a.gd:178
 msgid "No. No, no, no—"
 msgstr "No. No, no, no—"
 
-#: scripts/ch1_scenes_a.gd:181
+#: scripts/ch1_scenes_a.gd:183
 msgid "Not here. Not now."
 msgstr "Aquí no. Ahora no."
 
-#: scripts/ch1_scenes_a.gd:189
+#: scripts/ch1_scenes_a.gd:191
 msgid "Bridge out. Great."
 msgstr "Sin puente. Genial."
 
-#: scripts/ch1_scenes_a.gd:197
+#: scripts/ch1_scenes_a.gd:199
 msgid "\"Hollowmere is beautiful. Don't come.\" — L."
 msgstr "\"Hollowmere es hermoso. No vengas.\" — L."
 
-#: scripts/ch1_scenes_a.gd:200
+#: scripts/ch1_scenes_a.gd:202
 msgid "Three weeks, Lucía. Not one call."
 msgstr "Tres semanas, Lucía. Ni una llamada."
 
-#: scripts/ch1_scenes_a.gd:228
+#: scripts/ch1_scenes_a.gd:230
 msgid "Hello? Are you open?"
 msgstr "¿Hola? ¿Está abierto?"
 
-#: scripts/ch1_scenes_a.gd:237 scripts/ch1_scenes_a.gd:248 scripts/ch1_scenes_a.gd:257 scripts/ch1_scenes_a.gd:262 scripts/ch1_scenes_a.gd:268 scripts/ch1_scenes_a.gd:274 …
+#: scripts/ch1_scenes_a.gd:239 scripts/ch1_scenes_a.gd:250 scripts/ch1_scenes_a.gd:259 scripts/ch1_scenes_a.gd:264 scripts/ch1_scenes_a.gd:270 scripts/ch1_scenes_a.gd:276 …
 msgid "Grady"
 msgstr "Grady"
 
-#: scripts/ch1_scenes_a.gd:237
+#: scripts/ch1_scenes_a.gd:239
 msgid "Closed. Always, after dark."
 msgstr "Cerrado. Siempre, de noche."
 
-#: scripts/ch1_scenes_a.gd:241
+#: scripts/ch1_scenes_a.gd:243
 msgid "I'm looking for my sister. Lucía."
 msgstr "Busco a mi hermana. Lucía."
 
-#: scripts/ch1_scenes_a.gd:244
+#: scripts/ch1_scenes_a.gd:246
 msgid "She sent this. From here."
 msgstr "Ella mandó esto. Desde aquí."
 
-#: scripts/ch1_scenes_a.gd:248
+#: scripts/ch1_scenes_a.gd:250
 msgid "Never seen her."
 msgstr "Nunca la he visto."
 
-#: scripts/ch1_scenes_a.gd:252
+#: scripts/ch1_scenes_a.gd:254
 msgid "You didn't even look."
 msgstr "Ni siquiera miraste."
 
-#: scripts/ch1_scenes_a.gd:257
+#: scripts/ch1_scenes_a.gd:259
 msgid "Motel. Lake road, west."
 msgstr "El motel. Carretera del lago, al oeste."
 
-#: scripts/ch1_scenes_a.gd:262
+#: scripts/ch1_scenes_a.gd:264
 msgid "Room six. One night."
 msgstr "Habitación seis. Una noche."
 
-#: scripts/ch1_scenes_a.gd:268
+#: scripts/ch1_scenes_a.gd:270
 msgid "Then you go back the way you came."
 msgstr "Y después te vas por donde viniste."
 
-#: scripts/ch1_scenes_a.gd:270
+#: scripts/ch1_scenes_a.gd:272
 msgid "The bridge is out."
 msgstr "El puente se cayó."
 
-#: scripts/ch1_scenes_a.gd:274
+#: scripts/ch1_scenes_a.gd:276
 msgid "Then walk."
 msgstr "Entonces camina."
 
-#: scripts/ch1_scenes_a.gd:296
+#: scripts/ch1_scenes_a.gd:298
 msgid "23:00. Lakeview Motel, room six."
 msgstr "23:00. Lakeview Motel, habitación seis."
 
-#: scripts/ch1_scenes_a.gd:323
+#: scripts/ch1_scenes_a.gd:325
 msgid "Tsssss…"
 msgstr "Tsssss…"
 
-#: scripts/ch1_scenes_a.gd:332
+#: scripts/ch1_scenes_a.gd:334
 msgid "Agh—!"
 msgstr "¡Agh—!"
 
-#: scripts/ch1_scenes_a.gd:337
+#: scripts/ch1_scenes_a.gd:339
 msgid "Who's there?!"
 msgstr "¡¿Quién anda ahí?!"
 
-#: scripts/ch1_scenes_a.gd:348
+#: scripts/ch1_scenes_a.gd:350
 msgid "My hand…"
 msgstr "Mi mano…"
 
-#: scripts/ch1_scenes_a.gd:364
+#: scripts/ch1_scenes_a.gd:366
 msgid "An eye… inside a spiral."
 msgstr "Un ojo… dentro de una espiral."
 
-#: scripts/ch1_scenes_a.gd:367
+#: scripts/ch1_scenes_a.gd:369
 msgid "Burned in. What did they do to me?"
 msgstr "Quemado en la piel. ¿Qué me hicieron?"
 
-#: scripts/ch1_scenes_a.gd:392
+#: scripts/ch1_scenes_a.gd:394
 msgid "The same eye. On my door."
 msgstr "El mismo ojo. En mi puerta."
 
-#: scripts/ch1_scenes_a.gd:394
+#: scripts/ch1_scenes_a.gd:396
 msgid "Still wet."
 msgstr "Todavía está fresca."
 
-#: scripts/ch1_scenes_a.gd:397
+#: scripts/ch1_scenes_a.gd:399
 msgid "And a note."
 msgstr "Y una nota."
 
-#: scripts/ch1_scenes_a.gd:416 scripts/ch1_scenes_a.gd:445 scripts/ch1_scenes_a.gd:450 scripts/ch1_scenes_a.gd:452 scripts/ch1_scenes_a.gd:456 scripts/ch1_scenes_a.gd:458 …
+#: scripts/ch1_scenes_a.gd:418 scripts/ch1_scenes_a.gd:447 scripts/ch1_scenes_a.gd:452 scripts/ch1_scenes_a.gd:454 scripts/ch1_scenes_a.gd:458 scripts/ch1_scenes_a.gd:460 …
 msgid "Moth"
 msgstr "Polilla"
 
-#: scripts/ch1_scenes_a.gd:416
+#: scripts/ch1_scenes_a.gd:418
 msgid "\"Don't let them see you after dark. Radio, channel 7.\""
 msgstr "\"Que no te vean después del anochecer. Radio, canal 7.\""
 
-#: scripts/ch1_scenes_a.gd:418
+#: scripts/ch1_scenes_a.gd:420
 msgid "Channel 7…"
 msgstr "Canal 7…"
 
-#: scripts/ch1_scenes_a.gd:445
+#: scripts/ch1_scenes_a.gd:447
 msgid "You're awake. Good."
 msgstr "Despertaste. Bien."
 
-#: scripts/ch1_scenes_a.gd:447
+#: scripts/ch1_scenes_a.gd:449
 msgid "Who is this? Who did this to me?"
 msgstr "¿Quién habla? ¿Quién me hizo esto?"
 
-#: scripts/ch1_scenes_a.gd:450
+#: scripts/ch1_scenes_a.gd:452
 msgid "No names on open air. Listen."
 msgstr "Nada de nombres al aire. Escucha."
 
-#: scripts/ch1_scenes_a.gd:452
+#: scripts/ch1_scenes_a.gd:454
 msgid "They marked you. Owen comes to collect."
 msgstr "Te marcaron. Owen viene a cobrar."
 
-#: scripts/ch1_scenes_a.gd:454
+#: scripts/ch1_scenes_a.gd:456
 msgid "Collect what?"
 msgstr "¿A cobrar qué?"
 
-#: scripts/ch1_scenes_a.gd:456
+#: scripts/ch1_scenes_a.gd:458
 msgid "You. Get to the town square."
 msgstr "A ti. Ve a la plaza del pueblo."
 
-#: scripts/ch1_scenes_a.gd:458
+#: scripts/ch1_scenes_a.gd:460
 msgid "Stay in the tall grass. Stay low."
 msgstr "Quédate en la hierba alta. Agachado."
 
-#: scripts/ch1_scenes_a.gd:460
+#: scripts/ch1_scenes_a.gd:462
 msgid "And if he sees me?"
 msgstr "¿Y si me ve?"
 
-#: scripts/ch1_scenes_a.gd:462
+#: scripts/ch1_scenes_a.gd:464
 msgid "Don't let him. Go. Now."
 msgstr "No lo dejes. Ve. Ya."
 
-#: scripts/ch1_scenes_a.gd:488 scripts/ch1_scenes_a.gd:500 scripts/ch1_scenes_a.gd:505 scripts/ch1_scenes_b.gd:217 scripts/ch1_scenes_b.gd:222 scripts/ch1_scenes_b.gd:228 …
+#: scripts/ch1_scenes_a.gd:490 scripts/ch1_scenes_a.gd:502 scripts/ch1_scenes_a.gd:507 scripts/ch1_scenes_b.gd:217 scripts/ch1_scenes_b.gd:222 scripts/ch1_scenes_b.gd:228 …
 msgid "Owen"
 msgstr "Owen"
 
-#: scripts/ch1_scenes_a.gd:488
+#: scripts/ch1_scenes_a.gd:490
 msgid "Little outsider… where'd you go?"
 msgstr "Forasterito… ¿adónde te fuiste?"
 
-#: scripts/ch1_scenes_a.gd:494
+#: scripts/ch1_scenes_a.gd:496
 msgid "HIDE"
 msgstr "ESCÓNDETE"
 
-#: scripts/ch1_scenes_a.gd:495
+#: scripts/ch1_scenes_a.gd:497
 msgid "C in tall grass: hidden."
 msgstr "C en la hierba alta: escondido."
 
-#: scripts/ch1_scenes_a.gd:517
+#: scripts/ch1_scenes_a.gd:519
 msgid "He stopped…"
 msgstr "Se detuvo…"
 
-#: scripts/ch1_scenes_a.gd:520
+#: scripts/ch1_scenes_a.gd:522
 msgid "The lights. He won't come into the lights."
 msgstr "Las luces. No se mete en la luz."
 
-#: scripts/ch1_scenes_a.gd:529
+#: scripts/ch1_scenes_a.gd:531
 msgid "Room 4. Same eye on the door."
 msgstr "Habitación 4. El mismo ojo en la puerta."
 
-#: scripts/ch1_scenes_a.gd:530
+#: scripts/ch1_scenes_a.gd:532
 msgid "Lucía's postcards were on this motel's paper."
 msgstr "Las postales de Lucía eran del papel de este motel."
 
-#: scripts/ch1_scenes_a.gd:535
+#: scripts/ch1_scenes_a.gd:537
 msgid "ROOM 4"
 msgstr "HABITACIÓN 4"
 
-#: scripts/ch1_scenes_a.gd:536
+#: scripts/ch1_scenes_a.gd:538
 msgid "Chained on the inside. It gives an inch."
 msgstr "Encadenada por dentro. Cede un poco."
 
-#: scripts/ch1_scenes_a.gd:537
+#: scripts/ch1_scenes_a.gd:539
 msgid "Her camera's hanging off the handle."
 msgstr "Su cámara cuelga de la manija."
 
-#: scripts/ch1_scenes_a.gd:542
+#: scripts/ch1_scenes_a.gd:544
 msgid "EVIDENCE #11"
 msgstr "EVIDENCIA #11"
 
-#: scripts/ch1_scenes_a.gd:543
+#: scripts/ch1_scenes_a.gd:545
 msgid "Lucía's camera. One frame left."
 msgstr "La cámara de Lucía. Le queda una foto."
 
-#: scripts/ch1_scenes_a.gd:544
+#: scripts/ch1_scenes_a.gd:546
 msgid "Her last photo: a chapel. In a quarry."
 msgstr "Su última foto: una capilla. En una cantera."
 
@@ -588,7 +588,7 @@ msgstr "Maldita sea. Todos oyeron eso."
 msgid "WIRE CUT  ·  %d LEFT"
 msgstr "CABLE CORTADO  ·  QUEDAN %d"
 
-#: scripts/ch1_scenes_b.gd:456 scripts/ch2_scenes_a.gd:423
+#: scripts/ch1_scenes_b.gd:456 scripts/ch2_scenes_a.gd:423 scripts/inventory.gd:431
 msgid "EVIDENCE #%d"
 msgstr "EVIDENCIA #%d"
 
@@ -1768,7 +1768,7 @@ msgstr "Clara— no—"
 msgid "You'd bring the church down on me?"
 msgstr "¿Me tirarías la iglesia encima?"
 
-#: scripts/ch3_scenes_a.gd:240 player/player.gd:1095
+#: scripts/ch3_scenes_a.gd:240 player/player.gd:1188
 msgid "CLANG"
 msgstr "CLANG"
 
@@ -2500,7 +2500,7 @@ msgstr "EL NUEVO OJO"
 msgid "MIXED"
 msgstr "MIXTO"
 
-#: scripts/ch3_scenes_b.gd:713 scripts/main_menu.gd:398
+#: scripts/ch3_scenes_b.gd:713 scripts/main_menu.gd:278
 msgid "HOLLOWMERE  ·  POP. 1413"
 msgstr "HOLLOWMERE  ·  POB. 1413"
 
@@ -2752,7 +2752,7 @@ msgstr "Usar la radio"
 msgid "Reach the town square — crouch (C) in tall grass to hide"
 msgstr "Llega a la plaza del pueblo — agáchate (C) en la hierba alta para esconderte"
 
-#: scripts/chapter1.gd:840 player/guide.gd:16
+#: scripts/chapter1.gd:840 player/guide.gd:17
 msgid "Town Square"
 msgstr "Plaza del pueblo"
 
@@ -2788,7 +2788,7 @@ msgstr "Tomar el farol quemado del festival"
 msgid "Read the ledger"
 msgstr "Leer el registro"
 
-#: scripts/chapter1.gd:908 player/guide.gd:17
+#: scripts/chapter1.gd:908 player/guide.gd:18
 msgid "Pinewood Forest & Sawmill"
 msgstr "Bosque de Pinos y Aserradero"
 
@@ -2836,7 +2836,7 @@ msgstr "Cortar el cable trampa"
 msgid "+1 BOTTLE"
 msgstr "+1 BOTELLA"
 
-#: scripts/chapter2.gd:119 player/hud.gd:276
+#: scripts/chapter2.gd:119 scripts/inventory.gd:186 player/hud.gd:276
 msgid "Bottle"
 msgstr "Botella"
 
@@ -3088,7 +3088,7 @@ msgstr "Encender una vela por Lily"
 msgid "Light a candle for Sam"
 msgstr "Encender una vela por Sam"
 
-#: scripts/chapter3.gd:204
+#: scripts/chapter3.gd:204 scripts/inventory.gd:189
 msgid "Smoke can"
 msgstr "Bote de humo"
 
@@ -3096,7 +3096,7 @@ msgstr "Bote de humo"
 msgid "+1 SMOKE CAN"
 msgstr "+1 BOTE DE HUMO"
 
-#: scripts/chapter3.gd:237 player/guide.gd:17
+#: scripts/chapter3.gd:237 player/guide.gd:18
 msgid "Church & Cemetery"
 msgstr "Iglesia y Cementerio"
 
@@ -3164,7 +3164,7 @@ msgstr "Transmisor — canal 7, código 1413"
 msgid "North to the quarry — Lucía is in the Veil's Chapel"
 msgstr "Al norte, a la cantera — Lucía está en la Capilla del Velo"
 
-#: scripts/chapter3.gd:492 player/guide.gd:20
+#: scripts/chapter3.gd:492 player/guide.gd:21
 msgid "Quarry & Veil's Chapel"
 msgstr "Cantera y Capilla del Velo"
 
@@ -3320,7 +3320,7 @@ msgstr "Arrancar el generador"
 msgid "Easy"
 msgstr "Fácil"
 
-#: scripts/game.gd:19
+#: scripts/game.gd:19 scripts/pause_menu.gd:126
 msgid "Normal"
 msgstr "Normal"
 
@@ -3424,57 +3424,21 @@ msgstr "Cuerpo a cuerpo"
 msgid "Put an enemy down with a melee weapon or your fists."
 msgstr "Derriba a un enemigo con un arma cuerpo a cuerpo o con tus puños."
 
-#: scripts/game.gd:121 scripts/game.gd:171
+#: scripts/game.gd:122 scripts/game.gd:172
 msgid "Autosave"
 msgstr "Autoguardado"
 
-#: scripts/game.gd:162 scripts/main_menu.gd:616
+#: scripts/game.gd:163 scripts/main_menu.gd:449
 msgid "Save"
 msgstr "Partida"
 
-#: scripts/game.gd:172
+#: scripts/game.gd:173
 msgid "Saved."
 msgstr "Guardado."
 
-#: scripts/game.gd:230
+#: scripts/game.gd:231
 msgid "Achievement"
 msgstr "Logro"
-
-#: scripts/game.gd:316
-msgid "PAUSED"
-msgstr "PAUSA"
-
-#: scripts/game.gd:319
-msgid "MARK  %.1f%%"
-msgstr "MARCA  %.1f%%"
-
-#: scripts/game.gd:322
-msgid "Resume"
-msgstr "Continuar"
-
-#: scripts/game.gd:324
-msgid "Save game"
-msgstr "Guardar partida"
-
-#: scripts/game.gd:325
-msgid "Manual save"
-msgstr "Guardado manual"
-
-#: scripts/game.gd:328 scripts/main_menu.gd:667
-msgid "Options"
-msgstr "Opciones"
-
-#: scripts/game.gd:329
-msgid "Main menu"
-msgstr "Menú principal"
-
-#: scripts/game.gd:337 scripts/main_menu.gd:50
-msgid "OPTIONS"
-msgstr "OPCIONES"
-
-#: scripts/game.gd:341 scripts/main_menu.gd:502
-msgid "Back"
-msgstr "Volver"
 
 #: scripts/harvester.gd:43
 msgid "The Harvester"
@@ -3628,6 +3592,386 @@ msgstr "VELO"
 msgid "Use"
 msgstr "Usar"
 
+#: scripts/inventory.gd:19
+msgid "WEAPONS"
+msgstr "ARMAS"
+
+#: scripts/inventory.gd:19
+msgid "Weapons"
+msgstr "Armas"
+
+#: scripts/inventory.gd:19
+msgid "ITEMS"
+msgstr "OBJETOS"
+
+#: scripts/inventory.gd:19
+msgid "Items"
+msgstr "Objetos"
+
+#: scripts/inventory.gd:20
+msgid "KEYS"
+msgstr "CLAVE"
+
+#: scripts/inventory.gd:20
+msgid "Key items"
+msgstr "Objetos clave"
+
+#: scripts/inventory.gd:20
+msgid "EVIDENCE"
+msgstr "EVIDENCIA"
+
+#: scripts/inventory.gd:20 scripts/inventory.gd:410
+msgid "Evidence"
+msgstr "Evidencia"
+
+#: scripts/inventory.gd:20
+msgid "MAP"
+msgstr "MAPA"
+
+#: scripts/inventory.gd:20 scripts/inventory.gd:443
+msgid "Map"
+msgstr "Mapa"
+
+#: scripts/inventory.gd:30
+msgid "Bare hands. Alternating jabs; every third punch that lands hooks harder."
+msgstr "A mano limpia. Golpes alternos; cada tercer golpe que acierta es un gancho más fuerte."
+
+#: scripts/inventory.gd:31
+msgid "Six rounds. Steady, and loud enough to bring them running."
+msgstr "Seis balas. Firme, y tan ruidoso que los trae corriendo."
+
+#: scripts/inventory.gd:32
+msgid "One flare at a time. It burns, and fire stuns."
+msgstr "Una bengala a la vez. Quema, y el fuego aturde."
+
+#: scripts/inventory.gd:33
+msgid "Two shells, seven pellets each. Close range."
+msgstr "Dos cartuchos, siete perdigones cada uno. A corta distancia."
+
+#: scripts/inventory.gd:34
+msgid "Owen's hunting bow. Silent; a full draw hits hardest."
+msgstr "El arco de caza de Owen. Silencioso; tensado a fondo pega más."
+
+#: scripts/inventory.gd:35
+msgid "Heavy, slow chops that stagger."
+msgstr "Hachazos pesados y lentos que aturden."
+
+#: scripts/inventory.gd:36
+msgid "Quick swings that stagger."
+msgstr "Golpes rápidos que aturden."
+
+#: scripts/inventory.gd:40
+msgid "Hunting ledger"
+msgstr "Libro de caza"
+
+#: scripts/inventory.gd:40
+msgid "Names and dates from the sawmill. The last column says \"delivered\"."
+msgstr "Nombres y fechas del aserradero. La última columna dice \"entregado\"."
+
+#: scripts/inventory.gd:41
+msgid "Moth's oilcloth"
+msgstr "El hule de Polilla"
+
+#: scripts/inventory.gd:41
+msgid "Tied under the last tripwire stake: \"His wires. He marks whoever gets through.\""
+msgstr "Atado bajo la última estaca de los cables: \"Sus cables. Marca a quien logre pasar.\""
+
+#: scripts/inventory.gd:42
+msgid "Attendance list"
+msgstr "Lista de asistencia"
+
+#: scripts/inventory.gd:42
+msgid "The week of the festival. Six names crossed out in red: \"Recruited.\""
+msgstr "La semana del festival. Seis nombres tachados en rojo: \"Reclutados.\""
+
+#: scripts/inventory.gd:43
+msgid "Nora's letter"
+msgstr "La carta de Nora"
+
+#: scripts/inventory.gd:43
+msgid "Never sent. \"He says if I serve, she might come back.\""
+msgstr "Nunca enviada. \"Dice que si sirvo, ella podría volver.\""
+
+#: scripts/inventory.gd:44
+msgid "Delivery list"
+msgstr "Lista de entregas"
+
+#: scripts/inventory.gd:44
+msgid "Sedatives, signed J.P. Destination: the quarry."
+msgstr "Sedantes, firmada J.P. Destino: la cantera."
+
+#: scripts/inventory.gd:45
+msgid "Toe tag"
+msgstr "Etiqueta de pie"
+
+#: scripts/inventory.gd:45
+msgid "From an empty body bag: \"Tomás R. Transferred. Quarry.\""
+msgstr "De una bolsa para cadáveres vacía: \"Tomás R. Trasladado. Cantera.\""
+
+#: scripts/inventory.gd:46
+msgid "Bell register"
+msgstr "Registro de la campana"
+
+#: scripts/inventory.gd:46
+msgid "Every blackout rung since the festival. The last line: \"One. Elena.\""
+msgstr "Cada apagón tocado desde el festival. La última línea: \"Una. Elena.\""
+
+#: scripts/inventory.gd:47
+msgid "Elena's quarry map"
+msgstr "El mapa de la cantera de Elena"
+
+#: scripts/inventory.gd:47
+msgid "Every cell and cage. One circled in red: \"L.M. — chapel, beside the altar.\""
+msgstr "Cada celda y cada jaula. Una, encerrada en rojo: \"L.M. — capilla, junto al altar.\""
+
+#: scripts/inventory.gd:48
+msgid "Elena's recording"
+msgstr "La grabación de Elena"
+
+#: scripts/inventory.gd:48
+msgid "Hidden under the static on channel 7: \"He's lying to us.\""
+msgstr "Escondida bajo la estática del canal 7: \"Nos está mintiendo.\""
+
+#: scripts/inventory.gd:49
+msgid "Sunken box"
+msgstr "Caja hundida"
+
+#: scripts/inventory.gd:49
+msgid "Photos sealed in wax: every boat in the harbor chained on the festival night."
+msgstr "Fotos selladas en cera: todos los botes del puerto encadenados la noche del festival."
+
+#: scripts/inventory.gd:50
+msgid "Lucía's camera"
+msgstr "La cámara de Lucía"
+
+#: scripts/inventory.gd:50
+msgid "One frame left. Her last photo: a chapel, in a quarry."
+msgstr "Le queda una foto. La última: una capilla, en una cantera."
+
+#: scripts/inventory.gd:51
+msgid "The Shepherd's letter"
+msgstr "La carta del Pastor"
+
+#: scripts/inventory.gd:51
+msgid "Silas took it off the Shepherd's man. He never read it twice."
+msgstr "Silas se la quitó al hombre del Pastor. Nunca la leyó dos veces."
+
+#: scripts/inventory.gd:165
+msgid "EQUIP"
+msgstr "EQUIPAR"
+
+#: scripts/inventory.gd:165
+msgid "In hand."
+msgstr "En la mano."
+
+#: scripts/inventory.gd:169
+msgid "Melee"
+msgstr "Cuerpo a cuerpo"
+
+#: scripts/inventory.gd:187
+msgid "Thrown onto the crosshair. Whatever hears it shatter goes to look."
+msgstr "Se lanza a la mira. Lo que la oiga romperse va a ir a mirar."
+
+#: scripts/inventory.gd:190
+msgid "Thrown onto the crosshair: a cloud that hides everything in and behind it."
+msgstr "Se lanza a la mira: una nube que oculta todo lo que hay dentro y detrás."
+
+#: scripts/inventory.gd:194
+msgid "Elena's Tea"
+msgstr "Té de Elena"
+
+#: scripts/inventory.gd:195
+msgid "Lowers the Mark by 15%."
+msgstr "Baja la Marca un 15%."
+
+#: scripts/inventory.gd:195
+msgid "DRINK"
+msgstr "BEBER"
+
+#: scripts/inventory.gd:196
+msgid "The Mark is already clear."
+msgstr "La Marca ya está limpia."
+
+#: scripts/inventory.gd:200
+msgid "Gas mask"
+msgstr "Máscara de gas"
+
+#: scripts/inventory.gd:200
+msgid "Filter %d%%"
+msgstr "Filtro %d%%"
+
+#: scripts/inventory.gd:201
+msgid "Worn in the gas, the filter wears down instead of you."
+msgstr "Puesta en el gas, se gasta el filtro y no tú."
+
+#: scripts/inventory.gd:201
+msgid "TAKE OFF"
+msgstr "QUITAR"
+
+#: scripts/inventory.gd:201
+msgid "PUT ON"
+msgstr "PONER"
+
+#: scripts/inventory.gd:205
+msgid "Headlamp"
+msgstr "Linterna de cabeza"
+
+#: scripts/inventory.gd:205
+msgid "On"
+msgstr "Encendida"
+
+#: scripts/inventory.gd:205
+msgid "Off"
+msgstr "Apagada"
+
+#: scripts/inventory.gd:206
+msgid "Strapped to your head. It shines where you look."
+msgstr "Atada a la cabeza. Alumbra hacia donde miras."
+
+#: scripts/inventory.gd:206
+msgid "TURN OFF"
+msgstr "APAGAR"
+
+#: scripts/inventory.gd:206
+msgid "TURN ON"
+msgstr "ENCENDER"
+
+#: scripts/inventory.gd:208
+msgid "Lantern Tokens"
+msgstr "Fichas"
+
+#: scripts/inventory.gd:209
+msgid "The town's festival tokens. Silas plays for them."
+msgstr "Las fichas del festival del pueblo. Silas juega por ellas."
+
+#: scripts/inventory.gd:218
+msgid "Key parts"
+msgstr "Partes de la llave"
+
+#: scripts/inventory.gd:219
+msgid "Pieces of the tunnel gate's key. It takes all three."
+msgstr "Piezas de la llave de la reja del túnel. Hacen falta las tres."
+
+#: scripts/inventory.gd:221
+msgid "Chapel key"
+msgstr "Llave de la capilla"
+
+#: scripts/inventory.gd:222
+msgid "Iron, heavy, an eye cast into the bow. Marcus kept it."
+msgstr "De hierro, pesada, con un ojo fundido en la cabeza. Marcus la guardaba."
+
+#: scripts/inventory.gd:224
+msgid "The Clarkes' lantern"
+msgstr "El farol de los Clarke"
+
+#: scripts/inventory.gd:225
+msgid "A festival lantern, burnt black. Two names scratched in the brass: Clarke."
+msgstr "Un farol del festival, negro de quemado. Dos nombres rayados en el bronce: Clarke."
+
+#: scripts/inventory.gd:227
+msgid "Lily's drawing"
+msgstr "El dibujo de Lily"
+
+#: scripts/inventory.gd:228
+msgid "Crayon on paper, from classroom 3. She'll want this back."
+msgstr "Crayón sobre papel, del salón 3. Ella va a querer recuperarlo."
+
+#: scripts/inventory.gd:230
+msgid "Sam's file"
+msgstr "El expediente de Sam"
+
+#: scripts/inventory.gd:231
+msgid "\"Samantha Kim. Released to the Shepherd. Alive.\""
+msgstr "\"Samantha Kim. Entregada al Pastor. Viva.\""
+
+#: scripts/inventory.gd:233
+msgid "Clara's photo"
+msgstr "La foto de Clara"
+
+#: scripts/inventory.gd:234
+msgid "A woman in a choir robe, laughing. On the back: \"Marcus — sing with me. C.\""
+msgstr "Una mujer con túnica de coro, riendo. Al reverso: \"Marcus — canta conmigo. C.\""
+
+#: scripts/inventory.gd:236
+msgid "Elena's tea tins"
+msgstr "Las latas de té de Elena"
+
+#: scripts/inventory.gd:237
+msgid "From the clinic pharmacy, her name on the lids. For Elena."
+msgstr "De la farmacia de la clínica, con su nombre en las tapas. Para Elena."
+
+#: scripts/inventory.gd:239
+msgid "Elena's jacket"
+msgstr "La chaqueta de Elena"
+
+#: scripts/inventory.gd:240
+msgid "Her yellow rain jacket. Worn, the Mark takes hold slower."
+msgstr "Su impermeable amarillo. Puesto, la Marca avanza más despacio."
+
+#: scripts/inventory.gd:285
+msgid "INVENTORY"
+msgstr "INVENTARIO"
+
+#: scripts/inventory.gd:302
+msgid "Close"
+msgstr "Cerrar"
+
+#: scripts/inventory.gd:307 scripts/main_menu.gd:344
+msgid "Tabs"
+msgstr "Pestañas"
+
+#: scripts/inventory.gd:309 scripts/main_menu.gd:344 scripts/pause_menu.gd:102 scripts/pause_menu.gd:104
+msgid "Move"
+msgstr "Mover"
+
+#: scripts/inventory.gd:335
+msgid "%d carried"
+msgstr "%d en total"
+
+#: scripts/inventory.gd:337
+msgid "Gate key %d / 3"
+msgstr "Llave de la reja %d / 3"
+
+#: scripts/inventory.gd:340
+msgid "Nothing yet."
+msgstr "Nada todavía."
+
+#: scripts/inventory.gd:388
+msgid "Damage %s"
+msgstr "Daño %s"
+
+#: scripts/inventory.gd:397
+msgid "Rounds loaded · in reserve"
+msgstr "Cargadas · en reserva"
+
+#: scripts/inventory.gd:410 scripts/main_menu.gd:473
+msgid "%d of %d"
+msgstr "%d de %d"
+
+#: scripts/inventory.gd:433
+msgid "Not found yet."
+msgstr "Aún no la encuentras."
+
+#: scripts/inventory.gd:435
+msgid "Elena's broadcast needs all twelve."
+msgstr "La transmisión de Elena necesita las doce."
+
+#: scripts/inventory.gd:443
+msgid "Near: %s"
+msgstr "Cerca de: %s"
+
+#: scripts/inventory.gd:443
+msgid "Outside town"
+msgstr "Fuera del pueblo"
+
+#: scripts/inventory.gd:447 scripts/main_menu.gd:371 scripts/pause_menu.gd:133
+msgid "NEXT"
+msgstr "SIGUE"
+
+#: scripts/inventory.gd:450
+msgid "%s away"
+msgstr "a %s"
+
 #: scripts/lockpick.gd:99
 msgid "CLICK"
 msgstr "CLIC"
@@ -3664,351 +4008,339 @@ msgstr "PERNO %d / %d"
 msgid "A/D or mouse — feel for the pin · hold W / click — lift · Esc — quit"
 msgstr "A/D o mouse — busca el perno · mantén W / clic — levantar · Esc — salir"
 
-#: scripts/main_menu.gd:18
+#: scripts/main_menu.gd:19
 msgid "Last Postcard"
 msgstr "Última postal"
 
-#: scripts/main_menu.gd:18
+#: scripts/main_menu.gd:19
 msgid "\"Hollowmere is beautiful. Don't come.\""
 msgstr "\"Hollowmere es hermoso. No vengas.\""
 
-#: scripts/main_menu.gd:21
+#: scripts/main_menu.gd:22
 msgid "Room 6"
 msgstr "Habitación 6"
 
-#: scripts/main_menu.gd:21
+#: scripts/main_menu.gd:22
 msgid "A shape behind the glass. A hiss. The smell of burning."
 msgstr "Una silueta tras el vidrio. Un siseo. Olor a quemado."
 
-#: scripts/main_menu.gd:24
+#: scripts/main_menu.gd:25
 msgid "For The Nine"
 msgstr "Por los nueve"
 
-#: scripts/main_menu.gd:24
+#: scripts/main_menu.gd:25
 msgid "Who never came home."
 msgstr "Que nunca volvieron a casa."
 
-#: scripts/main_menu.gd:27 scripts/main_menu.gd:47
+#: scripts/main_menu.gd:28 scripts/main_menu.gd:48
 msgid "Channel 7"
 msgstr "Canal 7"
 
-#: scripts/main_menu.gd:27
+#: scripts/main_menu.gd:28
 msgid "\"They marked you. Stay in the grass.\""
 msgstr "\"Te marcaron. Quédate en la hierba.\""
 
-#: scripts/main_menu.gd:30
+#: scripts/main_menu.gd:31
 msgid "St. Brendan"
 msgstr "St. Brendan"
 
-#: scripts/main_menu.gd:30
+#: scripts/main_menu.gd:31
 msgid "The doors were never locked. Nobody leaves."
 msgstr "Las puertas nunca tuvieron llave. Nadie se va."
 
-#: scripts/main_menu.gd:33 scripts/main_menu.gd:41
+#: scripts/main_menu.gd:34 scripts/main_menu.gd:42
 msgid "The Harvest"
 msgstr "La Cosecha"
 
-#: scripts/main_menu.gd:33
+#: scripts/main_menu.gd:34
 msgid "It never talks. Its footsteps are the only loud thing."
 msgstr "Nunca habla. Sus pasos son lo único que suena fuerte."
 
-#: scripts/main_menu.gd:39
+#: scripts/main_menu.gd:40
 msgid "The Mark"
 msgstr "La Marca"
 
-#: scripts/main_menu.gd:43
+#: scripts/main_menu.gd:44
 msgid "I — The Mark"
 msgstr "I — La Marca"
 
-#: scripts/main_menu.gd:43
+#: scripts/main_menu.gd:44
 msgid "II — Moth"
 msgstr "II — Polilla"
 
-#: scripts/main_menu.gd:43
+#: scripts/main_menu.gd:44
 msgid "III — The Harvest"
 msgstr "III — La Cosecha"
 
-#: scripts/main_menu.gd:46
+#: scripts/main_menu.gd:47
 msgid "Intro"
 msgstr "Llegada"
 
-#: scripts/main_menu.gd:46
+#: scripts/main_menu.gd:47
 msgid "Room"
 msgstr "Habitación 6"
 
-#: scripts/main_menu.gd:46
+#: scripts/main_menu.gd:47
 msgid "Hunt"
 msgstr "La cacería"
 
-#: scripts/main_menu.gd:46
+#: scripts/main_menu.gd:47
 msgid "Square"
 msgstr "La plaza"
 
-#: scripts/main_menu.gd:46
+#: scripts/main_menu.gd:47
 msgid "Sawmill"
 msgstr "El aserradero"
 
-#: scripts/main_menu.gd:46
+#: scripts/main_menu.gd:47
 msgid "Boss"
 msgstr "El Leñador"
 
-#: scripts/main_menu.gd:46
+#: scripts/main_menu.gd:47
 msgid "Blackout"
 msgstr "El apagón"
 
-#: scripts/main_menu.gd:46
+#: scripts/main_menu.gd:47
 msgid "Free"
 msgstr "Libre"
 
-#: scripts/main_menu.gd:46
+#: scripts/main_menu.gd:47
 msgid "C 2 Intro"
 msgstr "El muelle"
 
-#: scripts/main_menu.gd:47
+#: scripts/main_menu.gd:48
 msgid "Zones"
 msgstr "Escuela y clínica"
 
-#: scripts/main_menu.gd:47
+#: scripts/main_menu.gd:48
 msgid "Traitor"
 msgstr "La traidora"
 
-#: scripts/main_menu.gd:47
+#: scripts/main_menu.gd:48
 msgid "C 3 Bell"
 msgstr "La campana"
 
-#: scripts/main_menu.gd:47
+#: scripts/main_menu.gd:48
 msgid "Run"
 msgstr "La carrera"
 
-#: scripts/main_menu.gd:47
+#: scripts/main_menu.gd:48
 msgid "Static"
 msgstr "Estática"
 
-#: scripts/main_menu.gd:47
+#: scripts/main_menu.gd:48
 msgid "Gate"
 msgstr "La reja"
 
-#: scripts/main_menu.gd:47
+#: scripts/main_menu.gd:48
 msgid "Harvest"
 msgstr "La Cosecha"
 
-#: scripts/main_menu.gd:47
+#: scripts/main_menu.gd:48
 msgid "Harvester"
 msgstr "El Segador"
 
-#: scripts/main_menu.gd:48
+#: scripts/main_menu.gd:49
 msgid "Epilogue"
 msgstr "Epílogo"
 
-#: scripts/main_menu.gd:49
+#: scripts/main_menu.gd:50
 msgid "CONTINUE"
 msgstr "CONTINUAR"
 
-#: scripts/main_menu.gd:49
+#: scripts/main_menu.gd:50
 msgid "NEW"
 msgstr "NUEVA"
 
-#: scripts/main_menu.gd:49
+#: scripts/main_menu.gd:50
 msgid "LOAD"
 msgstr "CARGAR"
 
-#: scripts/main_menu.gd:49
+#: scripts/main_menu.gd:50
 msgid "EXTRA"
 msgstr "EXTRA"
 
-#: scripts/main_menu.gd:50
+#: scripts/main_menu.gd:51
+msgid "OPTIONS"
+msgstr "OPCIONES"
+
+#: scripts/main_menu.gd:51
 msgid "DEV"
 msgstr "DEV"
 
-#: scripts/main_menu.gd:50
+#: scripts/main_menu.gd:51
 msgid "QUIT"
 msgstr "SALIR"
 
-#: scripts/main_menu.gd:338 scripts/main_menu.gd:342 scripts/main_menu.gd:521
+#: scripts/main_menu.gd:227 scripts/main_menu.gd:231 scripts/main_menu.gd:354
 msgid "Hollowmere"
 msgstr "Hollowmere"
 
-#: scripts/main_menu.gd:392
+#: scripts/main_menu.gd:272
 msgid "PRESS ANY KEY"
 msgstr "PULSA CUALQUIER TECLA"
 
-#: scripts/main_menu.gd:502
+#: scripts/main_menu.gd:341 scripts/pause_menu.gd:104 scripts/pause_menu.gd:106
+msgid "Back"
+msgstr "Volver"
+
+#: scripts/main_menu.gd:341
 msgid "Title"
 msgstr "Portada"
 
-#: scripts/main_menu.gd:502
+#: scripts/main_menu.gd:341 scripts/pause_menu.gd:102 scripts/pause_menu.gd:104 scripts/pause_menu.gd:106
 msgid "Select"
 msgstr "Elegir"
 
-#: scripts/main_menu.gd:504
+#: scripts/main_menu.gd:343 scripts/pause_menu.gd:104
 msgid "Adjust"
 msgstr "Ajustar"
 
-#: scripts/main_menu.gd:505
-msgid "Move"
-msgstr "Mover"
-
-#: scripts/main_menu.gd:505
-msgid "Tabs"
-msgstr "Pestañas"
-
-#: scripts/main_menu.gd:519
+#: scripts/main_menu.gd:352
 msgid "No case open"
 msgstr "Ningún caso abierto"
 
-#: scripts/main_menu.gd:520
+#: scripts/main_menu.gd:353
 msgid "Nothing saved yet. Start a new case and Hollowmere will keep your place."
 msgstr "Nada guardado aún. Abre un caso nuevo y Hollowmere guardará tu lugar."
 
-#: scripts/main_menu.gd:522
+#: scripts/main_menu.gd:355
 msgid "NEW CASE"
 msgstr "CASO NUEVO"
 
-#: scripts/main_menu.gd:528
+#: scripts/main_menu.gd:361 scripts/pause_menu.gd:121
 msgid "Chapter %s"
 msgstr "Capítulo %s"
 
-#: scripts/main_menu.gd:534
+#: scripts/main_menu.gd:367
 msgid "Mark %d%%"
 msgstr "Marca %d%%"
 
-#: scripts/main_menu.gd:538
-msgid "NEXT"
-msgstr "SIGUE"
-
-#: scripts/main_menu.gd:542
+#: scripts/main_menu.gd:375 scripts/pause_menu.gd:158
 msgid "RESUME"
 msgstr "CONTINUAR"
 
-#: scripts/main_menu.gd:549
+#: scripts/main_menu.gd:382
 msgid "Empty-handed."
 msgstr "Con las manos vacías."
 
-#: scripts/main_menu.gd:565
+#: scripts/main_menu.gd:398
 msgid "A new case"
 msgstr "Un caso nuevo"
 
-#: scripts/main_menu.gd:566
+#: scripts/main_menu.gd:399
 msgid "Dusk. The bridge is out. Your sister's postcard says don't come."
 msgstr "Anochece. El puente cayó. La postal de tu hermana dice que no vengas."
 
-#: scripts/main_menu.gd:568
+#: scripts/main_menu.gd:401
 msgid "Forgiving. For the story."
 msgstr "Indulgente. Para la historia."
 
-#: scripts/main_menu.gd:568
+#: scripts/main_menu.gd:401
 msgid "As it was meant to be."
 msgstr "Como fue pensado."
 
-#: scripts/main_menu.gd:568
+#: scripts/main_menu.gd:401
 msgid "Every round counts."
 msgstr "Cada bala cuenta."
 
-#: scripts/main_menu.gd:580
+#: scripts/main_menu.gd:413
 msgid "Damage you take"
 msgstr "Daño que recibes"
 
-#: scripts/main_menu.gd:580
+#: scripts/main_menu.gd:413
 msgid "Enemy toughness"
 msgstr "Aguante enemigo"
 
-#: scripts/main_menu.gd:580
+#: scripts/main_menu.gd:413
 msgid "Ammo you find"
 msgstr "Munición que hallas"
 
-#: scripts/main_menu.gd:590
+#: scripts/main_menu.gd:423
 msgid "BEGIN"
 msgstr "EMPEZAR"
 
-#: scripts/main_menu.gd:594
+#: scripts/main_menu.gd:427
 msgid "Load game"
 msgstr "Cargar partida"
 
-#: scripts/main_menu.gd:594
+#: scripts/main_menu.gd:427
 msgid "%d saved"
 msgstr "%d guardadas"
 
-#: scripts/main_menu.gd:596
+#: scripts/main_menu.gd:429
 msgid "Nothing saved yet. Save from the pause menu; the game also saves on its own as you go."
 msgstr "Nada guardado aún. Guarda desde el menú de pausa; el juego también guarda solo mientras avanzas."
 
-#: scripts/main_menu.gd:614
+#: scripts/main_menu.gd:447
 msgid "Ch.%s · %s"
 msgstr "Cap. %s · %s"
 
-#: scripts/main_menu.gd:619
+#: scripts/main_menu.gd:452
 msgid "%d more below"
 msgstr "%d más abajo"
 
-#: scripts/main_menu.gd:640
+#: scripts/main_menu.gd:473
 msgid "Extra"
 msgstr "Extra"
 
-#: scripts/main_menu.gd:640
-msgid "%d of %d"
-msgstr "%d de %d"
-
-#: scripts/main_menu.gd:658
+#: scripts/main_menu.gd:491
 msgid "What you've done in Hollowmere, kept across every run."
 msgstr "Lo que hiciste en Hollowmere, guardado en cada partida."
 
-#: scripts/main_menu.gd:662
+#: scripts/main_menu.gd:495
 msgid "Locked"
 msgstr "Bloqueado"
 
-#: scripts/main_menu.gd:686
-msgid "Changes apply at once and are kept."
-msgstr "Los cambios se aplican al instante y se guardan."
-
-#: scripts/main_menu.gd:718
+#: scripts/main_menu.gd:505
 msgid "All 12 evidence: %s"
 msgstr "Las 12 evidencias: %s"
 
-#: scripts/main_menu.gd:718
+#: scripts/main_menu.gd:505
 msgid "on"
 msgstr "sí"
 
-#: scripts/main_menu.gd:718
+#: scripts/main_menu.gd:505
 msgid "off"
 msgstr "no"
 
-#: scripts/main_menu.gd:719
+#: scripts/main_menu.gd:506
 msgid "Start holding every piece of evidence: the transmitter and the Signal ending (try III · Static)."
 msgstr "Empieza con todas las evidencias: el transmisor y el final Señal (prueba III · Static)."
 
-#: scripts/main_menu.gd:721
+#: scripts/main_menu.gd:508
 msgid "Start Mark: %s"
 msgstr "Marca inicial: %s"
 
-#: scripts/main_menu.gd:721
+#: scripts/main_menu.gd:508
 msgid "as the story has it"
 msgstr "la de la historia"
 
-#: scripts/main_menu.gd:722
+#: scripts/main_menu.gd:509
 msgid "Start with the Mark at a set level (its notices, whispers, the heartbeat, the sightings)."
 msgstr "Empieza con la Marca a un nivel fijo (sus avisos, susurros, el latido, las apariciones)."
 
-#: scripts/main_menu.gd:728
+#: scripts/main_menu.gd:515
 msgid "Chapter %s — %s. Normal, nothing saved."
 msgstr "Capítulo %s — %s. Normal, sin guardar."
 
-#: scripts/main_menu.gd:736
+#: scripts/main_menu.gd:523
 msgid "Dev mode"
 msgstr "Modo dev"
 
-#: scripts/main_menu.gd:747
+#: scripts/main_menu.gd:534
 msgid "Start any step of any chapter. Nothing is saved, nothing unlocks."
 msgstr "Empieza cualquier paso de cualquier capítulo. Nada se guarda, nada se desbloquea."
 
-#: scripts/main_menu.gd:752
+#: scripts/main_menu.gd:539
 msgid "Leave Hollowmere?"
 msgstr "¿Dejar Hollowmere?"
 
-#: scripts/main_menu.gd:753
+#: scripts/main_menu.gd:540
 msgid "Check out of room six. Your saves stay where you left them."
 msgstr "Entrega la habitación seis. Tus partidas se quedan donde las dejaste."
 
-#: scripts/main_menu.gd:757
+#: scripts/main_menu.gd:544
 msgid "QUIT TO DESKTOP"
 msgstr "SALIR AL ESCRITORIO"
 
@@ -4051,6 +4383,66 @@ msgstr "FIN DEL JUEGO"
 #: scripts/music_box.gd:23
 msgid "Silence the music box"
 msgstr "Callar la caja de música"
+
+#: scripts/options_page.gd:36 scripts/pause_menu.gd:16
+msgid "Options"
+msgstr "Opciones"
+
+#: scripts/options_page.gd:57
+msgid "Changes apply at once and are kept."
+msgstr "Los cambios se aplican al instante y se guardan."
+
+#: scripts/pause_menu.gd:15
+msgid "Save game"
+msgstr "Guardar partida"
+
+#: scripts/pause_menu.gd:15
+msgid "Keep your place in a new save."
+msgstr "Guarda tu avance en una partida nueva."
+
+#: scripts/pause_menu.gd:16
+msgid "Sound, controls, language and video."
+msgstr "Sonido, controles, idioma y video."
+
+#: scripts/pause_menu.gd:17 scripts/pause_menu.gd:167
+msgid "Main menu"
+msgstr "Menú principal"
+
+#: scripts/pause_menu.gd:17
+msgid "Leave this run for the title screen."
+msgstr "Deja esta partida y vuelve a la portada."
+
+#: scripts/pause_menu.gd:71
+msgid "Mark %.1f%%"
+msgstr "Marca %.1f%%"
+
+#: scripts/pause_menu.gd:102
+msgid "Resume"
+msgstr "Continuar"
+
+#: scripts/pause_menu.gd:119
+msgid "Paused"
+msgstr "Pausa"
+
+#: scripts/pause_menu.gd:155
+msgid "Dev runs aren't saved."
+msgstr "En modo dev no se guarda."
+
+#: scripts/pause_menu.gd:155
+msgid "You can't save right now."
+msgstr "Ahora no puedes guardar."
+
+#: scripts/pause_menu.gd:162
+msgid "Leave this run?"
+msgstr "¿Dejar esta partida?"
+
+#: scripts/pause_menu.gd:164
+msgid "Back to the title screen. Anything since your last save is lost."
+msgstr "De vuelta a la portada. Se pierde todo lo que hiciste desde tu último guardado."
+
+#: scripts/pause_menu.gd:301
+msgid "Manual save"
+msgstr "Guardado manual"
 
 #: scripts/radio_tuning.gd:64
 msgid "SIGNAL LOCKED"
@@ -4252,63 +4644,29 @@ msgstr "SÍ"
 msgid "OFF"
 msgstr "NO"
 
-#: player/guide.gd:16
+#: player/guide.gd:17
 msgid "Lakeview Motel"
 msgstr "Lakeview Motel"
 
-#: player/guide.gd:18
+#: player/guide.gd:19
 msgid "St. Agnes Clinic"
 msgstr "Clínica St. Agnes"
 
-#: player/guide.gd:18
+#: player/guide.gd:19
 msgid "Hollowmere Elementary"
 msgstr "Escuela Primaria de Hollowmere"
 
-#: player/guide.gd:19
+#: player/guide.gd:20
 msgid "Harbor & Lighthouse"
 msgstr "Puerto y Faro"
 
-#: player/guide.gd:19
+#: player/guide.gd:20
 msgid "Collapsed Bridge"
 msgstr "Puente derrumbado"
 
-#: player/guide.gd:222 player/guide.gd:223
+#: player/guide.gd:198 player/guide.gd:199
 msgid "NESW"
 msgstr "NESO"
-
-#: player/guide.gd:269
-msgid ""
-"HOLLOWMERE\n"
-"\n"
-"%s\n"
-"\n"
-"OBJECTIVE\n"
-"%s%s\n"
-"\n"
-"\n"
-"[M] close"
-msgstr ""
-"HOLLOWMERE\n"
-"\n"
-"%s\n"
-"\n"
-"OBJETIVO\n"
-"%s%s\n"
-"\n"
-"\n"
-"[M] cerrar"
-
-#: player/guide.gd:270
-msgid "You are near: %s"
-msgstr "Estás cerca de: %s"
-
-#: player/guide.gd:270
-msgid "Outside town"
-msgstr "Fuera del pueblo"
-
-#: player/guide.gd:271
-msgid "%s away"
-msgstr "a %s"
 
 #: player/hud.gd:76
 msgid "WASD move · Shift run · F light"
@@ -4342,111 +4700,111 @@ msgstr "recargando"
 msgid "Takedown"
 msgstr "Derribo"
 
-#: player/hud.gd:436
+#: player/hud.gd:443
 msgid "MARK +%s%%"
 msgstr "MARCA +%s%%"
 
-#: player/hud.gd:545
+#: player/hud.gd:552
 msgid "REVOLVER"
 msgstr "REVÓLVER"
 
-#: player/hud.gd:545
+#: player/hud.gd:552
 msgid "FLARE"
 msgstr "BENGALAS"
 
-#: player/hud.gd:545
+#: player/hud.gd:552
 msgid "SHOTGUN"
 msgstr "ESCOPETA"
 
-#: player/hud.gd:545
+#: player/hud.gd:552
 msgid "BOW"
 msgstr "ARCO"
 
-#: player/hud.gd:546
+#: player/hud.gd:553
 msgid "AXE"
 msgstr "HACHA"
 
-#: player/hud.gd:546
+#: player/hud.gd:553
 msgid "BAT"
 msgstr "BATE"
 
-#: player/hud.gd:546
+#: player/hud.gd:553
 msgid "FISTS"
 msgstr "PUÑOS"
 
-#: player/hud.gd:686
+#: player/hud.gd:692
 msgid "MASH!"
 msgstr "¡MACHACA!"
 
-#: player/hud.gd:723
+#: player/hud.gd:729
 msgid "OK"
 msgstr "BIEN"
 
-#: player/hud.gd:723
+#: player/hud.gd:729
 msgid "FAILED"
 msgstr "FALLASTE"
 
-#: player/player.gd:665
+#: player/player.gd:704
 msgid "DOUBLE TAP"
 msgstr "DOBLE TIRO"
 
-#: player/player.gd:1271
+#: player/player.gd:1370
 msgid "MASK ON"
 msgstr "MÁSCARA PUESTA"
 
-#: player/player.gd:1271
+#: player/player.gd:1370
 msgid "MASK OFF"
 msgstr "SIN MÁSCARA"
 
-#: player/player.gd:1276
+#: player/player.gd:1375
 msgid "FILTER REPLACED"
 msgstr "FILTRO CAMBIADO"
 
-#: player/player.gd:1292
+#: player/player.gd:1391
 msgid "FILTER EMPTY"
 msgstr "FILTRO AGOTADO"
 
-#: player/player.gd:1320
+#: player/player.gd:1419
 msgid "SMOKE"
 msgstr "HUMO"
 
-#: player/player.gd:1330
+#: player/player.gd:1429
 msgid "ELENA'S TEA  ·  MARK -15%"
 msgstr "TÉ DE ELENA  ·  MARCA -15%"
 
-#: player/player.gd:1435
+#: player/player.gd:1540
 msgid "TAKEDOWN"
 msgstr "DERRIBO"
 
-#: player/weapons.gd:21
+#: player/weapons.gd:23
 msgid "Revolver"
 msgstr "Revólver"
 
-#: player/weapons.gd:23
+#: player/weapons.gd:25
 msgid "Flare gun"
 msgstr "Pistola de bengalas"
 
-#: player/weapons.gd:25
+#: player/weapons.gd:27
 msgid "Shotgun"
 msgstr "Escopeta"
 
-#: player/weapons.gd:28
+#: player/weapons.gd:30
 msgid "Hunting bow"
 msgstr "Arco de caza"
 
-#: player/weapons.gd:30
+#: player/weapons.gd:32
 msgid "Fire axe"
 msgstr "Hacha de bombero"
 
-#: player/weapons.gd:32
+#: player/weapons.gd:34
 msgid "Nail bat"
 msgstr "Bate con clavos"
 
-#: player/weapons.gd:36
+#: player/weapons.gd:38
 msgid "Fists"
 msgstr "Puños"
 
-#: player/weapons.gd:38
+#: player/weapons.gd:40
 msgid "Bash"
 msgstr "Culatazo"
 

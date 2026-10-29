@@ -50,6 +50,12 @@ const FILTER_TIME := 45.0  ## seconds of gas one filter lasts
 const TAKEDOWN_RANGE := 1.6
 const THROW_RANGE := 22.0  ## bottles / smoke cans land on the crosshair up to this far
 const ARM_REACH := 0.95  ## shoulder → muzzle when aiming: a wall closer than this tucks the gun in
+const LONG_REACH := 1.25  ## m shoulder → past the shotgun's muzzle: a closer target tucks it to low ready
+const PITCH_MIN := -1.4  ## rad: the camera looks this far down (80°)...
+const PITCH_MAX := 1.4  ## ...and this far up
+const AIM_RANGE := 90.0  ## m: how far the crosshair point is looked for (the guns' longest reach)
+const PISTOL_AT := Vector3(-0.07, 1.42, 0.08)  ## model space: where a two-hand pistol grip aims from (sternum, right)
+const PISTOL_REACH := 0.5  ## m out along the aim from there: the hands, arms nearly straight
 ## carry(): a second body shape round what the arms hold out in front (the battery, the hands on its sides; model
 ## space, see _hold), so it stops at a table or a wall like Alex does instead of sinking into it
 const CARRY_BOX := Vector3(0.46, 0.3, 0.3)
@@ -59,6 +65,7 @@ const LAMP_REACH := 1.134  ## rad (65°): the beam turns this far off the face a
 const CAM_CLEAR := 0.22  ## m kept between the camera rig and any wall (a sphere, so thin posts count too)
 const ASH_ROOF := 30.0  ## m: anything over Alex's head this close (a roof, a ceiling) and the falling ash fades out
 const ASH_FADE := 0.6  ## s
+const HOLD_TO_FISTS := 0.4  ## s: the gamepad's swap button (Y) held this long puts every weapon away
 const ItemFx := preload("res://scripts/item_fx.gd")
 const WEAPON_MODELS := {"revolver": "res://models/item_revolver.glb", "flare": "res://models/item_flare_gun.glb",
 	"shotgun": "res://models/item_shotgun.glb", "bow": "res://models/item_bow.glb", "axe": "res://models/item_axe.glb",
@@ -69,6 +76,8 @@ const MUZZLE := {"revolver": Vector3(0, 0.06, -0.24), "flare": Vector3(0, 0.06, 
 ## (and the bow's) stand upright in the fist, barrel along the fingers; long grips (the shotgun's wrist, the axe
 ## and bat handles) run through the fist, thumb toward the business end.
 const GRIP := Transform3D(Basis(Vector3(-1, 0, 0), Vector3(0, 0, 1), Vector3(0, 1, 0)), Vector3(0, -0.06, -0.02))
+## the off hand on a pistol grip (gun space): cupped under and round the left side of the shooting hand
+const PISTOL_SUPPORT := Transform3D(Basis(Vector3.BACK, -0.5), Vector3(0.03, -0.045, 0.03))
 const LONG_GRIP := Transform3D(Basis(Vector3(-1, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, -1)), Vector3(0, -0.075, 0))
 ## axe / bat: the same fist round the handle, but hammer-wise: the business edge (+Y) toward the knuckles (-Y), so
 ## the blade faces where the fist drives instead of back along the forearm (that turned the wrist inside out)
@@ -80,6 +89,7 @@ const CARRY_DIR := Vector3(-0.17, 0.8, -0.57)
 const CARRY_FOREARM := Vector3(0.05, -0.35, -0.94)
 const SUPPORT := {"shotgun": Vector3(0, 0.0, -0.27), "axe": Vector3(0, 0, -0.4), "bat": Vector3(0, 0, -0.14)}  ## off hand
 const BOW_TIPS := [Vector3(0, 0.62, 0.1), Vector3(0, -0.62, 0.1)]  ## where the string ties on (bow space)
+const BOW_REST := Vector3(0.012, 0, -0.1)  ## bow space: where the arrow leaves the riser
 const BOW_BRACE := 0.16  ## string at rest (bow space z); a full draw pulls the nock BOW_DRAW further back
 const BOW_DRAW := 0.45
 ## Melee swings: weapon poses in model space (origin = right-hand grip, head direction) at strike progress t.
@@ -107,6 +117,7 @@ var mark_cap: float = Feel.MARK_SOFT_CAP[3]  ## this chapter's soft cap (set by 
 var crouching := false
 var aiming := false
 var controls_enabled := true
+var look_hold := 0  ## mouse moves to drop: the first after the mouse is captured again can carry the cursor's jump
 var dead := false
 var hidden_spots: Array[Vector3] = []  ## tall grass: crouching within 1.3 m hides the player
 var carrying := ""  ## item held in both hands ("" = none): walk only, no guns
@@ -147,6 +158,8 @@ var _bow_arrow: Node3D
 var _carry_mesh: Node3D
 var _carry_col: CollisionShape3D  ## CARRY_BOX while carrying, turned with the model (_physics_process)
 var _was_hidden := false
+var aim_at := Vector3.ZERO  ## world: what the crosshair is on (refreshed every frame): the guns and the bow aim at it
+var _swap_held := -1.0  ## s the gamepad's swap button has been down (-1: up, or its hold already holstered)
 var _gas_frame := -10  ## physics frame of the last gas_exposure (several clouds count once)
 var _cough_t := 0.0
 var _meshes: Array[GeometryInstance3D] = []  ## Alex's body parts: shadow-only when the camera is inside him
@@ -204,16 +217,18 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		if controls_enabled:
+		if look_hold > 0:
+			look_hold -= 1
+		elif controls_enabled:
 			_look(event.relative * mouse_sensitivity * Settings.number("controls/mouse_sensitivity") * (0.6 if aiming else 1.0))
 	elif event is InputEventMouseButton and event.pressed and Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		look_hold = 2
 		get_viewport().set_input_as_handled()
 	if not controls_enabled or dead:
 		return
 	if event.is_action_pressed("flashlight"):
-		flashlight.visible = not flashlight.visible
-		Snd.sfx("click", null, -8.0, 0.8)
+		toggle_flashlight()
 	elif event.is_action_pressed("shoulder_swap"):
 		_shoulder = -_shoulder
 	elif event.is_action_pressed("mask"):
@@ -247,7 +262,16 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("reload"):
 		weapons.reload()
 	elif event.is_action_pressed("swap_weapon"):
-		weapons.swap()
+		if event is InputEventJoypadButton:
+			_swap_held = 0.0  # a tap swaps on release, a hold puts the weapons away (_physics_process)
+		else:
+			weapons.swap()
+	elif event.is_action_released("swap_weapon") and event is InputEventJoypadButton:
+		if _swap_held >= 0.0:
+			weapons.swap()
+		_swap_held = -1.0
+	elif event.is_action_pressed("weapon_0"):
+		weapons.holster()
 	elif event.is_action_pressed("weapon_1"):
 		weapons.swap(0)
 	elif event.is_action_pressed("weapon_2"):
@@ -275,7 +299,7 @@ func _look(delta: Vector2) -> void:
 	## Mouse and right stick alike (Settings: invert up / down).
 	pivot.rotate_y(-delta.x)
 	var up := -1.0 if Settings.flag("controls/invert_y") else 1.0
-	pitch.rotation.x = clampf(pitch.rotation.x - delta.y * up, -1.2, 0.8)
+	pitch.rotation.x = clampf(pitch.rotation.x - delta.y * up, PITCH_MIN, PITCH_MAX)
 
 
 # ------------------------------------------------------------------ movement
@@ -313,6 +337,11 @@ func _physics_process(delta: float) -> void:
 		_fire()
 	if weapons.gun() == "bow" and weapons.loaded.bow <= 0:
 		weapons.reload()  # nock the next arrow
+	if _swap_held >= 0.0:
+		_swap_held = _swap_held + delta if controls_enabled and not dead else -1.0
+		if _swap_held >= HOLD_TO_FISTS:
+			_swap_held = -1.0  # (its release swaps nothing)
+			weapons.holster()
 	if _hitstop > 0.0:  # the blow landed: the swing (and the body's pose) hold for a beat
 		_hitstop -= delta
 		if _hitstop <= 0.0:
@@ -560,8 +589,16 @@ func _animate(delta: float) -> void:
 	anim.vertical = velocity.y
 	anim.sliding = _slide_left > 0.0
 	anim.aim = move_toward(anim.aim, 1.0 if (aiming or _aim_face > 0.0) else 0.0, delta * 8.0)
-	anim.aim_pitch = -pitch.rotation.x
+	# the arms aim at the point under the crosshair (not along the camera, which sits behind and above them): its
+	# pitch from the chest, + = up (it was -pitch.rotation.x, + = down: aiming at the ground raised the gun); a gun
+	# or the bow bends the spine part of the way there
+	if camera.is_inside_tree():
+		aim_at = throw_target(AIM_RANGE)
+	var tl := _local(aim_at)
+	var chest := Vector3(0, 1.0 if crouching else 1.42, 0)
+	anim.aim_pitch = atan2(tl.y - chest.y, maxf(Vector2(tl.x, tl.z).length(), 0.05))
 	var hold: String = weapons.spec().hold
+	anim.aim_lean = 1.0 if hold in ["pistol", "long", "bow"] and carrying == "" else 0.0
 	anim.stance = {"long": -0.35, "bow": -1.2}.get(hold, 0.0) if carrying == "" else 0.0
 	var block := 0.0
 	if anim.aim > 0.0:
@@ -570,6 +607,8 @@ func _animate(delta: float) -> void:
 		var hit := _ray(shoulder, shoulder + aim_dir * ARM_REACH)
 		if hit:
 			block = clampf(1.0 - (shoulder.distance_to(hit.position) - 0.35) / (ARM_REACH - 0.35), 0.0, 1.0)
+		if hold == "long":  # a target nearer than the barrels are long (the floor, crouched): it can't be shouldered
+			block = maxf(block, clampf((LONG_REACH - shoulder.distance_to(aim_at)) / 0.25, 0.0, 1.0))
 	anim.aim_block = move_toward(anim.aim_block, block, delta * 6.0)
 	# head follows the camera unless it would have to look backwards
 	var yaw := wrapf(pivot.rotation.y + PI - model.rotation.y, -PI, PI)
@@ -663,7 +702,7 @@ func _impacts(impacts: Array, dir: Vector3, gun: String) -> void:
 func _on_fired(gun: String, double_tap: bool) -> void:
 	if double_tap:
 		hud.banner("DOUBLE TAP", Color(1.0, 0.8, 0.3), 0.7)
-	pitch.rotation.x = clampf(pitch.rotation.x + Feel.KICK_PITCH[gun], -1.2, 0.8)  # muzzle climb
+	pitch.rotation.x = clampf(pitch.rotation.x + Feel.KICK_PITCH[gun], PITCH_MIN, PITCH_MAX)  # muzzle climb
 	camera.fov += Feel.KICK_FOV[gun]  # a punch outward; _update_camera eases it back
 
 
@@ -792,6 +831,7 @@ func _hold(delta: float) -> void:
 	var co := anim.crouch_offset()  # (where the crouch puts the hips: lower, and sat back over the feet)
 	var drop := Vector3(0, co.y - 0.06, co.z + 0.22) * c  # crouched: everything sits lower, the arms out front
 	var ad := Vector3(0, sin(anim.aim_pitch), cos(anim.aim_pitch))  # the aim, model space
+	var tl := _local(aim_at)  # what the crosshair is on, model space: the guns and the bow point at it
 	var id := weapons.gun()
 	var sp := weapons.spec()
 	var ready := clampf(anim.aim, 0.0, 1.0) * (1.0 - anim.aim_block)
@@ -808,7 +848,7 @@ func _hold(delta: float) -> void:
 			if anim.strike_style == "chop" else 1.0
 		t.L = w * Transform3D(Basis(), SUPPORT.get(id, Vector3(0, 0, -0.3)) * slide) * MELEE_GRIP.affine_inverse()
 	elif _strike_t >= 0.0 and sp.hold == "long":  # butt-stroke: the whole gun drives forward
-		var w := _long_pose(ad, drop, lerpf(ready, 1.0, smoothstep(0.0, 0.15, _strike_t)))  # up from low ready first
+		var w := _long_pose(tl, drop, lerpf(ready, 1.0, smoothstep(0.0, 0.15, _strike_t)))  # up from low ready first
 		w.origin += w.basis * Vector3(0, 0, -0.35) * sin(minf(_strike_t / _strike.hit_at, 1.0) * PI * 0.5) \
 			* (1.0 - maxf(_strike_t - _strike.hit_at, 0.0) / (1.0 - _strike.hit_at))
 		t.R = w * LONG_GRIP.affine_inverse()
@@ -825,13 +865,18 @@ func _hold(delta: float) -> void:
 		var fist := Transform3D(Basis(ad, (1.4 if k == "L" else -1.4) * out) * _fist(ad), sh + ad * 0.6 - Vector3(sh.x * 0.7, 0.06, 0))
 		t[k] = (t[k] as Transform3D).interpolate_with(fist, out)
 		if sp.hold == "bow":
-			t.L = _bow_pose(ad, drop, 0.0) * GRIP.affine_inverse()
+			t.L = _bow_pose(tl, drop, 0.0) * GRIP.affine_inverse()
 		elif sp.hold == "pistol" and k == "R":
 			t.erase("L")
 	else:
 		match sp.hold:
+			"pistol":  # both hands on the grip, out along the line to the target (none at rest: the arm hangs)
+				if anim.aim > 0.0:
+					var w := _pistol_pose(tl, drop, ready)
+					t.R = w * GRIP.affine_inverse()
+					t.L = w * PISTOL_SUPPORT * GRIP.affine_inverse()
 			"long":
-				var w := _long_pose(ad, drop, ready)
+				var w := _long_pose(tl, drop, ready)
 				t.R = w * LONG_GRIP.affine_inverse()
 				t.L = w * Transform3D(Basis(), SUPPORT[id]) * LONG_GRIP.affine_inverse()
 			"melee":
@@ -840,7 +885,7 @@ func _hold(delta: float) -> void:
 				if ready > 0.05:
 					t.L = w * Transform3D(Basis(), SUPPORT[id]) * MELEE_GRIP.affine_inverse()
 			"bow":
-				var w := _bow_pose(ad, drop, ready)
+				var w := _bow_pose(tl, drop, ready)
 				t.L = w * GRIP.affine_inverse()
 				anim.ik_pole["R"] = Vector3(-1.0, 0.3, -0.6)  # drawing elbow out and back, level with the shoulder
 				if ready > 0.05:  # the right hand hooks the string at the nock
@@ -886,22 +931,70 @@ func _guard(drop: Vector3) -> Dictionary:
 	return {"R": Transform3D(up, Vector3(-0.13, 1.37, 0.27) + drop), "L": Transform3D(up, Vector3(0.12, 1.41, 0.31) + drop)}
 
 
-func _long_pose(ad: Vector3, drop: Vector3, k: float) -> Transform3D:
-	## The shotgun (model space): stock in the right shoulder pocket along the aim (k = 1), or at low ready with
-	## the muzzle down and across the body (k = 0). Recoil shoves it back and up.
-	var aim_b := _toward(ad)
-	var aimed := Transform3D(aim_b, Vector3(-0.13, 1.45, 0.02) + drop - aim_b * Vector3(0, -0.035, 0.33))
+func _local(p: Vector3) -> Vector3:
+	## A world point in model space (the IK targets' space).
+	return model.global_transform.affine_inverse() * p
+
+
+func _bent(p: Vector3) -> Vector3:
+	## A model-space point on the upper body carried with the spine's aim bend (HumanoidAnim SPINE_AIM): a low aim
+	## stoops the shoulders forward and down, a high one arches them back.
+	var sp := anim.joint("Spine")
+	if not sp:
+		return p
+	var o := _local(sp.global_position)
+	var bend := -anim.aim_pitch * HumanoidAnim.SPINE_AIM * anim.aim_lean * clampf(anim.aim, 0.0, 1.0)
+	return o + Basis(Vector3.RIGHT, bend) * (p - o)
+
+
+static func _aim_dir(from: Vector3, to: Vector3) -> Vector3:
+	## Unit direction from -> to (model space), straight ahead when they're on top of each other.
+	var v := to - from
+	return v / v.length() if v.length() > 0.05 else Vector3.BACK
+
+
+func _barrel(at: Vector3, tl: Vector3, lift: float) -> Basis:
+	## The weapon's basis (model space) held at `at` with its bore, `lift` m over the grip along the weapon's up, on the
+	## line to tl: the bore sits a few cm over the hand, which at arm's length from the floor is a 10° miss otherwise.
+	var b := _toward(_aim_dir(at, tl))
+	for i in 2:
+		b = _toward(_aim_dir(at + b.y * lift, tl))
+	return b
+
+
+func _pistol_pose(tl: Vector3, drop: Vector3, k: float) -> Transform3D:
+	## The revolver / flare gun in both hands (model space): out from the chest toward the target, the barrel on the
+	## line to it (k = 1), or at low ready in front of the belt, muzzle down (k = 0). Recoil kicks it back and up.
+	var from := _bent(PISTOL_AT + drop)
+	var at := from + _aim_dir(from, tl) * PISTOL_REACH
+	var aimed := Transform3D(_barrel(at, tl, MUZZLE.get(weapons.gun(), Vector3.ZERO).y), at)
+	var low := Transform3D(_toward(Vector3(-0.1, -0.75, 0.65)), Vector3(-0.1, 1.12, 0.3) + drop)
+	var w := low.interpolate_with(aimed, k)
+	w.origin += w.basis * Vector3(0, 0.02, 0.06) * anim.recoil
+	w.basis = w.basis * Basis(Vector3.RIGHT, 0.25 * anim.recoil)  # muzzle flip
+	return w
+
+
+func _long_pose(tl: Vector3, drop: Vector3, k: float) -> Transform3D:
+	## The shotgun (model space): stock in the right shoulder pocket, the barrels on the line to the target (k = 1),
+	## or at low ready with the muzzle down and across the body (k = 0). Recoil shoves it back and up.
+	var pocket := _bent(Vector3(-0.13, 1.45, 0.02) + drop)
+	var aim_b := _toward(_aim_dir(pocket, tl))
+	var aimed := Transform3D(aim_b, pocket - aim_b * Vector3(0, -0.035, 0.33))
+	aimed.basis = _barrel(aimed.origin, tl, MUZZLE.shotgun.y)
 	var low := Transform3D(_toward(Vector3(0.3, -0.45, 0.84)), Vector3(-0.15, 1.2, 0.22) + drop)
 	var w := low.interpolate_with(aimed, k)
 	w.origin += w.basis * Vector3(0, 0.03, 0.09) * anim.recoil
 	return w
 
 
-func _bow_pose(ad: Vector3, drop: Vector3, k: float) -> Transform3D:
-	## The bow's grip (model space): at arm's length along the aim, a slight cant (k = 1), or carried low in the
-	## left hand with the limbs upright (k = 0).
+func _bow_pose(tl: Vector3, drop: Vector3, k: float) -> Transform3D:
+	## The bow's grip (model space): at arm's length toward the target, the arrow on the line to it, a slight cant
+	## (k = 1), or carried low in the left hand with the limbs upright (k = 0).
 	# side-on: bow arm straight from the left shoulder, the arrow line down the middle to the chin
-	var aimed := Transform3D(_toward(ad) * Basis(Vector3.BACK, 0.12), Vector3(0.0, 1.53, 0.12) + drop + ad * 0.6)
+	var from := _bent(Vector3(0.0, 1.53, 0.12) + drop)
+	var at := from + _aim_dir(from, tl) * 0.6
+	var aimed := Transform3D(_barrel(at, tl, 0.0) * Basis(Vector3.BACK, 0.12), at)
 	var low := Transform3D(_toward(Vector3(0.05, -0.15, 1.0)), Vector3(0.25, 0.93, 0.1) + drop)
 	return low.interpolate_with(aimed, k)
 
@@ -963,7 +1056,7 @@ func _loose() -> void:
 		return
 	var k := maxf(_draw, 0.3)
 	var bow: Node3D = _gun_meshes.get("bow")
-	var from := bow.to_global(Vector3(0.012, 0, -0.1)) if bow else global_position + Vector3.UP * 1.45
+	var from := bow.to_global(BOW_REST) if bow else global_position + Vector3.UP * 1.45
 	Arrow.fire(get_parent(), from, throw_target(Weapons.GUNS.bow.range), Weapons.GUNS.bow.damage * k, self,
 		lerpf(18.0, 46.0, k))
 	weapons.loose()
@@ -1072,7 +1165,7 @@ func _melee_hit() -> void:
 		if hs > 0.0:  # our swing holds with the enemy it struck
 			_hitstop = hs
 			anim.set_process(false)
-		pitch.rotation.x = clampf(pitch.rotation.x - 0.02, -1.2, 0.8)  # the jolt runs up the arms
+		pitch.rotation.x = clampf(pitch.rotation.x - 0.02, PITCH_MIN, PITCH_MAX)  # the jolt runs up the arms
 		noise(float(sp.noise))
 		if bounce:
 			_bounce(chest + fwd * 0.9)
@@ -1091,7 +1184,7 @@ func _bounce(at: Vector3) -> void:
 	## The axe / bat rebounds: sparks where it struck, the swing runs back, the camera jars.
 	_rebound = 0.3
 	ItemFx.burst(get_parent(), at, "sparks", Vector3.UP)
-	pitch.rotation.x = clampf(pitch.rotation.x + 0.05, -1.2, 0.8)
+	pitch.rotation.x = clampf(pitch.rotation.x + 0.05, PITCH_MIN, PITCH_MAX)
 	hud.banner("CLANG", Color(0.8, 0.8, 0.75), 0.4)
 
 
@@ -1263,6 +1356,12 @@ func _flat_mat(c: Color) -> StandardMaterial3D:
 	return m
 
 
+func toggle_flashlight() -> void:
+	## The headlamp on / off (F, the inventory).
+	flashlight.visible = not flashlight.visible
+	Snd.sfx("click", null, -8.0, 0.8)
+
+
 func toggle_mask() -> void:
 	if not gas_mask:
 		return
@@ -1346,8 +1445,14 @@ func _lob(item: String, land: Callable) -> bool:
 	if carrying != "" or _busy or anim.throw >= 0.0:
 		return false
 	var target := throw_target()
+	var eye := camera.global_position - camera.global_basis.z * arm.spring_length
+	if eye.distance_to(target) > THROW_RANGE - 0.05:  # nothing under the crosshair (the sky): as far as it goes, onto
+		var down := _ray(target + Vector3.UP * 0.5, target + Vector3.DOWN * 80.0)  # the ground under that point
+		if down:
+			target = down.position
 	var flat := target - global_position
-	model.rotation.y = atan2(flat.x, flat.z)
+	if Vector2(flat.x, flat.z).length() > 0.3:  # (straight down at his feet: he keeps facing the way he was)
+		model.rotation.y = atan2(flat.x, flat.z)
 	_aim_face = 0.7
 	var tw := create_tween()
 	tw.tween_property(anim, "throw", 0.45, 0.16).from(0.0)  # wind up...
