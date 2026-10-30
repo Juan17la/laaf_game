@@ -1587,11 +1587,33 @@ def table(m, x, z, w=1.2, d=0.8, h=0.75, mat="planks", yaw=0):
 
 
 def bed(m, x, z, yaw=0):
+    """Single wooden bed, head at -Z: turned posts, slatted headboard, footboard, mattress, turned-down
+    blanket hanging over the sides, a pillow leant on the headboard. Footprint 1.0 x 2.0 m."""
     with m.push((x, 0, z), (0, yaw, 0)):
-        m.box("planks", (1.0, 0.35, 2.0), (0, 0.175, 0))
-        m.box("sheet", (0.95, 0.15, 1.9), (0, 0.42, 0.02))
-        m.box("white", (0.6, 0.1, 0.35), (0, 0.54, -0.7))
-        m.box("planks", (1.0, 0.8, 0.08), (0, 0.4, -1.0))
+        for sz, ph in ((-1, 1.05), (1, 0.7)):  # posts with knob finials
+            for sx in (-1, 1):
+                m.box("planks", (0.08, ph, 0.08), (sx * 0.46, ph / 2, sz * 0.96))
+                m.cyl("planks", 0.05, 0.03, 0.06, (sx * 0.46, ph, sz * 0.96), seg=6)
+        for sx in (-1, 1):  # side rails + slat deck
+            m.box("planks", (0.05, 0.16, 1.84), (sx * 0.46, 0.26, 0))
+        m.box("planks", (0.88, 0.03, 1.84), (0, 0.22, 0))
+        # headboard: top rail, slats, bottom rail
+        m.box("planks", (1.0, 0.09, 0.06), (0, 0.98, -0.96))
+        m.box("planks", (0.86, 0.06, 0.05), (0, 0.48, -0.96))
+        for k in range(5):
+            m.box("planks", (0.07, 0.44, 0.03), (-0.3 + k * 0.15, 0.73, -0.96))
+        # footboard: rail + solid panel
+        m.box("planks", (1.0, 0.07, 0.06), (0, 0.66, 0.96))
+        m.box("planks", (0.86, 0.3, 0.03), (0, 0.45, 0.96))
+        # mattress, blanket (turned down at the head, hanging over the sides), sheet fold, pillow
+        m.box("sheet", (0.86, 0.2, 1.84), (0, 0.33, 0))
+        m.box("fabric", (0.9, 0.04, 1.3), (0, 0.45, 0.25))
+        for sx in (-1, 1):
+            m.box("fabric", (0.02, 0.22, 1.3), (sx * 0.45, 0.35, 0.25))
+        m.box("fabric", (0.9, 0.06, 0.16), (0, 0.48, -0.36))
+        m.box("white", (0.86, 0.02, 0.1), (0, 0.44, -0.47))
+        m.box("white", (0.6, 0.12, 0.34), (0, 0.55, -0.72), (-20, 3, 0))
+        m.box("white", (0.5, 0.03, 0.26), (0.01, 0.62, -0.71), (-20, 3, 0))  # its slouched top
 
 
 def lantern(m, x, y, z, s=1.0):

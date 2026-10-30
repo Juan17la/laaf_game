@@ -258,9 +258,9 @@
 
 [ext_resource type="PackedScene" path="res://player/player.tscn" id="r129"]
 
-[ext_resource type="Script" path="res://scripts/sign_label.gd" id="sign_label"]
-
 [ext_resource type="Script" path="res://scripts/weather.gd" id="r130"]
+
+[ext_resource type="Script" path="res://scripts/sign_label.gd" id="sign_label"]
 
 
 [sub_resource type="Environment" id="s1"]

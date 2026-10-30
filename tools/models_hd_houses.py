@@ -505,6 +505,13 @@ def trim_skin(m, W, D, y0, y1, trim="hh_trim", corners=True, bands=True):
             m.box(trim, (0.05, hh, D + 0.08), (-W / 2 - 0.025, y, 0))
 
 
+def front_band(m, mat, x0, x1, hy, y, z, t, gaps):
+    """Band along a +Z wall from x0 to x1, left open at each (x, width) doorway in gaps."""
+    edges = [x0] + [e for gx, gw in sorted(gaps) for e in (gx - gw / 2, gx + gw / 2)] + [x1]
+    for a, b in zip(edges[::2], edges[1::2]):
+        m.box(mat, (b - a, hy, t), ((a + b) / 2, y, z))
+
+
 def sign_text(m, mat, h, pos, rot=(0, 0, 0)):
     m.decal(mat, h * TEXT_COLS[mat], h, pos, rot)
 
@@ -849,8 +856,9 @@ def m_motel():
             m.box("metal", (0.1, h - 0.2, 0.1), (x, (h - 0.2) / 2, d / 2 + 2.2))
         m.box("metal", (0.24, 0.02, 0.24), (x, 0.06, d / 2 + 2.2))
     m.box("concrete", (w + 6, 0.12, 0.12), (-3, 0.06, d / 2 + 2.4))  # curb
-    # kick band along the front
-    m.box("hh_enamel_teal", (w, 0.35, 0.04), (0, 0.23, zf + 0.02))
+    # kick band along the front, open under every door (the five dressing doors + room 6)
+    front_band(m, "hh_enamel_teal", -w / 2, w / 2, 0.35, 0.23, zf + 0.02, 0.04,
+               [(-15 + 5 * (i + 0.5) + 0.5, 1.0) for i in range(5)] + [(13.0, 1.0)])
     for i in range(6):
         x = -15 + 5 * (i + 0.5)
         dx = x + 0.5
@@ -1104,8 +1112,9 @@ def m_bar():
         m.cyl("glass", 0.05, 0.05, 0.28, (-1.8 + x * 0.5, 1.6, -4.3), seg=5)
     B.windows(m, "hh_glass_lit", "s", w, d, (1.0, 4.0), 1.6, 1.4, 1.2)
     hd = d / 2
-    for sz in (-1, 1):  # block skirt
-        m.box("hh_block", (w + 0.1, 0.35, 0.05), (0, 0.175, sz * (hd + 0.025)))
+    # block skirt (open under the front door)
+    m.box("hh_block", (w + 0.1, 0.35, 0.05), (0, 0.175, -hd - 0.025))
+    front_band(m, "hh_block", -w / 2 - 0.05, w / 2 + 0.05, 0.35, 0.175, hd + 0.025, 0.05, [(-3, 1.2)])
     for sx in (-1, 1):
         m.box("hh_block", (0.05, 0.35, d + 0.1), (sx * (w / 2 + 0.025), 0.175, 0))
     trim_skin(m, w, d, 0.35, h, bands=False)
