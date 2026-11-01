@@ -201,6 +201,9 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	_build_guns()
 	headlamp = Headlamp.wear(model)
+	var brand := BrandMark.wear(model)
+	if brand:
+		brand.source = self
 	if headlamp:  # the light comes from the lamp on his forehead, not from his chest
 		flashlight.reparent(headlamp, false)
 		flashlight.transform = Transform3D(Basis(), Headlamp.LENS + Vector3(0, 0, 0.012))

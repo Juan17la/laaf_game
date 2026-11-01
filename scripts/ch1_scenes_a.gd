@@ -19,6 +19,7 @@ var hud: Node
 var _radio: Node3D  ## room 6 has no radio model in the map: placed here on the table (RADIO_SPOT)
 var _mic: Node3D  ## the radio's hand mic, lying beside it until Alex picks it up for the call
 var _note: Node3D  ## Moth's note under the door, from room_door until it's picked up
+var _door_eye: MeshInstance3D  ## the eye Owen thumbs onto room 6's door on his way out (_window), checked in room_door
 
 
 func _init(director: Chapter1Director) -> void:
@@ -95,11 +96,17 @@ func intro() -> void:
 	# one stand-in for the whole intro (a second stand_in() would respawn the player mid-scene);
 	# the hidden player body is moved along with the scene so the zone titles stamp each place
 	var alex := d.stand_in(Vector3(-100.4, 0, 146.0), PI)  # (by the driver's door, clear of the car: see _bridge)
+	var mark := BrandMark.of(alex.model)
+	if mark:
+		mark.visible = false  # not yet: Owen burns it in at the end of _window
 	await _bridge(alex)
 	await _store(alex)
 	await _window(alex)
 	d.release_stand_in()
 	d.player.respawn(ROOM6, PI / 2.0)
+	var own := BrandMark.of(d.player.model)
+	if own:
+		own.heat = 0.75  # still raw when he gets control
 	d.cinematic(false)
 	hud.fade(0.0, 0.5)
 
@@ -157,7 +164,7 @@ func _bridge(alex: Actor) -> void:
 	beam.rotation = Vector3(0, -PI / 2.0, 0)
 	alex.visible = false
 	d.shot(Vector3(-95.2, 0.8, 136.0), Vector3(-99, 0.9, 148), Vector3(-95.5, 1.1, 141.0), 7.0, 72.0)  # wide, creeping in
-	var engine := Snd.attach(car, "generator", -2.0)
+	var engine := Snd.attach(car, "car_engine", -2.0)
 	hud.fade(0.0, 1.0)
 	var tw := car.create_tween()
 	tw.tween_property(car, "global_position:z", 146.0, 3.0).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
@@ -169,10 +176,11 @@ func _bridge(alex: Actor) -> void:
 	beam.visible = false
 	car.rotation.x = 0.0
 	Snd.stop(engine)
-	Snd.sfx("scrape", car.global_position, -3.0, 0.6)
+	Snd.sfx("car_stall", car.global_position)
 	# Alex gets out, walks round to the nose, leans on the hood. The car stops at (-99, 146) nose -Z: its body
 	# (bumpers, mirrors) spans x -99.95..-98.05, z 143.7..148.3; Alex keeps ~0.4 m off it on the road.
 	alex.visible = true
+	Snd.sfx("car_door", car.global_position)
 	d.shot(Vector3(-102.8, 1.4, 141.6), Vector3(-99.8, 1.0, 145.4))
 	alex.walk_path([Vector3(-100.45, 0, 143.25), Vector3(-99.4, 0, 143.1)], 2.0)  # along the door, round the fender
 	await hud.subtitle("Alex", "No. No, no, no—", 1.8)
@@ -286,60 +294,130 @@ func _store(alex: Actor) -> void:
 
 
 func _window(alex: Actor) -> void:
-	# 23:00, room 6: Alex asleep; Owen at the glass, at the door — the hand burns
+	# 23:00, room 6. Alex asleep. Owen comes to the glass with a branding iron glowing at his side, creeps in through
+	# the open door, kneels at the bed and burns the Veil's eye into the back of Alex's right hand. Alex wakes into it; Owen
+	# bolts, and on the way out thumbs the same eye onto the door (room_door finds it there, still wet).
 	await _settle(alex)
 	d.player.global_position = ROOM6
 	_room_props()
-	# on his back, head on the pillow (-X): 1.78 m from the feet here to the crown just short of the headboard
+	# on his back, head on the pillow (-X): 1.78 m from the feet here to the crown just short of the headboard.
+	# Lying like this his right side is +Z, the back of his right hand turned out toward the walkway side.
 	alex.global_position = Vector3(-100.72, 0.55, 48.5)
 	alex.model.rotation = Vector3(-PI / 2.0, PI / 2.0, 0)
 	var owen := d.actor("res://models/char_owen.glb", Vector3(-95.3, 0, 55.5), PI)
+	var iron := owen.hold("brand_iron", "")  # carried low at his side
+	var tip := OmniLight3D.new()  # the eye on its end glows: the one warm thing coming through the dark
+	tip.light_color = Color(1.0, 0.4, 0.1)
+	tip.light_energy = 1.4
+	tip.omni_range = 1.4
+	tip.set_script(load("res://scripts/flicker.gd"))
+	tip.set("chance", 0.3)
+	var brand_end: Node3D = iron.find_child("Brand", true, false)
+	(brand_end if brand_end else iron).add_child(tip)
 	var back := _light(Vector3(-92.5, 2.6, 51.5), Color(0.55, 0.65, 0.9), 0.9, 7.0)
 	await hud.subtitle("", "23:00. Lakeview Motel, room six.", 2.0)
 	d.shot(Vector3(-98.6, 2.0, 51.4), Vector3(-102.0, 0.6, 48.5), Vector3(-99.2, 1.9, 51.0), 3.0)
 	hud.fade(0.0, 0.6)
 	await d.wait(2.4)
-	# outside: the silhouette walks up the walkway to the window
+	# outside: the silhouette walks up the walkway to the window, an ember swinging by its knee
 	owen.walk_to(Vector3(-95.3, 0, 50.6), 1.3)
-	d.shot(Vector3(-90.5, 1.3, 53.8), Vector3(-95.5, 1.4, 51.0))
+	d.shot(Vector3(-90.5, 1.3, 53.8), Vector3(-95.5, 1.0, 51.0))
 	await d.wait(3.2)
-	owen.face(Vector3(-100, 0, 50.6))
+	await owen.face(Vector3(-100, 0, 50.6))
+	# the iron goes through his belt, to have both hands on the glass
+	var hips: Node3D = owen.model.find_child("Hips", true, false)
+	iron.reparent(hips if hips else owen.model, false)
+	iron.transform = Transform3D(Basis.from_euler(Vector3(-1.2, 0, 0.2)), Vector3(-0.2, -0.05, 0.05))
 	d.shot(Vector3(-101.9, 1.05, 47.7), Vector3(-102.35, 0.7, 48.5), Vector3(-101.9, 1.0, 47.9), 3.0, 46.0, 0.006)  # asleep, breathing
 	await d.wait(1.6)
 	owen.gesture("window_press")
 	Snd.sfx("thud", Vector3(-96.5, 1.4, 50.0), -4.0, 1.4)
-	d.shot(Vector3(-93.3, 1.75, 51.9), Vector3(-101.5, 0.7, 48.6))  # over his shoulder, through the glass
+	d.shot(Vector3(-93.3, 1.75, 51.9), Vector3(-101.5, 0.7, 48.6))  # over his shoulder, through the glass: still asleep
 	await d.wait(2.4)
-	# to the door; he reaches for it
+	# to the open door; he listens, draws the iron, and creeps in low, the ember crossing the dark room to the bed
 	owen.gesture("")
 	await owen.walk_to(Vector3(-95.7, 0, 49.1), 1.3)
 	await owen.face(Vector3(-97, 0, 49.1), 0.3)
-	owen.gesture("reach")
-	Snd.sfx("door_locked", Vector3(-96.5, 1.0, 49.0), -3.0)
-	d.shot(Vector3(-93.4, 1.2, 47.4), Vector3(-96.0, 1.3, 49.1), Vector3(-94.6, 1.25, 48.2), 4.0, 50.0, 0.02)
-	await d.wait(1.4)
-	# the burn: an orange flicker on the sleeping hand
-	var hand := _hand(alex)
-	var burn := _light(hand.global_position + Vector3(0, 0.25, 0), Color(1.0, 0.45, 0.1), 1.2, 1.6, true)
-	d.shot(hand.global_position + Vector3(0.45, 0.55, -0.35), hand.global_position)
-	await hud.subtitle("", "Tsssss…", 1.3)
-	# Alex jolts up, clutching the hand
-	var tw := alex.create_tween().set_parallel()
-	tw.tween_property(alex.model, "rotation:x", 0.0, 0.3).set_trans(Tween.TRANS_BACK)
-	tw.tween_property(alex, "global_position", Vector3(-100.6, 0.1, 49.0), 0.3)  # (sits up off the bed)
+	d.shot(Vector3(-94.4, 1.5, 47.6), Vector3(-96.0, 1.3, 49.1), Vector3(-94.7, 1.45, 48.0), 2.4, 46.0, 0.008)
+	owen.look(Vector3(-100.7, 0.6, 48.5))
+	await d.wait(1.2)
+	owen.hold(iron, "")  # out of the belt, back in his fist
+	owen.crouch(true)
+	await d.wait(0.5)
+	var hand_at := _hand(alex).global_position
+	var kneel := Vector3(hand_at.x + 0.15, 0.1, hand_at.z + 0.72)
+	d.shot(Vector3(-101.6, 1.7, 50.4), Vector3(-96.6, 1.1, 49.1), Vector3(-101.3, 1.5, 50.2), 4.0, 55.0, 0.006)
+	owen.walk_path([Vector3(-97.2, 0, 49.2), Vector3(-98.8, 0, 49.7), kneel], 0.7)
+	await d.wait(1.6)
+	# from the foot of the bed: the ember coming round it, the sleeper not moving
+	d.shot(Vector3(-98.4, 1.25, 47.3), Vector3(-100.2, 0.6, 49.1), Vector3(-98.7, 1.15, 47.6), 3.0, 50.0, 0.006)
+	Snd.sfx("heartbeat", null, -10.0)
+	await _settle(owen)
+	await owen.face(Vector3(hand_at.x, 0, hand_at.z), 0.4)
+	owen.anim.down_pose = "one_knee"
+	owen.look(_hand(alex))
+	# close: the sleeping hand on the sheet, the glowing eye of the iron coming down to it
+	var mark := BrandMark.of(alex.model)
+	var at := mark.global_position if mark else hand_at
+	var n := (mark.global_basis.z if mark else Vector3.BACK).normalized()  # out of the back of the hand
+	d.shot(at + n * 0.35 + Vector3(0.45, 0.25, 0.0), at, at + n * 0.3 + Vector3(0.3, 0.2, 0.0), 2.6, 40.0, 0.004)
+	await d.wait(0.8)
+	owen.gesture("brand")
+	iron.reparent(d)
+	var dir := (-n + Vector3.DOWN * 0.35).normalized()  # the brand end goes on square, the grip up toward Owen
+	var on := Transform3D(Basis.looking_at(dir, Vector3.UP), at - dir * 0.39)
+	var off := Transform3D(on.basis, on.origin - dir * 0.18)
+	var tw := iron.create_tween()
+	tw.tween_property(iron, "global_transform", off, 0.5)
+	tw.tween_property(iron, "global_transform", on, 0.35).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	await tw.finished
+	# the burn
+	var hiss := Snd.sfx("hiss", at, -2.0, 1.1)
+	if mark:
+		mark.burn()
+	var flash := _light(at + n * 0.15, Color(1.0, 0.5, 0.15), 3.0, 2.2)
+	var smoke := _smoke(at)
+	smoke.reparent(_hand(alex))  # it goes on rising off the hand, wherever it goes
+	tip.set("_base", 3.0)  # (flicker.gd drives the energy from its base)
+	await d.wait(0.35)
+	# Alex jolts up into it, clutching the hand
+	var jolt := alex.create_tween().set_parallel()
+	jolt.tween_property(alex.model, "rotation:x", 0.0, 0.3).set_trans(Tween.TRANS_BACK)
+	jolt.tween_property(alex, "global_position", Vector3(-100.6, 0.1, 49.0), 0.3)  # (sits up off the bed)
 	alex.gesture("clutch_hand")
 	Snd.sfx("hurt", alex.global_position + Vector3.UP, -2.0)
-	burn.global_position = Vector3(-100.4, 1.2, 49.3)
 	d.shot(Vector3(-99.0, 1.5, 47.6), Vector3(-100.6, 1.2, 49.0))
-	await hud.subtitle("Alex", "Agh—!", 1.3)
-	# outside: Owen backs off the door into the dark
+	# Owen is thrown back on his seat, the iron jerked off the hand
 	owen.gesture("")
-	owen.walk_to(Vector3(-93.4, 0, 49.1), 1.9)
-	d.shot(Vector3(-90.8, 1.5, 46.2), Vector3(-95.0, 1.2, 49.2))
+	owen.anim.down_pose = "sit_back"
+	owen.hold(iron, "")
+	Snd.stop(hiss)
+	flash.queue_free()
+	await hud.subtitle("Alex", "Agh—!", 1.3)
+	# he scrambles up and runs for the door
+	owen.anim.down_pose = ""
+	owen.crouch(false)
+	owen.look(null)
+	owen.walk_path([Vector3(-98.8, 0, 49.7), Vector3(-97.2, 0, 49.2), Vector3(-95.6, 0, 49.1)], 3.4)
+	alex.look(owen)
+	d.shot(Vector3(-101.7, 1.6, 48.4), Vector3(-96.6, 1.3, 49.1))
 	await hud.subtitle("Alex", "Who's there?!", 1.6)
+	await _settle(owen)
+	# on the walkway he stops at the door, and with his thumb draws the eye on it, unhurried
+	await owen.face(Vector3(-97, 1.4, 49.0), 0.25)
+	owen.gesture("daub")
+	_door_eye = _paint_door_eye()
+	BrandMark.set_reveal(_door_eye, 0.0)
+	d.shot(Vector3(-93.6, 1.6, 47.2), Vector3(-96.3, 1.45, 49.0), Vector3(-93.9, 1.55, 47.6), 2.4, 50.0)
+	var draw := _door_eye.create_tween()
+	draw.tween_method(func(k: float) -> void: BrandMark.set_reveal(_door_eye, k), 0.0, 1.0, 1.8)
+	await draw.finished
+	owen.gesture("")
+	# and backs off into the dark
 	owen.walk_to(Vector3(-89.0, 0, 42.5), 2.2)
+	d.shot(Vector3(-90.8, 1.5, 46.2), Vector3(-95.0, 1.2, 49.2))
 	back.queue_free()
-	await d.wait(1.2)
+	await d.wait(1.6)
 	# alone again, the hand still smoking
 	owen.queue_free()
 	alex.look(null)
@@ -347,9 +425,51 @@ func _window(alex: Actor) -> void:
 	d.shot(Vector3(-102.8, 1.6, 50.6), ROOM6 + Vector3(0, 1.1, 0))
 	await d.wait(0.6)
 	alex.face(ROOM6 + Vector3.RIGHT, 0.3)
+	alex.gesture("give")
+	await d.wait(0.5)
+	_hand_shot(alex)
 	await hud.subtitle("Alex", "My hand…", 1.6)
-	burn.queue_free()
+	alex.gesture("")
+	smoke.queue_free()
 	await hud.fade(1.0, 0.35)
+
+
+func _smoke(at: Vector3) -> CPUParticles3D:
+	## Thin grey smoke curling up off a burn.
+	var p := CPUParticles3D.new()
+	var q := QuadMesh.new()
+	q.size = Vector2(0.06, 0.06)
+	var mat := StandardMaterial3D.new()
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+	mat.vertex_color_use_as_albedo = true
+	q.material = mat
+	p.mesh = q
+	p.amount = 18
+	p.lifetime = 1.6
+	p.direction = Vector3.UP
+	p.spread = 15.0
+	p.initial_velocity_min = 0.08
+	p.initial_velocity_max = 0.18
+	p.gravity = Vector3(0, 0.12, 0)
+	p.scale_amount_min = 0.6
+	p.scale_amount_max = 1.6
+	var ramp := Gradient.new()
+	ramp.set_color(0, Color(0.6, 0.58, 0.55, 0.55))
+	ramp.set_color(1, Color(0.5, 0.5, 0.5, 0.0))
+	p.color_ramp = ramp
+	d.add_child(p)
+	p.global_position = at
+	return p
+
+
+func _paint_door_eye() -> MeshInstance3D:
+	## The Veil's eye thumbed onto room 6's door, outside, at head height.
+	var eye := BrandMark.paint(d, 0.42)
+	eye.global_position = Vector3(-96.34, 1.45, 49.0)
+	eye.rotation.y = PI / 2.0
+	return eye
 
 
 # ------------------------------------------------------------------ M1 Room 6
@@ -357,17 +477,20 @@ func _window(alex: Actor) -> void:
 func room_wake() -> void:
 	_room_props()
 	var alex := _begin_stand_in()
+	var mark := BrandMark.of(alex.model)
+	var own := BrandMark.of(d.player.model)
+	if mark and own:
+		mark.heat = own.heat  # the same burn, still warm
 	alex.gesture("give")
-	var mark := _light(Vector3.ZERO, Color(1.0, 0.4, 0.1), 0.8, 0.8, true)
-	await d.wait(0.3)
+	await d.wait(0.5)
 	var hand := _hand(alex)
-	mark.global_position = hand.global_position + Vector3(0, 0.15, 0)
+	alex.look(hand)
+	# he turns the hand over in the lamp light, and the eye looks back up at him
 	_hand_shot(alex)
 	await hud.subtitle("Alex", "An eye… inside a spiral.")
 	_near(alex, alex.model.global_basis.z * 0.9 + Vector3(0.2, 1.6, 0), Vector3(0, 1.5, 0))
-	alex.look(hand)
+	alex.gesture("clutch_hand")
 	await hud.subtitle("Alex", "Burned in. What did they do to me?")
-	mark.queue_free()
 	alex.gesture("")
 	_end_stand_in()
 
@@ -375,19 +498,12 @@ func room_wake() -> void:
 func room_door() -> void:
 	var alex := _begin_stand_in()
 	alex.face(Vector3(-96.5, 0, 49.0))
-	var eye := Label3D.new()
-	eye.text = "(@)"
-	eye.modulate = Color(0.65, 0.05, 0.04)
-	eye.font_size = 100
-	eye.pixel_size = 0.004
-	eye.outline_size = 0
-	d.add_child(eye)
+	if not is_instance_valid(_door_eye):  # (a run started at this step: Owen never came by in it)
+		_door_eye = _paint_door_eye()
 	_note = Interactable.ItemFx.item("note")  # with its dust motes: the marker's _use has no item of its own
 	d.add_child(_note)
 	_note.global_position = Vector3(-97.4, 0.02, 49.6)
 	_note.rotation.y = 0.4
-	eye.global_position = Vector3(-96.36, 1.45, 49.0)
-	eye.rotation.y = PI / 2.0
 	Snd.stinger("dread", -9.0)
 	hud.mark_spike(Feel.SPIKE_SCRIPT)  # the same eye as the one burned into his hand
 	d.shot(Vector3(-94.6, 1.5, 48.6), Vector3(-96.4, 1.4, 49.0), Vector3(-95.0, 1.5, 48.8), 4.0, 48.0)  # outside: the eye on the door
@@ -397,7 +513,6 @@ func room_door() -> void:
 	d.shot(Vector3(-96.8, 0.5, 50.4), Vector3(-97.4, 0.05, 49.6))  # inside: something under the door
 	alex.look(Vector3(-97.4, 0.2, 49.6))
 	await hud.subtitle("Alex", "And a note.", 1.6)
-	eye.queue_free()
 	alex.look(null)
 	_end_stand_in()
 

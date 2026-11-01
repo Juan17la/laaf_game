@@ -25,6 +25,7 @@ static func make(parent: Node, scene: String, pos: Vector3, yaw := 0.0) -> Actor
 	a.add_child(a.model)
 	if scene.ends_with("char_alex.glb"):  # Alex's stand-in wears his headlamp too (off: the scene lights itself)
 		Headlamp.wear(a.model)
+		BrandMark.wear(a.model)  # (the intro hides it until Owen burns it in)
 	a.anim = HumanoidAnim.new()
 	a.model.add_child(a.anim)
 	a.anim.model_path = ^".."

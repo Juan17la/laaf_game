@@ -371,8 +371,11 @@ A 29×22 rounded 6 cell, Bone 10% for the current weapon and 4% for the rest. Ic
 - **Don't** use glyph or font icons, system fonts, or square unrounded panels; the brand commitment is that the UI is never only squares and text.
 - **Don't** place controls on the fog. The left of the screen belongs to the scene, the logo and the caption.
 
+### HUD
+`player/hud.gd`, drawn with `MenuDraw`'s palette and fonts. Bottom left: heart + 5px pill health track (black 45%) with a Bone 55% trail that holds 0.45 s after a hit and then drains; the heart beats under 30%. Under it the 3px stamina pill (with the run icon), shown only while stamina is spent (Rust Hi when exhausted), and the filter pill once Alex has the gas mask. Bottom right: one 150×36 weapon card (Folder 78%, radius 6, a 2px edge in the weapon's colour, amber outline flare on a swap) with the rendered icon, the name in Label Caps 8, amber magazine pips (or EMPTY / RELOADING) and `loaded / reserve` in Barlow Bold 14. The wheel holds every weapon, so the card shows only the one in hand; a `[TAB] Weapon wheel` hint sits beside it for 5 s after a pickup. Over the card, a pill chip per belt item (icon, ×n, quick-key keycap). Top left, one 188-wide column (clear of the compass): the objective panel (Folder 78%, a 2px amber left edge, OBJECTIVE in amber Label Caps over the line in Barlow 9 Bone) whose fill fades after 6 s and leaves shadowed text; under it the toasts, the same panel with a Bone edge (amber with a title), sliding in 14px from the left.
+
 ### Known drift (not part of the system)
-- The in-game HUD (`player/hud.gd` and its helpers) has not been migrated to this system and still renders in the project's `viewport` stretch scale (`project.godot`: `stretch/mode="viewport"`). It is recorded here as drift, not as precedent. (The pause menu, `scripts/pause_menu.gd`, now draws with the dossier's pieces in `canvas_items` scale while it is open.)
+- Subtitles, banners, the prompt and the boss bar in `player/hud.gd` still use the fallback font.
 - Keycap labels are currently drawn at 6px (`main_menu.gd` `_key`), below the 7px floor. Label Caps 7px is the system value.
 - The Extra page marks the focused achievement with a Bone 90% ring (r 17) where the Lantern Rule calls for amber.
 - The scene caption's source line uses a one-off rust-pink (#d98070) outside the palette.

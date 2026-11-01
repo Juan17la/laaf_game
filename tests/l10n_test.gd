@@ -157,13 +157,13 @@ func _run() -> void:
 	var hud: Node = player.hud
 	var guide: Node = player.get_node("Guide")
 	hud.objective("Talk to Grady at the General Store")
-	_check(hud._objective.text == "> Habla con Grady en su tienda", "Spanish objective: '%s'" % hud._objective.text)
+	_check(hud._objective.text == "Habla con Grady en su tienda", "Spanish objective: '%s'" % hud._objective.text)
 	await _lang("en")
-	_check(hud._objective.text == "> Talk to Grady at the General Store", "live switch to English: '%s'" %
+	_check(hud._objective.text == "Talk to Grady at the General Store", "live switch to English: '%s'" %
 		hud._objective.text)
 	_check(guide._bearings() == "NESW", "English compass: %s" % guide._bearings())
 	await _lang("es")
-	_check(hud._objective.text == "> Habla con Grady en su tienda", "live switch to Spanish: '%s'" % hud._objective.text)
+	_check(hud._objective.text == "Habla con Grady en su tienda", "live switch to Spanish: '%s'" % hud._objective.text)
 	_check(guide._bearings() == "NESO", "Spanish compass: %s" % guide._bearings())
 	var sign: Label3D = null
 	for n in world.get_node("Signs").get_children():

@@ -34,7 +34,7 @@ BS = chr(92)
 IGNORE = {
     "Node3D", "WorldEnvironment", "Moon", "Weather", "OmniLight3D", "Light3D", "MeshInstance3D", "GeometryInstance3D",
     "CPUParticles3D", "Button", "Label", "HUD", "Guide", "Chapter1", "Chapter2", "Chapter3", "Player", "Body",
-    "Props/Boss", "HandL", "HandR", "Head", "Spine", "Headlamp", "Model", "Anim", "SFX", "Voice", "Master", "Game",
+    "Props/Boss", "HandL", "HandR", "Head", "Spine", "Headlamp", "BrandMark", "Hips", "Model", "Anim", "SFX", "Voice", "Master", "Game",
     "Audio", "L", "R", "*", "#loop", ".!?", ",;:—-…", "áàä", "éè", "íì", "óò", "%s %s", "[i]%s[/i]",
     "[b][color=#%s]%s:[/color][/b] %s", "%d / %d", "%s ×%d [%s]", "[%d %s]", "%d %s", "%d. %s", "~#%*=:/" + BS * 2,
     "A", "J", "Q", "K", "G", "T", "H", "E", "N", "<", ">", "+", "x", "?", "!", "#", "—", "♪", "MHz", "%d·%d", "~#%*=:/" + BS,

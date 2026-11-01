@@ -26,16 +26,16 @@ const SPEAKERS := {
 
 var _tween: Tween
 var _root: Control
-var _health: ColorRect
-var _health_back: ColorRect
-var _stamina: ColorRect
-var _stamina_back: ColorRect
+var _d: MenuDraw  ## the dossier's palette and fonts (DESIGN.md), shared with the menus and the wheel
 var _eyes: HudEyes
 var _arcs: ThreatArcs
 var _fx: ScreenFx
-var _ammo: Label
-var _gun: Label
-var _slots: Label  ## every weapon carried, number keys to draw it; the drawn one in brackets
+var _ammo: Label  ## "6 / 18" on the weapon card (guns only)
+var _hp_lag := 1.0  ## health share the bar's pale trail still shows: it drains down to the fill after a hit
+var _hp_hold := 0.0  ## s the trail waits before it drains
+var _st_a := 0.0  ## stamina row alpha: it shows while stamina is spent and fades once it's full again
+var _wheel_hint := 0.0  ## s left on the "TAB Weapon wheel" hint by the card (a new weapon was picked up)
+var _icons := {}
 var _cross: Label
 var _hitmark: Label
 var _objective: Label
@@ -61,25 +61,29 @@ var _mark_n := 0.0  ## % the notice on screen adds up (rises while it's up merge
 var _mark_last := -1.0  ## the Mark last frame (< 0: not seen yet)
 var _mark_hits := 0.0  ## % the hits since last frame marked (the rest of a rise is the slow creep)
 var _mark_creep := 0.0  ## slow creep gathered toward the next notice
-var _filter: ColorRect
-var _filter_back: ColorRect
-var _bottles: Label
 var _mask: TextureRect
 var _gas: ColorRect
 var _t := 0.0
 var _hint_shown := false
 var _last_gun := ""
 var _slot_count := 0
-var _notes: VBoxContainer  ## old-paper notification slips, top left under the objective
-var _wui: Control  ## weapon cards + ammo pips (drawn)
+var _notes: VBoxContainer  ## notification toasts, top left under the objective
+var _obj_panel: PanelContainer  ## the objective: a dark panel that fades back to bare text once it's been read
+var _obj_tw: Tween
+var _wui: Control  ## drawn: health / stamina / filter bars, the weapon card, the belt chips (_draw_hud)
 var _swap_t := 0.0  ## seconds since the drawn weapon changed (the card flares)
 const TIP := "WASD move · Shift run · F light"  ## the only note at the start; the rest come when they matter
 var _queue: Array = []  ## notes wait their turn: one slip on screen at a time
 var _told_dry := false
 var _objective_id := ""  ## the objective as handed in (an English id): shown translated, again on a language switch
 var _line := 0  ## the subtitle on screen (a line that ends only clears the panel if no newer one took it over)
-const INK := Color(0.16, 0.11, 0.07)
-const PAPER := Color(0.87, 0.8, 0.63)
+const BAR_X := 24.0  ## the vitals' tracks start here (their icons sit left of it); HudEyes sits just past their end
+const BAR_W := 100.0
+const HP := Color(0.84, 0.22, 0.17)
+const FILTER := Color(0.45, 0.8, 0.6)
+const CARD := Vector2(150, 36)  ## the weapon card, bottom right
+const OBJ_HOLD := 6.0  ## s a new objective keeps its panel before it fades back to bare text
+const BELT := [["bottle", "bottles", "G"], ["smoke", "smokes", "T"], ["tea", "teas", "H"]]
 
 
 func _ready() -> void:
@@ -110,10 +114,14 @@ func _ready() -> void:
 	_fx = ScreenFx.new()  # the Mark's figures sit under every widget
 	_root.add_child(_fx)
 	_fx.setup(player, $Post.material as ShaderMaterial)
-	_health_back = _bar(Vector2(12, -30), Vector2(110, 6), Color(0.15, 0.02, 0.02, 0.8))
-	_health = _bar(Vector2(12, -30), Vector2(110, 6), Color(0.7, 0.12, 0.1))
-	_stamina_back = _bar(Vector2(12, -21), Vector2(110, 3), Color(0.1, 0.1, 0.1, 0.8))
-	_stamina = _bar(Vector2(12, -21), Vector2(110, 3), Color(0.75, 0.75, 0.6))
+	# bottom left: health / stamina / filter bars; bottom right: the weapon card and the belt chips (all drawn)
+	_wui = Control.new()
+	_wui.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_wui.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_wui.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	_wui.draw.connect(_draw_hud)
+	_root.add_child(_wui)
+	_d = MenuDraw.new(_wui)
 	# top right: the minimap (guide.gd, x -94..-10, y 8..92), the clock right under its rim, and under the clock
 	# the Mark's notice when it rises
 	_clock = _label("", 10, Color(0.85, 0.82, 0.7), Control.PRESET_TOP_RIGHT, Vector2(-110, 95), Vector2(100, 14))
@@ -124,40 +132,23 @@ func _ready() -> void:
 	player.marked.connect(func(gain: float) -> void:
 		_mark_hits += gain
 		mark_notice(gain))
-	_filter_back = _bar(Vector2(12, -15), Vector2(110, 3), Color(0.05, 0.1, 0.08, 0.8))
-	_filter = _bar(Vector2(12, -15), Vector2(110, 3), Color(0.45, 0.8, 0.6))
-	_bottles = _label("", 9, Color(0.6, 0.85, 0.65), Control.PRESET_BOTTOM_LEFT, Vector2(12, -46), Vector2(240, 12))
-	# bottom right: weapon cards (drawn, _draw_weapons), the drawn weapon's name, pips + ammo count
-	_gun = _label("", 9, Color(0.75, 0.72, 0.65), Control.PRESET_BOTTOM_RIGHT, Vector2(-190, -52), Vector2(180, 12))
-	_gun.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	_ammo = _label("", 16, Color(0.9, 0.88, 0.8), Control.PRESET_BOTTOM_RIGHT, Vector2(-130, -26), Vector2(120, 20))
+	_ammo = _label("", 14, MenuDraw.BONE, Control.PRESET_BOTTOM_RIGHT, Vector2(-86, -41), Vector2(70, 20))
 	_ammo.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	_slots = _label("", 7, Color(0.7, 0.68, 0.6), Control.PRESET_BOTTOM_RIGHT, Vector2(-330, -64), Vector2(320, 10))
-	_slots.visible = false  # (replaced by the cards)
-	_wui = Control.new()
-	_wui.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_wui.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_wui.draw.connect(_draw_weapons)
-	_root.add_child(_wui)
+	_ammo.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_ammo.add_theme_font_override("font", _d.bold)
+	_ammo.add_theme_constant_override("outline_size", 0)
 	_eyes = HudEyes.new()
 	_root.add_child(_eyes)
 	_eyes.setup(player)
 	_arcs = ThreatArcs.new()
 	_root.add_child(_arcs)
 	_arcs.setup(player)
-	_notes = VBoxContainer.new()
-	_notes.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	_notes.position = Vector2(10, 40)
-	_notes.custom_minimum_size = Vector2(190, 0)
-	_notes.add_theme_constant_override("separation", 4)
-	_notes.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_root.add_child(_notes)
+	_build_objective()
 	_cross = _label("+", 12, Color(1, 1, 1, 0.8), Control.PRESET_CENTER, Vector2(-10, -9), Vector2(20, 18))
 	_cross.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_hitmark = _label("x", 14, Color(1, 0.3, 0.2), Control.PRESET_CENTER, Vector2(-10, -10), Vector2(20, 18))
 	_hitmark.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_hitmark.modulate.a = 0.0
-	_objective = _label("", 9, Color(0.85, 0.82, 0.7), Control.PRESET_TOP_LEFT, Vector2(12, 10), Vector2(300, 30))
 	_build_prompt()
 	_sub_panel = PanelContainer.new()
 	var sb := StyleBoxFlat.new()
@@ -224,17 +215,6 @@ func _rect(c: Color, preset: int) -> ColorRect:
 	return r
 
 
-func _bar(pos: Vector2, size: Vector2, c: Color) -> ColorRect:
-	var r := ColorRect.new()
-	r.color = c
-	r.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	r.position = pos
-	r.size = size
-	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_root.add_child(r)
-	return r
-
-
 func _label(text: String, size: int, c: Color, preset: int, pos: Vector2, box: Vector2) -> Label:
 	var l := Label.new()
 	l.text = text
@@ -256,63 +236,46 @@ func _process(delta: float) -> void:
 		_skip = true
 	# gameplay HUD only while the player is in control (cinematics stay clean)
 	var play: bool = player.controls_enabled
-	for n in [_health, _health_back, _stamina, _stamina_back, _eyes, _arcs, _objective, _prompt_box, hint, _clock,
-			_mark_note]:
+	for n in [_eyes, _arcs, _obj_panel, _prompt_box, hint, _clock, _mark_note]:
 		n.visible = play
+	_obj_panel.visible = play and _objective_id != ""
 	_t += delta
 	_track_mark(play)
 	var masked: bool = player.mask_on
-	var owned: bool = player.gas_mask
-	_filter.visible = play and owned
-	_filter_back.visible = play and owned
-	var low: bool = player.mask_filter < 0.25 and masked
-	_filter.size.x = 110.0 * player.mask_filter
-	_filter.color = Color(0.9, 0.3, 0.2) if low and fmod(_t, 0.6) < 0.3 else Color(0.45, 0.8, 0.6, 1.0 if masked else 0.45)
 	_mask.visible = masked
 	_mask.modulate = Color(1, 1, 1, 0.85 + 0.15 * sin(_t * 1.6))  # breathing fogs the lenses
 	var choking: bool = player.in_gas() and not (masked and player.mask_filter > 0.0)
 	_gas.color.a = move_toward(_gas.color.a, 0.22 if choking else 0.0, delta * 0.8)
-	var items := []  # throwables / consumables on the belt
-	for it in [[player.bottles, "Bottle", "G"], [player.smokes, "Smoke", "T"], [player.teas, "Tea", "H"]]:
-		if it[0] > 0:
-			items.append("%s ×%d [%s]" % [tr(it[1]), it[0], it[2]])
-	_bottles.visible = play and not items.is_empty()
-	_bottles.text = "  ".join(items)
 	if play and not _hint_shown:  # the first time the player's in control: one line of controls
 		_hint_shown = true
 		get_tree().create_timer(1.0).timeout.connect(note.bind(TIP, "", 4.0))
 	if play and _notes.get_child_count() == 0 and not _queue.is_empty():
 		var n: Array = _queue.pop_front()
 		_slip(n[0], n[1], n[2])
-	_health.size.x = 110.0 * player.health / player.health_max
-	_stamina.size.x = 110.0 * player.stamina / player.stamina_max
+	var hp: float = clampf(player.health / player.health_max, 0.0, 1.0)  # the trail: snaps up on a heal, waits, drains
+	if hp >= _hp_lag:
+		_hp_lag = hp
+	elif _hp_hold > 0.0:
+		_hp_hold -= delta
+	else:
+		_hp_lag = move_toward(_hp_lag, hp, delta * 0.5)
+	var spent: bool = player.stamina < player.stamina_max - 0.5
+	_st_a = move_toward(_st_a, 1.0 if spent else 0.0, delta * (6.0 if spent else 1.2))
 	var w: Weapons = player.weapons
 	var g := w.gun()
 	var sp := w.spec()
-	_gun.visible = play
 	_ammo.visible = play and sp.kind != "melee"
 	_cross.visible = (g != "" or player.bottles > 0 or player.smokes > 0) and player.controls_enabled  # throws land on it too
-	var title: String = tr(sp.name).to_upper()
-	if w.dry():
-		title += "  · " + tr("EMPTY")
-		if not _told_dry:  # the moment it matters: the gun just ran dry
-			_told_dry = true
-			note("Empty. B strikes.", "", 3.0)
-	elif w.reloading():
-		title += "  · " + (tr("nocking") if g == "bow" else tr("reloading"))
-	_gun.text = title
-	if g != _last_gun:  # drawn: the name takes the weapon's colour and flares up
-		_gun.add_theme_color_override("font_color", Color(0.75, 0.72, 0.65).lerp(sp.color, 0.6))
-		create_tween().tween_property(_gun, "modulate", Color.WHITE, 0.5).from(Color(2.0, 2.0, 2.0))
-	if g != _last_gun or w.owned.size() != _slot_count:
-		_slot_count = w.owned.size()
-		var slots := PackedStringArray()
-		for i in w.owned.size():
-			var n: String = tr(Weapons.GUNS[w.owned[i]].name).to_upper()
-			slots.append(("[%d %s]" if i == w.current else "%d %s") % [i + 1, n])
-		_slots.text = "   ".join(slots)
+	if w.dry() and not _told_dry:  # the moment it matters: the gun just ran dry
+		_told_dry = true
+		note("Empty. B strikes.", "", 3.0)
+	if w.owned.size() > _slot_count:  # a new weapon: the card points at the wheel that holds them all
+		_wheel_hint = 5.0
+	_slot_count = w.owned.size()
+	_wheel_hint = maxf(_wheel_hint - delta, 0.0)
 	if sp.kind != "melee":
 		_ammo.text = "%d / %d" % [w.loaded[g], w.reserve[g]]
+		_ammo.add_theme_color_override("font_color", MenuDraw.RUST_HI if w.dry() else MenuDraw.BONE)
 	_cross.modulate.a = 1.0 if player.aiming else 0.45
 	if g != _last_gun:
 		_swap_t = 0.0
@@ -411,8 +374,20 @@ func show_zone(zone_name: String) -> void:
 
 func objective(text: String, target: Variant = null) -> void:
 	## target (Vector3 / Node3D / null) is handed to the Guide (minimap, compass, waypoint marker).
+	## A new one comes in with its panel lit and a warm flash, holds OBJ_HOLD s, then the panel fades and the line
+	## stays as bare shadowed text, out of the way.
+	var fresh := text != _objective_id and text != ""
 	_objective_id = text
-	_objective.text = "> " + tr(text) if text != "" else ""
+	_objective.text = tr(text) if text != "" else ""
+	if fresh:
+		if _obj_tw:
+			_obj_tw.kill()
+		_obj_panel.modulate = Color(1.5, 1.35, 1.1, 0.0)
+		_obj_panel.self_modulate.a = 1.0
+		_obj_tw = create_tween()
+		_obj_tw.tween_property(_obj_panel, "modulate", Color.WHITE, 0.4)
+		_obj_tw.tween_interval(OBJ_HOLD)
+		_obj_tw.tween_property(_obj_panel, "self_modulate:a", 0.0, 1.2)
 	var guide := player.get_node_or_null("Guide")
 	if guide:
 		guide.set_target(target, text)
@@ -420,7 +395,76 @@ func objective(text: String, target: Variant = null) -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSLATION_CHANGED and _objective:  # a language switch (Settings): the objective again
-		_objective.text = "> " + tr(_objective_id) if _objective_id != "" else ""
+		_objective.text = tr(_objective_id) if _objective_id != "" else ""
+		(_obj_panel.get_child(0).get_child(0) as Label).text = tr("Objective").to_upper()
+
+
+func _build_objective() -> void:
+	## Top left, one column: the objective panel (an amber edge, OBJECTIVE over the line), the toasts under it.
+	var col := VBoxContainer.new()
+	col.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	col.position = Vector2(10, 10)
+	col.add_theme_constant_override("separation", 5)
+	col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_root.add_child(col)
+	_obj_panel = _toast_panel(Color(MenuDraw.AMBER, 0.9))
+	_obj_panel.visible = false
+	col.add_child(_obj_panel)
+	var lines := _obj_panel.get_child(0)
+	lines.add_child(_caps("Objective", MenuDraw.AMBER))
+	_objective = _toast_text("")
+	lines.add_child(_objective)
+	_notes = VBoxContainer.new()
+	_notes.add_theme_constant_override("separation", 4)
+	_notes.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	col.add_child(_notes)
+
+
+func _toast_panel(edge: Color) -> PanelContainer:
+	## The HUD's one panel: dark, rounded, a 2 px coloured edge on its left; holds a VBox for its lines.
+	var p := PanelContainer.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(MenuDraw.FOLDER, 0.78)
+	sb.set_corner_radius_all(5)
+	sb.border_color = edge
+	sb.border_width_left = 2
+	sb.content_margin_left = 8
+	sb.content_margin_right = 8
+	sb.content_margin_top = 4
+	sb.content_margin_bottom = 5
+	p.add_theme_stylebox_override("panel", sb)
+	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var lines := VBoxContainer.new()
+	lines.add_theme_constant_override("separation", 0)
+	lines.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	p.add_child(lines)
+	return p
+
+
+func _caps(text: String, col: Color) -> Label:
+	var l := Label.new()
+	l.text = tr(text).to_upper()
+	l.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED  # (already translated, upper-cased)
+	l.add_theme_font_override("font", _d.caps)
+	l.add_theme_font_size_override("font_size", 7)
+	l.add_theme_color_override("font_color", col)
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return l
+
+
+func _toast_text(text: String) -> Label:
+	## A toast's body: Barlow 9 in Bone, wrapped to the column, with a shadow that holds once the panel has faded.
+	var l := Label.new()
+	l.text = text
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.custom_minimum_size = Vector2(160, 0)  # (the column ends at x 188: clear of the compass, 210..430)
+	l.add_theme_font_override("font", _d.ui)
+	l.add_theme_font_size_override("font_size", 9)
+	l.add_theme_color_override("font_color", MenuDraw.BONE)
+	l.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.75))
+	l.add_theme_constant_override("shadow_offset_y", 1)
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return l
 
 
 func hit_marker(double_tap: bool) -> void:
@@ -473,6 +517,7 @@ func _track_mark(play: bool) -> void:
 func damage_flash() -> void:
 	_hurt.color.a = 0.35
 	create_tween().tween_property(_hurt, "color:a", 0.0, 0.5)
+	_hp_hold = 0.45  # the health bar's trail holds what was lost a moment, then drains
 	_fx.on_hurt()  # and the edges blur red, more the less health is left
 
 
@@ -482,88 +527,137 @@ func note(text: String, title := "", time := 3.5) -> void:
 
 
 func _slip(text: String, title: String, time: float) -> void:
+	## A toast: the objective's panel with a bone edge (amber with a title: an achievement, a new rule), slides in
+	## from the left, holds, fades.
 	Snd.sfx("save" if text.begins_with("Saved") else "notify", null, -4.0)
-	var slip := PanelContainer.new()
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = PAPER
-	sb.border_color = Color(0.45, 0.33, 0.18)
-	sb.set_border_width_all(1)
-	sb.border_width_bottom = 2
-	sb.set_content_margin_all(5)
-	sb.content_margin_left = 9
-	sb.shadow_color = Color(0, 0, 0, 0.45)
-	sb.shadow_size = 3
-	sb.shadow_offset = Vector2(2, 2)
-	slip.add_theme_stylebox_override("panel", sb)
-	slip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 0)
-	slip.add_child(col)
+	var slip := _toast_panel(Color(MenuDraw.AMBER, 0.9) if title != "" else Color(MenuDraw.BONE, 0.45))
+	var lines := slip.get_child(0)
 	if title != "":
-		var t := Label.new()
-		t.text = tr(title).to_upper()
-		t.add_theme_font_size_override("font_size", 8)
-		t.add_theme_color_override("font_color", Color(0.55, 0.12, 0.08))
-		col.add_child(t)
-	var l := Label.new()
-	l.text = text
-	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	l.custom_minimum_size = Vector2(176, 0)
-	l.add_theme_font_size_override("font_size", 9)
-	l.add_theme_color_override("font_color", INK)
-	col.add_child(l)
-	_notes.add_child(slip)
-	slip.rotation_degrees = randf_range(-1.2, 1.2)
-	slip.modulate = Color(1.6, 1.5, 1.2, 0.0)  # fades in with a warm flash
-	var tw := slip.create_tween()
-	tw.tween_property(slip, "modulate", Color(1, 1, 1, 1), 0.35)
+		lines.add_child(_caps(title, MenuDraw.AMBER))
+	lines.add_child(_toast_text(text))
+	var wrap := Control.new()  # (the box lays the wrap out; the slip slides inside it)
+	wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	wrap.add_child(slip)
+	_notes.add_child(wrap)
+	wrap.custom_minimum_size = slip.get_combined_minimum_size()
+	slip.position.x = -14.0
+	slip.modulate.a = 0.0
+	var tw := slip.create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.tween_property(slip, "position:x", 0.0, 0.3)
+	tw.parallel().tween_property(slip, "modulate:a", 1.0, 0.25)
 	tw.tween_interval(time)
-	tw.tween_property(slip, "modulate:a", 0.0, 0.6)
-	tw.tween_callback(slip.queue_free)
+	tw.tween_property(slip, "modulate:a", 0.0, 0.5)
+	tw.tween_callback(wrap.queue_free)
 
 
-func _draw_weapons() -> void:
-	## Weapon cards bottom right: the fists first (key 0, always there), then one per carried weapon (number key,
-	## short name, colour stripe). The drawn one sits raised and bright with a pulsing edge in its colour, and
-	## flares when it's just been drawn; the others are dim. Under the name: a pip per round in the magazine.
-	var w: Weapons = player.weapons
+func _icon(id: String) -> Texture2D:
+	if not _icons.has(id):
+		var path := WeaponWheel.ICON_DIR % id
+		_icons[id] = load(path) if ResourceLoader.exists(path) else null
+	return _icons[id]
+
+
+func _pill(r: Rect2, col: Color) -> void:
+	if r.size.x >= 0.5:
+		Icons.fill_round(_wui, r, minf(r.size.y, r.size.x) / 2.0, col)
+
+
+func _draw_hud() -> void:
 	var c := _wui
-	var font := ThemeDB.fallback_font
-	var cards: Array = [""] + w.owned
-	var n := cards.size()
-	var cw := 54.0 if n <= 5 else 47.0  # (all seven still clear the health bars on the left)
-	var gap := 4.0
-	var right := c.size.x - 10.0
-	var y := c.size.y - 80.0
-	for i in n:
-		var id: String = cards[i]
-		var sp: Dictionary = Weapons.GUNS[id] if id != "" else Weapons.FISTS
-		var sel := id == w.gun()
-		var x := right - (n - i) * (cw + gap) + gap
-		var flare := clampf(1.0 - _swap_t / 0.35, 0.0, 1.0) if sel else 0.0
-		var r := Rect2(x, y - (5.0 if sel else 0.0) - flare * 3.0, cw, 22.0)
-		var col: Color = sp.color
-		c.draw_rect(r, Color(0.05, 0.045, 0.04, 0.92 if sel else 0.6))
-		c.draw_rect(Rect2(r.position + Vector2(0, r.size.y - 3), Vector2(cw, 3)), Color(col, 1.0 if sel else 0.35))
-		if sel:  # glowing edge: pulses, and blazes for a moment on the swap
-			var glow := 0.55 + 0.25 * sin(_t * 5.0) + flare * 0.8
-			for k in 3:
-				c.draw_rect(r.grow(1.0 + k * 1.5), Color(col, glow * (0.5 - k * 0.15)), false, 1.0)
-		var short: String = {"revolver": "REVOLVER", "flare": "FLARE", "shotgun": "SHOTGUN", "bow": "BOW",
-			"axe": "AXE", "bat": "BAT"}.get(id, "FISTS")
-		var tc := Color(1, 0.96, 0.85) if sel else Color(0.6, 0.57, 0.5)
-		c.draw_string(font, r.position + Vector2(3, 8), str(i), HORIZONTAL_ALIGNMENT_LEFT, -1, 7, Color(col, 0.9))
-		c.draw_string(font, r.position + Vector2(0, 17), tr(short), HORIZONTAL_ALIGNMENT_CENTER, cw, 7, tc)
-		if id != "" and sp.kind != "melee" and w.reserve[id] + w.loaded[id] <= 0:
-			c.draw_line(r.position + Vector2(4, 4), r.end - Vector2(4, 6), Color(0.8, 0.2, 0.15, 0.8), 1.0)  # dry
+	var H := c.size.y
+	# vitals, bottom left: a heart and a pill track per bar; health keeps a pale trail of what a hit just took, and
+	# beats under 30%. Stamina shows while it's spent. The gas mask's filter under them, once Alex has the mask.
+	var hp: float = clampf(player.health / player.health_max, 0.0, 1.0)
+	var low := hp < 0.3
+	var beat := 0.5 + 0.5 * sin(_t * 7.0) if low else 0.0
+	var y := H - 30.0
+	Icons.draw(c, "heart", Vector2(16, y + 2.5), 9.0 + beat, Color(HP.lerp(Color.WHITE, beat * 0.3), 0.95))
+	_pill(Rect2(BAR_X, y, BAR_W, 5), Color(0, 0, 0, 0.45))
+	_pill(Rect2(BAR_X, y, BAR_W * _hp_lag, 5), Color(MenuDraw.BONE, 0.55))
+	_pill(Rect2(BAR_X, y, BAR_W * hp, 5), HP.lerp(Color(1, 0.55, 0.45), beat * 0.4))
+	if _st_a > 0.01:
+		var st: float = clampf(player.stamina / player.stamina_max, 0.0, 1.0)
+		var tired: bool = player.get("_exhausted")
+		var sc := Color(MenuDraw.RUST_HI, _st_a) if tired else Color(MenuDraw.BONE, 0.85 * _st_a)
+		Icons.draw(c, "run", Vector2(16, y + 11.5), 8.0, Color(MenuDraw.BONE, 0.75 * _st_a))
+		_pill(Rect2(BAR_X, y + 10, BAR_W, 3), Color(0, 0, 0, 0.4 * _st_a))
+		_pill(Rect2(BAR_X, y + 10, BAR_W * st, 3), sc)
+	if player.gas_mask:
+		var f: float = clampf(player.mask_filter, 0.0, 1.0)
+		var on: bool = player.mask_on
+		var warn: bool = on and f < 0.25 and fmod(_t, 0.6) < 0.3
+		var tex := _icon("filter")
+		if tex:
+			c.draw_texture_rect(tex, Rect2(11, y + 15, 10, 10), false, Color(1.6, 1.6, 1.6, 1.0 if on else 0.5))
+		_pill(Rect2(BAR_X, y + 18.5, BAR_W, 3), Color(0, 0, 0, 0.4))
+		_pill(Rect2(BAR_X, y + 18.5, BAR_W * f, 3), MenuDraw.RUST_HI if warn else Color(FILTER, 1.0 if on else 0.45))
+	_draw_weapon(c)
+
+
+func _draw_weapon(c: Control) -> void:
+	## Bottom right: one card for what's in hand (the wheel, Tab, holds the rest): its icon, its name, a pip per round
+	## in the magazine or what it's busy with, and the ammo count (_ammo). It flares amber on a swap. Over it, the belt:
+	## a chip per throwable / tea carried, with its count and quick key.
+	var w: Weapons = player.weapons
 	var g := w.gun()
-	if g != "" and Weapons.GUNS[g].kind != "melee":
-		var mag: int = Weapons.GUNS[g].mag
-		var loaded: int = w.loaded[g]
-		for k in mag:  # the magazine: brass pips, lit while loaded
-			var px := right - 124.0 - (mag - k) * 7.0
-			var lit := k < loaded
-			c.draw_rect(Rect2(px, c.size.y - 22.0, 4.0, 9.0), Color(1.0, 0.8, 0.4) if lit else Color(0.25, 0.22, 0.18))
+	var sp := w.spec()
+	var r := Rect2(c.size - CARD - Vector2(10, 12), CARD)
+	var flare := clampf(1.0 - _swap_t / 0.4, 0.0, 1.0)
+	Icons.fill_round(c, r, 6.0, Color(MenuDraw.FOLDER, 0.78))
+	c.draw_rect(Rect2(r.position + Vector2(0, 6), Vector2(2, r.size.y - 12)), Color(sp.color, 0.9))  # its colour
+	if flare > 0.0:
+		c.draw_polyline(Icons.round_rect(r.grow(flare * 2.0), 6.0), Color(MenuDraw.AMBER, flare), 1.0, true)
+	var icon_r := Rect2(r.position + Vector2(6, 2), Vector2(32, 32))
+	var id := g if g != "" else "fists"
+	var tex := _icon(id)
+	if tex:
+		var lift: float = WeaponWheel.ICON_LIFT.get(id, 1.0)
+		c.draw_texture_rect(tex, icon_r, false, Color(lift, lift, lift))
+	else:
+		Icons.draw(c, id, icon_r.get_center(), 20.0, MenuDraw.BONE, 1.4)
+	var x := r.position.x + 42.0
+	var ranged: bool = sp.kind != "melee"
+	var name_w := r.end.x - x - (_ammo.get_minimum_size().x + 12.0 if ranged else 8.0)
+	var name_y := r.position.y + (16.0 if ranged else 21.0)
+	_d.text(_d.caps, Vector2(x, name_y), _d.fit(_d.caps, tr(sp.name).to_upper(), 8, name_w), 8, MenuDraw.BONE)
+	if ranged:
+		var py := r.position.y + 21.0
+		if w.dry() or w.reloading():
+			var busy := tr("EMPTY") if w.dry() else (tr("nocking") if g == "bow" else tr("reloading")).to_upper()
+			_d.text(_d.caps, Vector2(x, py + 6.0), busy, 7, MenuDraw.RUST_HI if w.dry() else MenuDraw.AMBER)
+		else:
+			var mag: int = sp.mag
+			for k in mag:
+				_pill(Rect2(x + k * 6.0, py, 3.5, 7), MenuDraw.AMBER if k < int(w.loaded[g]) else Color(MenuDraw.BONE, 0.18))
+	if _wheel_hint > 0.0:  # just picked up: left of the card, the key that opens them all
+		var a := minf(_wheel_hint, 1.0)
+		var label := tr("Weapon wheel")
+		var tx := r.position.x - 8.0 - _d.ui.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x
+		_d.shadowed(_d.ui, Vector2(tx, r.get_center().y + 3.0), label, 8, Color(MenuDraw.BONE, a))
+		var kw := _d.caps.get_string_size("TAB", HORIZONTAL_ALIGNMENT_LEFT, -1, 7).x + 9.0
+		var kr := Rect2(tx - 5.0 - kw, r.get_center().y - 6.5, kw, 13)
+		Icons.fill_round(c, kr, 3.0, Color(0, 0, 0, 0.5 * a))
+		c.draw_polyline(Icons.round_rect(kr, 3.0), Color(MenuDraw.BONE, 0.55 * a), 1.0, true)
+		_d.text(_d.caps, kr.position + Vector2(4.5, 9.1), "TAB", 7, Color(MenuDraw.BONE, a))
+	var right := r.end.x
+	for it in BELT:  # right to left over the card
+		var n := int(player.get(it[1]))
+		if n <= 0:
+			continue
+		var count := "×%d" % n
+		var cw := _d.bold.get_string_size(count, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x
+		var kw := _d.caps.get_string_size(it[2], HORIZONTAL_ALIGNMENT_LEFT, -1, 7).x + 7.0
+		var chip := Rect2(right - (19.0 + cw + 5.0 + kw + 5.0), r.position.y - 19.0, 19.0 + cw + 5.0 + kw + 5.0, 15)
+		Icons.fill_round(c, chip, 7.5, Color(MenuDraw.FOLDER, 0.78))
+		var t := _icon(it[0])
+		if t:
+			var lift: float = WeaponWheel.ICON_LIFT.get(it[0], 1.0) * 1.5  # (small on a dark chip: brighter still)
+			c.draw_texture_rect(t, Rect2(chip.position + Vector2(3, 0.5), Vector2(14, 14)), false, Color(lift, lift, lift))
+		_d.text(_d.bold, chip.position + Vector2(19, 10.5), count, 8, MenuDraw.BONE)
+		var kr := Rect2(chip.end.x - 5.0 - kw, chip.position.y + 2.5, kw, 10)
+		c.draw_polyline(Icons.round_rect(kr, 2.5), Color(MenuDraw.BONE, 0.4), 1.0, true)
+		_d.text(_d.caps, kr.position + Vector2(3.5, 7.6), it[2], 7, MenuDraw.MUTED)
+		right = chip.position.x - 4.0
 
 
 func banner(text: String, color := Color.WHITE, hold := 1.5) -> void:
