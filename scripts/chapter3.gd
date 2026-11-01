@@ -127,7 +127,13 @@ func begin(prev: Chapter1Director, from_step := "c3_bell") -> void:
 		if i > C3_STEPS.find("harvester"):
 			harvester = Harvester.spawn_at(self, HARV_SPAWN, PI)
 			harvester.phase = 3
-			harvester._take(harvester.max_health)  # already kneeling
+			harvester._take(harvester.max_health)
+			harvester._anim.down_pose = "flat_back"  # where the fight left it, its sword fallen out of its hand
+			harvester._anim.crouching = true
+			harvester._anim.gesture = ""
+			var sword := harvester.get_node("Model").find_child("prop", true, false) as Node3D
+			if sword:
+				sword.visible = false
 	if _dev:
 		_capture_kit.call_deferred()  # (the dev skip's hand-outs: a death keeps them)
 	for s in C3_STEPS.slice(i):

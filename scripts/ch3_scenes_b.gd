@@ -149,10 +149,12 @@ func quarry_arrive() -> void:
 	var alex := d.stand_in(d.player.global_position, PI)
 	var p := alex.global_position
 	_shot(p + Vector3(3.0, 6.0, -1.0), Vector3(-22, 2.0, -208), p + Vector3(1.0, 5.0, -4.0), 6.0)
-	await hud.subtitle("", "The quarry. Festival lanterns strung over the pit like trophies.", 3.0)
-	await hud.subtitle("", "The Veil's Chapel, cut into the rock. Somewhere in there: Lucía.", 3.0)
-	_shot(Vector3(18, 3.0, -200), Vector3(30, 3.5, -222.5))
-	await hud.subtitle("", "And the Old Pass gate. Three slots.", 2.2)
+	alex.look(Vector3(-22, 2.0, -208))  # the lanterns over the pit, the chapel cut into the rock
+	await d.wait(3.6)
+	alex.look(Vector3(30, 3.5, -222.5))
+	_shot(Vector3(18, 3.0, -200), Vector3(30, 3.5, -222.5))  # and the Old Pass gate, its three slots
+	await d.wait(2.4)
+	alex.look(null)
 	alex.gesture("clutch_hand", 2.0)
 	_shot(p + Vector3(0.9, 1.6, -1.0), p + Vector3.UP * 1.5)
 	await hud.subtitle("Alex", "Three parts in my pocket. I could just go.", 2.6)
@@ -209,7 +211,7 @@ func the_harvest(allies: Dictionary) -> void:
 	var glow := c2b._light(CHAPEL + Vector3(0, 3.8, -1.0), Color(1.0, 0.45, 0.25), 1.6, 8.0, true)
 	_shot(Vector3(-19.0, 1.8, -205.8), Vector3(-22, 1.5, -212), Vector3(-19.4, 2.2, -207.0), 5.0)
 	hud.fade(0.0, 0.8)
-	await hud.subtitle("", "Candles. Festival lanterns. An eye as tall as a man on the far wall.", 3.0)
+	await d.wait(3.0)
 	_shot(Vector3(-21.2, 1.0, -209.6), lucia.global_position + Vector3.UP * 0.7)
 	await hud.subtitle("Lucía", "…Alex?", 1.4)
 	alex.look(lucia)
@@ -226,10 +228,14 @@ func the_harvest(allies: Dictionary) -> void:
 	await c1b._talk(alex, lucia, "Alex", "You told me it was beautiful.", -1.0, 2.0)
 	lucia.gesture("reach")
 	await d.wait(0.5)
+	# her hand through the bars, and on the back of it, the same eye
+	var brand := BrandMark.wear(lucia.model)
+	if brand:
+		brand.heat = 0.12  # an old one: it cools to the scar by itself
 	c1a._hand_shot(lucia)
-	var brand := c1a._light(c1a._hand(lucia).global_position + Vector3.UP * 0.12, Color(1.0, 0.4, 0.1), 0.6, 0.7, true)
-	await hud.subtitle("", "Her hand through the bars. The same eye.", 2.2)
-	brand.queue_free()
+	alex.gesture("clutch_hand")
+	await d.wait(2.2)
+	alex.gesture("")
 	lucia.gesture("")
 	# the radio on the altar
 	_shot(ALTAR_TOP + Vector3(0.8, 0.4, 1.0), ALTAR_TOP)
@@ -258,9 +264,10 @@ func the_harvest(allies: Dictionary) -> void:
 	_drag(harv, taken)
 	var steps := harv.walk_to(Chapter3Director.HARV_SPAWN, 1.8)
 	_shot(Vector3(-12.0, 1.0, -160.0), Vector3(1, 1.2, -154))
-	await hud.subtitle("", "Footsteps, and something heavy scraping along behind them.", 2.6)
+	var drag := Snd.attach(taken, "scrape", -4.0)  # the body hauled over the stones behind it
+	await d.wait(2.6)
 	_shot(Vector3(-6.0, 0.7, -156.0), Vector3(1.5, 0.4, -152))
-	await hud.subtitle("", "It drags a Taken by the ankle. Face up, arms trailing through the dirt.", 3.0)
+	await d.wait(3.0)
 	lucia.gesture("cower")
 	_shot(Vector3(-24.6, 1.4, -210.2), lucia.global_position + Vector3.UP * 1.3)
 	await hud.subtitle("Lucía", "Alex, don't go out there. It's not what you think it is.", 2.8)
@@ -268,6 +275,8 @@ func the_harvest(allies: Dictionary) -> void:
 	d.track(harv, Vector3(-4.0, 1.4, -3.0), Vector3(0, 1.8, 0))
 	await Actor.settle(steps)  # (the walk may be over by now)
 	taken.set_meta("dropped", true)  # it lets go of the ankle: the body stays where it fell
+	Snd.stop(drag)
+	Snd.sfx("thud", taken.global_position, 2.0, 0.6)
 	harv.anim.ik_w["L"] = 0.0
 	taken.global_transform = Transform3D(Basis(), Chapter3Director.HARV_SPAWN + Vector3(1.2, 0, 0.8))
 	taken.gesture("")
@@ -278,8 +287,9 @@ func the_harvest(allies: Dictionary) -> void:
 	alex.global_position = Chapter3Director.CHAPEL_OUT - Vector3.UP * 0.1
 	alex.model.rotation.y = 0.0
 	alex.look(harv)
+	harv.look(alex)
 	d.ots(harv, alex, 1.0)
-	await hud.subtitle("", "It drops the body like a sack of feed. And looks at you.", 2.8)
+	await d.wait(2.4)
 	var to_alex := (Chapter3Director.CHAPEL_OUT - harv.global_position).normalized()
 	_shot(harv.global_position + to_alex * 2.4 + to_alex.cross(Vector3.UP) * 0.6 + Vector3.UP * 2.5,
 		harv.global_position + Vector3.UP * 2.6)
@@ -293,7 +303,7 @@ func the_harvest(allies: Dictionary) -> void:
 		a.walk_to(Chapter3Director.ALLY_SPOTS[m], 3.0)
 	if not allies.is_empty():
 		_shot(Chapter3Director.CHAPEL_OUT + Vector3(-3.0, 1.6, 4.0), Chapter3Director.CHAPEL_OUT + Vector3(-9, 1.3, 2))
-		await hud.subtitle("", "Lanterns on the rock path. Not the group's. Not anymore.", 2.6)
+		await d.wait(2.6)
 		for m in allies:
 			var a: Actor = allies[m]
 			await c1a._settle(a)  # arrives first: no turning to face it mid-stride
@@ -303,7 +313,8 @@ func the_harvest(allies: Dictionary) -> void:
 			await hud.subtitle(m.capitalize(), ALLY_ARRIVE[m], 2.8)
 	harv.gesture("raise_weapon")
 	_shot(Chapter3Director.CHAPEL_OUT + Vector3(0.8, 1.7, -1.2), harv.global_position + Vector3.UP * 2.0)
-	await hud.subtitle("", "The skull sword comes up.", 1.8)
+	Snd.sfx("swing", harv.global_position + Vector3.UP * 2.0, 0.0, 0.6)
+	await d.wait(1.8)
 	await hud.fade(1.0, 0.3)
 	harv.queue_free()
 	glow.queue_free()
@@ -352,7 +363,11 @@ func blackout(h: Harvester) -> void:
 	await hud.subtitle("Shepherd", "Three o'clock. Lights out, children.", 2.4)
 	a.gesture = "raise_weapon"
 	_shot(h.global_position + Vector3(3.0, 1.2, 3.0), h.global_position + Vector3.UP * 2.2)
-	await hud.subtitle("", "It plants the sword in the stone. Up on the rim, lanterns answer.", 2.8)
+	await d.wait(0.9)
+	a.gesture = "brand"  # both fists drive the sword down into the stone
+	Snd.sfx("thud", h.global_position, 4.0, 0.5)
+	Snd.sfx("scrape", h.global_position, -2.0, 0.7)
+	await d.wait(1.6)
 	_shot(Vector3(-30, 2.0, -178), Vector3(-36, 4.5, -186))
 	await hud.subtitle("", "Only the old floodlights have their own generators.", 2.6)
 	a.gesture = ""
@@ -376,19 +391,30 @@ func harvester_down(h: Harvester) -> void:
 	var frozen := c2a._freeze()
 	d.cinematic(true)
 	var a := c1b._anim(h)
+	# the skull sword is still in its fist when the last blow lands; it falls out of it on the way down
+	var hand: Node3D = h.get_node("Model").find_child("HandR", true, false)
+	var sword: Node3D = hand.get_node_or_null("prop") if hand else null  # (tools/models_boss.py: the skull sword)
+	if not sword:
+		sword = c2b._box(hand if hand else d, Vector3(0.3, 0.2, 2.0), BONE, Vector3(0, -0.1, 0.9))
+	await c1b.go_down(h, _shot, ["kneel", "hands_ground", "prone"], sword)
 	var o := h.global_position
 	var from := c1b._alex_near(o, 4.0)
-	_shot(Vector3(from.x, 1.2, from.z), o + Vector3.UP * 1.6, Vector3(from.x, 1.0, from.z).lerp(o, 0.2), 3.0)
-	a.gesture = "slump"
-	await hud.subtitle("", "It kneels. The sword slides out of its hands.", 2.4)
-	var sword := c2b._box(d, Vector3(0.3, 0.2, 2.0), BONE, Vector3.ZERO)
-	sword.global_position = o + Vector3(1.0, 0.1, 0.8)
-	sword.rotation.y = 0.7
-	await hud.subtitle("", "The skulls scatter over the stone.", 2.0)
+	# the skulls strung on its belt snap loose and roll out over the stone
+	_shot(Vector3(from.x, 1.2, from.z), o + Vector3.UP * 0.6, Vector3(from.x, 0.9, from.z).lerp(o, 0.25), 3.0)
+	Snd.sfx("glass", o, -4.0, 0.5)
+	for i in 6:
+		var skull := c2b._box(d, Vector3(0.18, 0.2, 0.2), BONE, Vector3.ZERO)
+		skull.global_position = o + Vector3(0, 1.1, 0)
+		var to := o + Vector3(0, 0.1, 0) + Vector3(randf_range(1.0, 2.6), 0, 0).rotated(Vector3.UP, TAU * i / 6.0 + randf() * 0.6)
+		var roll := skull.create_tween().set_parallel()
+		roll.tween_property(skull, "global_position", to, randf_range(0.6, 1.0)).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		roll.tween_property(skull, "rotation", Vector3(randf_range(3.0, 9.0), randf() * TAU, 0.0), 1.0)
+	await d.wait(1.6)
 	_shot(o + Vector3(0.6, 1.0, 2.6), o + Vector3.UP * 1.4)
 	await hud.subtitle("Radio", "Kshhh— no. No, no, no—", 1.8)
 	await hud.subtitle("Shepherd", "Caleb—", 1.4)
-	_lie(h)
+	a.crouch_rate = 2.0
+	a.down_pose = "flat_back"  # it rolls over onto its back and lies there, spent
 	await d.wait(0.8)
 	var alex := d.stand_in(from, 0.0)
 	alex.face(o, 0.01)
@@ -421,14 +447,22 @@ func the_shepherd() -> void:
 	_iron.rotation.y = 0.4
 	if _iron is MeshInstance3D:  # stand-in: the model has its own glowing Brand head
 		c2b._box(_iron, Vector3(0.14, 0.03, 0.14), RED, Vector3(0, 0, -0.38), 3.0).name = "Brand"
-	var lamp := c2b._light(SHEP_SPOT + Vector3(0.3, 1.4, 0.6), Color(1.0, 0.6, 0.3), 0.7, 3.5, true)
+	var lamp := c2b._light(SHEP_SPOT + Vector3(0.3, 1.4, 0.6), Color(1.0, 0.6, 0.3), 0.0, 3.5, true)
 	lamp.name = "ShepLamp"
 	_shot(Vector3(-18.8, 1.4, -206.4), SHEP_SPOT + Vector3.UP * 0.9)
 	hud.fade(0.0, 0.6)
-	await hud.subtitle("", "He'd been sitting there the whole time. Three metres from the cage.", 3.0)
+	# in the dark three metres from the cage, someone turns up a lamp: he'd been sitting there the whole time
+	await d.wait(1.2)
+	_shep.gesture("reach", 0.8)
+	Snd.sfx("pick_set", SHEP_SPOT + Vector3.UP, -6.0, 0.7)
+	lamp.create_tween().tween_property(lamp, "_base", 0.7, 0.8)  # (the flicker drives the energy from its base)
+	await d.wait(1.4)
 	_shep.look(alex)
 	_shot(SHEP_SPOT + Vector3(-0.6, 1.2, 1.4), SHEP_SPOT + Vector3.UP * 0.95)
-	await hud.subtitle("", "An old man. A radio. A brand iron on the altar, still warm.", 2.8)
+	await d.wait(1.4)
+	_shot(_iron.global_position + Vector3(0.5, 0.35, 0.6), _iron.global_position)  # the iron on the altar, still warm
+	await d.wait(1.6)
+	_shot(SHEP_SPOT + Vector3(-0.6, 1.2, 1.4), SHEP_SPOT + Vector3.UP * 0.95)
 	await hud.subtitle("Shepherd", "I never took anyone.", 1.8)
 	await hud.subtitle("Shepherd", "They brought them to me.", 2.2)
 	alex.look(_shep)
@@ -452,7 +486,8 @@ func the_shepherd() -> void:
 	lucia.walk_to(LUCIA_OUT, 0.8)
 	lucia.look(alex)
 	_shot(Vector3(-20.6, 1.5, -209.6), LUCIA_OUT + Vector3.UP * 1.3)
-	await hud.subtitle("", "The cage swings open.", 1.6)
+	Snd.sfx("door_open", LUCIA_BARS + Vector3.UP, -2.0, 0.8)  # the cage door swinging out
+	await d.wait(1.6)
 	await c1a._settle(lucia)
 	lucia.face(alex.global_position, 0.3)  # out of the door, she turns to him (the endings talk face to face)
 	_shep.look(Vector3(-22, 1.5, -200))  # out the door, toward the pit
@@ -505,7 +540,9 @@ func ending_signal() -> void:
 	_shot(Vector3(-2, 2.0, -196), Vector3(10, 1.5, -208))
 	hud.fade(0.0, 0.8)
 	await hud.subtitle("", "03:41. Lights over the lake.", 2.2)
-	await hud.subtitle("", "They come up out of the lower cells, blinking at the searchlights.", 3.0)
+	for i in range(1, freed.size()):  # up out of the lower cells, a hand up against the searchlights
+		freed[i].gesture("hand_to_face")
+	await d.wait(3.0)
 	d.track(tomas, Vector3(2.0, 1.4, 2.0), Vector3(0, 1.4, 0))
 	await hud.subtitle("Lucía", "That one. He kept asking about his sister.", 2.6)
 	await c1a._settle(tomas)  # he talks from arm's length, not from across the pit
@@ -540,8 +577,12 @@ func ending_unveiled() -> void:
 		a.model.rotation.y = PI
 		cast.append(a)
 	var marcus := cast[3]
+	for a in cast:  # in through the chapel door one after another, lanterns up
+		var at := a.global_position
+		a.global_position = at + Vector3(0, 0, 3.0)
+		a.walk_to(at, 1.3)
 	_shot(Vector3(-19.2, 1.7, -208.8), Vector3(-22, 1.5, -205.6))
-	await hud.subtitle("", "Footsteps at the door. Four of them.", 2.2)
+	await d.wait(2.6)
 	marcus.look(_shep)
 	d.ots(marcus, _shep, 1.0)
 	await hud.subtitle("Marcus", "It's over, Elias.", 1.8)
@@ -568,13 +609,15 @@ func ending_unveiled() -> void:
 		cast[k].walk_to(cast[k].global_position + Vector3(0, 0, 30), 1.0)
 	_shot(Vector3(-12, 1.4, -190), Vector3(-22, 1.2, -200), Vector3(-13, 1.6, -188), 6.0)
 	hud.fade(0.0, 1.0)
-	await hud.subtitle("", "Dawn. They carry its sword out of the pit between them.", 3.0)
+	await d.wait(3.0)
 	# Marcus scrapes the eye off the chapel door
 	marcus.global_position = Vector3(-22, 0, -203.4)
 	marcus.model.rotation.y = PI
 	marcus.gesture("reach")
 	_shot(Vector3(-19.5, 2.2, -199.5), Vector3(-22, 4.2, -204.8))
-	await hud.subtitle("", "At dawn they scrape the eyes off the doors. Every door in the valley.", 3.0)
+	var scrape := Snd.sfx("scrape", Vector3(-22, 2.0, -204.6), -2.0, 1.2)
+	await d.wait(3.0)
+	Snd.stop(scrape)
 	# Alex and Lucía, the tunnel
 	alex.walk_to(Chapter3Director.GATE - Vector3(1.0, 1.2, -1.2), 1.4)
 	lucia.walk_to(Chapter3Director.GATE - Vector3(0.0, 1.2, -1.0), 1.4)
@@ -595,7 +638,11 @@ func ending_new_eye() -> void:
 	_shep.crouch(false)
 	_shep.look(alex)
 	_shot(SHEP_SPOT + Vector3(-0.5, 1.4, 1.3), SHEP_SPOT + Vector3.UP * 1.5)
-	await hud.subtitle("", "He looks at the blood on you. Then he smiles.", 2.6)
+	_shep.look(alex.global_position + Vector3.UP * 0.9)  # down at the blood on him, then back up, pleased
+	await d.wait(1.3)
+	_shep.look(alex)
+	_shep.gesture("nod", 1.2)
+	await d.wait(1.3)
 	_shep.anim.hold(_iron, "")
 	_shep.gesture("give")
 	await hud.subtitle("Shepherd", "Four of them. I never had one who could do that.", 2.8)
@@ -618,15 +665,25 @@ func ending_new_eye() -> void:
 	var iron := c2b._prop(c2b._hand(room), "brand_iron", Vector3(0.05, 0.05, 0.7), IRON, Vector3(0, -0.12, 0.2))
 	if iron is MeshInstance3D:
 		c2b._box(iron, Vector3(0.14, 0.03, 0.14), RED, Vector3(0, 0, -0.38), 3.0)
-	var burn := c1a._light(Vector3(-96.4, 1.3, 49.0), Color(1.0, 0.3, 0.1), 1.2, 2.5, true)
-	room.gesture("reach")
+	var burn := c1a._light(Vector3(-96.0, 1.2, 49.0), Color(1.0, 0.3, 0.1), 1.2, 2.5, true)
 	d.release_stand_in()
 	_shot(Vector3(-94.6, 1.5, 48.6), Vector3(-96.4, 1.4, 49.0))
 	hud.fade(0.0, 1.0)
-	await hud.subtitle("", "A car stalls at the bridge.", 2.2)
-	await hud.subtitle("", "Room 6 is ready.", 2.2)
+	# far off, a car coughs and dies at the bridge; Alex thumbs the eye onto room 6's door, the way Owen did his
+	Snd.sfx("car_stall", null, -14.0)
+	await d.wait(1.2)
+	room.face(Vector3(-97, 1.4, 49.0), 0.3)
+	room.gesture("daub")
+	var eye := c1a._paint_door_eye()
+	BrandMark.set_reveal(eye, 0.0)
+	var draw := eye.create_tween()
+	draw.tween_method(func(k: float) -> void: BrandMark.set_reveal(eye, k), 0.0, 1.0, 2.0)
+	await draw.finished
+	room.gesture("")
+	await d.wait(1.0)
 	await hud.fade(1.0, 1.0)
 	room.queue_free()
+	eye.queue_free()
 	burn.queue_free()
 
 
@@ -645,7 +702,7 @@ func ending_mixed() -> void:
 		a.walk_to(Chapter3Director.GATE - Vector3(0.5, 1.2, -1.0), 0.9)
 	d.track(alex, Vector3(-2.2, 1.6, 3.0), Vector3(0, 1.2, 0))
 	hud.fade(0.0, 0.8)
-	await hud.subtitle("", "She can barely stand. Alex carries her most of the way.", 3.0)
+	await d.wait(3.0)
 	await d.wait(1.6)
 	await hud.fade(1.0, 0.8)
 	var cards := []
@@ -667,13 +724,25 @@ func ending_run() -> void:
 	await hud.subtitle("Alex", "I'm sorry, Lucía.", 1.8)
 	alex.look(null)
 	_shot(Vector3(24, 1.2, -212), GATE_IN + Vector3.UP * 3.0)
-	await hud.subtitle("", "Three parts turn in three slots. The gate grinds open.", 3.0)
+	alex.gesture("reach")
+	for i in 3:  # three parts, three slots
+		await d.wait(0.6)
+		Snd.sfx("pick_open", GATE_IN + Vector3.UP, -2.0, 0.8 + 0.1 * i)
+	alex.gesture("")
+	Snd.sfx("scrape", GATE_IN + Vector3.UP * 2.0, 0.0, 0.7)  # the gate grinds open
+	await d.wait(1.2)
 	alex.walk_to(GATE_IN, 1.4)
 	d.track(alex, Vector3(-1.8, 1.6, 3.2), Vector3(0, 1.3, -2.0))
 	await d.wait(2.6)
+	# in the tunnel he rubs at the back of his hand; the mark flares under his thumb
+	alex.gesture("clutch_hand")
+	var mark := BrandMark.of(alex.model)
+	if mark:
+		mark.heat = 0.6
+	c1a._hand_shot(alex)
+	await d.wait(1.8)
 	await hud.fade(1.0, 1.0)
 	await hud.subtitle("", "The Old Pass. Three kilometres of dark.", 2.6)
-	await hud.subtitle("", "The mark on the back of the hand itches all the way.", 2.8)
 	await hud.subtitle("Radio", "Kshhh… channel seven…", 2.2)
 	await hud.subtitle("", "Lucía is not found.", 2.4)
 	d.release_stand_in()
@@ -796,4 +865,5 @@ func _after_run() -> void:
 	await hud.subtitle("Radio", "Kshhh… channel seven…", 2.2)
 	var tw := lan.create_tween()
 	tw.tween_property(lan, "light_energy", 0.0, 2.0)
-	await hud.subtitle("", "The lantern gutters out.", 2.4)
+	Snd.sfx("hiss", cage + Vector3(1.4, 1.2, 1.0), -10.0, 1.4)  # the lantern guttering out
+	await d.wait(2.4)

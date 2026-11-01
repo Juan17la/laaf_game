@@ -99,7 +99,8 @@ func the_bell() -> void:
 	d.shot(Ch2ScenesB.LOCK_CAM, spot + Vector3.UP * 0.6)
 	d.cam.fov = 32.0
 	hud.fade(0.0, 1.2)
-	await hud.subtitle("", "The last note of the bell dies in the rain.", 2.6)
+	Snd.sfx("bell", spot + Vector3.UP * 8.0, -12.0)  # the last of it, dying in the rain
+	await d.wait(2.6)
 	marcus.crouch(true)
 	marcus.gesture("slump")
 	marcus.look(jacket)
@@ -155,7 +156,6 @@ func the_bell() -> void:
 func stash_found() -> void:
 	var frozen := c2a._freeze()  # the lanterns are already coming
 	await c2b._pickup(Vector3(0.2, 0.1, 0.14), Color(0.45, 0.42, 0.35), "+2 SMOKE CANS · BANDAGE", [
-		["", "A moth scratched into the marble. Under the step, Elena's tin.", 2.8],
 		["Alex", "Smoke cans. She thought of everything.", 2.2]], "lean", "smoke_can")
 	hud.note("T throws smoke.", "", 3.5)
 	c2a._thaw(frozen)
@@ -164,7 +164,6 @@ func stash_found() -> void:
 func bell_rings() -> void:
 	## Bark: a chaser saw Alex — the bell rings and the whole yard converges. Not awaited.
 	hud.banner("BONG", Color(0.9, 0.8, 0.6), 0.8)
-	hud.subtitle("", "The bell. They all heard it.", 1.8)
 
 
 func chase_bark() -> void:
@@ -179,11 +178,15 @@ func church_enter() -> void:
 	var p := alex.global_position
 	alex.face(Vector3(-80, 0, -100), 0.3)
 	_shot(p + Vector3(0.6, 1.7, 1.2), Vector3(-80, 1.8, -100), p + Vector3(-1.2, 1.9, 0.9), 5.0)
-	await hud.subtitle("", "The nave. Candles on every pew.", 2.2)
-	_shot(Vector3(-67.5, 1.6, -96.0), Vector3(-71, 5.5, -100))
-	await hud.subtitle("", "Three bells hang over the aisle on chains, brought down from the tower.", 3.0)
+	await d.wait(2.4)
+	# up at the three bells hung low over the aisle on chains; then down the chain to its rope, tied off at the wall
+	alex.look(Vector3(-71, 5.5, -100))
+	_shot(Vector3(-67.5, 1.6, -96.0), Vector3(-71, 5.5, -100), Vector3(-67.8, 1.5, -96.4), 3.0)
+	Snd.sfx("bell", Vector3(-71, 5.5, -100), -22.0, 1.6)  # one of them, stirring on its chain
+	await d.wait(2.8)
 	_shot(Vector3(-66.0, 1.2, -95.2), Vector3(-65, 1.3, -94.95))
-	await hud.subtitle("", "Their ropes are tied off at the wall.", 2.2)
+	await d.wait(2.0)
+	alex.look(null)
 	_shot(Vector3(-70.0, 2.0, -99.5), Vector3(-82, 1.5, -100))
 	await hud.subtitle("Marcus", "Clara sang in this choir.", 2.4)
 	await hud.subtitle("Marcus", "Every Sunday. Third row. Off-key, and loud.", 2.8)
@@ -206,7 +209,12 @@ func marcus_intro(marcus: Enemy, bells: Array[Bell]) -> void:
 	c1b._face_node(marcus, o + Vector3(-3, 0, 0))  # his back to Alex, at the candles
 	a.gesture = "reach"
 	_shot(alex.global_position + Vector3(0.8, 1.8, 1.0), o + Vector3.UP * 1.2, alex.global_position + Vector3(0.2, 1.7, 0.9), 4.0)
-	await hud.subtitle("", "He's lighting candles. One for every bell rung since the festival.", 3.0)
+	# he's lighting candles, one off another, a row of them already burning
+	await d.wait(1.0)
+	for i in 3:
+		c1a._light(o + Vector3(-0.7, 1.05, -0.3 + 0.3 * i), Color(1.0, 0.75, 0.4), 0.7, 2.0, true)
+		Snd.sfx("pick_set", o + Vector3.UP, -14.0, 1.4)
+		await d.wait(0.7)
 	a.gesture = ""
 	c1b._face_node(marcus, alex.global_position)
 	_enemy_face(marcus, alex.global_position)
@@ -243,8 +251,10 @@ func bell_dropped(crushed: bool) -> void:
 
 func marcus_phase(n: int) -> void:
 	hud.banner(tr("PHASE %d") % n, Color(1.0, 0.4, 0.3), 1.0)
-	hud.say([["", "He rings the hand bell. The doors bang open behind you.", 2.4],
-		["Marcus", "Into the house of God! All of you!" if n == 2 else "Nobody leaves! Nobody ever leaves!", 2.2]])
+	# he rings the hand bell, and the doors behind Alex bang open on the Marked
+	Snd.sfx("bell", null, -4.0, 1.7)
+	d.get_tree().create_timer(0.8).timeout.connect(func() -> void: Snd.sfx("door_slam", null, 0.0))
+	hud.say([["Marcus", "Into the house of God! All of you!" if n == 2 else "Nobody leaves! Nobody ever leaves!", 2.2]])
 
 
 func marcus_down(marcus: Enemy) -> void:
@@ -252,11 +262,16 @@ func marcus_down(marcus: Enemy) -> void:
 	var a := c1b._anim(marcus)
 	d.cinematic(true)
 	var frozen := c2a._freeze()
+	await c1b.go_down(marcus, _shot, ["one_knee", "prone", "hands_ground", "heels"])
 	var o := marcus.global_position
 	var from := safe(c1b._alex_near(o, 2.6))
-	_shot(Vector3(from.x, 1.9, from.z), o + Vector3.UP * 0.8, Vector3(from.x, 1.6, from.z).lerp(o, 0.2), 3.0)
-	a.gesture = "slump"
+	# down on his face in the aisle, then back up on his knees like at the altar rail: he looks up past the bells, for her
+	a.look = Vector2(0, 0.55)
+	_shot(o + (o - from).normalized() * 0.9 + Vector3.UP * 0.5, o + Vector3.UP * 1.9, o + (o - from).normalized() * 1.1 + Vector3.UP * 0.4, 3.0)
 	await hud.subtitle("Marcus", "Clara… I'm so tired.", 2.0)
+	a.look = Vector2.ZERO
+	a.gesture = "slump"
+	_shot(Vector3(from.x, 1.9, from.z), o + Vector3.UP * 0.8, Vector3(from.x, 1.6, from.z).lerp(o, 0.2), 3.0)
 	c1b._face_node(marcus, from)
 	a.gesture = "hand_to_face"
 	await hud.subtitle("Marcus", "Go on. I did it to Elena. I've earned it.", 2.6)
@@ -293,7 +308,11 @@ func marcus_spared(marcus: Enemy, with_photo: bool) -> void:
 		_shot(o + side * 1.3 + Vector3.UP * 1.0, o + Vector3.UP * 0.9)
 		a.gesture = "slump"
 		await hud.subtitle("Marcus", "Her Sunday dress. She hated this picture.", 2.6)
-		await hud.subtitle("", "The sledgehammer rolls out of his hand.", 2.0)
+		# the sledgehammer's handle slips out of his other hand and rolls on the flagstones
+		_shot(o + side * 0.9 + Vector3.UP * 0.4, o + Vector3.UP * 0.2)
+		Snd.sfx("thud", o, -2.0, 1.0)
+		Snd.sfx("scrape", o, -10.0, 1.4)
+		await d.wait(1.6)
 		a.gesture = "hand_to_face"
 		await c1b._talk(marcus, alex, "Marcus", "Elena was right. She was always right.", 1.0, 2.6)
 		a.gesture = ""
@@ -309,7 +328,7 @@ func marcus_spared(marcus: Enemy, with_photo: bool) -> void:
 	# he gets up and walks to the altar candles, away from Alex
 	a.gesture = ""
 	a.look = Vector2.ZERO
-	a.crouching = false
+	await c1b.get_up(marcus)
 	marcus.set_physics_process(false)
 	marcus.collision_layer = 0
 	_shot(o + side * 2.4 + Vector3.UP * 1.3, o + Vector3.UP * 0.9)
@@ -338,8 +357,8 @@ func marcus_killed(marcus: Enemy) -> void:
 	await hud.subtitle("Marcus", "Clara… sing it for me…", 2.2)
 	_shot(o + back * 1.0 + Vector3.UP * 5.0, o + Vector3(0, 7.5, 0))  # up the chains, into the dark
 	await d.wait(1.0)
-	hud.banner("BONG", Color(0.9, 0.8, 0.6), 1.0)
-	await hud.subtitle("", "Somewhere above, a bell rings once more. Nobody is pulling it.", 3.0)
+	hud.banner("BONG", Color(0.9, 0.8, 0.6), 1.0)  # (its caption rings the bell): nobody is pulling it
+	await d.wait(3.0)
 	alex.gesture("hand_to_face")
 	_face(alex)
 	await hud.subtitle("Alex", "I'm sorry, Elena. I couldn't.", 2.0)
@@ -430,12 +449,15 @@ func static_grief() -> void:
 	hud.clock("22:50")
 	close.call()
 	await hud.subtitle("Radio", "Kshhh…", 1.6)
-	await hud.subtitle("", "Still on channel seven. Still waiting for her.", 2.6)
+	await d.wait(1.6)  # still on channel seven, still waiting for her
 	# her thermos, her pencil marks on the dial
 	alex.look(radio)
 	_shot(p - f * 1.4 + side * 0.9 + Vector3.UP * 1.6, radio)
 	alex.gesture("lean")
-	await hud.subtitle("", "A thermos, half full. Pencil ticks on the dial: 7, 7, 7.", 2.8)
+	for i in 3:  # his finger along her pencil ticks on the dial: 7, 7, 7 (and the thermos, half full)
+		Snd.sfx("pick_set", radio, -8.0, 0.9)
+		await d.wait(0.6)
+	await d.wait(0.6)
 	c1a._near(alex, f * 1.0 - side * 0.3 + Vector3.UP * 1.5, Vector3(0, 1.4, 0))
 	alex.gesture("slump")
 	await hud.subtitle("Alex", "You said you'd call when you had what you needed.", 2.8)
@@ -496,7 +518,8 @@ func last_recording() -> void:
 		alex.anim.hold_pose = "show"
 		await d.wait(0.4)
 	c1a._read_shot(alex)
-	await hud.subtitle("", "Click.", 0.8)
+	Snd.sfx("pick_set", rec.global_position, 0.0)  # his thumb on the play key
+	await d.wait(0.8)
 	await hud.subtitle("Elena", "Test. Test. If you're hearing this, I didn't come back.", 3.0)
 	c1a._near(alex, f * 1.0 + Vector3.UP * 1.55, Vector3(0, 1.45, 0))
 	await hud.subtitle("Elena", "Alex. It's you, isn't it. Stubborn.", 2.4)
@@ -505,7 +528,8 @@ func last_recording() -> void:
 	await hud.subtitle("Elena", "That's why they cut the power at three. Light hurts it.", 3.0)
 	c1a._hand_shot(alex)
 	await hud.subtitle("Elena", "Tell Tomás… no. Just find him.", 2.4)
-	await hud.subtitle("", "Click.", 0.8)
+	Snd.sfx("pick_set", rec.global_position, 0.0)
+	await d.wait(0.8)
 	rec.queue_free()
 	alex.gesture("")
 	c1a._end_stand_in()

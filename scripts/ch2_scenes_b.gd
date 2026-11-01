@@ -443,14 +443,17 @@ func vents_reversed() -> void:
 	var p := alex.global_position
 	alex.gesture("reach")
 	d.shot(p - fwd * 0.4 + right * 0.7 + Vector3.UP * 1.5, p + fwd * 0.6 + Vector3.UP * 1.2)
-	await hud.subtitle("", "The valve grinds...", 1.6)
+	Snd.sfx("scrape", p + fwd * 0.6 + Vector3.UP * 1.2, -4.0, 1.3)  # the valve grinding round
+	await d.wait(1.6)
 	d.shot(p + right * 1.2 + fwd * 0.5 + Vector3.UP * 1.3, p + Vector3.UP * 1.4)
 	alex.gesture("raise_weapon", 1.0)
 	await d.wait(1.2)
 	# the clinic roof from above: the ducts cough and draw the other way
 	d.shot(Vector3(58.0, 15.0, -116.0), Vector3(72, 7.5, -100), Vector3(60.0, 16.5, -113.0), 4.0)
 	hud.banner("VENTS REVERSED", Color(0.6, 1.0, 0.7), 1.6)
-	await hud.subtitle("", "The fans shudder, and run backwards.", 2.4)
+	var fans := Snd.sfx("generator", Vector3(72, 7.5, -100), -4.0, 0.8)  # the fans shudder and spin up backwards
+	await d.wait(2.4)
+	Snd.stop(fans)
 	alex.gesture("")
 	d.shot(p + fwd * 1.2 - right * 0.4 + Vector3.UP * 1.6, p + Vector3.UP * 1.5)
 	await hud.subtitle("Alex", "Your gas, your lungs, Julian.", 2.2)
@@ -589,11 +592,17 @@ func julian_down(julian: Enemy) -> void:
 	## Julian on his knees, wheezing. The spare / kill prompt appears after this.
 	var a := _anim(julian)
 	d.cinematic(true)
+	julian.set_physics_process(false)
+	await Ch1ScenesB.new(d).go_down(julian, d.shot, ["one_knee", "hands_ground", "curl_side"])
 	var o := julian.global_position
 	var from := _alex_near(o, 2.6)
+	# curled up on the floor, his own gas in his lungs: he hacks into his fist, every breath whistling
 	d.shot(Vector3(from.x, o.y + 1.9, from.z), o + Vector3.UP * 0.8, Vector3(from.x, o.y + 1.6, from.z).lerp(o, 0.2), 3.0)
-	a.gesture = "hand_to_face"
-	await hud.subtitle("", "He wheezes. Every breath a whistle.", 2.0)
+	a.gesture = "cough"
+	var wheeze := Snd.sfx("hiss", o + Vector3.UP * 1.0, -12.0, 1.7)
+	await d.wait(2.0)
+	Snd.stop(wheeze)
+	a.down_pose = "side"  # he shoves himself up off the floor onto a braced arm
 	a.gesture = "slump"
 	await hud.subtitle("Julian", "Go on. It's only triage.", 2.0)
 	_face_node(julian, from)
@@ -601,6 +610,7 @@ func julian_down(julian: Enemy) -> void:
 	await hud.subtitle("Julian", "One for the rest.", 1.8)
 	a.gesture = ""
 	a.look = Vector2.ZERO
+	julian.set_physics_process(true)
 	d.cinematic(false)
 
 
@@ -648,7 +658,7 @@ func julian_spared(julian: Enemy, with_file: bool) -> void:
 	# Julian gets up and walks off, coughing, into the dark of the clinic
 	a.gesture = ""
 	a.look = Vector2.ZERO
-	a.crouching = false
+	await Ch1ScenesB.new(d).get_up(julian)
 	julian.set_physics_process(false)
 	julian.collision_layer = 0
 	d.shot(o + side * 2.6 + Vector3.UP * 1.2, o + Vector3.UP * 0.8)
@@ -728,7 +738,7 @@ func traitor() -> void:
 	await d.wait(0.5)  # let the arm come up before framing the hand
 	var hand := _hand(elena).global_position
 	d.shot(hand + Vector3(-0.8, 0.45, 0.75), hand, hand + Vector3(-0.6, 0.35, 0.55), 2.6)
-	await hud.subtitle("", "The quarry map. Stolen from the Shepherd's own ledger room.", 2.6)
+	await d.wait(2.2)
 	elena.gesture("")
 	elena.face(alex.global_position)
 	elena.look(alex)
@@ -752,10 +762,12 @@ func traitor() -> void:
 	_lock(ELENA_SPOT + Vector3.UP * 1.2, 55.0)
 	await d.wait(1.6)
 	_lock(BELL, 20.0)
-	await hud.subtitle("", "BONG.", 1.2)
+	Snd.sfx("bell", BELL)
+	await d.wait(1.2)
 	_lock(ELENA_SPOT + Vector3.UP * 1.3, 32.0)
 	elena.face(TOWER_DOOR)
-	await hud.subtitle("", "The bell. Once.", 1.4)
+	elena.look(TOWER_DOOR + Vector3.UP * 3.0)
+	await d.wait(1.4)
 	# Marcus out of the tower door, a lantern in his fist
 	var marcus := d.actor("res://models/char_marcus.glb", TOWER_DOOR, 0.0)
 	_lantern(marcus)
@@ -781,7 +793,7 @@ func traitor() -> void:
 		said.append(r)
 		cast.append(mem)
 	_lock(Vector3(-97, 1.0, -100), 50.0)
-	await hud.subtitle("", "Lanterns in the fog.", 1.8)
+	await d.wait(1.8)
 	alex.gesture("clutch_hand")
 	_lock(HIDE + Vector3(0.1, 0.6, -0.3), 45.0)  # his hand on the cold marble
 	await d.wait(1.4)
@@ -857,7 +869,8 @@ func traitor() -> void:
 	await d.wait(0.2)
 	hud.mark_spike(Feel.SPIKE_SCRIPT)  # the bell: Elena
 	hud.fade(1.0, 0.05)
-	await hud.subtitle("", "BONG.", 1.2)
+	Snd.sfx("bell", BELL)  # over black
+	await d.wait(1.2)
 	ma.attack = -1.0
 	marcus.gesture("")
 	# ---- the aftermath, still from behind the marble: she lies among the graves in the yellow coat
@@ -874,7 +887,7 @@ func traitor() -> void:
 		mem.gesture("")
 	_lock(ELENA_SPOT + Vector3.UP * 0.4, 30.0)
 	await hud.fade(0.0, 1.8)
-	await hud.subtitle("", "Nobody says anything.", 2.2)
+	await d.wait(2.2)
 	# they turn away one by one, lanterns low
 	for mem in members:
 		mem.walk_to(mem.global_position + (mem.global_position - ELENA_SPOT).normalized() * 9.0, 1.0)
@@ -894,11 +907,13 @@ func traitor() -> void:
 	marcus.walk_to(TOWER_DOOR, 1.1)
 	await d.wait(1.8)
 	_lock(BELL, 20.0)
-	await hud.subtitle("", "BONG.", 1.4)
+	Snd.sfx("bell", BELL)
+	await d.wait(1.4)
 	# the lantern burns down beside her
 	_lock(ELENA_SPOT + Vector3.UP * 0.3, 22.0)
 	lamp.create_tween().tween_property(lamp, "light_energy", 0.0, 3.2)
-	await hud.subtitle("", "Her lantern gutters out on the grave. The yellow coat is the last thing the fog takes.", 3.4)
+	Snd.sfx("hiss", lamp.global_position, -10.0, 1.4)
+	await d.wait(3.4)
 	_lock(HIDE + Vector3(0.25, 1.1, -0.3), 40.0)
 	alex.gesture("hand_to_face")
 	await hud.subtitle("Alex", "...Tomás. His name was Tomás.", 2.6)

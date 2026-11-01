@@ -43,12 +43,21 @@ var reach_to := Transform3D()
 var _holding := false  ## this anim drives ik.R for a held item (the player's weapons drive it otherwise)
 ## Cinematic body language (Actor.gesture): "" or one of point, wave, give, reach, hand_to_face,
 ## clutch_hand, arms_crossed, shrug, nod, shake_head, lean, cower, raise_weapon, window_press,
-## hands_up, beckon, look_around, slump, frenzy (a charging attacker: stabbing overhead, clawing, hunched).
-## Blends in/out over ~0.3 s.
+## hands_up, beckon, look_around, slump, frenzy (a charging attacker: stabbing overhead, clawing, hunched),
+## stagger (reeling back from a blow), brand (pressing an iron down), daub (painting on a wall at head
+## height), push_up (hands on the knee, trying to stand), cough, reach_out (a dying reach).
+## Blends in/out over ~0.3 s; switching straight from one to another crossfades.
 var gesture := ""
 ## Beaten on the ground (a downed boss), shown while crouching: "kneel", "one_knee", "hands_ground", "sit_back",
-## "side" ("" = the plain crouch). Standing up (crouching = false) blends out of it.
+## "side", "heels", "sprawl_sit"; lying: "propped_back", "flat_back", "prone", "crawl", "curl_side", "face_down"
+## ("" = the plain crouch). Standing up (crouching = false) blends out of it; a change of pose crossfades.
 var down_pose := ""
+var crouch_rate := 5.0  ## how fast crouching blends (1/s): slow it to stage a struggle up, or a sag down
+var _dp := ""  ## the down pose shown, and the one it's crossfading from (_dp_k 0 → 1)
+var _dp_prev := ""
+var _dp_k := 1.0
+var _g_prev := ""  ## a gesture handing over to the next one, fading out by _g_prev_amt
+var _g_prev_amt := 0.0
 var _g_amt := 0.0
 var _g_last := ""
 var _g_time := 0.0  ## seconds since the gesture started (loops like nod / shrug settle down)
@@ -177,7 +186,7 @@ func _process(delta: float) -> void:
 	a = _amp
 	var ka := minf(a, 1.0) * (2.0 - minf(a, 1.0))  # knee / ankle excursions shrink less than the stride
 	var g := minf(a, 1.0)  # gait intensity
-	_crouch = move_toward(_crouch, 1.0 if crouching else 0.0, delta * 5.0)
+	_crouch = move_toward(_crouch, 1.0 if crouching else 0.0, delta * crouch_rate)
 	var breath := sin(_time * 1.8)
 	var idle := 1.0 - clampf(v, 0.0, 1.0)
 	if airborne:
@@ -290,7 +299,9 @@ func _process(delta: float) -> void:
 		_j["UpperArmL"].rotation = Vector3(-0.3, 0, 0.9)
 
 	if down_pose != "" and _crouch > 0.0:
-		_down(_crouch, hips, spine, head)
+		_down(_crouch, delta, hips, spine, head)
+	else:
+		_dp = ""
 
 	# gun arms: two-hand isosceles grip, both arms converge in front of the chest (wrists meet), the
 	# right wrist turns the gun back onto the aim line; recoil kicks both hands up. Near a wall
@@ -350,11 +361,18 @@ func _process(delta: float) -> void:
 
 	# cinematic gestures, blended over whatever the body was doing
 	if gesture != "":
+		if gesture != _g_last and _g_amt > 0.0 and _g_last != "":
+			_g_prev = _g_last  # the old one hands over instead of snapping
+			_g_prev_amt = _g_amt
+			_g_amt = 0.0
 		if gesture != _g_last or _g_amt <= 0.0:
 			_g_time = 0.0
 		_g_last = gesture
 	_g_time += delta
 	_g_amt = move_toward(_g_amt, 1.0 if gesture != "" else 0.0, delta * 3.5)
+	_g_prev_amt = move_toward(_g_prev_amt, 0.0, delta * 3.5)
+	if _g_prev_amt > 0.0:
+		_gesture(_g_prev, _g_prev_amt)
 	if _g_amt > 0.0:
 		_gesture(_g_last, _g_amt)
 
@@ -921,16 +939,70 @@ func _gesture(g: String, w: float) -> void:
 			head.rotation.x = lerpf(head.rotation.x, 0.6, w)
 			for k in ["L", "R"]:
 				_pose("UpperArm" + k, Vector3(0.1, 0, 0.05 if k == "L" else -0.05), w)
+		"stagger":  # reeling back from a blow: chest thrown back, arms flung out, swaying for balance
+			var sway := 0.12 * sin(t * 8.0) * _settle(0.6)
+			spine.rotation = spine.rotation.lerp(Vector3(-0.4, 0.0, sway), w)
+			head.rotation.x = lerpf(head.rotation.x, -0.4, w)
+			_pose("UpperArmL", Vector3(0.35, 0, 0.8 + sway), w)
+			_pose("UpperArmR", Vector3(0.25, 0, -0.75 + sway), w)
+			for k in ["L", "R"]:
+				_pose("Forearm" + k, Vector3(-0.5, 0, 0), w)
+		"brand":  # both hands on an iron's grip, pressing it down onto something low in front, leaning into it
+			var push := 0.05 * sin(t * 5.0)
+			_pose("UpperArmR", Vector3(-0.75 - push, 0, 0.25), w)
+			_pose("ForearmR", Vector3(-0.3, 0, 0), w)
+			_pose("UpperArmL", Vector3(-0.8 - push, 0, -0.3), w)
+			_pose("ForearmL", Vector3(-0.45, 0, 0), w)
+			spine.rotation.x = lerpf(spine.rotation.x, 0.6 + push, w)
+			head.rotation.x = lerpf(head.rotation.x, 0.35, w)
+		"daub":  # the left thumb drawing on a wall at head height, in slow loops (the right hand may hold something)
+			_pose("UpperArmL", Vector3(-1.95 + 0.18 * sin(t * 4.0), 0, 0.05 - 0.18 * cos(t * 4.0)), w)
+			_pose("ForearmL", Vector3(-0.55, 0, 0), w)
+			head.rotation.x = lerpf(head.rotation.x, -0.12, w)
+		"push_up":  # both hands on the front knee, shoving to stand, arms trembling
+			var shake := 0.05 * sin(t * 23.0)
+			_pose("UpperArmL", Vector3(-0.55 + shake, 0, 0.05), w)
+			_pose("ForearmL", Vector3(-0.9, 0, 0), w)
+			_pose("UpperArmR", Vector3(-0.5 - shake, 0, 0.2), w)
+			_pose("ForearmR", Vector3(-0.85, 0, 0), w)
+			spine.rotation.x = lerpf(spine.rotation.x, 0.65 + shake, w)
+			head.rotation.x = lerpf(head.rotation.x, -0.15, w)
+		"cough":  # a fist to the mouth, the chest jerking with each one
+			var hack := 0.16 * absf(sin(t * 6.5))
+			_pose("UpperArmR", Vector3(-0.85, 0, 0.45), w)
+			_pose("ForearmR", Vector3(-2.15, 0, 0), w)
+			spine.rotation.x = lerpf(spine.rotation.x, 0.35 + hack, w)
+			head.rotation.x = lerpf(head.rotation.x, 0.3 + hack, w)
+		"reach_out":  # one shaking arm out toward something it can't reach
+			var shake := 0.04 * sin(t * 13.0)
+			_pose("UpperArmR", Vector3(-1.35 + shake, 0, -0.1), w)
+			_pose("ForearmR", Vector3(-0.15, 0, 0), w)
+			_pose("HandR", Vector3(0.35, 0, 0), w)
+			head.rotation.x = lerpf(head.rotation.x, -0.1, w)
 
 
-func _down(w: float, hips: Node3D, spine: Node3D, head: Node3D) -> void:
-	## down_pose, blended by the crouch amount, chest heaving for breath. Heights come from the rig (any scale):
-	## thigh T, shin S; knees on the ground puts the hips S below rest, sitting puts them just off the floor.
+func _down(w: float, delta: float, hips: Node3D, spine: Node3D, head: Node3D) -> void:
+	## down_pose, blended by the crouch amount; a new pose crossfades from the last over ~0.6 s.
+	if down_pose != _dp:
+		_dp_prev = _dp if _dp_k > 0.5 or _dp_prev == "" else _dp_prev
+		_dp = down_pose
+		_dp_k = 0.0 if _dp_prev != "" else 1.0
+	_dp_k = minf(_dp_k + delta * 1.7, 1.0)
+	var k := smoothstep(0.0, 1.0, _dp_k)
+	if k < 1.0:
+		_down_pose(_dp_prev, w, 1.0 - k, hips, spine, head)
+	_down_pose(_dp, w * k, 1.0, hips, spine, head)
+
+
+func _down_pose(pose: String, w: float, add: float, hips: Node3D, spine: Node3D, head: Node3D) -> void:
+	## One down pose at weight w (add: the share of its additive head tilt), chest heaving for breath. Heights come
+	## from the rig (any scale): thigh T, shin S; knees on the ground puts the hips S below rest, sitting puts them
+	## just off the floor.
 	var shin: float = -_rest["FootL"].y
 	var thigh: float = -_rest["ShinL"].y
 	var heave := 0.05 * sin(_time * 3.4)  # ragged breathing
 	var y := _rest["Hips"].y as float
-	match down_pose:
+	match pose:
 		"kneel":  # both knees down, upright but sagging, arms hanging
 			y -= shin + 0.01
 			for k in ["L", "R"]:
@@ -940,7 +1012,7 @@ func _down(w: float, hips: Node3D, spine: Node3D, head: Node3D) -> void:
 				_pose("UpperArm" + k, Vector3(0.05, 0, 0.12 if k == "L" else -0.12), w)
 				_pose("Forearm" + k, Vector3(-0.2, 0, 0), w)
 			spine.rotation.x = lerpf(spine.rotation.x, 0.3 + heave, w)
-			head.rotation.x += 0.45 * w
+			head.rotation.x += 0.45 * w * add
 		"one_knee":  # right knee down, left foot planted, forearm on the left knee
 			y -= thigh
 			_pose("ThighR", Vector3(0.3, 0, -0.06), w)
@@ -954,7 +1026,7 @@ func _down(w: float, hips: Node3D, spine: Node3D, head: Node3D) -> void:
 			_pose("UpperArmR", Vector3(0.1, 0, -0.15), w)
 			_pose("ForearmR", Vector3(-0.3, 0, 0), w)
 			spine.rotation.x = lerpf(spine.rotation.x, 0.5 + heave, w)
-			head.rotation.x += 0.3 * w
+			head.rotation.x += 0.3 * w * add
 		"hands_ground":  # on knees and hands, head hanging
 			y -= shin + 0.01
 			for k in ["L", "R"]:
@@ -965,7 +1037,7 @@ func _down(w: float, hips: Node3D, spine: Node3D, head: Node3D) -> void:
 				_pose("Forearm" + k, Vector3(-0.1, 0, 0), w)
 				_pose("Hand" + k, Vector3(-0.9, 0, 0), w)
 			spine.rotation.x = lerpf(spine.rotation.x, 1.15 + heave, w)
-			head.rotation.x += 0.5 * w
+			head.rotation.x += 0.5 * w * add
 		"sit_back":  # thrown down on its seat, knees up, leaning back on its hands
 			y = 0.21 * y / 0.95
 			for k in ["L", "R"]:
@@ -975,7 +1047,7 @@ func _down(w: float, hips: Node3D, spine: Node3D, head: Node3D) -> void:
 				_pose("UpperArm" + k, Vector3(0.75, 0, 0.2 if k == "L" else -0.2), w)
 				_pose("Forearm" + k, Vector3(0.0, 0, 0), w)
 			spine.rotation.x = lerpf(spine.rotation.x, -0.35 + heave, w)
-			head.rotation.x += 0.55 * w
+			head.rotation.x += 0.55 * w * add
 		"side":  # kneeling, sagging to its right on a braced arm, the other hand on its thigh
 			y -= shin + 0.01
 			for k in ["L", "R"]:
@@ -988,5 +1060,102 @@ func _down(w: float, hips: Node3D, spine: Node3D, head: Node3D) -> void:
 			_pose("ForearmR", Vector3(0.0, 0, 0), w)
 			spine.rotation = spine.rotation.lerp(Vector3(0.3 + heave, 0.1, 0.35), w)
 			head.rotation.z = lerpf(head.rotation.z, 0.3, w)
-			head.rotation.x += 0.35 * w
+			head.rotation.x += 0.35 * w * add
+		"heels":  # sat back on its heels, spent: hands fallen open on the thighs, head bowed
+			y -= shin + 0.12 * y / 0.95
+			for k in ["L", "R"]:
+				_pose("Thigh" + k, Vector3(-1.2, 0, 0.12 if k == "L" else -0.12), w)
+				_pose("Shin" + k, Vector3(2.6, 0, 0), w)
+				_pose("Foot" + k, Vector3(0.9, 0, 0), w)
+				_pose("UpperArm" + k, Vector3(-0.35, 0, 0.12 if k == "L" else -0.12), w)
+				_pose("Forearm" + k, Vector3(-0.7, 0, 0), w)
+				_pose("Hand" + k, Vector3(0.3, 0, 0), w)
+			spine.rotation.x = lerpf(spine.rotation.x, 0.45 + heave, w)
+			head.rotation.x += 0.5 * w * add
+		"sprawl_sit":  # sat down hard, legs out, one knee up: a hand braced behind, the other arm over the knee
+			y = 0.17 * y / 0.95
+			_pose("ThighL", Vector3(-2.2, 0, 0.2), w)
+			_pose("ShinL", Vector3(1.9, 0, 0), w)
+			_pose("FootL", Vector3(0.3, 0, 0), w)
+			_pose("ThighR", Vector3(-1.5, 0.15, -0.25), w)
+			_pose("ShinR", Vector3(0.15, 0, 0), w)
+			_pose("FootR", Vector3(0.6, 0, 0), w)
+			_pose("UpperArmL", Vector3(-0.75, 0, 0.15), w)
+			_pose("ForearmL", Vector3(-0.35, 0, 0), w)
+			_pose("UpperArmR", Vector3(0.75, 0, -0.35), w)
+			_pose("ForearmR", Vector3(-0.1, 0, 0), w)
+			_pose("HandR", Vector3(-0.9, 0, 0), w)
+			spine.rotation = spine.rotation.lerp(Vector3(0.2 + heave, 0.15, 0.12), w)
+			head.rotation.z = lerpf(head.rotation.z, -0.2, w)
+			head.rotation.x += 0.3 * w * add
+		"propped_back":  # thrown on its back, up on its elbows, one knee drawn up: still glaring
+			y = 0.14 * y / 0.95
+			hips.rotation = hips.rotation.lerp(Vector3(-1.45, 0, 0), w)
+			_pose("ThighL", Vector3(-0.85, 0, 0.15), w)
+			_pose("ShinL", Vector3(1.7, 0, 0), w)
+			_pose("FootL", Vector3(-0.2, 0, 0), w)
+			_pose("ThighR", Vector3(-0.1, 0, -0.12), w)
+			_pose("ShinR", Vector3(0.1, 0, 0), w)
+			_pose("FootR", Vector3(0.6, 0, 0), w)
+			for k in ["L", "R"]:
+				_pose("UpperArm" + k, Vector3(1.45, 0, 0.3 if k == "L" else -0.3), w)
+				_pose("Forearm" + k, Vector3(-1.5, 0, 0), w)
+			spine.rotation.x = lerpf(spine.rotation.x, 0.3 + heave, w)
+			head.rotation.x += 0.75 * w * add
+		"flat_back":  # laid out on its back, arms flung wide, chest heaving
+			y = 0.12 * y / 0.95
+			hips.rotation = hips.rotation.lerp(Vector3(-1.55, 0, 0), w)
+			for k in ["L", "R"]:
+				_pose("Thigh" + k, Vector3(-0.05, 0, 0.12 if k == "L" else -0.12), w)
+				_pose("Shin" + k, Vector3(0.15, 0, 0), w)
+				_pose("Foot" + k, Vector3(0.7, 0, 0), w)
+				_pose("UpperArm" + k, Vector3(-0.3, 0, 1.2 if k == "L" else -1.2), w)
+				_pose("Forearm" + k, Vector3(-0.3, 0, 0), w)
+			spine.rotation.x = lerpf(spine.rotation.x, 0.02 + heave, w)
+			head.rotation.x += -0.15 * w * add
+		"prone", "crawl":  # face down, chest pushed up off the ground on its forearms, head up; crawl: one arm reaching on
+			y = 0.12 * y / 0.95
+			hips.rotation = hips.rotation.lerp(Vector3(1.5, 0, 0), w)
+			for k in ["L", "R"]:
+				_pose("Thigh" + k, Vector3(0.0, 0, 0.12 if k == "L" else -0.12), w)
+				_pose("Shin" + k, Vector3(0.1, 0, 0), w)
+				_pose("Foot" + k, Vector3(-0.7, 0, 0), w)
+				_pose("UpperArm" + k, Vector3(-1.3, 0, 0.3 if k == "L" else -0.3), w)
+				_pose("Forearm" + k, Vector3(-1.45, 0, 0), w)
+			if pose == "crawl":  # the right arm stretched out ahead, shaking, the left knee dragged up
+				var shake := 0.04 * sin(_time * 13.0)
+				_pose("UpperArmR", Vector3(-2.6 + shake, 0, -0.15), w)
+				_pose("ForearmR", Vector3(-0.1, 0, 0), w)
+				_pose("ThighL", Vector3(-0.7, 0, 0.5), w)
+				_pose("ShinL", Vector3(1.4, 0, 0), w)
+			spine.rotation.x = lerpf(spine.rotation.x, -0.2 + heave, w)
+			head.rotation.x += -0.9 * w * add
+		"face_down":  # flat on its face, head turned to the side, one arm up by the head: still
+			y = 0.1 * y / 0.95
+			hips.rotation = hips.rotation.lerp(Vector3(1.55, 0, 0), w)
+			_pose("ThighL", Vector3(-0.35, 0, 0.35), w)
+			_pose("ShinL", Vector3(0.6, 0, 0), w)
+			_pose("ThighR", Vector3(0.0, 0, -0.08), w)
+			_pose("ShinR", Vector3(0.05, 0, 0), w)
+			for k in ["L", "R"]:
+				_pose("Foot" + k, Vector3(-0.8, 0, 0), w)
+			_pose("UpperArmL", Vector3(-2.6, 0, 0.5), w)
+			_pose("ForearmL", Vector3(-0.6, 0, 0), w)
+			_pose("UpperArmR", Vector3(0.1, 0, -0.15), w)
+			_pose("ForearmR", Vector3(-0.1, 0, 0), w)
+			spine.rotation.x = lerpf(spine.rotation.x, 0.0, w)
+			head.rotation.y = lerpf(head.rotation.y, 1.2, w)
+			head.rotation.x += -0.1 * w * add
+		"curl_side":  # on its right side, curled up round the hurt, knees drawn in, arms wrapped over the belly
+			y = 0.2 * y / 0.95
+			hips.rotation = hips.rotation.lerp(Vector3(0, 0, 1.45), w)
+			for k in ["L", "R"]:
+				_pose("Thigh" + k, Vector3(-1.1 if k == "L" else -0.8, 0, 0.0), w)
+				_pose("Shin" + k, Vector3(1.4 if k == "L" else 1.2, 0, 0), w)
+				_pose("Foot" + k, Vector3(0.3, 0, 0), w)
+				_pose("UpperArm" + k, Vector3(-0.5, 0, -0.2 if k == "L" else 0.2), w)
+				_pose("Forearm" + k, Vector3(-1.6, 0, 0), w)
+			spine.rotation = spine.rotation.lerp(Vector3(0.5 + heave, 0, 0), w)
+			head.rotation.z = lerpf(head.rotation.z, -0.35, w)
+			head.rotation.x += 0.2 * w * add
 	hips.position.y = lerpf(hips.position.y, y, w)

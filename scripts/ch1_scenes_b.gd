@@ -50,6 +50,106 @@ func _alex_near(target: Vector3, dist: float) -> Vector3:
 	return d.near(target, dist)
 
 
+func drop_held(item: Node3D, floor_y: float, spin := 1.0) -> void:
+	## Whatever a hand held falls out of it: tumbles to the floor, bounces once and lies there. Not awaited.
+	if not is_instance_valid(item):
+		return
+	var at := item.global_transform
+	item.get_parent().remove_child(item)
+	d.add_child(item)
+	item.global_transform = at
+	var land := Vector3(at.origin.x, floor_y + 0.03, at.origin.z)
+	var tw := item.create_tween()
+	tw.tween_property(item, "global_position", land, 0.42).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tw.parallel().tween_property(item, "rotation", Vector3(PI / 2.0 * spin, item.rotation.y + 1.3 * spin, 0.2), 0.42)
+	tw.tween_property(item, "global_position:y", floor_y + 0.09, 0.1).set_ease(Tween.EASE_OUT)
+	tw.tween_property(item, "global_position:y", floor_y + 0.03, 0.12).set_ease(Tween.EASE_IN)
+	d.get_tree().create_timer(0.42).timeout.connect(func() -> void: Snd.sfx("thud", land, -6.0, 1.5))
+
+
+const GROUND_POSES := ["flat_back", "propped_back", "prone", "crawl", "curl_side", "face_down"]  ## HumanoidAnim down poses lying flat
+
+
+func go_down(e: Enemy, shot: Callable, fall: Array, held: Node3D = null) -> void:
+	## A beaten boss goes down as a scene, not a switch: the last blow throws him back off Alex, what he fought
+	## with falls out of his hand, then `fall` plays beat by beat: each a HumanoidAnim down pose (a knee giving,
+	## crashing onto his back, face down, curled up...) or "push_up" (he shoves himself halfway up and it goes out
+	## from under him). The last beat is where he settles, facing Alex. `shot` is the chapter's camera cut (d.shot
+	## or the interior-safe one). ~1 s a beat; the spare / kill scene picks up from here.
+	var a := _anim(e)
+	var m: Node3D = e.get_node("Model")
+	var o := e.global_position
+	var foe := d.player.global_position
+	var away := Vector3(o.x - foe.x, 0.0, o.z - foe.z)
+	away = away.normalized() if away.length() > 0.2 else -m.global_basis.z
+	var side := away.cross(Vector3.UP)
+	_face_node(e, foe)
+	# the blow lands: he reels back off it, arms flung out
+	a.crouching = false
+	a.down_pose = ""
+	a.speed = 0.0
+	a.flinch = 1.0
+	a.gesture = "stagger"
+	Snd.sfx("melee_hit", o + Vector3.UP * 1.2, 0.0, 0.8)
+	var reel := 1.6 if fall[0] in GROUND_POSES else 1.1  # straight off his feet: thrown further
+	var p := d.clear_walk(o, o + away * reel)
+	shot.call(o - away * 2.4 + side * 1.6 + Vector3.UP * 1.25, o + away * 0.6 + Vector3.UP * 1.3,
+		o - away * 2.1 + side * 1.9 + Vector3.UP * 1.05, 1.4)
+	var tw := e.create_tween()
+	tw.tween_property(e, "global_position", p, 0.6).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	if held:
+		d.get_tree().create_timer(0.3).timeout.connect(drop_held.bind(held, o.y))
+	await d.wait(0.6 if fall[0] in GROUND_POSES else 0.75)
+	a.gesture = ""
+	var low := false  # the last beat's pose was on the ground: the next cut stays low
+	for i in fall.size():
+		var beat: String = fall[i]
+		var last := i == fall.size() - 1
+		if beat == "push_up":  # shoves himself up off the ground... and it goes out from under him
+			a.gesture = "push_up"
+			a.crouch_rate = 1.1
+			a.crouching = false
+			await d.wait(0.6)
+			a.gesture = ""
+			continue
+		var flat: bool = beat in GROUND_POSES
+		var harder := flat and not low  # hitting the ground, not shifting on it
+		a.crouch_rate = (4.0 if i == 0 else 6.0) if harder else (6.0 if i == 0 else 3.0)  # (off his feet: a fall, not a pop)
+		a.crouching = true
+		a.down_pose = beat
+		if harder or i == 0 or fall[i - 1] == "push_up":
+			Snd.sfx("thud", p, -1.0 if harder else -4.0, 0.6 if harder else 0.7)
+		# alternate the cut: low in front from Alex's side, then across from the side; flat on the ground the camera
+		# drops to the floor and pulls back to take in the whole body
+		var h := 0.35 if flat else 0.6
+		if i % 2 == 0:
+			shot.call(p - away * (2.3 if flat else 1.7) + side * 0.9 + Vector3.UP * h, p + Vector3.UP * (0.3 if flat else 0.8),
+				p - away * (2.0 if flat else 1.5) + side * 0.6 + Vector3.UP * (h + 0.1), 2.0)
+		else:
+			shot.call(p + side * (2.6 if flat else 2.2) + Vector3.UP * (h + 0.2), p + Vector3.UP * (0.25 if flat else 0.5),
+				p + side * (2.3 if flat else 2.0) - away * 0.4 + Vector3.UP * (h + 0.4), 2.2)
+		low = flat
+		if last:  # the breath comes back; he settles, and his head comes up to Alex
+			await d.wait(0.6)
+			a.crouch_rate = 5.0
+			a.look = Vector2(0, -0.3)
+			await d.wait(0.9)
+		else:
+			await d.wait(1.25 if harder else 1.0)
+
+
+func get_up(e: Enemy) -> void:
+	## A spared boss gets back on his feet: from the ground he rolls onto a knee first, then stands, slowly.
+	var a := _anim(e)
+	if a.down_pose in GROUND_POSES or a.down_pose in ["sit_back", "sprawl_sit", "heels"]:
+		a.down_pose = "one_knee"
+		await d.wait(0.7)
+	a.crouch_rate = 1.6
+	a.crouching = false
+	await d.wait(0.5)
+	a.crouch_rate = 5.0
+
+
 # ------------------------------------------------------------------ M3 the square
 
 func grady_talk(grady: Actor) -> void:
@@ -253,19 +353,25 @@ func boss_phase2(owen: Enemy) -> void:
 
 
 func boss_down(owen: Enemy) -> void:
-	## Owen is on his knees (Enemy.State.DOWN). The spare / kill prompt appears after this.
+	## Owen's bar is empty (Enemy.State.DOWN): thrown on his back, he props himself up, gets a knee under him, tries
+	## to stand, and ends sat on the ground. The spare / kill prompt appears after this.
 	var a := _anim(owen)
 	owen.set_physics_process(false)  # frozen for the scene: an arrow / flare still in the air can't kill him
 	d.cinematic(true)
+	await go_down(owen, d.shot, ["flat_back", "propped_back", "one_knee", "push_up", "sprawl_sit"])
 	var o := owen.global_position
 	var from := _alex_near(o, 2.6)
 	_face_node(owen, from)
 	d.shot(Vector3(from.x, 1.9, from.z), o + Vector3.UP * 0.8, Vector3(from.x, 1.6, from.z).lerp(o, 0.2), 3.0)
 	a.gesture = "slump"
 	await hud.subtitle("Owen", "Go on. Do it.", 2.0)
+	# chin up at Alex, daring him; then the fight goes out of his shoulders
 	a.gesture = ""
-	a.look = Vector2(0, -0.3)
+	a.look = Vector2(0, -0.35)
+	var f := (from - o).normalized()
+	d.shot(o + f * 1.1 + f.cross(Vector3.UP) * 0.4 + Vector3.UP * 1.0, o + Vector3.UP * 1.05)
 	await hud.subtitle("Owen", "Everyone else did.", 2.0)
+	a.gesture = "slump"
 	a.look = Vector2.ZERO
 	owen.set_physics_process(true)
 	d.cinematic(false)
@@ -319,7 +425,7 @@ func owen_spared(owen: Enemy, with_lantern: bool) -> void:
 	# Owen gets up and walks back into the dark of the sawmill
 	a.gesture = ""
 	a.look = Vector2.ZERO
-	a.crouching = false
+	await get_up(owen)
 	owen.set_physics_process(false)
 	owen.collision_layer = 0
 	d.shot(o + side * 2.6 + Vector3.UP * 1.2, o + Vector3.UP * 0.8)

@@ -125,6 +125,10 @@ const SENSE_STEP := 0.2  ## s between looks (can_see_player)
 const THROW_TIME := 0.9
 const PACE_CAP := 5.3  ## m/s: a raging chaser stays just under Alex's sprint (escape costs stamina)
 const DOWN_POSES := ["kneel", "one_knee", "hands_ground", "sit_back", "side"]
+## Killed while already lying down (HumanoidAnim down poses): it stays the way it lies. Sat or kneeling, it falls by
+## the shot instead (_fall): over backwards from the front, onto its face from behind.
+const DEAD_POSES := {"propped_back": "flat_back", "flat_back": "flat_back", "curl_side": "curl_side",
+	"prone": "face_down", "crawl": "face_down", "face_down": "face_down"}
 const HABIT_NOTES := {
 	"dodge": "They've learned you roll on cue. They'll hold their strikes, and follow up.",
 	"ranged": "They've learned you shoot from afar. They weave in and dive out of your aim.",
@@ -943,7 +947,9 @@ func hit(dmg: float, point: Vector3, flare := false) -> void:
 	if not is_physics_processing():
 		return  # frozen for a cutscene: fire / stray shots can't down a boss mid-scene
 	if state == State.DOWN:
-		kill()  # shooting a kneeling boss is the KILL choice
+		if _player:  # (the death falls away from the shot)
+			_hit_from = (_player.global_position - global_position).normalized()
+		kill()  # shooting a beaten boss is the KILL choice
 		return
 	if state == State.DEAD:
 		return
@@ -989,7 +995,11 @@ func _take(dmg: float) -> void:
 			_end_call(false)  # lit for the spare / kill scene
 			_anim.attack = -1.0
 			_anim.down_pose = DOWN_POSES.pick_random()  # beaten, but never twice the same way for sure
-			_anim.crouching = true
+			# the last blow throws it back on its feet first, this very frame; the boss's down scene
+			# (Ch1ScenesB.go_down, on `downed`) carries the fall on from here
+			_anim.crouching = false
+			_anim.gesture = "stagger"
+			_anim.flinch = 1.0
 			_anim.aim = 0.0
 			downed.emit(self)
 		else:
@@ -1083,6 +1093,7 @@ func kill() -> void:
 	_anim.aim = 0.0
 	_anim.speed = 0.0
 	_anim.look = Vector2.ZERO
+	_anim.gesture = ""
 	_fall(was_down)
 	if drop.is_valid():
 		drop.call(global_position)
@@ -1092,17 +1103,33 @@ func kill() -> void:
 
 func _fall(was_down: bool) -> void:
 	## The body goes down away from the killing blow (blown back, pitched forward, spun to the side) or folds
-	## at the knees first, never quite the same twice. A kneeling boss topples from its kneel.
-	var from := _model.global_basis.inverse() * _hit_from  # model space: +z = the blow came from in front
-	var kind: String
-	if was_down:
-		kind = {"sit_back": "back", "hands_ground": "front"}.get(_anim.down_pose, ["back", "side", "front"].pick_random())
-	else:
-		var r := randf()
-		kind = "crumple" if r < 0.25 else ("side" if r < 0.45 else ("back" if from.z >= 0.0 else "front"))
-		_anim.crouching = false
-	var side := signf(from.x) if absf(from.x) > 0.2 else (1.0 if randf() < 0.5 else -1.0)
+	## at the knees first, never quite the same twice. A downed boss goes limp from its pose (DEAD_POSES).
 	var tw := create_tween()
+	if was_down:  # beaten already: the shot rocks it, then it's thrown back off it and goes down for good
+		var from_down := _model.global_basis.inverse() * _hit_from
+		var dead: String = DEAD_POSES.get(_anim.down_pose, "")
+		if dead == "":  # sat / kneeling: shot from the front it goes over backwards, from behind onto its face
+			dead = "flat_back" if from_down.z > -0.3 else "face_down"
+		var away := Vector3(-_hit_from.x, 0.0, -_hit_from.z)
+		away = away.normalized() * 0.5 if away.length() > 0.1 else Vector3.ZERO
+		_anim.crouching = true  # (kill's _cancel_moves stands a DEAD body up)
+		_anim.gesture = "stagger"  # chest thrown back, arms flung out by the impact
+		_anim.flinch = 1.0
+		tw.tween_interval(0.18)
+		tw.tween_callback(func() -> void:
+			_anim.gesture = ""
+			_anim.down_pose = dead)
+		tw.tween_property(self, "global_position", global_position + away, 0.5) \
+				.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)  # slid back as it falls
+		tw.tween_callback(func() -> void: Snd.sfx("thud", global_position, -2.0, 0.65))
+		tw.tween_interval(0.9)  # the last breath goes out of it
+		tw.tween_callback(func() -> void: _anim.set_process(false))
+		return
+	var from := _model.global_basis.inverse() * _hit_from  # model space: +z = the blow came from in front
+	var r := randf()
+	var kind := "crumple" if r < 0.25 else ("side" if r < 0.45 else ("back" if from.z >= 0.0 else "front"))
+	_anim.crouching = false
+	var side := signf(from.x) if absf(from.x) > 0.2 else (1.0 if randf() < 0.5 else -1.0)
 	if kind == "crumple":  # knees give first, then the rest pitches over
 		_anim.down_pose = ["kneel", "hands_ground"].pick_random()
 		_anim.crouching = true

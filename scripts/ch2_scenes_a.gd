@@ -148,7 +148,7 @@ func moth_intro() -> void:
 	hud.clock("09:00")
 	var walk := alex.walk_to(DOCK_STAND, 1.5)
 	d.track(alex, Vector3(2.4, 1.5, -1.8), Vector3(0, 1.3, 0))
-	await hud.subtitle("", "A yellow rain jacket at the end of the dock.", 2.6)
+	await d.wait(2.6)  # (the yellow jacket at the end of the dock, in the fog ahead of him)
 	# her face; Alex coming up behind her
 	d.shot(Vector3(-13.2, 1.6, 115.7), Vector3(-10.5, 1.55, 116.4))
 	await hud.subtitle("Elena", "You came alone. Good.", 2.2)
@@ -164,19 +164,23 @@ func moth_intro() -> void:
 	await c1b._talk(alex, elena, "Alex", "You left the note. And the eye on my door?", -1.0, 2.6)
 	elena.gesture("shake_head", 1.2)
 	await c1b._talk(elena, alex, "Elena", "The note was me. The eye was Owen.", 1.0, 2.4)
-	# the bandage comes off: the same brand
+	# the bandage comes off her hand and drops on the boards: under it, the same brand, years old
+	var brand := BrandMark.wear(elena.model)
+	if brand:
+		brand.visible = false  # (an old scar: heat 0)
 	var bandage := c1a._prop(elena.model, "HandR", Vector3(0.09, 0.05, 0.12), BANDAGE, Vector3(0, -0.08, 0.02), "bandage")
 	elena.gesture("give")
 	await d.wait(0.5)
 	c1a._hand_shot(elena)
-	await hud.subtitle("", "She unwinds the bandage.", 1.6)
-	bandage.queue_free()
-	var brand := c1a._light(c1a._hand(elena).global_position + Vector3(0, 0.15, 0), Color(1.0, 0.4, 0.1), 0.7, 0.7, true)
+	await d.wait(0.6)
+	c1b.drop_held(bandage, elena.global_position.y)
+	if brand:
+		brand.visible = true
+	await d.wait(1.0)
 	await hud.subtitle("Alex", "The same mark.", 1.6)
 	alex.gesture("clutch_hand", 2.0)
 	_face_cam(elena)
 	await hud.subtitle("Elena", "I'm one of them.", 1.8)
-	brand.queue_free()
 	elena.gesture("")
 	d.ots(elena, alex, 1.0)
 	await hud.subtitle("Elena", "I'm also the only one who wants them gone.", 2.6)
@@ -301,7 +305,10 @@ func radio_room() -> void:
 	var close := func() -> void: _shot(radio - f * 0.5 + side * 0.45 + Vector3.UP * 0.3, radio)
 	close.call()
 	await hud.subtitle("Radio", "Kshhh… channel seven…", 1.8)
-	await hud.subtitle("", "A recording, hidden under the static.", 2.2)
+	# she rides the dial; a voice comes up out of the hiss
+	elena.gesture("reach", 1.4)
+	Snd.sfx("radio_tune", radio, -6.0)
+	await d.wait(1.6)
 	_shot(p - f * 1.6 - side * 0.8 + Vector3.UP * 1.7, radio)  # both of them, leaning in
 	elena.gesture("arms_crossed")
 	await hud.subtitle("Elena", "\"Night of the Lanterns. Three years on.\"", 2.4)
@@ -443,7 +450,8 @@ func power_cut() -> void:
 	var tw := alex.create_tween()
 	tw.tween_property(alex, "global_position", alex.global_position + Vector3.DOWN * 0.15, 0.2)
 	tw.tween_property(alex, "global_position", alex.global_position, 0.3)
-	await hud.subtitle("", "CLUNK.", 1.0)
+	Snd.sfx("thud", lever, 0.0, 0.9)
+	await d.wait(1.0)
 	spark.queue_free()
 	alex.gesture("")
 	d.lights_out(SCHOOL, 40.0, 45.0)
@@ -472,7 +480,6 @@ func drawing_found() -> void:
 		await d.wait(0.5)
 	c1a._read_shot(alex)
 	hud.banner("LILY'S DRAWING", Color(1.0, 0.85, 0.5), 1.5)
-	await hud.subtitle("", "Crayon: a lighthouse, a boat, two stick figures holding hands.", 3.0)
 	await hud.subtitle("", "\"ME AND MOMMY. LILY, 6.\"", 2.2)
 	_face_cam(alex)
 	alex.look(paper)
@@ -534,7 +541,7 @@ func nora_intro(nora: Enemy) -> void:
 	# the dark corridor, a shape at the far end
 	_shot(alex.global_position - to_alex * 1.2 + side * 0.6 + Vector3.UP * 1.8, o + Vector3.UP * 1.1,
 		alex.global_position - to_alex * 0.6 + side * 0.5 + Vector3.UP * 1.7, 5.0)
-	await hud.subtitle("", "The corridor. Pitch dark.", 2.0)
+	await d.wait(2.0)
 	reveal.call(1.4)
 	a.gesture = "look_around"
 	await hud.subtitle("Nora", "Lily? The lights went out, baby.", 2.4)
@@ -634,13 +641,21 @@ func nora_down(nora: Enemy) -> void:
 	var a := c1b._anim(nora)
 	d.cinematic(true)
 	var frozen := _freeze()
+	await c1b.go_down(nora, _shot, ["kneel", "hands_ground", "prone"])
 	var o := nora.global_position
 	var from := c1b._alex_near(o, 2.6)
-	_shot(Vector3(from.x, 1.9, from.z), o + Vector3.UP * 0.8, Vector3(from.x, 1.6, from.z).lerp(o, 0.2), 3.0)
-	a.gesture = "slump"
+	# face down, she drags herself round toward the dark corridor and reaches into it, for someone only she can hear
+	var dark := o + (o - from).normalized().rotated(Vector3.UP, 0.6) * 4.0
+	c1b._face_node(nora, dark)
+	Snd.sfx("musicbox", dark + Vector3.UP, -14.0, 0.8)
+	_shot(o + (from - o).normalized() * 1.6 + Vector3.UP * 0.6, dark + Vector3.UP * 0.6, Vector3.INF, 3.0)
+	a.down_pose = "crawl"
 	await hud.subtitle("Nora", "Lily… Mommy's tired.", 2.0)
+	# the hand falls; she sits back on her heels, covers her face, then turns back to him
+	a.down_pose = "heels"
 	a.gesture = "hand_to_face"
 	c1b._face_node(nora, from)
+	_shot(Vector3(from.x, 1.9, from.z), o + Vector3.UP * 0.8, Vector3(from.x, 1.6, from.z).lerp(o, 0.2), 3.0)
 	await hud.subtitle("Nora", "I only wanted to find her.", 2.2)
 	a.gesture = ""
 	a.look = Vector2(0, -0.3)
@@ -675,7 +690,10 @@ func nora_spared(nora: Enemy, with_drawing: bool) -> void:
 		_shot(o + side * 1.4 + Vector3.UP * 1.0, o + Vector3.UP * 0.9)
 		a.gesture = "slump"
 		await hud.subtitle("Nora", "Her lighthouse. She drew it the day before.", 2.6)
-		await hud.subtitle("", "The scissors slip from her fingers.", 2.0)
+		# her other hand opens: the scissors hit the floor
+		_shot(o + side * 1.0 + Vector3.UP * 0.5, o + Vector3.UP * 0.35)
+		Snd.sfx("pick_snap", o + Vector3.UP * 0.3, -2.0, 0.8)
+		await d.wait(1.4)
 		a.gesture = "hand_to_face"
 		await c1b._talk(nora, alex, "Nora", "She's gone. She's really gone.", 1.0, 2.4)
 		alex.gesture("nod", 1.2)
@@ -694,7 +712,7 @@ func nora_spared(nora: Enemy, with_drawing: bool) -> void:
 	# she gets up and walks off into the dark of the school
 	a.gesture = ""
 	a.look = Vector2.ZERO
-	a.crouching = false
+	await c1b.get_up(nora)
 	nora.set_physics_process(false)
 	nora.collision_layer = 0
 	_shot(o + side * 2.6 + Vector3.UP * 1.2, o + Vector3.UP * 0.8)
@@ -729,7 +747,11 @@ func nora_killed(nora: Enemy) -> void:
 	d.ots(alex, nora, 1.0)
 	alex.gesture("slump")
 	await d.wait(1.4)
-	await hud.subtitle("", "Somewhere in the school, a music box winds down. And stops.", 3.0)
+	# somewhere in the school a music box winds down, slower, and stops
+	Snd.sfx("musicbox", null, -6.0, 0.8)
+	await d.wait(1.5)
+	Snd.sfx("musicbox", null, -9.0, 0.55)
+	await d.wait(1.6)
 	alex.gesture("hand_to_face")
 	_face_cam(alex)
 	await hud.subtitle("Alex", "Two of them now." if d.flags.owen == "killed" else "What did I just do.", 1.8)
