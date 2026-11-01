@@ -2288,6 +2288,8 @@ def main():
 
     def build(fn):
         m = fn()
+        if m.name.startswith("char_"):  # the shipped characters come from tools/psx_chars.py: never overwrite them
+            return
         if m.name in placed:
             floors[m.name] = _floor_rects(m)
         moved = unfight(m) if not m.name.startswith("char_") else 0
