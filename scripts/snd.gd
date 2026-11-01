@@ -49,7 +49,9 @@ static func attach(parent: Node3D, name: String, volume_db := 0.0) -> Node:
 	return a.attach(parent, name, volume_db) if a else null
 
 
-static func stop(player: Node) -> void:
+static func stop(player: Variant) -> void:  ## untyped: callers may hand in an already-freed player
+	if not is_instance_valid(player):
+		return
 	var a := _a()
 	if a:
 		a.stop(player)

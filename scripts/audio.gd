@@ -1,6 +1,7 @@
 extends Node
-## Autoload "Audio": music, sound effects and character voices. Every sound is synthesized by tools/make_audio.py
-## into res://audio/ (music_*.wav, sfx_*.wav, voice_<who>_<0-7>.wav). Buses Master > Music / SFX / Voice are made here.
+## Autoload "Audio": music, sound effects and character voices, in res://audio/: CC0 recordings from tools/import_sfx.py
+## (steps, doors, guns, engines... credits in audio/CREDITS.md), the rest synthesized by tools/make_audio.py
+## (music_*.ogg, sfx_*.wav, voice_<who>_<0-7>.wav). Buses Master > Music / SFX / Voice are made here.
 ##   Audio.music("explore", 2.0)    crossfade to a loop ("menu" "explore" "chase" "safe" "melancholy" "boss"); "" stops
 ##   Audio.threat(true, enemy)      chase music while any source hunts the player; back to the base track after
 ##   Audio.push_music("boss") / pop_music()   a track over everything else (cinematics, boss bars) and back
@@ -9,7 +10,7 @@ extends Node
 ## Headless runs (tests) never touch the audio server: calls only record `music_name` / `last_sfx` / `last_voice`.
 
 const DIR := "res://audio/"
-const LOOPS := ["generator", "harvester", "radio_static", "hiss"]
+const LOOPS := ["generator", "harvester", "radio_static", "hiss", "car_engine"]
 const VOICES := ["alex", "elena", "marcus", "owen", "nora", "julian", "shepherd", "lucia", "tomas", "grady", "silas",
 	"tom", "pa", "radio", "patient", "marked", "boss", "moth"]
 const ALIAS := {"dispatch": "radio", "marked one": "marked", "lucía": "lucia", "tomás": "tomas"}
@@ -75,6 +76,13 @@ func _stream(name: String, loop := false) -> AudioStream:
 	var key := name + ("#loop" if loop else "")
 	if _cache.has(key):
 		return _cache[key]
+	if ResourceLoader.exists(DIR + name + ".ogg"):  # the music (recordings, tools/import_sfx.py)
+		var o: AudioStreamOggVorbis = load(DIR + name + ".ogg")
+		if loop:
+			o = o.duplicate()
+			o.loop = true
+		_cache[key] = o
+		return o
 	var path := DIR + name + ".wav"
 	var s: AudioStreamWAV = null
 	if ResourceLoader.exists(path):
@@ -90,7 +98,7 @@ func _stream(name: String, loop := false) -> AudioStream:
 		s = s.duplicate()
 		s.loop_mode = AudioStreamWAV.LOOP_FORWARD
 		s.loop_begin = 0
-		s.loop_end = s.data.size() / 2
+		s.loop_end = int(s.get_length() * s.mix_rate)  # in frames (data is QOA-compressed once imported: not size / 2)
 	_cache[key] = s
 	return s
 
@@ -260,7 +268,7 @@ const CAPTIONS := [  ## sound captions in the story ("BONG.", "Click.", "Kshhh�
 	["click", "pick_set", 0.0, 1.0, 0.0], ["tsss", "hiss", -4.0, 1.0, 1.4], ["kshhh", "radio_tune", -6.0, 1.0, 1.3],
 	["bell rings", "bell", 0.0, 1.0, 0.0], ["doors bang", "door_slam", 0.0, 1.0, 0.0],
 	["music box", "musicbox", 0.0, 0.8, 0.0], ["pencil ticks", "pick_set", -4.0, 0.9, 0.0],
-	["gate grinds", "scrape", -2.0, 1.0, 0.0], ["car stalls", "scrape", -3.0, 0.7, 0.0], ["valve", "scrape", -4.0, 1.3, 0.0],
+	["gate grinds", "scrape", -2.0, 1.0, 0.0], ["car stalls", "car_stall", 0.0, 1.0, 0.0], ["valve", "scrape", -4.0, 1.3, 0.0],
 	["scissors slip", "pick_snap", -2.0, 0.8, 0.0], ["footsteps", "step_concrete", -2.0, 0.8, 0.0],
 	["cage swings", "door_open", -2.0, 0.8, 0.0], ["skulls scatter", "glass", -4.0, 0.5, 0.0],
 	["lantern gutters", "hiss", -10.0, 1.4, 0.7], ["rolls out of his hand", "thud", -2.0, 1.0, 0.0],

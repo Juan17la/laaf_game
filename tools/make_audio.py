@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Procedural audio for LAAF: every sample is synthesized here (stdlib only), nothing is sampled or downloaded.
+"""Procedural audio for LAAF: voices and the creature / radio / stinger sfx are synthesized here (stdlib only).
+The music and the everyday sfx (steps, doors, guns, engines...) are CC0 recordings from tools/import_sfx.py; this
+skips those names.
 Writes 16-bit mono 22.05 kHz .wav files into res://audio/ (music_*, sfx_*, voice_*).
     python3 tools/make_audio.py            # everything
     python3 tools/make_audio.py music      # only names starting with the prefix / containing the word
@@ -843,26 +845,39 @@ def sfx_ladder_thud(rng): return thump(110, 70, 0.1, 1.0)
 # ------------------------------------------------------------------ voices
 
 VOWELS = {"a": (730, 1090, 2440), "e": (530, 1840, 2480), "i": (300, 2200, 3000), "o": (450, 800, 2500), "u": (320, 800, 2400)}
-# f0 Hz, formant scale, roughness 0..1, breath 0..1, vibrato Hz-depth, style, syllable seconds
+# f0 Hz, formant scale, roughness 0..1, breath 0..1, vibrato Hz-depth, style, syllable seconds; the timbre that tells
+# them apart: src the glottal source (saw: chesty buzz, pulse: reedy / nasal with width pw, soft: round triangle,
+# fm: hollow and glassy), tilt the brightness (a last low-pass, Hz), dry how much plain source rides over the vowel
+# filters (more: a clearer blip, less: a murkier mumble). Intonation is played on top (scripts/audio.gd TONE).
 PROFILES = {
-    "alex": dict(f0=122, fs=1.0, rough=0.12, breath=0.1, vib=0.01, style="", syl=0.095),
-    "elena": dict(f0=208, fs=1.17, rough=0.05, breath=0.22, vib=0.012, style="", syl=0.1),
-    "marcus": dict(f0=92, fs=0.9, rough=0.4, breath=0.1, vib=0.006, style="", syl=0.12),
-    "owen": dict(f0=108, fs=0.95, rough=0.15, breath=0.28, vib=0.004, style="", syl=0.11),
-    "nora": dict(f0=238, fs=1.2, rough=0.03, breath=0.3, vib=0.02, style="", syl=0.13),
-    "julian": dict(f0=138, fs=1.02, rough=0.02, breath=0.05, vib=0.0, style="mono", syl=0.085),
-    "shepherd": dict(f0=78, fs=0.86, rough=0.25, breath=0.1, vib=0.004, style="radio_dark", syl=0.14),
-    "lucia": dict(f0=265, fs=1.27, rough=0.05, breath=0.15, vib=0.01, style="", syl=0.09),
-    "tomas": dict(f0=310, fs=1.38, rough=0.05, breath=0.2, vib=0.008, style="", syl=0.085),
-    "grady": dict(f0=84, fs=0.9, rough=0.6, breath=0.15, vib=0.005, style="", syl=0.12),
-    "silas": dict(f0=150, fs=1.0, rough=0.3, breath=0.3, vib=0.03, style="slur", syl=0.14),
-    "tom": dict(f0=112, fs=0.97, rough=0.35, breath=0.1, vib=0.006, style="", syl=0.12),
-    "pa": dict(f0=190, fs=1.1, rough=0.05, breath=0.1, vib=0.0, style="pa", syl=0.11),
-    "radio": dict(f0=150, fs=1.05, rough=0.05, breath=0.1, vib=0.0, style="radio", syl=0.095),
-    "patient": dict(f0=170, fs=1.08, rough=0.3, breath=0.65, vib=0.03, style="", syl=0.15),
-    "moth": dict(f0=208, fs=1.17, rough=0.05, breath=0.22, vib=0.012, style="radio", syl=0.1),  # Elena over the radio
-    "marked": dict(f0=62, fs=0.8, rough=0.8, breath=0.3, vib=0.01, style="growl", syl=0.16),
-    "boss": dict(f0=46, fs=0.72, rough=0.9, breath=0.2, vib=0.004, style="growl", syl=0.18),
+    "alex": dict(f0=122, fs=1.0, rough=0.12, breath=0.1, vib=0.01, style="", syl=0.095, src="saw", tilt=3200, dry=0.15),
+    "elena": dict(f0=208, fs=1.17, rough=0.05, breath=0.22, vib=0.012, style="", syl=0.1, src="soft", tilt=3800, dry=0.3),
+    "marcus": dict(f0=92, fs=0.9, rough=0.4, breath=0.1, vib=0.006, style="", syl=0.12, src="saw", tilt=2200, dry=0.3),
+    "owen": dict(f0=108, fs=0.95, rough=0.15, breath=0.28, vib=0.004, style="", syl=0.11, src="pulse", pw=0.3, tilt=2600,
+                 dry=0.1),
+    "nora": dict(f0=238, fs=1.2, rough=0.03, breath=0.3, vib=0.03, style="", syl=0.13, src="soft", tilt=4500, dry=0.35),
+    "julian": dict(f0=138, fs=1.02, rough=0.02, breath=0.05, vib=0.0, style="mono", syl=0.085, src="fm", tilt=4200,
+                   dry=0.4),
+    "shepherd": dict(f0=78, fs=0.86, rough=0.25, breath=0.1, vib=0.004, style="radio_dark", syl=0.14, src="saw",
+                     tilt=3000, dry=0.1),
+    "lucia": dict(f0=265, fs=1.27, rough=0.05, breath=0.15, vib=0.01, style="", syl=0.09, src="pulse", pw=0.18, tilt=4800,
+                  dry=0.2),
+    "tomas": dict(f0=310, fs=1.38, rough=0.05, breath=0.2, vib=0.008, style="", syl=0.075, src="soft", tilt=5000, dry=0.4),
+    "grady": dict(f0=84, fs=0.9, rough=0.6, breath=0.15, vib=0.005, style="", syl=0.12, src="saw", tilt=1700, dry=0.2),
+    "silas": dict(f0=150, fs=1.0, rough=0.3, breath=0.3, vib=0.03, style="slur", syl=0.14, src="pulse", pw=0.42,
+                  tilt=2400, dry=0.15),
+    "tom": dict(f0=112, fs=0.97, rough=0.35, breath=0.1, vib=0.006, style="", syl=0.12, src="pulse", pw=0.36, tilt=2900,
+                dry=0.2),
+    "pa": dict(f0=190, fs=1.1, rough=0.05, breath=0.1, vib=0.0, style="pa", syl=0.11, src="fm", tilt=3500, dry=0.2),
+    "radio": dict(f0=150, fs=1.05, rough=0.05, breath=0.1, vib=0.0, style="radio", syl=0.095, src="pulse", pw=0.25,
+                  tilt=3500, dry=0.15),
+    "patient": dict(f0=170, fs=1.08, rough=0.3, breath=0.65, vib=0.03, style="", syl=0.15, src="soft", tilt=2600,
+                    dry=0.1),
+    "moth": dict(f0=208, fs=1.17, rough=0.05, breath=0.22, vib=0.012, style="radio", syl=0.1, src="soft", tilt=3800,
+                 dry=0.3),  # Elena over the radio
+    "marked": dict(f0=62, fs=0.8, rough=0.8, breath=0.3, vib=0.01, style="growl", syl=0.16, src="saw", tilt=2000,
+                   dry=0.1),
+    "boss": dict(f0=46, fs=0.72, rough=0.9, breath=0.2, vib=0.004, style="growl", syl=0.18, src="saw", tilt=1800, dry=0.1),
 }
 
 
@@ -881,13 +896,24 @@ def voice_clip(p, vowel, rng, dur=None, f0_mul=1.0, contour=0.0, rough=None, con
         if int(ph) != int(prev):
             amp_j = 1 - rough * 0.6 * rng.random()
         ph -= math.floor(ph)
-        src.append((2 * ph - 1) * amp_j)
+        kind = p["src"]
+        if kind == "pulse":
+            v = 1.0 - 2 * p["pw"] if ph < p["pw"] else -2 * p["pw"]  # (no DC whatever the width)
+        elif kind == "soft":
+            v = 4 * abs(ph - 0.5) - 1 + 0.25 * math.sin(2 * TAU * ph)
+        elif kind == "fm":
+            v = math.sin(TAU * ph + 1.4 * math.sin(2 * TAU * ph))
+        else:
+            v = 2 * ph - 1
+        src.append(v * amp_j)
     src = lp(src, 5000)
     src = [s + p["breath"] * 0.5 * rng.uniform(-1, 1) for s in src]
     fm = VOWELS[vowel]
     y = zeros(n)
     for k, (fr, g, qq) in enumerate(zip(fm, (1.0, 0.6, 0.25), (7, 9, 11))):
         add(y, bp(src, min(fr * p["fs"] * rng.uniform(0.97, 1.03), SR * 0.45), qq), 0, g)
+    add(y, src, 0, p["dry"] * peak(y) / max(peak(src), 1e-9))
+    y = lp(y, p["tilt"])
     if p["style"] == "growl":
         y = mul(y, [0.5 + 0.5 * math.sin(TAU * 38 * i / SR) for i in range(n)])
         y = mix(y, scale(osc("saw", [v * 0.5 for v in f], n), 0.25))
@@ -962,12 +988,24 @@ def voice_set(name):
 
 # ------------------------------------------------------------------ build
 
+def import_sfx_names(var):
+    """The sfx / music tools/import_sfx.py makes from recordings (read from its source: it needs numpy, this doesn't)."""
+    import ast
+    src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "import_sfx.py")).read()
+    for node in ast.parse(src).body:
+        if isinstance(node, ast.Assign) and getattr(node.targets[0], "id", "") == var:
+            return list(ast.literal_eval(node.value))
+    return []
+
+
 def build():
     only = sys.argv[1] if len(sys.argv) > 1 else ""
     jobs = {}
 
+    recorded = tuple("sfx_" + n for n in import_sfx_names("NAMES")) + tuple("music_" + n for n in import_sfx_names("MUSIC"))
+
     def job(name, fn, level=0.8):
-        if only in name:
+        if only in name and not name.startswith(recorded):  # recorded samples now (tools/import_sfx.py)
             jobs[name] = (fn, level)
 
     # music (-3 dB so they sit under sfx)
