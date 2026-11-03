@@ -107,7 +107,8 @@ func _pick(name: String) -> AudioStream:
 	var vs: Array = _cache.get("v:" + name, [])
 	if vs.is_empty() and not _cache.has("v:" + name):
 		for i in 8:
-			if ResourceLoader.exists("%ssfx_%s_%d.wav" % [DIR, name, i]) or FileAccess.file_exists("%ssfx_%s_%d.wav" % [DIR, name, i]):
+			var v := "%ssfx_%s_%d" % [DIR, name, i]
+			if ResourceLoader.exists(v + ".wav") or FileAccess.file_exists(v + ".wav") or ResourceLoader.exists(v + ".ogg"):
 				vs.append("sfx_%s_%d" % [name, i])
 		if vs.is_empty():
 			vs.append("sfx_" + name)
@@ -236,9 +237,17 @@ func sfx(name: String, at: Variant = null, volume_db := 0.0, pitch := 1.0, bus :
 		p = p2
 	_live += 1
 	p.tree_exited.connect(func() -> void: _live -= 1)
-	if not (s as AudioStreamWAV).loop_mode == AudioStreamWAV.LOOP_FORWARD:
+	if not _loops(s):
 		p.finished.connect(p.queue_free)
 	return p
+
+
+static func _loops(s: AudioStream) -> bool:
+	## Any format: a .wav loops by its loop mode, an .ogg / .mp3 by its loop flag (a cast to AudioStreamWAV is
+	## null for those, and reading its loop_mode crashed the call).
+	if s is AudioStreamWAV:
+		return (s as AudioStreamWAV).loop_mode != AudioStreamWAV.LOOP_DISABLED
+	return bool(s.get("loop"))
 
 
 func attach(parent: Node3D, name: String, volume_db := 0.0) -> Node:
@@ -322,7 +331,7 @@ func _process(delta: float) -> void:
 	var mus := AudioServer.get_bus_index("Music")
 	var target := _duck - (4.0 if _vtext != "" else 0.0)
 	_vduck = lerpf(_vduck, target, minf(delta * 4.0, 1.0))
-	AudioServer.set_bus_volume_db(mus, -5.0 + _vduck)
+	AudioServer.set_bus_volume_db(mus, Settings.bus_db("music") + _vduck)  # ducked from the player's level, not a fixed one
 	if _vtext == "":
 		return
 	_vt -= delta

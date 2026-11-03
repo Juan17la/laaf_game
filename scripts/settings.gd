@@ -166,9 +166,13 @@ static func apply_audio() -> void:
 		var i := AudioServer.get_bus_index(BUSES[k])
 		if i < 0:
 			continue
-		var v := number("audio/" + k)
-		AudioServer.set_bus_mute(i, v <= 0.001)
-		AudioServer.set_bus_volume_db(i, BUS_DB[BUSES[k]] + linear_to_db(maxf(v, 0.001)))
+		AudioServer.set_bus_mute(i, number("audio/" + k) <= 0.001)
+		AudioServer.set_bus_volume_db(i, bus_db(k))
+
+
+static func bus_db(k: String) -> float:
+	## A bus's volume at the player's setting: its designed level (BUS_DB) × the slider. k: a BUSES key ("music").
+	return BUS_DB[BUSES[k]] + linear_to_db(maxf(number("audio/" + k), 0.001))
 
 
 static func _apply_window() -> void:

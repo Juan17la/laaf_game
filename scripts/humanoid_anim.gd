@@ -45,7 +45,8 @@ var _holding := false  ## this anim drives ik.R for a held item (the player's we
 ## clutch_hand, arms_crossed, shrug, nod, shake_head, lean, cower, raise_weapon, window_press,
 ## hands_up, beckon, look_around, slump, frenzy (a charging attacker: stabbing overhead, clawing, hunched),
 ## stagger (reeling back from a blow), brand (pressing an iron down), daub (painting on a wall at head
-## height), push_up (hands on the knee, trying to stand), cough, reach_out (a dying reach).
+## height), push_up (hands on the knee, trying to stand), cough, reach_out (a dying reach), asleep (lying on the
+## back with the head on a pillow: the chin tucks as the pillow lifts the head).
 ## Blends in/out over ~0.3 s; switching straight from one to another crossfades.
 var gesture := ""
 ## Beaten on the ground (a downed boss), shown while crouching: "kneel", "one_knee", "hands_ground", "sit_back",
@@ -116,6 +117,13 @@ var _air := 0.0  ## 0..1 blend into the airborne pose
 var _lock := {"L": {"on": false, "i": 0, "at": Vector3.ZERO, "corr": Vector3.ZERO, "last": Vector3.INF},
 	"R": {"on": false, "i": 0, "at": Vector3.ZERO, "corr": Vector3.ZERO, "last": Vector3.INF}}
 const SOLE := [Vector3(0, -0.05, -0.07), Vector3(0, -0.05, 0.05), Vector3(0, -0.04, 0.17)]  ## heel, ball, toe
+const FLOOR_REACH := 0.3  ## m (1.78 m rig) a foot's own floor may lie above / below the body's (a kerb, a step, a slope)
+const SOLE_CORNERS := [Vector2(-0.05, -0.07), Vector2(0.05, -0.07), Vector2(-0.05, 0.17), Vector2(0.05, 0.17)]  ## (x, fwd)
+## Each foot's floor, model-space height (eased), found straight under it: the hips come down to the lower one and
+## the other leg bends onto its own, so a foot on the kerb and one on the road both stand on something. 0 where
+## there's no floor to find (no physics world, the model lying down or in the air): the body's own floor.
+var _floor := {"L": 0.0, "R": 0.0}
+var _body: CollisionObject3D  ## the character's own body, never a floor for its feet
 var _atk_t := 0.0  ## the overhead attack's last progress and its fade (1 → 0 once attack is cut to -1)
 var _atk_fade := 0.0
 var _stk_t := 0.0  ## same for strike
@@ -146,6 +154,8 @@ func _ready() -> void:
 		if sk:
 			_skirt[k] = sk
 	_time = randf() * 10.0
+	if model.get_parent() is CollisionObject3D:
+		_body = model.get_parent()
 	var skels := model.find_children("*", "Skeleton3D", true, false)
 	if skels:
 		_skel = skels[0]
@@ -239,6 +249,8 @@ func _process(delta: float) -> void:
 	# rise over the straight stance leg (lowest in double support) and the run its sink through the bent knee, and
 	# keeps a foot from ever sinking into the floor. Running adds the flight between toe-off and heel strike.
 	hips.position.y += (0.035 * flight * k_scale - _sole_low()) * (1.0 - _air)
+	_feel_floor(delta, k_scale)
+	hips.position.y += minf(_floor.L, _floor.R) * (1.0 - _air)  # down to the lower floor (up, if both are higher)
 	_plant_feet(delta, duty, 0.015 * (1.0 - run) * g, 1.0 - _air)
 
 	# spine: the thorax counter-rotates against the pelvis (shoulders turn with the arms), shoulders stay level over
@@ -588,6 +600,7 @@ func _plant_feet(delta: float, duty: float, lift: float, w: float) -> void:
 		var fz := mb.inverse() * f.global_basis.z
 		var rot := Basis(Vector3.RIGHT, atan2(-fz.y, Vector2(fz.x, fz.z).length()))  # the curves' foot pitch, level
 		var lk: Dictionary = _lock[k]
+		var fl: float = _floor[k]  # this foot's floor
 		var low := 0
 		for i in 3:
 			if (rot * SOLE[i]).y < (rot * SOLE[low]).y:
@@ -603,14 +616,14 @@ func _plant_feet(delta: float, duty: float, lift: float, w: float) -> void:
 			if lk.last != Vector3.INF and w > 0.99:  # walking: carry on from the swing's last (ground-clamped) step
 				was = was.lerp(lk.last, 1.0 - _run)
 			lk.at = was + rot * (SOLE[low] * k_scale)
-			lk.at.y = maxf(lk.at.y, 0.0)
+			lk.at.y = maxf(lk.at.y, fl)
 		else:
 			lk.at.z -= speed * delta
 			if low != lk.i:  # rolls onto the next point: it touches down where it is
 				lk.at += rot * ((SOLE[low] - SOLE[lk.i]) * k_scale)
-				lk.at.y = maxf(lk.at.y, 0.0)
+				lk.at.y = maxf(lk.at.y, fl)
 				lk.i = low
-		lk.at.y *= exp(-delta * 25.0)
+		lk.at.y = fl + (lk.at.y - fl) * exp(-delta * 25.0)
 		var target: Vector3 = lk.at - rot * (SOLE[lk.i] * k_scale)
 		# a pin more than 18 cm off the curves' foot (a sudden start, a speed jump) drags along instead of
 		# stretching the leg
@@ -648,20 +661,48 @@ func _plant_feet(delta: float, duty: float, lift: float, w: float) -> void:
 			# the swing foot keeps its height while the hips sink over the other leg, touching down only at the end
 			target = ankle + c + Vector3(0, (lift * smoothstep(0.0, 0.25, p) * k_scale + drop) * (1.0 - smoothstep(0.8, 1.0, p)), 0)
 			# toes up as needed to clear the ground by the lift, then nothing below the floor
-			var clear := lift * smoothstep(0.0, 0.25, p) * k_scale
+			var fl: float = _floor[k]
+			var clear := lift * smoothstep(0.0, 0.25, p) * k_scale + fl
 			var toe := target.y + (rot * SOLE[2]).y * k_scale
 			if toe < clear:
 				rot = Basis(Vector3.RIGHT, rot.get_euler().x - (clear - toe) / (0.17 * k_scale))
 			var sole := 0.0
 			for pt in SOLE:
 				sole = minf(sole, (rot * pt).y * k_scale)
-			target.y = maxf(target.y, -sole)
+			target.y = maxf(target.y, fl - sole)
 		target = ankle.lerp(target, w)
 		lk.last = target
 		var th: Node3D = _j["Thigh" + k]
 		var sh: Node3D = _j["Shin" + k]
 		_limb(th, sh, f, model.to_global(target), mb.z, 1.0, deg_to_rad(165.0))
 		f.quaternion = (sh.global_basis.orthonormalized().inverse() * mb * rot).get_rotation_quaternion()
+
+
+func _feel_floor(delta: float, k_scale: float) -> void:
+	## _floor: what each foot would stand on: the highest floor under its sole's corners (heel and toe, either edge:
+	## a shoe half over a kerb rests on the kerb), by rays straight down from FLOOR_REACH over the body's floor to as
+	## far under it (a table top higher than that is no floor; starting inside a prop, a ray finds the floor
+	## beneath). Eased, so a foot crossing an edge doesn't pop.
+	var model := _j["Hips"].get_parent() as Node3D
+	var upright := model.is_inside_tree() and model.global_basis.y.normalized().dot(Vector3.UP) > 0.98
+	var reach := FLOOR_REACH * k_scale
+	var space := model.get_world_3d().direct_space_state if upright and _air < 1.0 else null
+	for k in ["L", "R"]:
+		var want := -INF
+		if space:
+			var f: Node3D = _j["Foot" + k]
+			var fwd := Vector3(f.global_basis.z.x, 0.0, f.global_basis.z.z).normalized()
+			var side := Vector3(fwd.z, 0.0, -fwd.x)
+			var o := model.global_position
+			for c in SOLE_CORNERS:
+				var at: Vector3 = f.global_position + (fwd * c.y + side * c.x) * k_scale
+				var q := PhysicsRayQueryParameters3D.create(Vector3(at.x, o.y + reach, at.z), Vector3(at.x, o.y - reach, at.z), 1)
+				if _body:
+					q.exclude = [_body.get_rid()]
+				var hit := space.intersect_ray(q)
+				if hit:
+					want = maxf(want, model.to_local(hit.position).y)
+		_floor[k] = lerpf(_floor[k], clampf(want, -reach, reach) if want > -INF else 0.0, 1.0 - exp(-delta * 18.0))
 
 
 func _sole_low() -> float:
@@ -872,6 +913,8 @@ func _gesture(g: String, w: float) -> void:
 			_pose("UpperArmR", Vector3(-0.9, 0, 0.35), w)
 			_pose("ForearmR", Vector3(-2.3, 0, 0), w)
 			head.rotation.x = lerpf(head.rotation.x, 0.3, w)
+		"asleep":  # on his back, the pillow under the head: neck and head bend forward off the mattress line
+			head.rotation.x = lerpf(head.rotation.x, 0.4, w)
 		"clutch_hand":  # holding the burned right hand (the Mark) with the left
 			_pose("UpperArmR", Vector3(-0.8, 0, 0.35), w)
 			_pose("ForearmR", Vector3(-1.2, 0, 0), w)

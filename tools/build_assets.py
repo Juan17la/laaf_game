@@ -880,7 +880,8 @@ def bake_ao(model, radius=None, gain=None, floor=None):
 #         past it): its triangles again, facing the other way
 #   group small pieces that touch (a stack of stock boxes, sacks, a woodpile, a stump and its axe) judged as one,
 #         one box round them all
-# "Covered" means inside the collision that is already there: a compact collider piece (a box, a cylinder) by its
+# A piece (or group) with a walk-through opening in it (_passage: a doorway in a wall lining, a casing's jambs) is
+# never boxed whole: a piece is split at the opening. "Covered" means inside the collision that is already there: a compact collider piece (a box, a cylinder) by its
 # bounding box, a hollow one (a room's walls joined at the corners: its bounding box is the whole room) only where a
 # point really is inside its solid (_Solids), so the furniture standing in a room is not taken for part of the walls.
 # Foliage and decals (PASSABLE_TEX, PASSABLE_NODES) stay passable.
@@ -1091,6 +1092,40 @@ def _passage(lo, hi, members):
     return False
 
 
+def _split_doorway(lo, hi, tris):
+    """A piece standing through the whole walking band (COL_GAP_BAND over its foot) with a walk-through opening in
+    it (_passage over its own triangles: a gap of COL_GAP or more), split at its openings along that axis: the
+    triangles by where their centre falls. Any other piece: [tris]. (A piece sunk into the ground, a church door's
+    stone surround, has its band over the ground, not over its buried foot.)"""
+    foot = max(lo[1], 0.0)
+    if hi[1] - foot < COL_GAP_BAND[1]:
+        return [tris]
+    y0, y1 = foot + COL_GAP_BAND[0], foot + COL_GAP_BAND[1]
+    boxes = [_aabb([t]) for t in tris]
+    band = [b for b in boxes if b[0][1] < y1 and b[1][1] > y0]
+    if not band or not _passage((lo[0], foot, lo[2]), hi, band):
+        return [tris]
+    for k in (0, 2):
+        cuts, edge = [], lo[k]  # the openings along k: [(from, to)]
+        for a, b in sorted((b[0][k], b[1][k]) for b in band):
+            if a - edge >= COL_GAP:
+                cuts.append((edge, a))
+            edge = max(edge, b)
+        if hi[k] - edge >= COL_GAP:
+            cuts.append((edge, hi[k]))
+        if not cuts:
+            continue
+        parts = {}  # by side of the openings; what spans an opening (strictly inside it: a jamb's face stays with
+        for t, b in zip(tris, boxes):  # its side) is the sill under it or the lintel over it, kept apart
+            m = (b[0][k] + b[1][k]) / 2
+            side = sum(1 for c0, c1 in cuts if m >= (c0 + c1) / 2)
+            inside = any(c0 + 0.01 < m < c1 - 0.01 for c0, c1 in cuts)
+            over = inside and (b[0][1] + b[1][1]) / 2 > (y0 + y1) / 2
+            parts.setdefault((side, inside, over), []).append(t)
+        return list(parts.values())
+    return [tris]
+
+
 class _Solids:
     """Point-in-collider test for a model's collider triangles: straight up from a point inside a closed solid, the
     first face met is one of its top faces (facing up); from outside it is an underside, or nothing."""
@@ -1217,9 +1252,16 @@ def auto_collision(model):
             if min(v_sub(hi, lo)) >= COL_GROUP_THIN:  # (a rug would join the suitcase on it, a tread its rail post)
                 small.append((tris, lo, hi))
             continue
-        c, ax, h = _obb(tris)
-        if not covered(lo, hi, 8 * h[0] * h[1] * h[2] > COL_GIANT):
-            add(tris, lo, hi)
+        # a piece with a doorway through it (a wall's plaster lining joined over its door, a door frame) boxed whole
+        # bricks the doorway up (the school's and the clinic's front doors were): each side of the opening is
+        # judged on its own instead, and what spans the opening (the lintel strip) is out of reach
+        for part in _split_doorway(lo, hi, tris):
+            plo, phi = _aabb(part) if part is not tris else (lo, hi)
+            if part is not tris and not big(plo, phi):
+                continue
+            c, ax, h = _obb(part)
+            if not covered(plo, phi, 8 * h[0] * h[1] * h[2] > COL_GIANT):
+                add(part, plo, phi)
     for tris, lo, hi, members in _touching(small):  # a stack of boxes, a stool's seat on its post...
         size = v_sub(hi, lo)
         if max(size) <= COL_GROUP_MAX and big(lo, hi) and not _passage(lo, hi, members) and not covered(lo, hi):
@@ -1530,6 +1572,9 @@ def write_glb(model, path):
 
 # ============================================================== building helpers
 
+DOUBLE_DOOR = 1.8  # m: a doorway at least this wide gets two leaves
+
+
 def room(m, w, d, h, mat, t=0.2, door=None, floor="concrete", ceil="paint", leaf=True):
     """Enterable shell on the current node. door=(x, width, height) is cut in the +Z wall."""
     hw, hd, z = w / 2, d / 2, d / 2 - t / 2
@@ -1545,10 +1590,15 @@ def room(m, w, d, h, mat, t=0.2, door=None, floor="concrete", ceil="paint", leaf
             m.box(mat, (hw - b, h, t), ((b + hw) / 2, h / 2, z))
         if dh < h:
             m.box(mat, (dw, h - dh, t), (x, (h + dh) / 2, z))
-        if leaf:
+        if leaf:  # swung open inward against the wall; a wide doorway (a school's, a church's) has a pair of leaves:
+            # one leaf its full width stood a slab 2.4 m out into the hall behind it, snagging whoever walked by
             phi = math.radians(85)
-            m.box("door", (dw, dh, 0.06),
-                  (a + math.cos(phi) * dw / 2, dh / 2, z - t / 2 - 0.03 - math.sin(phi) * dw / 2), (0, 85, 0))
+            pair = dw >= DOUBLE_DOOR
+            lw = dw / 2 if pair else dw
+            for hinge, sgn in ((a, 1), (b, -1)) if pair else ((a, 1),):
+                m.box("door", (lw, dh, 0.06),
+                      (hinge + sgn * math.cos(phi) * lw / 2, dh / 2, z - t / 2 - 0.03 - math.sin(phi) * lw / 2),
+                      (0, sgn * 85, 0))
     else:
         m.box(mat, (w, h, t), (0, h / 2, z))
     if floor:
@@ -1586,34 +1636,42 @@ def table(m, x, z, w=1.2, d=0.8, h=0.75, mat="planks", yaw=0):
                 m.box(mat, (0.06, h, 0.06), (lx, h / 2, lz))
 
 
+BED_LONG = 0.2  # m the frame runs on past the old 1.84 m mattress: 2.04 m, a long single (the PSX cast stand up to
+#                1.85 m; lying down Alex's crown clears the headboard and his shoes end short of the footboard)
+
+
 def bed(m, x, z, yaw=0):
     """Single wooden bed, head at -Z: turned posts, slatted headboard, footboard, mattress, turned-down
-    blanket hanging over the sides, a pillow leant on the headboard. Footprint 1.0 x 2.0 m."""
+    blanket hanging over the sides, a pillow lying flat at the head. Footprint 1.0 x 2.2 m (head end at z - 0.96)."""
+    e = BED_LONG
     with m.push((x, 0, z), (0, yaw, 0)):
         for sz, ph in ((-1, 1.05), (1, 0.7)):  # posts with knob finials
             for sx in (-1, 1):
-                m.box("planks", (0.08, ph, 0.08), (sx * 0.46, ph / 2, sz * 0.96))
-                m.cyl("planks", 0.05, 0.03, 0.06, (sx * 0.46, ph, sz * 0.96), seg=6)
+                pz = sz * 0.96 + (e if sz > 0 else 0)
+                m.box("planks", (0.08, ph, 0.08), (sx * 0.46, ph / 2, pz))
+                m.cyl("planks", 0.05, 0.03, 0.06, (sx * 0.46, ph, pz), seg=6)
         for sx in (-1, 1):  # side rails + slat deck
-            m.box("planks", (0.05, 0.16, 1.84), (sx * 0.46, 0.26, 0))
-        m.box("planks", (0.88, 0.03, 1.84), (0, 0.22, 0))
+            m.box("planks", (0.05, 0.16, 1.84 + e), (sx * 0.46, 0.26, e / 2))
+        m.box("planks", (0.88, 0.03, 1.84 + e), (0, 0.22, e / 2))
         # headboard: top rail, slats, bottom rail
         m.box("planks", (1.0, 0.09, 0.06), (0, 0.98, -0.96))
         m.box("planks", (0.86, 0.06, 0.05), (0, 0.48, -0.96))
         for k in range(5):
             m.box("planks", (0.07, 0.44, 0.03), (-0.3 + k * 0.15, 0.73, -0.96))
         # footboard: rail + solid panel
-        m.box("planks", (1.0, 0.07, 0.06), (0, 0.66, 0.96))
-        m.box("planks", (0.86, 0.3, 0.03), (0, 0.45, 0.96))
+        m.box("planks", (1.0, 0.07, 0.06), (0, 0.66, 0.96 + e))
+        m.box("planks", (0.86, 0.3, 0.03), (0, 0.45, 0.96 + e))
         # mattress, blanket (turned down at the head, hanging over the sides), sheet fold, pillow
-        m.box("sheet", (0.86, 0.2, 1.84), (0, 0.33, 0))
-        m.box("fabric", (0.9, 0.04, 1.3), (0, 0.45, 0.25))
+        m.box("sheet", (0.86, 0.2, 1.84 + e), (0, 0.33, e / 2))
+        m.box("fabric", (0.9, 0.04, 1.3 + e), (0, 0.45, 0.25 + e / 2))
         for sx in (-1, 1):
-            m.box("fabric", (0.02, 0.22, 1.3), (sx * 0.45, 0.35, 0.25))
+            m.box("fabric", (0.02, 0.22, 1.3 + e), (sx * 0.45, 0.35, 0.25 + e / 2))
         m.box("fabric", (0.9, 0.06, 0.16), (0, 0.48, -0.36))
         m.box("white", (0.86, 0.02, 0.1), (0, 0.44, -0.47))
-        m.box("white", (0.6, 0.12, 0.34), (0, 0.55, -0.72), (-20, 3, 0))
-        m.box("white", (0.5, 0.03, 0.26), (0.01, 0.62, -0.71), (-20, 3, 0))  # its slouched top
+        # the pillow: flat on the sheet, 7 cm of give under a head (it used to stand leant on the headboard, a 12 cm
+        # block the sleeper's face sank into); a softer, narrower crown on it so it isn't a box
+        m.box("white", (0.56, 0.05, 0.34), (0, 0.455, -0.72), (2, 0, 0))
+        m.box("white", (0.48, 0.02, 0.28), (0, 0.485, -0.72), (2, 0, 0))
 
 
 def lantern(m, x, y, z, s=1.0):
@@ -1770,13 +1828,16 @@ def m_terrain():
     cx, cz, rx, rz = LAKE
     m.emit("water", [(cx + rx * math.cos(a / 32 * math.tau), -0.25, cz + rz * math.sin(a / 32 * math.tau))
                      for a in range(32)], (cx, -10, cz))
-    m.node("roads")  # (never under a building's floor: FLOOR_CUTS)
+    # roads, lots and sidewalks stand 3-8 cm proud of the terrain: they're walked on (with no collider of their own
+    # the body stood on the terrain under them, the shoes sunk into the paving up to the ankle)
+    m.node("roads-col")  # (never under a building's floor: FLOOR_CUTS)
     for i, ((ax, az), (bx, bz), w, mat) in enumerate(ROADS):
         _ground_rect(m, mat, min(ax, bx) - w / 2, min(az, bz) - w / 2, max(ax, bx) + w / 2, max(az, bz) + w / 2,
                      0.03 + i * 0.002)
     for x0, z0, x1, z1, mat in LOTS:
         _ground_rect(m, mat, x0, z0, x1, z1, 0.07)
-    m.node("streets")
+    m.node("road_lines")  # paint over the asphalt: seen, never stood on
+    m.node("streets-col")
     rects = [_road_rect(r) for r in ROADS] + [l[:4] for l in LOTS]
     for i, road in enumerate(ROADS):
         (ax, az), (bx, bz), w, mat = road
@@ -1807,6 +1868,7 @@ def m_terrain():
         c = (az if k == 0 else ax)
         for off, mat_, dash in ((-(w / 2 - 0.35), "line_white", 0), (w / 2 - 0.35, "line_white", 0), (0, "line_yellow", 1)):
             band = (x0, c + off - 0.07, x1, c + off + 0.07) if k == 0 else (c + off - 0.07, z0, c + off + 0.07, z1)
+            m.use("road_lines")
             for a0, a1 in _cut(band, k, others):
                 spans = [(a0, a1)] if not dash else [(t, min(t + 3.0, a1)) for t in _frange(a0 + 1.0, a1, 7.0)]
                 for t0, t1 in spans:
@@ -1814,6 +1876,7 @@ def m_terrain():
                         _ground_rect(m, mat_, t0, band[1], t1, band[3], 0.068)
                     else:
                         _ground_rect(m, mat_, band[0], t0, band[2], t1, 0.068)
+            m.use("streets-col")
     return m
 
 

@@ -878,7 +878,7 @@ func traitor() -> void:
 	elena.look(null)
 	elena.grounded = false
 	elena.model.rotation = Vector3(-PI / 2.0, 0.5, 0)  # on her back
-	elena.global_position = ELENA_SPOT + Vector3(0, 0.12, 0)
+	elena.global_position = ELENA_SPOT + Vector3(0, 0.15, 0)  # (her coat's back is 15 cm behind her: on the grass, not in it)
 	lamp.set_script(null)  # her lantern, knocked into the grass beside her, still burning
 	lamp.light_energy = 0.8
 	lamp.global_position = ELENA_SPOT + Vector3(0.8, 0.2, -0.5)

@@ -355,7 +355,7 @@ INTERIOR = [
     (SCHOOL, "int_radio", -12.5, -1.8, 10, 0.81),  # on the teacher's desk (#3)
     (SCHOOL, "int_mannequin", 17.0, -6.2, -150, 0.05),
     (SCHOOL, "int_eye_door", -17.8, 3, 90, 0.05),
-    (SCHOOL, "int_debris", -4, 4, 40, 0.05),
+    (SCHOOL, "int_debris", -4.5, 5.7, 0, 0.05),  # along the front wall: left across the corridor it snagged the hall patrol
     (SCHOOL, "int_filing_cabinet", 4.45, -6.45, 0, 0.05),
     (CHURCH, "int_candle_stand", -2.4, -10.4, 0, 0.05),
     (CHURCH, "int_candle_stand", 2.4, -10.4, 30, 0.05),

@@ -816,7 +816,8 @@ def _clinic_structure(m, w, d, h):
     K.partition(m, wall, (CL_X[1], -hd), (CL_X[1], CL_BACK), 0.05, 3.55, trim="ik_wain")
     K.partition(m, wall, (CL_X[1], CL_BACK), (CL_X[2], CL_BACK), 0.05, 3.55, trim="ik_wain", doors=[(2.8, 1.2, 2.2, 60)])
     K.partition(m, wall, (CL_X[2], -hd), (CL_X[2], CL_BACK), 0.05, 3.55, trim="ik_wain")
-    m.box("glass", (1.2, 0.8, 0.04), (0.9, 1.6, CL_BACK))  # pharmacy hatch window (sealed)
+    # pharmacy hatch window (sealed), beside its door: it hung in the doorway (x -0.2..1.0) at chest height
+    m.box("glass", (1.2, 0.8, 0.04), (-1.3, 1.6, CL_BACK))
     # upstairs: corridor between the room rows, a landing at the west end over the morgue
     up, uh = 3.8, 2.88
     K.partition(m, wall, (CL_X[0], CL_UP[0]), (hw, CL_UP[0]), up, uh, trim="ik_wain",

@@ -3,7 +3,9 @@ extends Node3D
 ## The enemy's state over its head, PS2-style pixel glyphs made here (no font): an amber "?" while it's noticing
 ## Alex (a meter under it fills with Enemy.awareness) or suspicious / searching, a red "!" that pops in with a
 ## sting when it spots him and stays up Feel.ICON_ALERT_HOLD s. Nothing while stunned, down or dead, in a
-## cinematic, or further than Feel.ICON_SHOW_DIST. Drawn over geometry (no depth test). Added by Enemy._ready.
+## cinematic, or further than Feel.ICON_SHOW_DIST. Rides over the model's head (crouched, kneeling, any height of
+## character). Drawn over its owner and the clutter round it (no depth test), but not through the world: hidden
+## while a wall stands between the camera and it. Added by Enemy._ready.
 
 const QUESTION := [
 	".#####.",
@@ -29,6 +31,8 @@ const BANG := [
 	"..###..",
 	".......",
 ]
+const HEAD_TOP := 0.18  ## m from the Head joint up to where the capsule top is on the cast (ICON_GAP is measured from there)
+const SIGHT_STEP := 0.15  ## s between checks that the camera can see it
 const METER_W := 9  ## glyph pixels
 const METER_H := 2
 
@@ -41,6 +45,9 @@ var _meter_back: Sprite3D
 var _meter: Sprite3D
 var _shown := ""  ## "", "?" or "!"
 var _pop: Tween
+var _head: Node3D  ## the model's Head joint, when the rig has one
+var _hidden := false  ## the camera's view of it is blocked by the world (a wall, a floor)
+var _sight_t := 0.0
 
 
 func _ready() -> void:
@@ -50,6 +57,9 @@ func _ready() -> void:
 		if c is CollisionShape3D and c.shape is CapsuleShape3D:
 			head = c.position.y + (c.shape as CapsuleShape3D).height * 0.5
 	position.y = head + Feel.ICON_GAP
+	var model := _e.get_node_or_null("Model")
+	if model:
+		_head = model.find_child("Head", true, false) as Node3D
 	_glyph = _sprite(_texture("?"), 0, 10)
 	_meter_back = _sprite(_texture("meter"), -9, 9)  # the meter's empty track, under its fill
 	_meter_back.modulate = Color(0.35, 0.3, 0.25, 0.9)
@@ -101,15 +111,35 @@ static func _texture(kind: String) -> Texture2D:
 	return _tex[kind]
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	var want := _want()
 	if want != _shown:
 		_show(want)
+	if _head and _shown != "":  # over the head as it is now, not the capsule's top: it never drifts off the body
+		global_position = _head.global_position + Vector3.UP * (HEAD_TOP + Feel.ICON_GAP)
+	_sight_t -= delta
+	if _shown != "" and _sight_t <= 0.0:
+		_sight_t = SIGHT_STEP
+		_hidden = _blocked()
+	visible = _shown != "" and not _hidden
 	if want == "?":
 		var a := clampf(_e.awareness, 0.0, 1.0)
 		_meter.scale.x = maxf(a, 0.001)
 		_meter.visible = a > 0.0  # (the empty track stays: "it's looking, not sure yet")
 		_glyph.modulate.a = 0.55 + 0.45 * a if _e.state == Enemy.State.PATROL else 1.0  # firmer once it's looking
+
+
+func _blocked() -> bool:
+	## World geometry (layer 1) between the camera and the icon; the player and the enemy itself don't count.
+	var cam := get_viewport().get_camera_3d() if is_inside_tree() else null
+	if not cam:
+		return false
+	var to := global_position
+	var exclude: Array[RID] = [_e.get_rid()]
+	if _e._player is CollisionObject3D:
+		exclude.append((_e._player as CollisionObject3D).get_rid())
+	var q := PhysicsRayQueryParameters3D.create(cam.global_position, to, 1, exclude)
+	return not get_world_3d().direct_space_state.intersect_ray(q).is_empty()
 
 
 func _want() -> String:
@@ -129,9 +159,10 @@ func _want() -> String:
 
 func _show(kind: String) -> void:
 	_shown = kind
-	visible = kind != ""
+	visible = kind != "" and not _hidden
 	if kind == "":
 		return
+	_sight_t = 0.0  # check the view at once: a new icon never flashes up through a wall
 	_glyph.texture = _texture(kind)
 	_glyph.modulate = Feel.ALERT_RED if kind == "!" else Feel.AMBER
 	_meter.visible = kind == "?"

@@ -84,6 +84,8 @@ var _cool := 0.0
 var _arrow_t := 1.5
 var _stun := 0.0
 var _stuck := 0.0
+var _closest := INF  ## SUSPICIOUS / SEARCH: nearest it has come to the spot it's making for...
+var _stall := 0.0  ## ...and for how long it hasn't come any nearer (pinned on a wall, a car, another enemy)
 var _strafe := 1.0
 var _unseen := 0.0  ## seconds since the player was last seen
 var _call_t := 0.0
@@ -124,6 +126,8 @@ const TAKEDOWN_CONE := 100.0  ## degrees behind the enemy
 const SENSE_STEP := 0.2  ## s between looks (can_see_player)
 const THROW_TIME := 0.9
 const PACE_CAP := 5.3  ## m/s: a raging chaser stays just under Alex's sprint (escape costs stamina)
+const STALL_GAIN := 0.3  ## m nearer it must get to the spot it investigates...
+const STALL_TIME := 4.0  ## ...within this many s (_go veers round either side first), or it gives that spot up (_stalled)
 const DOWN_POSES := ["kneel", "one_knee", "hands_ground", "sit_back", "side"]
 ## Killed while already lying down (HumanoidAnim down poses): it stays the way it lies. Sat or kneeling, it falls by
 ## the shot instead (_fall): over backwards from the front, onto its face from behind.
@@ -404,7 +408,8 @@ func _think(delta: float) -> void:
 					_wait = randf_range(0.5, 2.0)
 					_look = Vector3.ZERO
 		State.SUSPICIOUS:
-			if _go(_target, walk_speed * 1.3, delta) < 1.2 or _t_state > 10.0:
+			var d := _go(_target, walk_speed * 1.3, delta)
+			if d < 1.2 or _t_state > 10.0 or _stalled(d, delta):
 				_set_state(State.SEARCH)
 		State.CHASE:
 			var d := global_position.distance_to(_player.global_position)
@@ -432,8 +437,11 @@ func _think(delta: float) -> void:
 		State.SEARCH:
 			if not _check.is_empty():
 				_check_spot(delta)
-			elif _go(_target, walk_speed * 1.2, delta) < 1.2:
-				_target = _target + Vector3(randf_range(-6, 6), 0, randf_range(-6, 6))
+			else:
+				var d := _go(_target, walk_speed * 1.2, delta)
+				if d < 1.2 or _stalled(d, delta):  # there, or it can't get there: look somewhere near
+					_target = _target + Vector3(randf_range(-6, 6), 0, randf_range(-6, 6))
+					_closest = INF
 			if _t_state > 12.0:
 				_set_state(State.PATROL)
 				_target = patrol[_patrol_i]
@@ -885,6 +893,17 @@ func _go(p: Vector3, speed: float, delta: float) -> float:
 	return d
 
 
+func _stalled(d: float, delta: float) -> bool:
+	## Making for a spot it can't reach (the far side of a wall, a doorway someone stands in): no nearer by
+	## STALL_GAIN for STALL_TIME s. Investigating ends there instead of walking on the spot until a timer runs out.
+	if d < _closest - STALL_GAIN:
+		_closest = d
+		_stall = 0.0
+	else:
+		_stall += delta
+	return _stall > STALL_TIME
+
+
 func _stop(delta: float) -> void:
 	velocity.x = move_toward(velocity.x, 0.0, 25.0 * delta)
 	velocity.z = move_toward(velocity.z, 0.0, 25.0 * delta)
@@ -900,6 +919,8 @@ func _set_state(s: State) -> void:
 	var was := state
 	state = s
 	_t_state = 0.0
+	_closest = INF
+	_stall = 0.0
 	if s == State.CHASE:
 		awareness = 1.0
 		if was != State.CHASE:

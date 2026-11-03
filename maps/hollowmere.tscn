@@ -4757,7 +4757,7 @@ transform = Transform3D(-0.5, 0, 0.86603, 0, 1, 0, -0.86603, 0, -0.5, 114.2, 0.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 105, 0.05, -17.8)
 
 [node name="int_debris2" parent="Props" instance=ExtResource("r78")]
-transform = Transform3D(0.64279, 0, -0.76604, 0, 1, 0, 0.76604, 0, 0.64279, 104, 0.05, -4)
+transform = Transform3D(6.1232e-17, 0, -1, 0, 1, 0, 1, 0, 6.1232e-17, 102.3, 0.05, -4.5)
 
 [node name="int_filing_cabinet5" parent="Props" instance=ExtResource("r73")]
 transform = Transform3D(6.1232e-17, 0, -1, 0, 1, 0, 1, 0, 6.1232e-17, 114.45, 0.05, 4.45)

@@ -5,6 +5,11 @@ extends RefCounted
 ## Rule: stage actions (actors move, gesture, cameras cut every 2–5 s); lines stay short.
 
 const ROOM6 := Vector3(-100.2, 0.1, 49.6)
+## Asleep in room 6's bed (tools/build_assets.py bed(): head at x -102.76, mattress top 0.43, blanket 0.47, the
+## pillow's top 0.495, footboard at -100.64): on his back, soles here, crown 6 cm short of the headboard, his back
+## on the blanket and the head on the pillow (the "asleep" gesture tucks the chin: the pillow lifts the head).
+const BED_LIE := Vector3(-100.81, 0.59, 48.5)
+const BED_TURN := Vector3(-PI / 2.0, PI / 2.0, 0)  ## lying on his back, head to -X, right side +Z
 const OWEN_LINES := ["I can hear you breathing.", "The forest keeps everything.", "Come out, outsider.",
 	"It's quicker if you don't run.", "You're not the first.", "The grass won't hide you forever.",
 	"I see where you've been.", "Dad taught me to track deer.", "Your hand's burning, isn't it?",
@@ -300,10 +305,11 @@ func _window(alex: Actor) -> void:
 	await _settle(alex)
 	d.player.global_position = ROOM6
 	_room_props()
-	# on his back, head on the pillow (-X): 1.78 m from the feet here to the crown just short of the headboard.
+	# on his back, head on the pillow (-X): 1.85 m from the feet here to the crown just short of the headboard.
 	# Lying like this his right side is +Z, the back of his right hand turned out toward the walkway side.
-	alex.global_position = Vector3(-100.72, 0.55, 48.5)
-	alex.model.rotation = Vector3(-PI / 2.0, PI / 2.0, 0)
+	alex.global_position = BED_LIE
+	alex.model.rotation = BED_TURN
+	alex.gesture("asleep")
 	var owen := d.actor("res://models/char_owen.glb", Vector3(-95.3, 0, 55.5), PI)
 	var iron := owen.hold("brand_iron", "")  # carried low at his side
 	var tip := OmniLight3D.new()  # the eye on its end glows: the one warm thing coming through the dark
@@ -383,10 +389,10 @@ func _window(alex: Actor) -> void:
 	# Alex jolts up into it, clutching the hand
 	var jolt := alex.create_tween().set_parallel()
 	jolt.tween_property(alex.model, "rotation:x", 0.0, 0.3).set_trans(Tween.TRANS_BACK)
-	jolt.tween_property(alex, "global_position", Vector3(-100.6, 0.1, 49.0), 0.3)  # (sits up off the bed)
+	jolt.tween_property(alex, "global_position", Vector3(-100.4, 0.1, 49.1), 0.3)  # (sits up off the bed, clear of its foot)
 	alex.gesture("clutch_hand")
 	Snd.sfx("hurt", alex.global_position + Vector3.UP, -2.0)
-	d.shot(Vector3(-99.0, 1.5, 47.6), Vector3(-100.6, 1.2, 49.0))
+	d.shot(Vector3(-99.0, 1.5, 47.6), Vector3(-100.4, 1.2, 49.1))
 	# Owen is thrown back on his seat, the iron jerked off the hand
 	owen.gesture("")
 	owen.anim.down_pose = "sit_back"
