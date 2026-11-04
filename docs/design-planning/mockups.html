@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LAAF Mockups</title>
+<meta name="description" content="Annotated mockups of every LAAF interface screen as currently built: title, main menu dossier, pause, inventory, HUD, selection wheel and minigame overlays.">
+<link rel="stylesheet" href="assets/laaf.css">
+<script src="assets/icons.js"></script>
+<script src="assets/site.js"></script>
+</head>
+<body>
+
+<header class="site-head">
+  <a class="brand" href="mockups.html"><b>LAAF</b><span>DESIGN PLANNING</span></a>
+  <nav class="site-nav" aria-label="Design planning">
+    <a href="mockups.html" aria-current="page"><i data-icon="load" data-size="15" data-stroke="1.6"></i>Mockups</a>
+    <a href="design-system.html"><i data-icon="options" data-size="15" data-stroke="1.6"></i>Design system</a>
+    <a href="navigation-flow.html"><i data-icon="pin" data-size="15" data-stroke="1.6"></i>Navigation</a>
+    <a href="product-vision.html"><i data-icon="mark" data-size="15" data-stroke="1.6"></i>Vision</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow-num">01 · Mockups</div>
+    <h1>Every screen, as built</h1>
+    <p class="lede">Low-fidelity models of LAAF's current interface, rebuilt on the game's own 640×360 base canvas with its real fonts, palette and icon set. Each screen has numbered notes on what it shows and why.</p>
+    <p style="margin:22px 0 0"><label class="pill"><input type="checkbox" id="toggle-callouts" checked> Show numbered callouts</label></p>
+    <nav class="toc" aria-label="Screens">
+      <a class="pill" href="#title">Title</a><a class="pill" href="#continue">Continue</a><a class="pill" href="#new">New</a>
+      <a class="pill" href="#load">Load</a><a class="pill" href="#extra">Extra</a><a class="pill" href="#options">Options</a>
+      <a class="pill" href="#dev">Dev</a><a class="pill" href="#quit">Quit</a><a class="pill" href="#pause">Pause</a>
+      <a class="pill" href="#leave">Leave run</a><a class="pill" href="#inv-weapons">Inventory</a><a class="pill" href="#inv-evidence">Evidence</a>
+      <a class="pill" href="#inv-map">Map</a><a class="pill" href="#hud">HUD</a><a class="pill" href="#wheel">Wheel</a><a class="pill" href="#minigame">Minigames</a>
+    </nav>
+  </section>
+
+  <p class="section-lede">Every mockup uses the same coordinates as the game: base pixels on a 640×360 canvas, scaled up to fit. The town behind the menus is shown as a flat fog plate, standing in for the live 3D scene.</p>
+
+  <!-- ============================================================ TITLE -->
+  <h2 id="title">Title screen</h2>
+  <p class="section-lede">The first thing the player sees. The live town plays staged story scenes in the fog behind the logo.</p>
+  <div class="mock">
+    <div class="stage"><div class="screen">
+      <div class="fog"></div>
+      <div class="letterbox top"></div><div class="letterbox bottom"></div>
+      <div class="logo" style="left:0;right:0;top:118px;text-align:center">
+        <div class="word" style="font-size:78px;letter-spacing:24px;margin-right:-24px">LAAF</div>
+        <div class="rule" style="width:200px;margin:6px auto 7px"></div>
+        <div class="town" style="letter-spacing:5px">HOLLOWMERE · POP. 1413</div>
+      </div>
+      <div style="position:absolute;left:0;right:0;top:248px;display:flex;justify-content:center;z-index:10">
+        <span style="height:19px;padding:0 12px;border-radius:10px;background:rgba(0,0,0,.45);border:1px solid rgba(233,226,211,.35);font:700 8px/19px var(--ui);letter-spacing:1px;opacity:.85">PRESS ANY KEY</span>
+      </div>
+      <div class="caption"><div class="line">The bridge has been out since spring. Nobody came to fix it.</div><div class="src">C1.1 · Last Postcard</div></div>
+      <div class="crt"></div><div class="grain"></div>
+      <span class="callout" style="left:250px;top:120px">1</span>
+      <span class="callout" style="left:262px;top:250px">2</span>
+      <span class="callout" style="left:24px;top:318px">3</span>
+      <span class="callout" style="left:8px;top:4px">4</span>
+    </div></div>
+    <ol class="notes">
+      <li><b>Logo.</b> IM Fell English, 52px × 1.35 × 1.12, tracked +16, with a 1.2px Rust Hi rule under it. HOLLOWMERE in Label Wide.</li>
+      <li><b>PRESS ANY KEY.</b> The large keycap pill (19px tall) breathing between 55% and 100% at 2.6 rad/s. Any key, button or click opens the dossier.</li>
+      <li><b>Scene caption.</b> The italic line over the fog (Caption Bone) and its source in Barlow 7. A new scene every 11 s, with fades.</li>
+      <li><b>Letterbox and CRT.</b> 18px black bars. Scanlines, grain, a vignette and a slight colour fringe pass over everything, the UI included.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================ CONTINUE -->
+  <h2 id="continue">Dossier · Continue</h2>
+  <p class="section-lede">The default page once the folder opens. It presents the newest save as a case file, so the player can resume with a single Enter.</p>
+  <div class="mock">
+    <div class="stage"><div class="screen" data-shell="dossier" data-tab="0" data-help="ESC|Title,ENTER|Resume,W S|Tabs">
+      <div class="page">
+        <div class="print" style="left:2px;top:2px;width:188px;height:108px;transform:rotate(-1.4deg)">
+          <div class="img" style="background-position:42% 58%"></div><span class="pinhead" style="left:96px;top:40px"></span>
+          <div class="lbl">Lakeview Motel</div>
+        </div>
+        <div style="position:absolute;top:118px;font:400 16px var(--serif)">Chapter I — The Mark</div>
+        <div class="chips" style="position:absolute;top:140px">
+          <span class="chip"><i data-icon="clock" data-size="9" data-stroke="1.1"></i>0:24:13</span>
+          <span class="chip"><i data-icon="flame" data-size="9" data-stroke="1.1"></i>Normal</span>
+          <span class="chip mark"><i data-icon="mark" data-size="9" data-stroke="1.1"></i>Mark 34%</span>
+        </div>
+        <div style="position:absolute;top:161px;display:flex;gap:3px">
+          <div style="width:29px;text-align:center"><div style="height:22px;border-radius:6px;background:rgba(233,226,211,.04);display:grid;place-items:center;color:var(--muted)"><i data-icon="fists" data-size="16"></i></div></div>
+          <div style="width:29px;text-align:center"><div style="height:22px;border-radius:6px;background:rgba(233,226,211,.1);display:grid;place-items:center"><i data-icon="revolver" data-size="16"></i></div><div class="m" style="font-size:8px;margin-top:1px">5·12</div></div>
+          <div style="width:29px;text-align:center"><div style="height:22px;border-radius:6px;background:rgba(233,226,211,.04);display:grid;place-items:center;color:var(--muted)"><i data-icon="axe" data-size="16"></i></div></div>
+          <div style="width:29px;text-align:center"><div style="height:22px;border-radius:6px;background:rgba(233,226,211,.04);display:grid;place-items:center;color:var(--muted)"><i data-icon="flare" data-size="16"></i></div><div class="m" style="font-size:8px;margin-top:1px">1·2</div></div>
+        </div>
+        <div class="next" style="position:absolute;top:196px;left:0;right:0"><span class="caps">Next</span><p>Talk to Grady at the General Store</p></div>
+        <div class="bar armed"><i data-icon="play" data-size="10" data-stroke="1.4"></i>RESUME<span class="kc">ENTER</span></div>
+      </div>
+      <span class="callout" style="left:340px;top:44px">1</span>
+      <span class="callout" style="left:404px;top:58px">2</span>
+      <span class="callout" style="left:400px;top:186px">3</span>
+      <span class="callout" style="left:398px;top:212px">4</span>
+      <span class="callout" style="left:392px;top:248px">5</span>
+      <span class="callout" style="left:392px;top:290px">6</span>
+      <span class="callout" style="left:598px;top:340px">7</span>
+    </div></div>
+    <ol class="notes">
+      <li><b>Index tabs.</b> Seven drawn tabs tucked behind the folder. The open one pulls 4px further out, takes the folder's own gradient and lights its icon amber.</li>
+      <li><b>Map print.</b> A tilted photo of the town map, pinned where the save was made, with the place handwritten at the foot.</li>
+      <li><b>Facts as chips.</b> Play time, difficulty and the Mark. The Mark chip is the only rust-tinted chip, so danger reads at a glance.</li>
+      <li><b>Weapons carried.</b> One cell each; the one in hand is brighter. Guns show loaded·reserve rounds.</li>
+      <li><b>NEXT panel.</b> The save's objective on an amber 8% panel, because amber marks what is live.</li>
+      <li><b>RESUME, the one rust bar.</b> Drawn icon, tracked caps and an ENTER keycap. It is armed (brighter top) because Enter fires it from the tabs.</li>
+      <li><b>Help bar.</b> The keys that work right now, right-aligned in the bottom letterbox. Every pair is clickable too.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================ NEW -->
+  <h2 id="new">Dossier · New</h2>
+  <p class="section-lede">Choose a difficulty and see what it changes before committing.</p>
+  <div class="mock">
+    <div class="stage"><div class="screen" data-shell="dossier" data-tab="1" data-help="ESC|Back,ENTER|Begin,W S|Move">
+      <div class="page">
+        <div class="h">A new case</div>
+        <div class="ld">Dusk. The bridge is out. Your sister's postcard says don't come.</div>
+        <div class="row" style="position:absolute;top:54px;left:0;right:0;height:30px">
+          <span style="position:absolute;left:6px;top:10px;color:var(--faint)"><i data-icon="flame" data-size="10" data-stroke="1.1"></i></span>
+          <div style="position:absolute;left:38px;top:6px" class="t caps" >EASY</div><div style="position:absolute;left:38px;top:17px" class="m">Forgiving. For the story.</div>
+        </div>
+        <div class="row sel" style="position:absolute;top:88px;left:0;right:0;height:30px">
+          <span style="position:absolute;left:6px;top:10px;color:var(--amber)"><i data-icon="flame" data-size="10" data-stroke="1.1"></i><i data-icon="flame" data-size="10" data-stroke="1.1"></i></span>
+          <div style="position:absolute;left:38px;top:6px" class="t caps">NORMAL</div><div style="position:absolute;left:38px;top:17px" class="m">As it was meant to be.</div>
+        </div>
+        <div class="row" style="position:absolute;top:122px;left:0;right:0;height:30px">
+          <span style="position:absolute;left:6px;top:10px;color:var(--faint)"><i data-icon="flame" data-size="10" data-stroke="1.1"></i><i data-icon="flame" data-size="10" data-stroke="1.1"></i><i data-icon="flame" data-size="10" data-stroke="1.1"></i></span>
+          <div style="position:absolute;left:38px;top:6px" class="t caps">HARD</div><div style="position:absolute;left:38px;top:17px" class="m">Every round counts.</div>
+        </div>
+        <div style="position:absolute;top:160px;left:0;right:0;display:grid;gap:7px">
+          <div style="display:grid;grid-template-columns:78px 1fr 30px;align-items:center" class="m">Damage you take<div class="meter fixed"><i style="width:66.6%"></i></div><b class="caps" style="text-align:right;color:var(--bone)">×1.0</b></div>
+          <div style="display:grid;grid-template-columns:78px 1fr 30px;align-items:center" class="m">Enemy toughness<div class="meter fixed"><i style="width:66.6%"></i></div><b class="caps" style="text-align:right;color:var(--bone)">×1.00</b></div>
+          <div style="display:grid;grid-template-columns:78px 1fr 30px;align-items:center" class="m">Ammo you find<div class="meter fixed"><i style="width:66.6%"></i></div><b class="caps" style="text-align:right;color:var(--bone)">×1.0</b></div>
+        </div>
+        <div class="bar armed"><i data-icon="play" data-size="10" data-stroke="1.4"></i>BEGIN<span class="kc">ENTER</span></div>
+      </div>
+      <span class="callout" style="left:393px;top:46px">1</span>
+      <span class="callout" style="left:393px;top:140px">2</span>
+      <span class="callout" style="left:393px;top:208px">3</span>
+    </div></div>
+    <ol class="notes">
+      <li><b>Heading and lede.</b> The page speaks in the world's voice (IM Fell) before it asks for anything.</li>
+      <li><b>Difficulty rows.</b> 1–3 flames make the level readable without words. The chosen row gets amber flames and the 1px amber focus outline.</li>
+      <li><b>Live meters.</b> Damage taken, enemy health and ammo found redraw as the selection moves. Fixed values use Bone 70%, not amber, because they are information, not a setting.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================ LOAD -->
+  <h2 id="load">Dossier · Load</h2>
+  <p class="section-lede">Every save, newest first, so the right one can be recognised at a glance.</p>
+  <div class="mock">
+    <div class="stage"><div class="screen" data-shell="dossier" data-tab="2" data-help="ESC|Back,ENTER|Load,W S|Move">
+      <div class="page">
+        <div class="h">Load game <small>4 saved</small></div>
+        <div id="load-rows"></div>
+      </div>
+      <span class="callout" style="left:393px;top:78px">1</span>
+      <span class="callout" style="left:440px;top:78px">2</span>
+      <span class="callout" style="left:440px;top:93px">3</span>
+    </div></div>
+    <ol class="notes">
+      <li><b>Map thumbnail.</b> A 36×24 crop of the town map with a Rust Hi dot where the save was made. Older saves show the chapter numeral instead.</li>
+      <li><b>Title line.</b> Chapter and objective in Barlow Bold 8, cut to fit with an ellipsis.</li>
+      <li><b>Meta line.</b> Save kind · difficulty · play time · date, in Muted Label 7. Six rows show at once; the list scrolls with the selection, and a "n more below" line appears when needed.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================ EXTRA -->
+  <h2 id="extra">Dossier · Extra</h2>
+  <p class="section-lede">Achievements, kept across every run.</p>
+  <div class="mock">
+    <div class="stage"><div class="screen" data-shell="dossier" data-tab="3" data-help="ESC|Back,W A S D|Move">
+      <div class="page">
+        <div class="h">Extra <small>5 of 13</small></div>
+        <div class="meter" style="position:absolute;top:24px;left:0;right:0"><i style="width:38.5%"></i></div>
+        <div id="ach" style="position:absolute;top:34px;left:0;right:0;display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:38px"></div>
+        <div style="position:absolute;top:197px"><div style="font:700 9px var(--ui)">Old Tom</div><div class="m" style="margin-top:3px">Catch the legendary catfish.</div></div>
+      </div>
+      <span class="callout" style="left:396px;top:68px">1</span>
+      <span class="callout" style="left:430px;top:82px">2</span>
+      <span class="callout" style="left:396px;top:240px">3</span>
+    </div></div>
+    <ol class="notes">
+      <li><b>Progress track.</b> A 3.5px pill filled amber to the share earned. The count sits in the heading.</li>
+      <li><b>Rings.</b> Earned: an amber ring and the achievement's icon. Locked: a faint ring and a lock. The focused one gets an outer ring (Bone 90% as built; DESIGN.md lists this as drift from the Lantern Rule).</li>
+      <li><b>Detail.</b> The name (or "Locked") and the condition, so locked goals still tell the player what to try.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================ OPTIONS -->
+  <h2 id="options">Dossier · Options</h2>
+  <p class="section-lede">One settings page, shared by the main menu and the pause menu. Every change applies immediately.</p>
+  <div class="mock">
+    <div class="stage"><div class="screen" data-shell="dossier" data-tab="4" data-help="ESC|Back,A D|Adjust,W S|Move">
+      <div class="page">
+        <div class="h">Options</div>
+        <div id="opt" style="position:absolute;top:30px;left:0;right:0"></div>
+        <div style="position:absolute;right:-9px;top:30px;width:2px;height:204px;border-radius:1px;background:rgba(233,226,211,.08)"><div style="height:70px;border-radius:1px;background:rgba(233,226,211,.45)"></div></div>
+      </div>
+      <span class="callout" style="left:392px;top:80px">1</span>
+      <span class="callout" style="left:500px;top:96px">2</span>
+      <span class="callout" style="left:556px;top:148px">3</span>
+      <span class="callout" style="left:610px;top:80px">4</span>
+    </div></div>
+    <ol class="notes">
+      <li><b>Group headers.</b> GENERAL, AUDIO, SUBTITLES, CONTROLS, GAMEPLAY &amp; ACCESSIBILITY, VIDEO in Muted Label Caps. 29 settings in all.</li>
+      <li><b>Choice.</b> The value sits between two drawn chevrons, which turn amber on the focused row. A/D, Enter or a click steps it.</li>
+      <li><b>Meter with knob.</b> A 56px track filled amber, with a knob that grows when focused. Click or drag the track, or use the wheel. Multipliers and brightness get a tick at the designed value.</li>
+      <li><b>Scroll thumb.</b> A thin Bone track in the folder's right margin shows where the 12 visible lines sit in the list.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================ DEV -->
+  <h2 id="dev">Dossier · Dev</h2>
+  <p class="section-lede">For testing: jump to any step of any chapter. Nothing is saved and nothing unlocks.</p>
+  <div class="mock">
+    <div class="stage"><div class="screen" data-shell="dossier" data-tab="5" data-help="ESC|Back,ENTER|Start,W S|Move">
+      <div class="page">
+        <div class="h">Dev mode</div>
+        <div id="dev-rows" style="position:absolute;top:28px;left:0;right:0"></div>
+        <div class="m" style="position:absolute;bottom:0;left:0;right:0">Chapter I — The Mark. Normal, nothing saved.</div>
+      </div>
+      <span class="callout" style="left:392px;top:78px">1</span>
+      <span class="callout" style="left:392px;top:112px">2</span>
+    </div></div>
+    <ol class="notes">
+      <li><b>Run modifiers.</b> Start with all 12 evidence, or with the Mark at 30 / 60 / 95%.</li>
+      <li><b>Steps.</b> Every mission step of the three chapters (I · Intro … III · Epilogue). The help line at the foot explains the selected row.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================ QUIT -->
+  <h2 id="quit">Dossier · Quit</h2>
+  <p class="section-lede">A confirmation that reassures: the player's saves are kept.</p>
+  <div class="mock">
+    <div class="stage"><div class="screen" data-shell="dossier" data-tab="6" data-help="ESC|Back,ENTER|Quit,W S|Tabs">
+      <div class="page">
+        <div class="h">Leave Hollowmere?</div>
+        <div class="ld">Check out of room six. Your saves stay where you left them.</div>
+        <div class="print" style="left:10px;top:70px;width:172px;height:104px;transform:rotate(1.7deg)">
+          <div class="img" style="background-position:42% 58%"></div><span class="pinhead" style="left:90px;top:38px"></span>
+          <div class="lbl">Lakeview Motel</div>
+        </div>
+        <div class="bar armed"><i data-icon="quit" data-size="10" data-stroke="1.4"></i>QUIT TO DESKTOP<span class="kc">ENTER</span></div>
+      </div>
+      <span class="callout" style="left:393px;top:72px">1</span>
+      <span class="callout" style="left:404px;top:120px">2</span>
+      <span class="callout" style="left:392px;top:290px">3</span>
+    </div></div>
+    <ol class="notes">
+      <li><b>In-world copy.</b> "Check out of room six" keeps the fiction while stating the fact: saves stay.</li>
+      <li><b>Where you'd leave off.</b> The same map print as Continue, tilted the other way.</li>
+      <li><b>One action.</b> QUIT TO DESKTOP. Esc goes back to the tabs.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================ PAUSE -->
+  <h2 id="pause">Pause menu</h2>
+  <p class="section-lede">The dossier set down over the frozen game. The frame behind it is blurred and dimmed.</p>
+  <div class="mock">
+    <div class="stage"><div class="screen" data-shell="pause" data-help="ESC|Resume,ENTER|Select,W S|Move">
+      <div class="page">
+        <div class="h">Paused</div>
+        <div class="ld" style="margin-top:3px">Chapter I — The Mark</div>
+        <div class="chips" style="position:absolute;top:40px">
+          <span class="chip"><i data-icon="clock" data-size="9" data-stroke="1.1"></i>0:24:13</span>
+          <span class="chip"><i data-icon="flame" data-size="9" data-stroke="1.1"></i>Normal</span>
+          <span class="chip mark"><i data-icon="mark" data-size="9" data-stroke="1.1"></i>Mark 34.2%</span>
+        </div>
+        <div class="next" style="position:absolute;top:62px;left:0;right:0"><span class="caps">Next</span><p>Follow the forest trail to the sawmill</p></div>
+        <div id="pause-rows"></div>
+        <div class="bar armed"><i data-icon="play" data-size="10" data-stroke="1.4"></i>RESUME<span class="kc">ENTER</span></div>
+      </div>
+      <span class="callout" style="left:20px;top:150px">1</span>
+      <span class="callout" style="left:393px;top:90px">2</span>
+      <span class="callout" style="left:393px;top:152px">3</span>
+      <span class="callout" style="left:392px;top:290px">4</span>
+    </div></div>
+    <ol class="notes">
+      <li><b>Frozen backdrop.</b> The paused frame, blurred and dimmed (<code>pause_blur.gdshader</code>), under the same letterbox, logo and CRT pass as the main menu: one world.</li>
+      <li><b>State at a glance.</b> The chapter, then chips for time, difficulty and the exact Mark (to a tenth: the only place it is shown exactly), then the NEXT objective.</li>
+      <li><b>Three rows.</b> Save game, Options, Main menu, each with an icon and a line that says what it does. When saving isn't allowed, Save game becomes a fainter slip with a lock and the reason.</li>
+      <li><b>RESUME.</b> The default selection. Esc also resumes. It fires on the button's release, so the click never reaches the gun.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================ LEAVE -->
+  <h2 id="leave">Pause · Leave this run?</h2>
+  <div class="mock">
+    <div class="stage"><div class="screen" data-shell="pause" data-help="ESC|Back,ENTER|Select">
+      <div class="page">
+        <div class="h">Leave this run?</div>
+        <div class="ld">Back to the title screen. Anything since your last save is lost.</div>
+        <div class="print" style="left:10px;top:70px;width:172px;height:104px;transform:rotate(1.7deg)">
+          <div class="img" style="background-position:30% 38%"></div><span class="pinhead" style="left:70px;top:44px"></span>
+          <div class="lbl">Forest trail</div>
+        </div>
+        <div class="bar armed"><i data-icon="quit" data-size="10" data-stroke="1.4"></i>MAIN MENU<span class="kc">ENTER</span></div>
+      </div>
+      <span class="callout" style="left:393px;top:72px">1</span>
+      <span class="callout" style="left:392px;top:290px">2</span>
+    </div></div>
+    <ol class="notes">
+      <li><b>Consequence first.</b> The lede states what will be lost before the player confirms.</li>
+      <li><b>Leaf turn, not a modal.</b> The confirmation is its own page of the dossier (a 0.18 s leaf turn). Esc turns back.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================ INVENTORY -->
+  <h2 id="inv-weapons">Inventory · Weapons</h2>
+  <p class="section-lede">I opens it (Back on a pad). It is the pause dossier, wider, with five index tabs.</p>
+  <div class="mock">
+    <div class="stage"><div class="screen" data-shell="inventory" data-tab="0" data-help="ESC|Close,ENTER|Equip,Q E|Tabs,W S|Move">
+      <div class="page">
+        <div class="h">Weapons <small>4 carried</small></div>
+        <div id="inv-list" style="position:absolute;top:26px;left:0;width:123px"></div>
+        <div style="position:absolute;top:26px;left:133px;right:0;bottom:0">
+          <img class="png-ico" src="../../ui/icons/revolver.png" alt="" style="width:56px;height:56px;filter:brightness(1.5)">
+          <div style="font:400 14px var(--serif);margin-top:2px">Revolver</div>
+          <div class="chips" style="margin-top:5px"><span class="chip"><i data-icon="skull" data-size="9" data-stroke="1.1"></i>Damage 34</span><span class="chip"><i data-icon="bullet" data-size="9" data-stroke="1.1"></i>5 · 12</span></div>
+          <p class="m" style="margin:6px 0 0;font-size:8px;line-height:1.3;color:var(--bone)">Six rounds. Steady, and loud enough to bring them running.</p>
+          <div class="m" style="margin-top:4px">Rounds loaded · in reserve</div>
+          <div class="bar armed"><i data-icon="revolver" data-size="10" data-stroke="1.4"></i>EQUIP<span class="kc">ENTER</span></div>
+        </div>
+      </div>
+      <span class="callout" style="left:260px;top:44px">1</span>
+      <span class="callout" style="left:312px;top:84px">2</span>
+      <span class="callout" style="left:452px;top:84px">3</span>
+      <span class="callout" style="left:452px;top:290px">4</span>
+    </div></div>
+    <ol class="notes">
+      <li><b>Index tabs.</b> WEAPONS, ITEMS, KEYS, EVIDENCE, MAP. Q/E, LB/RB or a click changes tab. M opens straight on MAP.</li>
+      <li><b>List.</b> 45% of the page. Each row has the item's rendered icon (made from its 3D model in the PS2 look), its name and a sub line.</li>
+      <li><b>Detail card.</b> A big icon, the name in the serif, chips, what it is. Read live from the game, so it's always right.</li>
+      <li><b>Action bar.</b> The verb Enter will do: EQUIP, DRINK, PUT ON… When it can't, a fainter slip says why ("In hand.").</li>
+    </ol>
+  </div>
+
+  <h2 id="inv-evidence">Inventory · Evidence</h2>
+  <div class="mock">
+    <div class="stage"><div class="screen" data-shell="inventory" data-tab="3" data-help="ESC|Close,Q E|Tabs,W A S D|Move">
+      <div class="page">
+        <div class="h">Evidence <small>7 of 12</small></div>
+        <div class="meter" style="position:absolute;top:24px;left:0;right:0"><i style="width:58.3%"></i></div>
+        <div id="ev" style="position:absolute;top:32px;left:0;right:0;display:grid;grid-template-columns:repeat(6,1fr);gap:4px"></div>
+        <div style="position:absolute;top:142px;left:0;right:0">
+          <div class="caps" style="color:var(--amber)">Evidence #9</div>
+          <div style="font:400 14px var(--serif);margin-top:3px">Elena's recording</div>
+          <p class="m" style="margin:5px 0 0;font-size:8px;color:var(--bone)">Hidden under the static on channel 7: "He's lying to us."</p>
+        </div>
+        <div style="position:absolute;bottom:0;font:italic 400 9px var(--serif);color:var(--muted)">Elena's broadcast needs all twelve.</div>
+      </div>
+      <span class="callout" style="left:320px;top:84px">1</span>
+      <span class="callout" style="left:540px;top:110px">2</span>
+      <span class="callout" style="left:320px;top:186px">3</span>
+    </div></div>
+    <ol class="notes">
+      <li><b>Slips.</b> A 6×2 grid of the twelve pieces, each with its rendered icon. Missing ones show as ???, never hidden, so the player knows how many remain.</li>
+      <li><b>Focus.</b> The same amber outline as every list row in the game.</li>
+      <li><b>Detail.</b> The number in amber caps, the name in the serif, then what it says. The footer hints at why collecting matters (the Signal ending).</li>
+    </ol>
+  </div>
+
+  <h2 id="inv-map">Inventory · Map</h2>
+  <div class="mock">
+    <div class="stage"><div class="screen" data-shell="inventory" data-tab="4" data-help="ESC|Close,Q E|Tabs">
+      <div class="page">
+        <div class="h">Map <small>Near: Lakeview Motel</small></div>
+        <div style="position:absolute;top:26px;left:0;right:0;bottom:36px;border-radius:3px;background:url('../../maps/hollowmere_map.png') 45% 55%/150% no-repeat;filter:sepia(.4) brightness(.9)">
+          <span style="position:absolute;left:46%;top:56%;width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:9px solid var(--rust-hi);transform:rotate(25deg)"></span>
+          <span style="position:absolute;left:68%;top:30%;width:9px;height:9px;border-radius:50%;border:2px solid var(--amber)"></span>
+        </div>
+        <div class="next" style="position:absolute;bottom:0;left:0;right:0;height:28px"><span class="caps">Next</span><p>Talk to Grady at the General Store <span class="m">· 84 m away</span></p></div>
+      </div>
+      <span class="callout" style="left:440px;top:170px">1</span>
+      <span class="callout" style="left:500px;top:120px">2</span>
+      <span class="callout" style="left:312px;top:300px">3</span>
+    </div></div>
+    <ol class="notes">
+      <li><b>Alex.</b> A rust arrow pointing where Alex faces, on the town printed on paper (<code>guide.gd draw_paper_map</code>).</li>
+      <li><b>Objective.</b> An amber ring, the same colour as the objective on the minimap and compass.</li>
+      <li><b>NEXT and distance.</b> One line: what to do and how far it is.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================ HUD -->
+  <h2 id="hud">In-game HUD</h2>
+  <p class="section-lede">Four things always on screen; everything else enters on its event and leaves after. Glance, don't read.</p>
+  <div class="mock">
+    <div class="stage"><div class="screen">
+      <div class="fog night"></div>
+      <!-- figure -->
+      <div style="position:absolute;left:300px;top:170px;width:26px;height:74px;border-radius:12px 12px 4px 4px;background:linear-gradient(#2c2a28,#151413)"></div>
+      <!-- objective -->
+      <div class="hudpanel" style="position:absolute;left:10px;top:10px;width:188px;padding:5px 8px 6px 10px;box-shadow:inset 2px 0 0 rgba(255,184,77,.9)">
+        <div class="caps" style="color:var(--amber)">Objective</div>
+        <div style="font:500 9px/1.25 var(--ui)">Talk to Grady at the General Store</div>
+      </div>
+      <div class="hudpanel" style="position:absolute;left:10px;top:48px;width:150px;padding:5px 8px 6px 10px;box-shadow:inset 2px 0 0 rgba(233,226,211,.7)">
+        <div style="font:500 8px var(--ui)">Picked up: Flare ×2</div>
+      </div>
+      <!-- compass -->
+      <div style="position:absolute;left:210px;top:8px;width:220px;height:14px;background:rgba(0,0,0,.45);display:flex;justify-content:space-around;align-items:center;font:700 7px var(--ui);color:var(--muted)">
+        <span>W</span><span>·</span><span style="color:var(--bone)">N</span><span style="color:var(--amber)">◆</span><span>·</span><span>E</span>
+      </div>
+      <!-- minimap + clock -->
+      <div style="position:absolute;right:10px;top:8px;width:84px;height:84px;border-radius:50%;border:2px solid #1a1410;background:url('../../maps/hollowmere_map.png') 42% 58%/420% no-repeat;filter:sepia(.3)">
+        <span style="position:absolute;left:38px;top:36px;width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:10px solid var(--rust-hi)"></span>
+        <span style="position:absolute;left:60px;top:18px;width:7px;height:7px;border-radius:50%;background:var(--amber)"></span>
+      </div>
+      <div style="position:absolute;right:10px;top:96px;width:84px;text-align:center;font:700 10px var(--ui);text-shadow:0 1px 0 #000">22:47</div>
+      <div style="position:absolute;right:10px;top:110px;width:84px;text-align:center" class="caps"><span style="color:var(--rust-hi)">MARK +5%</span></div>
+      <!-- prompt -->
+      <div style="position:absolute;left:0;right:0;top:254px;display:flex;justify-content:center;gap:5px;align-items:center;font:500 9px var(--ui);text-shadow:0 1px 0 #000"><span class="kc" style="height:13px;background:rgba(0,0,0,.5)">E</span>Talk to Grady</div>
+      <!-- subtitle -->
+      <div style="position:absolute;left:0;right:0;top:276px;display:flex;justify-content:center"><span style="padding:3px 9px;background:rgba(0,0,0,.6);border-radius:3px;font:500 10px var(--ui)"><b style="color:#d9c79e">Grady:</b> Marked folk pay in tokens.</span></div>
+      <!-- vitals -->
+      <div style="position:absolute;left:11px;top:326px;color:var(--hp)"><i data-icon="heart" data-size="10" data-color="#d6382b"></i></div>
+      <div style="position:absolute;left:24px;top:330px;width:100px;height:5px;border-radius:3px;background:rgba(0,0,0,.45)"><div style="width:78%;height:100%;border-radius:3px;background:rgba(233,226,211,.55)"><div style="width:84%;height:100%;border-radius:3px;background:var(--hp)"></div></div></div>
+      <div style="position:absolute;left:12px;top:336px;color:var(--bone);opacity:.75"><i data-icon="run" data-size="8"></i></div>
+      <div style="position:absolute;left:24px;top:340px;width:100px;height:3px;border-radius:2px;background:rgba(0,0,0,.4)"><div style="width:45%;height:100%;border-radius:2px;background:rgba(233,226,211,.85)"></div></div>
+      <!-- visibility eye -->
+      <div style="position:absolute;left:132px;top:325px;color:var(--bone);opacity:.8"><i data-icon="mark" data-size="14" data-stroke="1.3"></i></div>
+      <!-- belt -->
+      <div style="position:absolute;right:10px;top:293px;display:flex;gap:4px">
+        <span class="hudpanel" style="display:flex;align-items:center;gap:4px;height:15px;padding:0 5px 0 3px;border-radius:8px"><img class="png-ico" src="../../ui/icons/bottle.png" alt="" style="width:14px;height:14px;filter:brightness(1.6)"><b style="font:700 8px var(--ui)">×2</b><span class="kc" style="height:10px;color:var(--muted)">G</span></span>
+        <span class="hudpanel" style="display:flex;align-items:center;gap:4px;height:15px;padding:0 5px 0 3px;border-radius:8px"><img class="png-ico" src="../../ui/icons/tea.png" alt="" style="width:14px;height:14px;filter:brightness(1.6)"><b style="font:700 8px var(--ui)">×1</b><span class="kc" style="height:10px;color:var(--muted)">H</span></span>
+      </div>
+      <!-- weapon card -->
+      <div class="hudpanel" style="position:absolute;right:10px;bottom:12px;width:150px;height:36px;box-shadow:inset 2px 0 0 #b9a27a">
+        <img class="png-ico" src="../../ui/icons/revolver.png" alt="" style="position:absolute;left:6px;top:2px;width:32px;height:32px;filter:brightness(1.5)">
+        <div class="caps" style="position:absolute;left:42px;top:9px;font-size:8px;color:var(--bone)">Revolver</div>
+        <div style="position:absolute;left:42px;top:21px;display:flex;gap:2.5px"><i style="width:3.5px;height:7px;border-radius:2px;background:var(--amber)"></i><i style="width:3.5px;height:7px;border-radius:2px;background:var(--amber)"></i><i style="width:3.5px;height:7px;border-radius:2px;background:var(--amber)"></i><i style="width:3.5px;height:7px;border-radius:2px;background:var(--amber)"></i><i style="width:3.5px;height:7px;border-radius:2px;background:var(--amber)"></i><i style="width:3.5px;height:7px;border-radius:2px;background:rgba(233,226,211,.18)"></i></div>
+        <div style="position:absolute;right:8px;top:10px;font:700 14px var(--ui)">5<span style="color:var(--muted);font-size:10px"> / 12</span></div>
+      </div>
+      <div class="grain"></div>
+      <span class="callout" style="left:4px;top:4px">1</span>
+      <span class="callout" style="left:204px;top:4px">2</span>
+      <span class="callout" style="left:540px;top:4px">3</span>
+      <span class="callout" style="left:4px;top:322px">4</span>
+      <span class="callout" style="left:466px;top:316px">5</span>
+      <span class="callout" style="left:540px;top:288px">6</span>
+      <span class="callout" style="left:250px;top:254px">7</span>
+      <span class="callout" style="left:198px;top:278px">8</span>
+      <span class="callout" style="left:540px;top:112px">9</span>
+      <span class="callout" style="left:148px;top:322px">10</span>
+    </div></div>
+    <ol class="notes">
+      <li><b>Objective</b> (always). Amber edge and OBJECTIVE caps. Its panel fades after 6 s, leaving shadowed text. Toasts stack under it, sliding in 14px from the left.</li>
+      <li><b>Compass.</b> Cardinal points, with the objective as an amber diamond.</li>
+      <li><b>Minimap and clock</b> (always). A round paper map that turns with Alex, the objective in amber, and the in-game clock under it.</li>
+      <li><b>Health and stamina</b> (always). A heart and a 5px pill with a pale trail that drains after a hit; the heart beats under 30%. Stamina shows only while spent and turns Rust Hi when exhausted.</li>
+      <li><b>Weapon card</b> (always). Rendered icon, name, amber magazine pips, <code>loaded / reserve</code>. A 2px edge in the weapon's colour; an amber flare on a swap.</li>
+      <li><b>Item belt.</b> A chip for each throwable or tea carried, with the count and its quick key.</li>
+      <li><b>Prompt.</b> Key plus verb, only near something usable.</li>
+      <li><b>Subtitle.</b> The speaker's name in their colour and the line on an adjustable backing. The name means colour is never the only cue.</li>
+      <li><b>Mark notice.</b> MARK +N% in Rust Hi under the clock when it rises; it fades. No permanent gauge.</li>
+      <li><b>Visibility eye.</b> How visible Alex is, for stealth. Can be turned off.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================ WHEEL -->
+  <h2 id="wheel">Selection wheel</h2>
+  <p class="section-lede">Hold Tab. Time slows to 25% and the world goes grey, so the choice is made under pressure but not in a panic.</p>
+  <div class="mock">
+    <div class="stage"><div class="screen">
+      <div class="fog night grey"></div>
+      <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 46%,transparent 30%,rgba(0,0,0,.6))"></div>
+      <svg id="wheel-svg" width="640" height="360" style="position:absolute;inset:0"></svg>
+      <div style="position:absolute;left:270px;top:132px;width:100px;text-align:center">
+        <div class="caps" style="color:var(--amber);font-size:8px">Equip</div>
+        <div style="font:400 15px var(--serif);margin:3px 0">Shotgun</div>
+        <span class="kc">3</span>
+      </div>
+      <div style="position:absolute;left:0;right:0;top:318px;text-align:center;font:500 9px var(--ui)">Two shells, seven pellets each. Close range.</div>
+      <div style="position:absolute;left:0;right:0;bottom:6px;display:flex;justify-content:center;gap:12px" class="m"><span><span class="kc">TAB</span> Release to pick</span><span><span class="kc">RIGHT CLICK</span> Cancel</span></div>
+      <div class="grain"></div>
+      <span class="callout" style="left:314px;top:20px">1</span>
+      <span class="callout" style="left:420px;top:150px">2</span>
+      <span class="callout" style="left:268px;top:130px">3</span>
+      <span class="callout" style="left:180px;top:316px">4</span>
+    </div></div>
+    <ol class="notes">
+      <li><b>Ring of wedges.</b> Fists at the top, then each weapon clockwise in number-key order, a faint rule, then the items Alex holds. Icon on a Bone 7% disc, count under it (<code>loaded / reserve</code>, ×n, On/Off, or EMPTY in Rust Hi).</li>
+      <li><b>Picked wedge.</b> Stands out 8px, warmer, with the amber focus outline. The weapon in hand carries an amber dot.</li>
+      <li><b>Hub.</b> The verb in amber caps, the name in IM Fell, the quick key, and an amber needle on the rim where the pointer aims.</li>
+      <li><b>Explanation line.</b> What the item does (Bone) or why it can't be used (Rust Hi), then the help pair for the device in use.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================ MINIGAME -->
+  <h2 id="minigame">Minigame overlay · Radio tuning</h2>
+  <p class="section-lede">Each minigame is a drawn object over a dimmed world, with its instruction under it and Esc to leave. Shown: radio tuning, the first and mandatory one.</p>
+  <div class="mock">
+    <div class="stage"><div class="screen">
+      <div class="fog night"></div>
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,.62)"></div>
+      <div style="position:absolute;left:150px;top:92px;width:340px;height:170px;border-radius:4px;background:repeating-linear-gradient(0deg,#4a2f1c 0 3px,#553621 3px 6px);box-shadow:4px 4px 0 rgba(0,0,0,.5)">
+        <div style="position:absolute;left:8px;top:8px;right:8px;bottom:8px;background:#2a1d16;border:1px solid #6b6f73">
+          <div style="position:absolute;left:8px;top:8px;width:96px;height:100px;background:radial-gradient(#120d0a 30%,transparent 31%) 0 0/4px 4px,#0c0907"></div>
+          <div style="position:absolute;left:6px;top:114px;width:100px;height:16px;background:#b88f42;font:700 8px/16px var(--ui);color:#33261a;text-align:center">CHANNEL 7</div>
+          <div style="position:absolute;left:118px;top:8px;width:196px;height:48px;border-radius:3px;background:linear-gradient(#f1c46b,#b98a3c);overflow:hidden">
+            <div style="position:absolute;left:0;right:0;top:30px;height:1px;background:rgba(0,0,0,.4)"></div>
+            <div style="position:absolute;left:112px;top:4px;width:2px;height:40px;background:var(--rust)"></div>
+            <div style="position:absolute;left:8px;right:8px;top:6px;display:flex;justify-content:space-between;font:700 7px var(--ui);color:#4a3418"><span>88</span><span>92</span><span>96</span><span>100</span><span>104</span><span>108</span></div>
+          </div>
+          <svg style="position:absolute;left:118px;top:64px" width="196" height="40"><rect width="196" height="40" fill="#0b120c"/><polyline fill="none" stroke="#7fd48b" stroke-width="1.2" points="0,20 10,14 20,26 30,10 40,28 50,16 60,22 70,12 80,27 90,18 100,20 110,15 120,24 130,13 140,26 150,17 160,22 170,14 180,25 196,20"/><polyline fill="none" stroke="rgba(233,226,211,.35)" stroke-dasharray="3 3" points="0,20 20,12 40,28 60,12 80,28 100,12 120,28 140,12 160,28 180,12 196,20"/></svg>
+          <div style="position:absolute;left:140px;top:112px;width:30px;height:30px;border-radius:50%;background:radial-gradient(#9aa0a4,#4b5054);box-shadow:0 2px 0 #000"></div>
+          <div style="position:absolute;left:230px;top:118px;width:22px;height:22px;border-radius:50%;background:radial-gradient(#9aa0a4,#4b5054);box-shadow:0 2px 0 #000"></div>
+          <div class="caps" style="position:absolute;left:262px;top:124px;color:#7fd48b">Hold steady ..</div>
+        </div>
+      </div>
+      <div style="position:absolute;left:0;right:0;top:282px;text-align:center;font:500 10px var(--ui);color:#d9d1b8">A/D or mouse — tune · hold on the signal</div>
+      <div style="position:absolute;right:16px;bottom:10px" class="m"><span class="kc">ESC</span> Leave</div>
+      <div class="grain"></div>
+      <span class="callout" style="left:262px;top:96px">1</span>
+      <span class="callout" style="left:262px;top:160px">2</span>
+      <span class="callout" style="left:404px;top:214px">3</span>
+      <span class="callout" style="left:190px;top:282px">4</span>
+    </div></div>
+    <ol class="notes">
+      <li><b>Dial window.</b> A lit amber scale with a rust needle that the player moves with A/D, the mouse or a stick.</li>
+      <li><b>Waveform.</b> The signal (green) against the target shape (dashed). It cleans up as the dial nears the station.</li>
+      <li><b>Status.</b> "HOLD STEADY" and dots that count up while the signal is held clean.</li>
+      <li><b>Instruction and exit.</b> One line of controls under the object, and Esc to leave at any time without other penalty.</li>
+    </ol>
+  </div>
+  <div class="table-scroll" style="margin-top:28px">
+    <table class="spec">
+      <thead><tr><th>Overlay</th><th>Object drawn</th><th>Controls</th><th>Feedback</th></tr></thead>
+      <tbody>
+        <tr><td>Lockpicking</td><td>A pin-tumbler lock in cross-section</td><td>A/D, mouse or stick rotate the pick; W, click or A lifts</td><td>The pin trembles near the sweet spot; tension builds and can break the pick</td></tr>
+        <tr><td>Fishing</td><td>The dock at dawn, bobber and line</td><td>Hold to charge the cast, press on the bite, hold to reel</td><td>A tension bar: keep the marker in the green or the line snaps</td></tr>
+        <tr><td>Lantern Hi-Lo</td><td>A card table against Silas</td><td>Pick a stake, then Higher or Lower; cash out</td><td>Chain multiplier ×1.5 / ×2 / ×3, HAND n/10, the Veil card</td></tr>
+        <tr><td>Moth Run</td><td>An arcade cabinet screen</td><td>W/S, stick or mouse steer</td><td>Score, 3 lives, the high-score table, Elena's message at 10,000</td></tr>
+        <tr><td>Shooting gallery</td><td>In the world: 5 tin moths on the square's bar</td><td>Aim and fire</td><td>Each moth swings up when hit</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<footer class="site-foot">LAAF · design planning · mockups of the build at <code>main</code>. See also <a href="../project-documentation.md">the project documentation</a>.</footer>
+
+<script>
+// ---------------------------------------------------------------- shared shells: the fog, letterbox, logo, tabs and folder
+const DOSSIER_TABS = [["continue","CONTINUE"],["new","NEW"],["load","LOAD"],["extra","EXTRA"],["options","OPTIONS"],["dev","DEV"],["quit","QUIT"]];
+const INV_TABS = [["revolver","WEAPONS"],["bottle","ITEMS"],["key","KEYS"],["load","EVIDENCE"],["pin","MAP"]];
+
+function keyHelp(spec) {
+  return '<div class="help">' + spec.split(',').map(p => { const [k, w] = p.split('|'); return `<span><span class="kc">${k}</span>${w}</span>`; }).join('') + '</div>';
+}
+function tabs(list, open, left, top) {
+  return `<div class="tabs" style="left:${left}px;top:${top}px">` + list.map(([ic, lb], i) =>
+    `<div class="tab${i === open ? ' open' : ''}"><i data-icon="${ic}" data-size="12" data-stroke="1.3" data-color="${i === open ? '#ffb84d' : '#b3ab9c'}"></i>${lb}</div>`).join('') + '</div>';
+}
+const LOGO = `<div class="logo" style="left:32px;top:30px"><div class="word">LAAF</div><div class="rule" style="width:170px"></div><div class="town">HOLLOWMERE</div></div>`;
+
+document.querySelectorAll('.screen[data-shell]').forEach(s => {
+  const kind = s.dataset.shell, page = s.querySelector('.page'), tab = +s.dataset.tab;
+  const callouts = [...s.querySelectorAll('.callout')];
+  let html = '';
+  if (kind === 'dossier') {
+    html = `<div class="fog"></div><div class="letterbox top"></div><div class="letterbox bottom"></div>${LOGO}
+      <div class="caption"><div class="line">Every door on Maple Avenue has the same eye on it.</div><div class="src">C1.2 · 3:00 minus four</div></div>
+      ${tabs(DOSSIER_TABS, tab, 346, 52)}<div class="folder" style="left:382px;top:34px;width:222px;height:292px"></div>`;
+  } else if (kind === 'pause') {
+    html = `<div class="fog night blur"></div><div class="letterbox top"></div><div class="letterbox bottom"></div>${LOGO}
+      <div class="folder" style="left:382px;top:34px;width:222px;height:292px"></div>`;
+  } else {
+    html = `<div class="fog night blur"></div><div class="letterbox top"></div><div class="letterbox bottom"></div>${LOGO}
+      <div class="caps" style="position:absolute;right:36px;top:22px;z-index:6;color:var(--muted)">Inventory</div>
+      ${tabs(INV_TABS, tab, 264, 52)}<div class="folder" style="left:300px;top:34px;width:304px;height:292px"></div>`;
+  }
+  s.innerHTML = html + keyHelp(s.dataset.help) + '<div class="crt"></div><div class="grain"></div>';
+  const folder = s.querySelector('.folder');
+  folder.appendChild(page);
+  callouts.forEach(c => s.appendChild(c));
+});
+
+// ---------------------------------------------------------------- repeated rows
+const el = id => document.getElementById(id);
+el('load-rows').innerHTML = [
+  ['Ch.I · Talk to Grady at the General Store', 'Autosave · Normal · 0:24:13 · 11-01 22:14', '42% 58%', true],
+  ['Ch.I · Look at your hand', 'Save · Normal · 0:09:40 · 11-01 21:58', '40% 60%', false],
+  ['Ch.II · Get the gas mask', 'Save · Hard · 1:12:05 · 10-30 23:40', '62% 30%', false],
+  ['Ch.III · Ring the bells on Marcus', 'Autosave · Easy · 2:03:51 · 10-28 19:02', '70% 72%', false],
+].map(([t, m, bp, sel], i) => `
+  <div class="row${sel ? ' sel' : ''}" style="position:absolute;top:${26 + i * 36}px;left:0;right:0;height:32px">
+    <div style="position:absolute;left:4px;top:4px;width:36px;height:24px;outline:1px solid rgba(233,226,211,.25);background:url('../../maps/hollowmere_map.png') ${bp}/500% no-repeat;filter:sepia(.4) brightness(.8)"><span style="position:absolute;left:16px;top:10px;width:4.4px;height:4.4px;border-radius:50%;background:var(--rust-hi)"></span></div>
+    <div class="t" style="position:absolute;left:47px;top:6px;right:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t}</div>
+    <div class="m" style="position:absolute;left:47px;top:18px;right:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m}</div>
+  </div>`).join('');
+
+el('ach').innerHTML = [['axe',1],['mark',1],['continue',0],['load',0],['key',1],['heart',0],['check',0],['skull',0],['revolver',1],['extra',1,1],['flame',0],['extra',0],['fists',0]]
+  .map(([ic, on, focus]) => `<div style="position:relative;display:grid;place-items:center">
+    <span style="position:absolute;width:28px;height:28px;border-radius:50%;background:rgba(233,226,211,${on ? .1 : .035});box-shadow:inset 0 0 0 1px ${on ? 'rgba(255,184,77,.9)' : 'rgba(143,135,122,.4)'}"></span>
+    ${focus ? '<span style="position:absolute;width:34px;height:34px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(233,226,211,.9)"></span>' : ''}
+    <span style="position:relative;color:${on ? '#e9e2d3' : '#8f877a'}"><i data-icon="${on ? ic : 'lock'}" data-size="13" data-stroke="1.2"></i></span></div>`).join('');
+
+const OPT = [
+  ['h', 'GENERAL'], ['Language', 'choice', 'English'], ['Control tips', 'switch', 1],
+  ['h', 'AUDIO'], ['Master volume', 'meter', 100], ['Music', 'meter', 70, 1], ['Sound effects', 'meter', 100], ['Voices', 'meter', 100],
+  ['h', 'SUBTITLES'], ['Subtitles', 'switch', 1], ['Subtitle size', 'choice', 'Normal'], ['Subtitle backing', 'meter', 60],
+];
+el('opt').innerHTML = OPT.map((r, i) => {
+  const y = i * 17;
+  if (r[0] === 'h') return `<div class="caps" style="position:absolute;top:${y + 5}px;color:var(--muted)">${r[1]}</div>`;
+  const [label, kind, v, sel] = r;
+  let val = '';
+  if (kind === 'choice') val = `<span style="display:flex;justify-content:space-between;width:100%;align-items:center;color:var(--bone)" class="m"><b style="color:var(--muted)">‹</b>${v}<b style="color:var(--muted)">›</b></span>`;
+  if (kind === 'switch') val = `<span class="switch${v ? ' on' : ''}" style="margin-left:auto"></span>`;
+  if (kind === 'meter') val = `<span style="position:relative;width:56px;height:4px;border-radius:2px;background:rgba(233,226,211,.12)"><i style="position:absolute;left:0;top:0;bottom:0;width:${v}%;border-radius:2px;background:var(--amber)"></i><i style="position:absolute;left:calc(${v}% - ${sel ? 4.2 : 3.5}px);top:${sel ? -2.2 : -1.5}px;width:${sel ? 8.4 : 7}px;height:${sel ? 8.4 : 7}px;border-radius:50%;background:${sel ? 'var(--amber)' : 'var(--bone)'}"></i></span><span class="caps" style="width:22px;text-align:right;color:var(--bone)">${v}%</span>`;
+  return `<div class="${sel ? 'row sel' : ''}" style="position:absolute;top:${y}px;left:-4px;right:-4px;height:16px">
+    <span class="m" style="position:absolute;left:6px;top:4px;color:${sel ? 'var(--bone)' : 'var(--muted)'}">${label}</span>
+    <span style="position:absolute;right:6px;top:3px;width:80px;height:10px;display:flex;align-items:center;gap:4px;justify-content:flex-end">${val}</span></div>`;
+}).join('');
+
+el('dev-rows').innerHTML = ['All 12 evidence: off', 'Start Mark: as the story has it', 'I · Intro', 'I · Room', 'I · Hunt', 'I · Square', 'I · Sawmill', 'I · Boss', 'I · Blackout', 'II · Intro', 'II · Channel7', 'II · Zones']
+  .map((t, i) => `<div class="${i === 2 ? 'row sel' : ''}" style="position:absolute;top:${i * 17}px;left:-4px;right:-4px;height:16px"><span class="m" style="position:absolute;left:6px;top:4px;color:${i === 2 ? 'var(--bone)' : 'var(--muted)'}">${t}</span></div>`).join('');
+
+el('pause-rows').innerHTML = [['load', 'SAVE GAME', 'Keep your place in a new save.'], ['options', 'OPTIONS', 'Sound, controls, language and video.'], ['quit', 'MAIN MENU', 'Leave this run for the title screen.']]
+  .map(([ic, t, m], i) => `<div class="row" style="position:absolute;top:${102 + i * 34}px;left:0;right:0;height:30px">
+    <span style="position:absolute;left:11px;top:9px;color:var(--muted)"><i data-icon="${ic}" data-size="12" data-stroke="1.3"></i></span>
+    <div class="t caps" style="position:absolute;left:38px;top:6px;font-size:8px">${t}</div><div class="m" style="position:absolute;left:38px;top:17px">${m}</div></div>`).join('');
+
+el('inv-list').innerHTML = [['fists', 'Fists', 'Melee'], ['revolver', 'Revolver', '5 · 12', 1], ['axe', 'Fire axe', 'Melee'], ['flare', 'Flare gun', '1 · 2']]
+  .map(([ic, n, sub, sel], i) => `<div class="row${sel ? ' sel' : ''}" style="position:absolute;top:${i * 27}px;left:0;right:0;height:24px">
+    <img class="png-ico" src="../../ui/icons/${ic === 'fists' ? 'axe' : ic}.png" alt="" style="position:absolute;left:3px;top:2px;width:20px;height:20px;filter:brightness(1.5);${ic === 'fists' ? 'opacity:0' : ''}">
+    ${ic === 'fists' ? '<span style="position:absolute;left:5px;top:5px;color:var(--muted)"><i data-icon="fists" data-size="14"></i></span>' : ''}
+    ${i === 1 ? '<span style="position:absolute;right:6px;top:10px;width:4px;height:4px;border-radius:50%;background:var(--amber)"></span>' : ''}
+    <div class="t" style="position:absolute;left:28px;top:4px">${n}</div><div class="m" style="position:absolute;left:28px;top:13px">${sub}</div></div>`).join('');
+
+el('ev').innerHTML = [['ledger',1],['note',1],['file',1],['note',0],['file',0],['toe_tag',1],['ledger',0],['map',0],['recorder',1,1],['tin_box',1],['photo',0],['note',1]]
+  .map(([ic, on, sel]) => `<div class="row${sel ? ' sel' : ''}" style="height:46px;display:grid;place-items:center;${on ? '' : 'background:rgba(233,226,211,.02)'}">
+    ${on ? `<img class="png-ico" src="../../ui/icons/${ic}.png" alt="" style="width:30px;height:30px;filter:brightness(1.4)">` : '<span style="font:400 13px var(--serif);color:var(--faint)">???</span>'}</div>`).join('');
+
+// ---------------------------------------------------------------- the wheel's wedges (SVG)
+(function () {
+  const svg = el('wheel-svg'), cx = 320, cy = 160, rIn = 56, rOut = 140;
+  const slots = [['fists', 'fists', ''], ['revolver', 'revolver', '5 / 12'], ['flare', 'flare', '1 / 2'], ['shotgun', 'shotgun', '2 / 6', 1], ['axe', 'axe', ''], ['rule'], ['bottle', 'bottle', '×2'], ['tea', 'tea', '×1'], ['headlamp', 'headlamp', 'On']];
+  const real = slots.filter(s => s[0] !== 'rule'), n = real.length, step = Math.PI * 2 / n, gap = 0.022;
+  let out = '', k = 0;
+  const pt = (a, r) => [cx + Math.cos(a) * r, cy + Math.sin(a) * r];
+  for (const s of slots) {
+    const a0 = -Math.PI / 2 - step / 2 + k * step;
+    if (s[0] === 'rule') { const [x1, y1] = pt(a0, rIn + 6), [x2, y2] = pt(a0, rOut - 6); out += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="rgba(233,226,211,.3)"/>`; continue; }
+    const on = s[3], ro = rOut + (on ? 8 : 0), a1 = a0 + step - gap, b0 = a0 + gap;
+    const [p1x, p1y] = pt(b0, ro), [p2x, p2y] = pt(a1, ro), [p3x, p3y] = pt(a1, rIn), [p4x, p4y] = pt(b0, rIn);
+    out += `<path d="M${p1x},${p1y} A${ro},${ro} 0 0 1 ${p2x},${p2y} L${p3x},${p3y} A${rIn},${rIn} 0 0 0 ${p4x},${p4y} Z" fill="${on ? 'rgba(48,40,34,.96)' : 'rgba(33,29,25,.94)'}" ${on ? 'stroke="#ffb84d" stroke-opacity=".85" stroke-width="1"' : ''}/>`;
+    if (on) out += `<path d="M${pt(b0, ro + 1.5)} A${ro + 1.5},${ro + 1.5} 0 0 1 ${pt(a1, ro + 1.5)}" fill="none" stroke="#ffb84d" stroke-width="3"/>`;
+    const mid = (b0 + a1) / 2, [ix, iy] = pt(mid, rIn + 34), [tx, ty] = pt(mid, rIn + 70), sz = on ? 46 : 40;
+    out += `<circle cx="${ix}" cy="${iy}" r="${sz / 2 - 2}" fill="rgba(233,226,211,.07)"/>`;
+    out += s[0] === 'fists' ? `<g transform="translate(${ix - 12},${iy - 12})" color="#e9e2d3">${laafIcon('fists', 24, '#e9e2d3', 1.3).replace('<svg', '<svg x="0" y="0"')}</g>`
+      : `<image href="../../ui/icons/${s[1]}.png" x="${ix - sz / 2}" y="${iy - sz / 2}" width="${sz}" height="${sz}" style="image-rendering:pixelated;filter:brightness(1.5)"/>`;
+    if (s[2]) out += `<text x="${tx}" y="${ty + 4}" text-anchor="middle" fill="${on ? '#e9e2d3' : '#b3ab9c'}" style="font:700 10px 'Barlow Semi Condensed'">${s[2]}</text>`;
+    if (s[0] === 'revolver') { const [dx, dy] = pt(mid, rIn + 8); out += `<circle cx="${dx}" cy="${dy}" r="3" fill="#ffb84d"/>`; }
+    k++;
+  }
+  const na = -Math.PI / 2 - step / 2 + 3 * step + step / 2, [nx, ny] = pt(na, rIn - 5);
+  out += `<circle cx="${cx}" cy="${cy}" r="${rIn - 5}" fill="rgba(19,16,14,.9)"/><circle cx="${nx}" cy="${ny}" r="3" fill="#ffb84d"/>`;
+  svg.innerHTML = out;
+})();
+laafIcons();
+fitScreens();
+</script>
+</body>
+</html>

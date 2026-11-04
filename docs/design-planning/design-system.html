@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LAAF Design System</title>
+<meta name="description" content="The LAAF design system: colour palette, typography, spacing, radii, elevation, icon set, components with their states, motion and rules.">
+<link rel="stylesheet" href="assets/laaf.css">
+<script src="assets/icons.js"></script>
+<style>
+  .spec-zone { background: linear-gradient(var(--folder-hi), var(--folder)); border-radius: 14px; padding: 26px; box-shadow: 0 10px 30px rgba(0,0,0,.45); }
+  .x2 { zoom: 2; }
+  .x3 { zoom: 3; }
+  .specimen { display: flex; flex-wrap: wrap; gap: 28px 40px; align-items: flex-end; }
+  .specimen figure { margin: 0; }
+  .specimen figcaption { margin-top: 10px; font: 600 13px var(--ui); color: var(--muted); }
+  .specimen figcaption b { color: var(--bone); display: block; font-weight: 700; }
+  .tier { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+  .tier div { height: 70px; border-radius: 8px; display: flex; align-items: flex-end; padding: 8px; font: 700 12px var(--ui); color: var(--muted); }
+  .type-row { display: grid; grid-template-columns: 210px 1fr; gap: 20px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .type-row .meta { font-size: 13px; color: var(--muted); line-height: 1.4; }
+  .type-row .meta b { color: var(--bone); font-size: 15px; display: block; }
+  @media (max-width: 700px) { .type-row { grid-template-columns: 1fr; } }
+  .radii { display: flex; flex-wrap: wrap; gap: 22px; }
+  .radii div { text-align: center; font: 600 12px var(--ui); color: var(--muted); }
+  .radii span { display: block; width: 76px; height: 54px; margin-bottom: 8px; background: rgba(233,226,211,.1); box-shadow: inset 0 0 0 1px rgba(233,226,211,.25); }
+  .icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 10px; }
+  .icon-grid div { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 6px 10px; border-radius: 10px; background: rgba(233,226,211,.04); font: 600 12px var(--ui); color: var(--muted); }
+  .icon-grid img { width: 48px; height: 48px; image-rendering: pixelated; filter: brightness(1.5); }
+  .dd { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); }
+  .dd ul { margin: 0; padding-left: 20px; color: var(--muted); }
+  .dd li { margin-bottom: 10px; }
+  .dd li b { color: var(--bone); }
+  .do h3 { color: #9fd49a; } .dont h3 { color: var(--rust-ink); }
+  .demo-folder { position: relative; width: 222px; height: 150px; border-radius: 11px; padding: 15px; overflow: hidden; background: linear-gradient(var(--folder-hi), var(--folder)); box-shadow: 0 2px 2px rgba(0,0,0,.16), 0 5px 5px rgba(0,0,0,.16), 0 8px 10px rgba(0,0,0,.16); }
+  .leaf { position: absolute; inset: 15px; transition: transform .18s cubic-bezier(.2,.7,.3,1), opacity .18s cubic-bezier(.2,.7,.3,1); }
+  .leaf.out { transform: translateX(-14px); opacity: 0; pointer-events: none; }
+  .leaf.in-start { transform: translateX(14px); opacity: 0; transition: none; }
+  .pulse { animation: pulse 2.42s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .pulse { animation: none; } .leaf { transition: none; } }
+  .bar.demo { position: relative; width: 192px; cursor: pointer; }
+  .bar.demo:hover { background: linear-gradient(var(--rust-hi), var(--rust-deep)); }
+  .tab.demo { cursor: pointer; }
+  .tab.demo:hover:not(.open) { background: rgba(26,22,19,.96); }
+  .switch.demo { cursor: pointer; }
+  .layout-stage { position: relative; aspect-ratio: 16 / 9; width: 100%; max-width: 960px; container-type: inline-size; background: #2b2d2b; border-radius: 10px; overflow: hidden; }
+  .layout-stage > * { position: absolute; font: 700 1.5cqw var(--ui); color: var(--bone); }
+  .dim { border: 1px dashed rgba(255,184,77,.7); color: var(--amber) !important; display: flex; align-items: center; justify-content: center; }
+</style>
+</head>
+<body>
+
+<header class="site-head">
+  <a class="brand" href="mockups.html"><b>LAAF</b><span>DESIGN PLANNING</span></a>
+  <nav class="site-nav" aria-label="Design planning">
+    <a href="mockups.html"><i data-icon="load" data-size="15" data-stroke="1.6"></i>Mockups</a>
+    <a href="design-system.html" aria-current="page"><i data-icon="options" data-size="15" data-stroke="1.6"></i>Design system</a>
+    <a href="navigation-flow.html"><i data-icon="pin" data-size="15" data-stroke="1.6"></i>Navigation</a>
+    <a href="product-vision.html"><i data-icon="mark" data-size="15" data-stroke="1.6"></i>Vision</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow-num">02 · Design system</div>
+    <h1>The Case File in the Fog</h1>
+    <p class="lede">The interface is a dossier on a missing sister, set down on a table in Hollowmere's fog. Warm bone on a near-black folder, one blood-rust action, one lantern-amber selection. Everything is drawn, everything is rounded, and the grain passes over all of it.</p>
+    <nav class="toc" aria-label="Sections">
+      <a class="pill" href="#color">Colour</a><a class="pill" href="#type">Typography</a><a class="pill" href="#layout">Layout &amp; spacing</a>
+      <a class="pill" href="#shape">Shape &amp; elevation</a><a class="pill" href="#icons">Icons</a><a class="pill" href="#components">Components</a>
+      <a class="pill" href="#hud">HUD pieces</a><a class="pill" href="#motion">Motion</a><a class="pill" href="#texture">Texture</a><a class="pill" href="#rules">Do's &amp; don'ts</a>
+    </nav>
+  </section>
+
+  <p class="section-lede">Source of truth: <code>DESIGN.md</code> (tokens and rules) and <code>scripts/menu_draw.gd</code> / <code>scripts/icons.gd</code> (the code that draws them). Every size here is in base pixels of the 640×360 canvas. Component specimens are shown at 2× so they can be read on a monitor.</p>
+
+  <!-- ============================================================ COLOUR -->
+  <h2 id="color">Colour palette</h2>
+  <p class="section-lede">Few colours, strict roles. Everything not listed here is Bone at a lowered alpha.</p>
+
+  <h3>Action and selection</h3>
+  <div class="grid g4">
+    <div class="swatch"><div class="chip-color" style="background:#9e140f">ACTION</div><div class="meta"><b>Case Rust</b><code>#9e140f</code><br>The one primary action bar per page, the logo rule, the Mark chip at 32%.</div></div>
+    <div class="swatch"><div class="chip-color" style="background:#c4291c">ARMED</div><div class="meta"><b>Rust Hi</b><code>#c4291c</code><br>An armed or hovered bar's top, the map pin, EMPTY, "why not" lines, exhausted stamina.</div></div>
+    <div class="swatch"><div class="chip-color" style="background:#770f0b">GRADIENT FOOT</div><div class="meta"><b>Dried Rust</b><code>#770f0b</code><br>The foot of the primary bar's vertical gradient.</div></div>
+    <div class="swatch"><div class="chip-color" style="background:#f5bdad;color:#33261a">INK ON RUST</div><div class="meta"><b>Rust Ink</b><code>#f5bdad</code><br>Text and icon ink on a rust-tinted chip.</div></div>
+    <div class="swatch"><div class="chip-color" style="background:#ffb84d;color:#13100e">CHOSEN</div><div class="meta"><b>Lantern Amber</b><code>#ffb84d</code><br>What is chosen or live: focus outline, open tab, set values, earned rings, NEXT.</div></div>
+  </div>
+
+  <h3>Neutrals and surfaces</h3>
+  <div class="grid g4">
+    <div class="swatch"><div class="chip-color" style="background:#e9e2d3;color:#13100e">TEXT</div><div class="meta"><b>Bone</b><code>#e9e2d3</code><br>Primary text, headings, the logo; at low alpha, every surface tier.</div></div>
+    <div class="swatch"><div class="chip-color" style="background:#b3ab9c;color:#13100e">SECONDARY</div><div class="meta"><b>Muted Bone</b><code>#b3ab9c</code><br>All secondary text the player still needs: blurbs, meta, help, ledes.</div></div>
+    <div class="swatch"><div class="chip-color" style="background:#8f877a;color:#13100e">NOT YET</div><div class="meta"><b>Faint Bone</b><code>#8f877a</code><br>Marks only, never words: unchosen flames, locked icons.</div></div>
+    <div class="swatch"><div class="chip-color" style="background:linear-gradient(#211d19,#13100e)">FOLDER</div><div class="meta"><b>Folder → Folder Hi</b><code>#13100e</code> <code>#211d19</code><br>The dossier's vertical gradient at 97%; HUD panels at 78%.</div></div>
+    <div class="swatch"><div class="chip-color" style="background:#0f0d0b;box-shadow:inset 0 0 0 1px rgba(233,226,211,.08)">TAB</div><div class="meta"><b>Tab Back / Hover</b><code>#0f0d0b</code> <code>#1a1613</code><br>Closed index tabs behind the folder.</div></div>
+    <div class="swatch"><div class="chip-color" style="background:#dbd4c2;color:#33261a;font-family:var(--serif);font-style:italic;font-weight:400;font-size:16px;letter-spacing:0">Lakeview Motel</div><div class="meta"><b>Print / Print Ink</b><code>#dbd4c2</code> <code>#33261a</code><br>The photo print's border and its handwritten label.</div></div>
+    <div class="swatch"><div class="chip-color" style="background:#d1c9b8;color:#13100e">CAPTION</div><div class="meta"><b>Caption Bone</b><code>#d1c9b8</code><br>The italic scene line printed on the fog.</div></div>
+    <div class="swatch"><div class="chip-color" style="background:#000;box-shadow:inset 0 0 0 1px rgba(233,226,211,.1)">LETTERBOX</div><div class="meta"><b>Letterbox Black</b><code>#000000</code><br>The 18px bars top and bottom; they hold the help bar.</div></div>
+  </div>
+
+  <h3>Surface tiers (Bone at alpha, on the folder)</h3>
+  <div class="spec-zone">
+    <div class="tier">
+      <div style="background:rgba(233,226,211,.02)">2% · disabled slip</div>
+      <div style="background:rgba(233,226,211,.04)">4% · row at rest</div>
+      <div style="background:rgba(233,226,211,.08)">8% · chip</div>
+      <div style="background:rgba(233,226,211,.095);box-shadow:inset 0 0 0 1px rgba(255,184,77,.85)">9.5% · selected</div>
+      <div style="background:rgba(233,226,211,.10)">10% · current cell, track</div>
+      <div style="background:rgba(255,184,77,.08);color:var(--amber)">Amber 8% · NEXT</div>
+    </div>
+  </div>
+
+  <h3>Game-state colours (HUD)</h3>
+  <div class="grid g4">
+    <div class="swatch"><div class="chip-color" style="background:#d6382b">HEALTH</div><div class="meta"><b>Health red</b><code>#d6382b</code><br>The health pill and heart. Paired with the heart icon and the bar's length.</div></div>
+    <div class="swatch"><div class="chip-color" style="background:#73cc99;color:#13100e">FILTER</div><div class="meta"><b>Filter green</b><code>#73cc99</code><br>The gas-mask filter pill (Rust Hi when nearly spent).</div></div>
+  </div>
+
+  <h3>Speaker colours (subtitles)</h3>
+  <p class="section-lede">Each speaker has a colour, and the name is always written too, so colour is never the only cue (RNF-05).</p>
+  <div class="spec-zone" style="display:flex;flex-wrap:wrap;gap:8px 18px;font-weight:600">
+    <span><i class="legend-dot" style="background:#d9e6ff"></i>Alex</span><span><i class="legend-dot" style="background:#ffd940"></i>Moth</span>
+    <span><i class="legend-dot" style="background:#ffd14d"></i>Elena</span><span><i class="legend-dot" style="background:#d9c79e"></i>Grady</span>
+    <span><i class="legend-dot" style="background:#99d98c"></i>Owen</span><span><i class="legend-dot" style="background:#e699cc"></i>Nora</span>
+    <span><i class="legend-dot" style="background:#8cd9d9"></i>Julian</span><span><i class="legend-dot" style="background:#cc8c59"></i>Marcus</span>
+    <span><i class="legend-dot" style="background:#ff4d40"></i>Shepherd</span><span><i class="legend-dot" style="background:#bfa6f2"></i>Silas</span>
+    <span><i class="legend-dot" style="background:#f2998c"></i>Lucía</span><span><i class="legend-dot" style="background:#a6ccf2"></i>Tomás</span>
+    <span><i class="legend-dot" style="background:#b3b3b3"></i>Radio</span><span><i class="legend-dot" style="background:#b39985"></i>Marked One</span>
+  </div>
+
+  <h3>Colour rules</h3>
+  <div class="grid g3">
+    <div class="card"><b style="color:var(--rust-hi)">The One Rust Rule</b><p class="section-lede" style="margin:6px 0 0">A page has at most one rust surface that acts: its primary bar. Elsewhere, rust is only a signal (Mark chip, pin, logo rule).</p></div>
+    <div class="card"><b style="color:var(--amber)">The Lantern Rule</b><p class="section-lede" style="margin:6px 0 0">Amber marks exactly what is chosen or live right now. Never decoration, never an action fill, never body text.</p></div>
+    <div class="card"><b>The Muted, Not Faint Rule</b><p class="section-lede" style="margin:6px 0 0">Text the player needs is Bone or Muted Bone. Faint Bone means "not yet" and carries no words.</p></div>
+  </div>
+
+  <!-- ============================================================ TYPE -->
+  <h2 id="type">Typography</h2>
+  <p class="section-lede">Two faces, two voices. <b>IM Fell English</b>, a 17th-century printed serif with ink spread, speaks for the world. <b>Barlow Semi Condensed</b>, a narrow, sturdy grotesque that reads at 7px, runs the controls. Both are bundled under the OFL in <code>fonts/</code>.</p>
+  <div class="grid g2">
+    <div class="card">
+      <div style="font:400 64px/1 var(--serif)">Aa</div>
+      <div style="font:400 26px/1.3 var(--serif);margin-top:10px">IM Fell English</div>
+      <div style="font:italic 400 20px/1.4 var(--serif);color:var(--muted)">Regular &amp; Italic · the voice</div>
+      <p style="font:400 18px/1.5 var(--serif);margin:14px 0 0">Hollowmere is beautiful. Don't come.</p>
+    </div>
+    <div class="card">
+      <div style="font:700 64px/1 var(--ui)">Aa</div>
+      <div style="font:700 26px/1.3 var(--ui);margin-top:10px">Barlow Semi Condensed</div>
+      <div style="font:500 18px/1.4 var(--ui);color:var(--muted)">Medium 500 · Bold 700 · the controls</div>
+      <p style="font:700 16px/1.5 var(--ui);letter-spacing:1px;margin:14px 0 0">RESUME · EQUIP · 5 / 12 · MARK 34%</p>
+    </div>
+  </div>
+
+  <h3>Type scale (base px; samples at 2×)</h3>
+  <div class="spec-zone">
+    <div class="type-row"><div class="meta"><b>Logo</b>IM Fell 52 · +16 tracking · ×1.12</div><div style="font:400 104px/1 var(--serif);letter-spacing:32px;overflow:hidden">LAAF</div></div>
+    <div class="type-row"><div class="meta"><b>Headline</b>IM Fell 17 · page heading</div><div style="font:400 34px var(--serif)">Load game</div></div>
+    <div class="type-row"><div class="meta"><b>Chapter</b>IM Fell 16</div><div style="font:400 32px var(--serif)">Chapter I — The Mark</div></div>
+    <div class="type-row"><div class="meta"><b>Caption</b>IM Fell Italic 11 · Caption Bone</div><div style="font:italic 400 22px var(--serif);color:var(--caption)">Every door on Maple Avenue has the same eye on it.</div></div>
+    <div class="type-row"><div class="meta"><b>Lede</b>IM Fell Italic 10 · Muted · ≤3 lines</div><div style="font:italic 400 20px var(--serif);color:var(--muted)">Dusk. The bridge is out. Your sister's postcard says don't come.</div></div>
+    <div class="type-row"><div class="meta"><b>Print label</b>IM Fell Italic 9 · Print Ink</div><div><span style="font:italic 400 18px var(--serif);color:var(--print-ink);background:var(--print);padding:2px 12px;border-radius:3px">Lakeview Motel</span></div></div>
+    <div class="type-row"><div class="meta"><b>Action</b>Barlow Bold 9 · +1 · caps</div><div style="font:700 18px var(--ui);letter-spacing:2px">QUIT TO DESKTOP</div></div>
+    <div class="type-row"><div class="meta"><b>Title</b>Barlow Bold 8 · row main line</div><div style="font:700 16px var(--ui)">Ch.I · Talk to Grady at the General Store</div></div>
+    <div class="type-row"><div class="meta"><b>Body</b>Barlow Medium 8 · objective, ammo</div><div style="font:500 16px var(--ui)">Follow the forest trail to the sawmill</div></div>
+    <div class="type-row"><div class="meta"><b>Label</b>Barlow Medium 7 · <b style="display:inline;color:var(--amber);font-size:13px">the floor</b></div><div style="font:500 14px var(--ui);color:var(--muted)">Autosave · Normal · 0:24:13 · 11-01 22:14</div></div>
+    <div class="type-row"><div class="meta"><b>Label Caps</b>Barlow Bold 7 · +1 · caps</div><div style="font:700 14px var(--ui);letter-spacing:2px;color:var(--amber)">NEXT</div></div>
+    <div class="type-row" style="border:0"><div class="meta"><b>Label Wide</b>Barlow Bold 7 · +4 · caps</div><div style="font:700 14px var(--ui);letter-spacing:8px;color:var(--muted)">HOLLOWMERE</div></div>
+  </div>
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card"><b>The 7px Floor Rule</b><p class="section-lede" style="margin:6px 0 0">No functional text is smaller than 7 base pixels. Anything smaller doesn't survive the scale-down to a laptop window.</p></div>
+    <div class="card"><b>The Two Voices Rule</b><p class="section-lede" style="margin:6px 0 0">IM Fell speaks in the world: names, headings, ledes, captions, handwriting. Barlow operates the UI: labels, values, keys. A control is never set in the serif.</p></div>
+  </div>
+
+  <!-- ============================================================ LAYOUT -->
+  <h2 id="layout">Layout &amp; spacing</h2>
+  <p class="section-lede">The canvas is 640×360 base units with aspect <code>expand</code>: extra width grows the canvas and the right-anchored folder keeps its gutter. <b>The Fog Owns the Left:</b> only the logo and the scene caption sit on the fog; every control lives on the folder or in the letterbox.</p>
+  <div class="layout-stage">
+    <div style="inset:0;background:radial-gradient(80% 60% at 25% 60%,#5a5c58,#2b2d2b)"></div>
+    <div style="left:0;right:0;top:0;height:5%;background:#000"></div><div style="left:0;right:0;bottom:0;height:5%;background:#000"></div>
+    <div class="dim" style="left:0;right:0;top:0;height:5%">letterbox 18</div>
+    <div style="left:5%;top:11%;font:400 7cqw/1 var(--serif);letter-spacing:2cqw">LAAF</div>
+    <div class="dim" style="left:0;width:5%;top:30%;height:6%">32</div>
+    <div style="left:5%;bottom:9%;font:italic 400 1.9cqw var(--serif);color:var(--caption)">scene caption (32, H−36)</div>
+    <div style="left:59.7%;top:9.4%;width:34.7%;height:81.1%;border-radius:1.7cqw;background:linear-gradient(#211d19,#13100e)"></div>
+    <div style="left:54.06%;top:14.4%;width:6.25%;height:61.1%;background:repeating-linear-gradient(#0f0d0b 0 4.375cqw, transparent 4.375cqw 5cqw)"></div>
+    <div class="dim" style="left:62%;top:13.5%;width:30%;height:73%">page 192 × 262<br>(folder 222 × 292, pad 15)</div>
+    <div class="dim" style="left:94.4%;width:5.6%;top:40%;height:6%">36</div>
+    <div class="dim" style="left:62%;top:78%;width:30%;height:7.2%;border-color:var(--rust-hi);color:var(--rust-ink)!important">bar 26</div>
+    <div class="dim" style="left:54%;top:7.5%;width:6.4%;height:5%;font-size:1.2cqw">tabs 40×28 @32</div>
+    <div style="right:5.6%;bottom:0.6%;font:500 1.2cqw var(--ui);color:var(--muted)">help bar ⟶ right-aligned at W−36</div>
+  </div>
+
+  <div class="table-scroll" style="margin-top:22px">
+  <table class="spec">
+    <thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr><td>hairline</td><td>1</td><td>Focus outline, keycap outline, tick marks</td></tr>
+      <tr><td>chip-gap</td><td>4</td><td>Between chips in a row; tabs overlap the folder by 4</td></tr>
+      <tr><td>page-shift</td><td>14</td><td>How far a page slides in the leaf turn; toasts slide in by 14</td></tr>
+      <tr><td>pad</td><td>15</td><td>The folder's inner padding on all sides</td></tr>
+      <tr><td>line</td><td>17</td><td>Options and Dev line pitch (16 tall), 12 visible</td></tr>
+      <tr><td>letterbox</td><td>18</td><td>Black bars top and bottom</td></tr>
+      <tr><td>gutter-left / right</td><td>32 / 36</td><td>Logo and caption gutter / folder and help-bar gutter</td></tr>
+      <tr><td>Row pitches</td><td>34 · 36 · 38</td><td>Difficulty rows (30 tall) · load rows (32 tall, 6 visible) · achievement rows (36 tall, 4 columns)</td></tr>
+      <tr><td>Weapon cells</td><td>29 × 22 @ 32</td><td>Continue page's weapons carried</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- ============================================================ SHAPE -->
+  <h2 id="shape">Shape &amp; elevation</h2>
+  <p class="section-lede">Every surface is a rounded rectangle (<code>Icons.round_rect</code>, 5 points per corner, antialiased). Radii scale with the surface; anything 14 or less tall that holds a fact is a full pill. Index tabs are rounded only on their outside edge. The photo print is the one tilted shape.</p>
+  <div class="spec-zone radii">
+    <div><span style="border-radius:3px"></span>3 · keycap, print</div>
+    <div><span style="border-radius:5px"></span>5 · thumbnail</div>
+    <div><span style="border-radius:6px"></span>6 · cell, HUD card</div>
+    <div><span style="border-radius:7px"></span>7 · row, tab, chip</div>
+    <div><span style="border-radius:8px"></span>8 · bar, panel</div>
+    <div><span style="border-radius:11px"></span>11 · folder</div>
+    <div><span style="border-radius:99px;height:28px;margin-top:26px"></span>pill · ≤14 tall</div>
+  </div>
+  <div class="grid g3" style="margin-top:18px">
+    <div class="card"><b>Folder shadow</b><p class="section-lede" style="margin:6px 0 0">Three stacked rounded fills of black at 16%, grown 2, 5 and 8, pulled down. Soft and mostly downward.</p></div>
+    <div class="card"><b>Print shadow</b><p class="section-lede" style="margin:6px 0 0">One fill of black at 45%, offset (1, 3), radius 3, under the tilted print.</p></div>
+    <div class="card"><b>The Shadow or Line Rule</b><p class="section-lede" style="margin:6px 0 0">A shadowed surface never also gets a 1px border. Outlines belong to unshadowed things: keycaps, focus, closed tabs.</p></div>
+  </div>
+
+  <!-- ============================================================ ICONS -->
+  <h2 id="icons">Icons</h2>
+  <p class="section-lede">Two sets, one hand. The <b>drawn set</b> (<code>scripts/icons.gd</code>) sits on a 24-unit grid with a 2-unit stroke and a 1px minimum, built from lines, outlines, fills, circles, arcs and rounded boxes. Weapons are drawn side-on facing right. A new icon is added on the same grid, never as a glyph or a font character. These are rendered below from the game's own data.</p>
+  <div class="spec-zone"><div class="icon-grid" id="drawn-icons"></div></div>
+  <p class="section-lede" style="margin-top:22px">The <b>rendered set</b> (<code>ui/icons/*.png</code>) is made by <code>tools/shot.gd -- --icons</code> from each item's 3D model in the PS2 look. It is used where an item needs to be recognised as an object: the HUD weapon card, the belt, the wheel and the inventory.</p>
+  <div class="spec-zone"><div class="icon-grid" id="png-icons"></div></div>
+  <div class="table-scroll" style="margin-top:18px">
+  <table class="spec">
+    <thead><tr><th>Context</th><th>Size</th><th>Stroke</th></tr></thead>
+    <tbody>
+      <tr><td>Index tab</td><td>12</td><td>1.3</td></tr><tr><td>Chip</td><td>9</td><td>1.1</td></tr><tr><td>Primary bar</td><td>10</td><td>1.4</td></tr>
+      <tr><td>Weapon cell</td><td>16</td><td>1.2</td></tr><tr><td>Achievement</td><td>13</td><td>1.2</td></tr><tr><td>Difficulty flame</td><td>10</td><td>1.1</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- ============================================================ COMPONENTS -->
+  <h2 id="components">Components</h2>
+  <p class="section-lede">Every piece below is drawn by <code>MenuDraw</code> and shared by the main menu, the pause menu, the inventory and the Options page. Hover and click the specimens: they behave like the game.</p>
+
+  <h3>Primary bar: the button</h3>
+  <div class="spec-zone">
+    <div class="specimen">
+      <figure><div class="x2"><div class="bar" style="position:relative;width:192px"><i data-icon="play" data-size="10" data-stroke="1.4"></i>RESUME<span class="kc">ENTER</span></div></div><figcaption><b>Rest</b>Rust → Dried Rust gradient</figcaption></figure>
+      <figure><div class="x2"><div class="bar armed" style="position:relative;width:192px"><i data-icon="play" data-size="10" data-stroke="1.4"></i>BEGIN<span class="kc">ENTER</span></div></div><figcaption><b>Armed / hover</b>Rust Hi at the top: Enter or a click fires it</figcaption></figure>
+      <figure><div class="x2"><div class="bar demo"><i data-icon="quit" data-size="10" data-stroke="1.4"></i>QUIT TO DESKTOP<span class="kc">ENTER</span></div></div><figcaption><b>Try it</b>Hover to arm</figcaption></figure>
+      <figure><div class="x2"><div class="row off" style="width:192px;height:26px;background:rgba(233,226,211,.02);display:flex;align-items:center;gap:6px;padding:0 9px"><span style="color:var(--faint)"><i data-icon="lock" data-size="10" data-stroke="1.3"></i></span><span class="m">In hand.</span></div></div><figcaption><b>Not possible</b>A fainter slip with a lock and the reason, never a dead button</figcaption></figure>
+    </div>
+    <p class="section-lede" style="margin:22px 0 0">Anatomy: 26 tall, full page width, radius 8, pinned to the page's foot. Bone icon (10) at 15 from the left, Action caps label at 27, ENTER keycap 9 from the right at 90%. No border, no shadow. One per page.</p>
+  </div>
+
+  <h3>Keycap</h3>
+  <div class="spec-zone"><div class="specimen">
+    <figure><div class="x3" style="display:flex;gap:6px"><span class="kc">ESC</span><span class="kc">ENTER</span><span class="kc">W S</span><span class="kc">TAB</span><span class="kc">E</span></div><figcaption><b>Keycap</b>11 tall, radius 3, outline at 55% of the ink, Label Caps</figcaption></figure>
+    <figure><div class="x2" style="padding:6px;background:#2b2d2b;border-radius:4px"><span class="pulse" style="display:inline-block;height:19px;padding:0 12px;border-radius:10px;background:rgba(0,0,0,.45);border:1px solid rgba(233,226,211,.35);font:700 8px/19px var(--ui);letter-spacing:1px">PRESS ANY KEY</span></div><figcaption><b>Large pill</b>Title screen, pulsing 55–100%</figcaption></figure>
+    <figure><div class="x2 help" style="position:static;display:flex;gap:12px"><span><span class="kc">ESC</span>Back</span><span><span class="kc">ENTER</span>Select</span><span><span class="kc">W S</span>Move</span></div><figcaption><b>Help bar</b>Keycap + Muted word, pairs 12 apart; clickable</figcaption></figure>
+  </div></div>
+
+  <h3>Chips, meters, switch, stepper</h3>
+  <div class="spec-zone"><div class="specimen">
+    <figure><div class="x2 chips"><span class="chip"><i data-icon="clock" data-size="9" data-stroke="1.1"></i>0:24:13</span><span class="chip"><i data-icon="flame" data-size="9" data-stroke="1.1"></i>Normal</span><span class="chip mark"><i data-icon="mark" data-size="9" data-stroke="1.1"></i>Mark 34%</span></div><figcaption><b>Chip / Mark chip</b>14-tall pill, Bone 8%; the Mark chip is the one rust tint</figcaption></figure>
+    <figure><div class="x2" style="width:120px;display:grid;gap:8px"><div class="meter"><i style="width:70%"></i></div><div class="meter fixed"><i style="width:45%"></i></div></div><figcaption><b>Meter</b>Amber = live setting or earned · Bone 70% = fixed value</figcaption></figure>
+    <figure><div class="x2" style="display:flex;align-items:center;gap:10px"><span class="switch demo" onclick="this.classList.toggle('on')"></span><span class="switch demo on" onclick="this.classList.toggle('on')"></span></div><figcaption><b>Switch</b>18×9 · off Bone 15% · on Amber (click)</figcaption></figure>
+    <figure><div class="x2" style="width:80px;display:flex;justify-content:space-between;align-items:center" class="m"><b style="color:var(--amber);cursor:pointer" onclick="step(this,-1)">‹</b><span class="m" style="color:var(--bone)" id="stepper">Large</span><b style="color:var(--amber);cursor:pointer" onclick="step(this,1)">›</b></div><figcaption><b>Choice stepper</b>Chevrons amber on the focused row (click)</figcaption></figure>
+    <figure><div class="x2" style="position:relative;width:70px;height:10px"><span style="position:absolute;left:0;right:0;top:3px;height:4px;border-radius:2px;background:rgba(233,226,211,.12)"></span><span style="position:absolute;left:0;width:60%;top:3px;height:4px;border-radius:2px;background:var(--amber)"></span><span style="position:absolute;left:66%;top:1px;width:1px;height:8px;background:rgba(233,226,211,.35)"></span><span style="position:absolute;left:calc(60% - 4.2px);top:0.8px;width:8.4px;height:8.4px;border-radius:50%;background:var(--amber)"></span></div><figcaption><b>Slider (Options)</b>Knob grows and turns amber when focused; tick = designed value</figcaption></figure>
+  </div></div>
+
+  <h3>List rows</h3>
+  <div class="spec-zone"><div class="specimen">
+    <figure><div class="x2"><div class="row" style="width:192px;height:30px;padding:6px 0 0 38px"><span style="position:absolute;left:11px;top:9px;color:var(--muted)"><i data-icon="options" data-size="12" data-stroke="1.3"></i></span><div class="t caps">OPTIONS</div><div class="m">Sound, controls, language and video.</div></div></div><figcaption><b>Rest</b>Bone 4%, radius 7</figcaption></figure>
+    <figure><div class="x2"><div class="row sel" style="width:192px;height:30px;padding:6px 0 0 38px"><span style="position:absolute;left:11px;top:9px;color:var(--amber)"><i data-icon="load" data-size="12" data-stroke="1.3"></i></span><div class="t caps">SAVE GAME</div><div class="m">Keep your place in a new save.</div></div></div><figcaption><b>Selected</b>Bone 9.5% + 1px amber outline at 85%; mouse pointing selects too</figcaption></figure>
+    <figure><div class="x2"><div class="row" style="width:192px;height:30px;padding:6px 0 0 38px;background:rgba(233,226,211,.02)"><span style="position:absolute;left:11px;top:9px;color:var(--faint)"><i data-icon="lock" data-size="12" data-stroke="1.3"></i></span><div class="t caps" style="color:var(--muted)">SAVE GAME</div><div class="m">Dev runs aren't saved.</div></div></div><figcaption><b>Disabled</b>Fainter slip, lock icon, the reason; skipped by the selection</figcaption></figure>
+  </div></div>
+
+  <h3>Index tabs</h3>
+  <div class="spec-zone"><div class="specimen">
+    <figure><div class="x2" style="display:flex;gap:4px;flex-direction:column" id="tab-demo"></div><figcaption><b>Closed · hover · open</b>Click a tab: the open one pulls 4px out, takes the folder's gradient, icon turns amber</figcaption></figure>
+    <figure><div class="x2"><div class="demo-folder" id="leaf-demo"><div class="leaf"><div class="h">Continue</div><div class="ld">The leaf turn: 0.18 s, ease-out. Out 14 left and fading, in from 14 right.</div></div></div></div><figcaption><b>Folder + leaf turn</b>Driven by the tabs on the left</figcaption></figure>
+  </div></div>
+
+  <h3>Panels and prints</h3>
+  <div class="spec-zone"><div class="specimen">
+    <figure><div class="x2" style="width:192px"><div class="next"><span class="caps">Next</span><p>Talk to Grady at the General Store</p></div></div><figcaption><b>Objective panel (NEXT)</b>30 tall, radius 8, Amber 8%</figcaption></figure>
+    <figure><div class="x2" style="position:relative;width:150px;height:100px"><div class="print" style="left:4px;top:4px;width:140px;height:88px;transform:rotate(-1.4deg)"><div class="img" style="background-position:42% 58%"></div><span class="pinhead" style="left:72px;top:30px"></span><div class="lbl">Lakeview Motel</div></div></div><figcaption><b>Map print</b>Print border (4, 15 at the foot), tilt, Rust Hi pin, handwritten place</figcaption></figure>
+    <figure><div class="x2" style="display:flex;gap:3px"><div style="width:29px;height:22px;border-radius:6px;background:rgba(233,226,211,.1);display:grid;place-items:center"><i data-icon="revolver" data-size="16"></i></div><div style="width:29px;height:22px;border-radius:6px;background:rgba(233,226,211,.04);display:grid;place-items:center;color:var(--muted)"><i data-icon="axe" data-size="16"></i></div><div style="width:29px;height:22px;border-radius:6px;background:rgba(233,226,211,.04);display:grid;place-items:center;color:var(--muted)"><i data-icon="bow" data-size="16"></i></div></div><figcaption><b>Weapon cell</b>29×22, radius 6; Bone 10% current / 4% rest</figcaption></figure>
+  </div></div>
+
+  <!-- ============================================================ HUD -->
+  <h2 id="hud">HUD pieces</h2>
+  <p class="section-lede">The HUD uses the same palette and fonts over the live game, on Folder at 78% so the fog shows through.</p>
+  <div class="spec-zone" style="background:radial-gradient(80% 90% at 40% 60%,#3a3e3b,#121413)"><div class="specimen">
+    <figure><div class="x2"><div class="hudpanel" style="width:188px;padding:5px 8px 6px 10px;box-shadow:inset 2px 0 0 rgba(255,184,77,.9)"><div class="caps" style="color:var(--amber)">Objective</div><div style="font:500 9px/1.25 var(--ui)">Talk to Grady at the General Store</div></div></div><figcaption><b>Objective</b>Amber edge; fades to text after 6 s</figcaption></figure>
+    <figure><div class="x2"><div class="hudpanel" style="width:140px;padding:5px 8px 6px 10px;box-shadow:inset 2px 0 0 rgba(233,226,211,.7)"><div style="font:500 8px var(--ui)">Saved.</div></div></div><figcaption><b>Toast</b>Bone edge (amber with a title)</figcaption></figure>
+    <figure><div class="x2" style="position:relative;width:130px;height:24px"><span style="position:absolute;left:0;top:2px"><i data-icon="heart" data-size="10" data-color="#d6382b"></i></span><div style="position:absolute;left:13px;top:5px;width:100px;height:5px;border-radius:3px;background:rgba(0,0,0,.45)"><div style="width:78%;height:100%;border-radius:3px;background:rgba(233,226,211,.55)"><div style="width:84%;height:100%;border-radius:3px;background:var(--hp)"></div></div></div><span style="position:absolute;left:1px;top:12px;opacity:.75"><i data-icon="run" data-size="8"></i></span><div style="position:absolute;left:13px;top:15px;width:100px;height:3px;border-radius:2px;background:rgba(0,0,0,.4)"><div style="width:45%;height:100%;border-radius:2px;background:rgba(233,226,211,.85)"></div></div></div><figcaption><b>Vitals</b>Heart + 5px health pill with a trail; stamina only while spent</figcaption></figure>
+    <figure><div class="x2"><div class="hudpanel" style="position:relative;width:150px;height:36px;box-shadow:inset 2px 0 0 #b9a27a"><img class="png-ico" src="../../ui/icons/shotgun.png" alt="" style="position:absolute;left:6px;top:2px;width:32px;height:32px;filter:brightness(1.4)"><div class="caps" style="position:absolute;left:42px;top:9px;font-size:8px;color:var(--bone)">Shotgun</div><div class="caps" style="position:absolute;left:42px;top:22px;color:var(--rust-hi)">Empty</div><div style="position:absolute;right:8px;top:10px;font:700 14px var(--ui)">0<span style="color:var(--muted);font-size:10px"> / 4</span></div></div></div><figcaption><b>Weapon card · empty</b>EMPTY in Rust Hi replaces the pips</figcaption></figure>
+  </div></div>
+
+  <!-- ============================================================ MOTION -->
+  <h2 id="motion">Motion</h2>
+  <div class="table-scroll">
+  <table class="spec">
+    <thead><tr><th>Moment</th><th>Duration</th><th>Curve</th><th>What moves</th></tr></thead>
+    <tbody>
+      <tr><td>Title → dossier</td><td>0.45 s</td><td>in-out</td><td>The logo drifts from the centre to the top left and scales 1.35 → 1; its rule and HOLLOWMERE slide flush left; the folder slides in from +260</td></tr>
+      <tr><td>Leaf turn</td><td>0.18 s</td><td>ease-out</td><td>The outgoing page slides 14 left and fades; the incoming slides in from 14 right. The outgoing page can't be clicked</td></tr>
+      <tr><td>Scene (title backdrop)</td><td>11 s / shot</td><td>linear</td><td>1.5 s fades to and from black; the caption arrives 2 s in and leaves 2 s before the end; a handheld drift and roll of ±0.01 rad</td></tr>
+      <tr><td>PRESS ANY KEY</td><td>2.6 rad/s</td><td>sine</td><td>Opacity 55–100%</td></tr>
+      <tr><td>Selection wheel</td><td>90 ms (real time)</td><td>linear</td><td>Grey, blur and the wheel fade in while the game slows to 25%</td></tr>
+      <tr><td>Weapon swap</td><td>0.4 s</td><td>linear</td><td>An amber outline flares around the weapon card and fades</td></tr>
+      <tr><td>Health trail</td><td>0.45 s hold</td><td>then drain</td><td>The pale trail holds what a hit took, then drains to the new value</td></tr>
+      <tr><td>Toast</td><td>—</td><td>ease-out</td><td>Slides in 14 from the left</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- ============================================================ TEXTURE -->
+  <h2 id="texture">Texture: the PS2 material</h2>
+  <p class="section-lede"><b>The Texture Over Everything Rule.</b> The world's material is applied last and to the whole frame, UI included. Nostalgia comes from the texture; modernity comes from the craft under it.</p>
+  <div class="grid g2">
+    <div class="card"><b><code>ps2_post.gdshader</code> · over the town</b><p class="section-lede" style="margin:6px 0 0">Grain 0.07, vignette 0.6, colour cut to 32 levels with a 4×4 Bayer dither. The 3D renders at 640×360 with nearest filtering for chunky pixels. "Film grain &amp; vignette" in Options scales it.</p></div>
+    <div class="card"><b><code>menu_crt.gdshader</code> · over the menus</b><p class="section-lede" style="margin:6px 0 0">Scanlines at 16% on every second physical row, a slow 5% rolling band, grain 0.07, vignette 1.1, a 0.0006 UV colour fringe. Over the town and the UI together.</p></div>
+  </div>
+
+  <!-- ============================================================ RULES -->
+  <h2 id="rules">Do's &amp; don'ts</h2>
+  <div class="dd">
+    <div class="card do"><h3>Do</h3><ul>
+      <li><b>Draw menus in <code>canvas_items</code> scale</b> so type is crisp, keep the 3D in its 640×360 viewport, and restore <code>viewport</code> scale on exit.</li>
+      <li><b>Keep every functional label at 7 base px or larger</b>, in Bone or Muted Bone.</li>
+      <li><b>Give each page at most one rust bar</b>, pinned to its foot, with its icon and ENTER keycap.</li>
+      <li><b>Use amber for exactly what is chosen or live.</b></li>
+      <li><b>Build surface tiers from Bone at low alpha</b> rather than new greys.</li>
+      <li><b>Draw every icon from <code>Icons.SET</code></b> and every surface with <code>Icons.round_rect</code>.</li>
+      <li><b>Show only real data</b>, with honest empty states ("No case open").</li>
+      <li><b>Let grain, dither, scanlines and vignette cover the UI too.</b></li>
+    </ul></div>
+    <div class="card dont"><h3>Don't</h3><ul>
+      <li><b>Don't put an eyebrow or kicker label above a heading.</b> The heading and lede carry the page.</li>
+      <li><b>Don't set needed text in Faint Bone.</b></li>
+      <li><b>Don't add a border to a shadowed surface</b> (folder, print).</li>
+      <li><b>Don't use amber as decoration</b> or an action fill, and don't add a second rust button.</li>
+      <li><b>Don't use glyph or font icons, system fonts, or square panels.</b> The UI is never only squares and text.</li>
+      <li><b>Don't place controls on the fog.</b> The left belongs to the scene.</li>
+      <li><b>Don't carry meaning by colour alone.</b> Pair it with an icon, a shape or a word.</li>
+    </ul></div>
+  </div>
+
+  <h3>Known drift (not part of the system)</h3>
+  <ul class="section-lede">
+    <li>Subtitles, banners, the interaction prompt and the boss bar still use the fallback font.</li>
+    <li>Keycap labels are drawn at 6px, below the 7px floor.</li>
+    <li>The Extra page's focused achievement uses a Bone ring where the Lantern Rule calls for amber.</li>
+    <li>The scene caption's source line uses a one-off rust-pink (#d98070) outside the palette.</li>
+  </ul>
+</main>
+
+<footer class="site-foot">LAAF · design planning · tokens from <code>DESIGN.md</code>. See also <a href="../project-documentation.md">the project documentation</a>.</footer>
+
+<script>
+document.getElementById('drawn-icons').innerHTML = Object.keys(LAAF_ICONS)
+  .map(n => `<div>${laafIcon(n, 40, '#e9e2d3', 2)}${n}</div>`).join('');
+document.getElementById('png-icons').innerHTML = ['revolver','flare','shotgun','bow','axe','bat','bottle','smoke','tea','mask','filter','headlamp','ammo','shells','flares','arrow','key_part','chapel_key','lantern','drawing','file','ledger','note','photo','map','recorder','tin_box','toe_tag']
+  .map(n => `<div><img src="../../ui/icons/${n}.png" alt="">${n}</div>`).join('');
+
+const SIZES = ['Normal', 'Large', 'Larger'];
+function step(el, d) { const s = document.getElementById('stepper'); s.textContent = SIZES[(SIZES.indexOf(s.textContent) + d + 3) % 3]; }
+
+// tabs drive the leaf-turn demo
+const TABS = [['continue','CONTINUE','Continue','The newest save as a case file.'],['new','NEW','A new case','Dusk. The bridge is out.'],['load','LOAD','Load game','Every save, newest first.'],['extra','EXTRA','Extra','What you\'ve done in Hollowmere.']];
+let cur = 0;
+function drawTabs() {
+  document.getElementById('tab-demo').innerHTML = TABS.map(([ic, lb], i) =>
+    `<div class="tab demo${i === cur ? ' open' : ''}" data-i="${i}" role="button" tabindex="0" aria-pressed="${i === cur}">${laafIcon(ic, 12, i === cur ? '#ffb84d' : '#b3ab9c', 1.3)}${lb}</div>`).join('');
+}
+function turn(i) {
+  if (i === cur) return;
+  cur = i; drawTabs();
+  const folder = document.getElementById('leaf-demo'), old = folder.querySelector('.leaf:not(.out)');
+  const leaf = document.createElement('div');
+  leaf.className = 'leaf in-start';
+  leaf.innerHTML = `<div class="h">${TABS[i][2]}</div><div class="ld">${TABS[i][3]}</div>`;
+  folder.appendChild(leaf);
+  old.classList.add('out');
+  requestAnimationFrame(() => requestAnimationFrame(() => leaf.classList.remove('in-start')));
+  setTimeout(() => old.remove(), 200);
+}
+document.getElementById('tab-demo').addEventListener('click', e => { const t = e.target.closest('.tab'); if (t) turn(+t.dataset.i); });
+document.getElementById('tab-demo').addEventListener('keydown', e => { const t = e.target.closest('.tab'); if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); turn(+t.dataset.i); } });
+drawTabs();
+</script>
+</body>
+</html>

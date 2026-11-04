@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LAAF Product Vision</title>
+<meta name="description" content="LAAF's objective, the visual style that defines it, and the audience it is designed for.">
+<link rel="stylesheet" href="assets/laaf.css">
+<script src="assets/icons.js"></script>
+<style>
+  .statement { font: 400 clamp(26px, 3.4vw, 40px)/1.3 var(--serif); max-width: 980px; margin: 0; }
+  .statement em { color: var(--amber); font-style: italic; }
+  .big-num { font: 400 46px/1 var(--serif); color: var(--amber); }
+  .mood { display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 120px; gap: 10px; }
+  .mood > div { border-radius: 10px; position: relative; overflow: hidden; display: flex; align-items: flex-end; padding: 10px 12px; font: 700 12px var(--ui); letter-spacing: 1.5px; color: var(--bone); text-shadow: 0 1px 2px #000; }
+  @media (max-width: 800px) { .mood { grid-template-columns: repeat(2, 1fr); } .mood > div { grid-column: auto !important; grid-row: auto !important; } }
+  .vs { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 700px) { .vs { grid-template-columns: 1fr; } }
+  .vs li { margin-bottom: 8px; color: var(--muted); }
+  .persona { display: flex; flex-direction: column; gap: 6px; }
+  .persona .who { display: flex; align-items: center; gap: 12px; }
+  .persona .av { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: rgba(233,226,211,.08); color: var(--amber); }
+  .persona b { font: 400 22px var(--serif); }
+  .persona dl { margin: 8px 0 0; display: grid; grid-template-columns: 74px 1fr; gap: 6px 10px; font-size: 14px; }
+  .persona dt { color: var(--muted); font: 700 11px/1.9 var(--ui); letter-spacing: 1.5px; text-transform: uppercase; }
+  .persona dd { margin: 0; color: var(--muted); }
+  .copy-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px var(--line); }
+  .copy-pair > div { padding: 14px 18px; }
+  .copy-pair .no { background: rgba(233,226,211,.03); color: var(--faint); text-decoration: line-through; text-decoration-color: rgba(196,41,28,.6); }
+  .copy-pair .yes { background: rgba(255,184,77,.05); font: italic 400 19px var(--serif); }
+  @media (max-width: 640px) { .copy-pair { grid-template-columns: 1fr; } }
+  .principle { display: grid; grid-template-columns: 60px 1fr; gap: 14px; }
+</style>
+</head>
+<body>
+
+<header class="site-head">
+  <a class="brand" href="mockups.html"><b>LAAF</b><span>DESIGN PLANNING</span></a>
+  <nav class="site-nav" aria-label="Design planning">
+    <a href="mockups.html"><i data-icon="load" data-size="15" data-stroke="1.6"></i>Mockups</a>
+    <a href="design-system.html"><i data-icon="options" data-size="15" data-stroke="1.6"></i>Design system</a>
+    <a href="navigation-flow.html"><i data-icon="pin" data-size="15" data-stroke="1.6"></i>Navigation</a>
+    <a href="product-vision.html" aria-current="page"><i data-icon="mark" data-size="15" data-stroke="1.6"></i>Vision</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow-num">04 · Product vision</div>
+    <h1>Nostalgic, but not back in time</h1>
+    <p class="lede">What LAAF is for, what makes it look and feel the way it does, and who it is made for.</p>
+    <nav class="toc" aria-label="Sections"><a class="pill" href="#objective">Objective</a><a class="pill" href="#style">Style</a><a class="pill" href="#audience">Audience</a><a class="pill" href="#principles">Principles</a><a class="pill" href="#voice">Voice</a></nav>
+  </section>
+
+  <!-- ============================================================ OBJECTIVE -->
+  <h2 id="objective">Objective</h2>
+  <p class="statement">To make players feel <em>hunted, alone and responsible</em> in a fog-bound town, in a horror game short enough to finish in one evening, with an interface that never pulls their eyes out of the fog.</p>
+
+  <div class="grid g3" style="margin-top:34px">
+    <div class="card"><div class="big-num">I</div><h3 style="margin-top:12px">Experience goal</h3><p class="section-lede" style="margin:0">Bring back the dread of PSX/PS2-era survival horror (fog, sound, scarcity, being watched) in three tight chapters of about 10 minutes each, with no filler.</p></div>
+    <div class="card"><div class="big-num">II</div><h3 style="margin-top:12px">Narrative goal</h3><p class="section-lede" style="margin:0">Make the player's mercy matter. Sparing or killing each hunter changes who stands with Alex at the end and which of five endings plays.</p></div>
+    <div class="card"><div class="big-num">III</div><h3 style="margin-top:12px">Interface goal</h3><p class="section-lede" style="margin:0">The player always knows the mission, their weapon and ammo, and their vitals, and nothing else competes for attention. Menus feel like part of the world, a case file, not a settings app.</p></div>
+  </div>
+
+  <h3>The problem it answers</h3>
+  <p class="section-lede">Classic horror games are loved for their mood but are often hard to return to: tank controls, tiny unreadable menus, no subtitles or comfort options. Modern remakes fix the controls but often lose the texture. LAAF keeps the texture and modernises everything the player touches.</p>
+
+  <h3>How we know it works</h3>
+  <div class="table-scroll">
+  <table class="spec">
+    <thead><tr><th>Goal</th><th>Signal</th><th>Target</th></tr></thead>
+    <tbody>
+      <tr><td>Glanceable HUD</td><td>Time to read objective, ammo and health in a playtest</td><td>Under 1 s each, without stopping</td></tr>
+      <tr><td>Fast return to play</td><td>Key presses from launch to the last save</td><td>2 (any key, Enter)</td></tr>
+      <tr><td>Short and complete</td><td>Critical-path length</td><td>~30 min (3 × 10 min)</td></tr>
+      <tr><td>Choices feel weighty</td><td>Players who replay for another ending</td><td>Five endings, 13 achievements to pull them back</td></tr>
+      <tr><td>Comfortable for everyone</td><td>Comfort options available before the first scare</td><td>Shake, hit-stop, screen effects, subtitles, toggles all in Options on the main menu</td></tr>
+      <tr><td>Legible at any size</td><td>Smallest functional text</td><td>7 base px (≈14 px at 720p, 21 px at 1080p)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- ============================================================ STYLE -->
+  <h2 id="style">The style that defines it</h2>
+  <p class="section-lede"><b>Analog horror texture under a modern, drawn interface.</b> The world looks like a PS2 game seen through an old CRT: fog, grain, dither, low-poly shapes with painted textures. The UI over it is current-generation: crisp type, rounded shapes, stroke icons, soft shadows and short, purposeful motion. Then the grain passes over the UI too, so the two feel like one picture.</p>
+
+  <div class="mood" role="img" aria-label="Moodboard: fog, the dossier folder, case rust, lantern amber, the photo print, scanlines and grain, the two typefaces">
+    <div style="grid-column:span 3;grid-row:span 2;background:radial-gradient(120% 70% at 30% 75%,rgba(150,150,140,.45),transparent 60%),linear-gradient(180deg,#2a2c2b,#3d3f3c 45%,#1c1d1c)">FOG · THE WORLD OWNS THE LEFT</div>
+    <div style="grid-column:span 2;background:linear-gradient(#211d19,#13100e);box-shadow:inset 0 0 0 1px rgba(233,226,211,.08)">THE DOSSIER</div>
+    <div style="background:#9e140f">CASE RUST</div>
+    <div style="background:#ffb84d;color:#13100e;text-shadow:none">LANTERN</div>
+    <div style="grid-column:span 2;background:#dbd4c2 url('../../maps/hollowmere_map.png') 42% 58%/260%;background-blend-mode:multiply;color:#33261a;text-shadow:none;font:italic 400 18px var(--serif);letter-spacing:0"><span style="background:#dbd4c2;padding:2px 10px;border-radius:3px">Lakeview Motel</span></div>
+    <div style="grid-column:span 2;background:repeating-linear-gradient(0deg,rgba(0,0,0,.35) 0 1px,transparent 1px 3px),radial-gradient(ellipse,#47504a,#0d0f0e 80%)">SCANLINES · GRAIN · DITHER</div>
+    <div style="grid-column:span 2;background:rgba(233,226,211,.05);font:400 40px var(--serif);letter-spacing:6px;align-items:center;justify-content:center">LAAF</div>
+    <div style="grid-column:span 2;background:rgba(233,226,211,.05);font:700 15px var(--ui);letter-spacing:2px;align-items:center;justify-content:center;gap:10px"><span class="kc" style="zoom:1.8">ENTER</span>RESUME</div>
+  </div>
+
+  <h3>Keywords</h3>
+  <div class="chips" style="gap:8px">
+    <span class="pill">Dread</span><span class="pill">Fog</span><span class="pill">Analog</span><span class="pill">Case file</span><span class="pill">Hand-drawn</span>
+    <span class="pill">Rounded</span><span class="pill">Quiet</span><span class="pill">Warm darkness</span><span class="pill rust">Danger as rust</span><span class="pill amber">Choice as lantern light</span>
+  </div>
+
+  <h3>Influences</h3>
+  <p class="section-lede">The PSX/PS2-era <i>Silent Hill</i> games and <i>Cry of Fear</i> set the mood: fog that hides the threat, radio static, small towns with secrets, and grain as a material. LAAF takes the feeling, not the content. Its town, characters, story, art and interface are its own.</p>
+
+  <div class="vs">
+    <div class="card"><h3 style="margin-top:0;color:#9fd49a">LAAF is</h3><ul>
+      <li>A dark folder of drawn, rounded UI, set down over the fog</li>
+      <li>Two typefaces: a printed serif for the world, a narrow sans for the controls</li>
+      <li>Icons and shapes before words; a fact as a chip, not a sentence</li>
+      <li>Grain, dither and scanlines over everything, UI included</li>
+      <li>Honest: empty states over invented data, reasons over dead buttons</li>
+    </ul></div>
+    <div class="card"><h3 style="margin-top:0;color:var(--rust-ink)">LAAF is not</h3><ul>
+      <li>Squares of text on a black screen ("retro" as an excuse)</li>
+      <li>A modern HUD covered in meters, minimaps and pop-ups at once</li>
+      <li>Pixel fonts or system fonts</li>
+      <li>Gore as spectacle: executions cut away</li>
+      <li>A dashboard to read between threats</li>
+    </ul></div>
+  </div>
+
+  <!-- ============================================================ AUDIENCE -->
+  <h2 id="audience">Who it is for</h2>
+  <p class="statement" style="font-size:clamp(22px,2.6vw,30px)">PC players, 18 and over, who love story-driven survival horror and the PSX/PS2 era it comes from, and who want an evening of dread, not a 40-hour grind.</p>
+
+  <div class="table-scroll" style="margin-top:26px">
+  <table class="spec">
+    <tbody>
+      <tr><td>Platform</td><td>Windows and Linux desktop. Keyboard and mouse first; gamepad fully supported</td></tr>
+      <tr><td>Age / rating</td><td>18+, mature horror and violence</td></tr>
+      <tr><td>Languages</td><td>English and Spanish (text and subtitles)</td></tr>
+      <tr><td>Play context</td><td>One sitting, evenings, often in the dark with headphones. Tense; they glance at the HUD between threats</td></tr>
+      <tr><td>Genre literacy</td><td>High. They know fog, radio static and the cult-town premise, and they reward atmosphere and punish filler</td></tr>
+      <tr><td>Accessibility needs</td><td>Motion sensitivity, hearing loss, colour-vision deficiency, preference for toggles over holds</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Personas</h3>
+  <div class="grid g2">
+    <div class="card persona"><div class="who"><span class="av"><i data-icon="continue" data-size="24" data-stroke="1.6"></i></span><div><b>The Nostalgic Fan</b><div class="m" style="font-size:14px">28 · played the originals on PS2</div></div></div>
+      <dl><dt>Wants</dt><dd>That fog-and-static feeling again, without dated controls</dd><dt>Fears</dt><dd>A "retro" game that's just ugly and awkward</dd><dt>LAAF gives</dt><dd>The PS2 material with modern movement, aiming and a readable UI</dd></dl></div>
+    <div class="card persona"><div class="who"><span class="av"><i data-icon="load" data-size="24" data-stroke="1.6"></i></span><div><b>The Story Seeker</b><div class="m" style="font-size:14px">24 · narrative indies, plays on Easy</div></div></div>
+      <dl><dt>Wants</dt><dd>To read every note and see every ending</dd><dt>Fears</dt><dd>Getting stuck or lost; missing the story behind difficulty</dd><dt>LAAF gives</dt><dd>Always-on objective, NEXT panels, the evidence log, Easy mode, five endings</dd></dl></div>
+    <div class="card persona"><div class="who"><span class="av"><i data-icon="skull" data-size="24" data-stroke="1.6"></i></span><div><b>The Challenge Player</b><div class="m" style="font-size:14px">31 · speedruns, plays on Hard</div></div></div>
+      <dl><dt>Wants</dt><dd>Mechanics to master and something to prove</dd><dt>Fears</dt><dd>Hand-holding and padding</dd><dt>LAAF gives</dt><dd>Boss weaknesses, the double tap, Hard mode, Untouched and Nightmare achievements</dd></dl></div>
+    <div class="card persona"><div class="who"><span class="av"><i data-icon="heart" data-size="24" data-stroke="1.6"></i></span><div><b>The Comfort-First Player</b><div class="m" style="font-size:14px">35 · motion-sensitive, hard of hearing</div></div></div>
+      <dl><dt>Wants</dt><dd>To play horror without nausea or missing dialogue</dd><dt>Fears</dt><dd>Shake and flashes they can't turn off</dd><dt>LAAF gives</dt><dd>Sliders for shake, hit-stop and screen effects; large subtitles with a backing; named speakers; toggles instead of holds</dd></dl></div>
+  </div>
+
+  <!-- ============================================================ PRINCIPLES -->
+  <h2 id="principles">Design principles</h2>
+  <div class="grid g2">
+    <div class="card principle"><div class="big-num">1</div><div><b>Glance, don't read.</b><p class="section-lede" style="margin:4px 0 0">Every HUD element registers in under a second, with shape and icon before words.</p></div></div>
+    <div class="card principle"><div class="big-num">2</div><div><b>Quiet until it matters.</b><p class="section-lede" style="margin:4px 0 0">Contextual information enters on its event and leaves afterwards. Fog and silence are part of the design.</p></div></div>
+    <div class="card principle"><div class="big-num">3</div><div><b>Nostalgia through texture, modernity through craft.</b><p class="section-lede" style="margin:4px 0 0">Keep the grain, fog and analog feel; give the UI itself current-generation clarity, motion and polish.</p></div></div>
+    <div class="card principle"><div class="big-num">4</div><div><b>One world.</b><p class="section-lede" style="margin:4px 0 0">The menu, HUD, overlays and minigames share one visual language. The pause menu is the main menu's dossier, set down over the game.</p></div></div>
+  </div>
+
+  <!-- ============================================================ VOICE -->
+  <h2 id="voice">Voice</h2>
+  <p class="section-lede">The interface talks like the case file it is: short, in-world, and plain about consequences. The serif carries the world's voice; the sans states the facts.</p>
+  <div class="grid" style="gap:12px">
+    <div class="copy-pair"><div class="no">Are you sure you want to quit?</div><div class="yes">Leave Hollowmere? Check out of room six. Your saves stay where you left them.</div></div>
+    <div class="copy-pair"><div class="no">No save data found.</div><div class="yes">No case open. Start a new case and Hollowmere will keep your place.</div></div>
+    <div class="copy-pair"><div class="no">Select difficulty: Easy / Medium / Hard</div><div class="yes">Forgiving. For the story. · As it was meant to be. · Every round counts.</div></div>
+    <div class="copy-pair"><div class="no">Error: cannot save.</div><div class="yes">You can't save right now.</div></div>
+  </div>
+
+  <h3>Brand commitments</h3>
+  <ul class="section-lede">
+    <li>The name is <b>LAAF</b>. The setting is <b>Hollowmere</b>. The terms are the Mark, The Veil, Lantern Tokens, the Harvester, and Moth (Elena).</li>
+    <li>The Silent Hill / Cry of Fear vibe stays: dread, fog, grain, analog texture.</li>
+    <li>The UI is never only squares and text: icons, figures, and rounded, modern forms that fit the game.</li>
+    <li>Show only what the player needs right now: the mission, the guns, the weapons.</li>
+    <li>No invented marketing, reviews or testimonials.</li>
+  </ul>
+</main>
+
+<footer class="site-foot">LAAF · design planning · from <code>PRODUCT.md</code>. See also <a href="../project-documentation.md">the project documentation</a>.</footer>
+</body>
+</html>

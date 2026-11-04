@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LAAF Navigation Flow</title>
+<meta name="description" content="How the player moves between LAAF's screens: the full screen map, every transition with its keyboard, mouse and gamepad input, the focus model and the navigation rules.">
+<link rel="stylesheet" href="assets/laaf.css">
+<script src="assets/icons.js"></script>
+<style>
+  .flow-wrap { background: linear-gradient(var(--folder-hi), var(--folder)); border-radius: 14px; padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,.45); overflow-x: auto; }
+  #flow { display: block; width: 100%; min-width: 900px; height: auto; }
+  #flow .node rect { fill: rgba(233,226,211,.05); stroke: rgba(233,226,211,.22); stroke-width: 1; transition: fill .15s, stroke .15s; }
+  #flow .node text { fill: var(--bone); font: 700 14px var(--ui); letter-spacing: .5px; }
+  #flow .node text.sub { fill: var(--muted); font: 500 12px var(--ui); letter-spacing: 0; }
+  #flow .node { cursor: pointer; }
+  #flow .node.primary rect { fill: rgba(158,20,15,.35); stroke: rgba(196,41,28,.8); }
+  #flow .node.exit rect { fill: #000; stroke: rgba(233,226,211,.3); stroke-dasharray: 4 3; }
+  #flow .node.on rect { fill: rgba(255,184,77,.14); stroke: var(--amber); }
+  #flow .group rect { fill: none; stroke: rgba(233,226,211,.12); stroke-width: 1; }
+  #flow .group text { fill: var(--muted); font: 700 12px var(--ui); letter-spacing: 2px; }
+  #flow .edge path { fill: none; stroke: rgba(233,226,211,.32); stroke-width: 1.4; transition: stroke .15s, opacity .15s; }
+  #flow .edge text { fill: var(--muted); font: 600 11px var(--ui); paint-order: stroke; stroke: #171310; stroke-width: 4px; transition: fill .15s, opacity .15s; }
+  #flow.focus .edge { opacity: .12; }
+  #flow.focus .edge.hot { opacity: 1; }
+  #flow .edge.hot path { stroke: var(--amber); stroke-width: 2; }
+  #flow .edge.hot text { fill: var(--amber); }
+  #flow .edge.back path { stroke-dasharray: 5 4; }
+  .detail { margin-top: 16px; min-height: 64px; display: flex; gap: 14px; align-items: flex-start; }
+  .detail b { font: 400 24px var(--serif); display: block; }
+  .legend { display: flex; flex-wrap: wrap; gap: 18px; margin: 14px 0 0; color: var(--muted); font-size: 14px; }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .legend i { display: inline-block; width: 26px; height: 0; border-top: 2px solid rgba(233,226,211,.45); }
+  .legend i.dash { border-top-style: dashed; }
+  .keys { display: inline-flex; gap: 4px; flex-wrap: wrap; }
+  .keys .kc { zoom: 1.6; }
+  .state { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: center; max-width: 760px; }
+  .state .box { border-radius: 12px; padding: 16px 18px; background: rgba(233,226,211,.05); box-shadow: inset 0 0 0 1px rgba(233,226,211,.18); }
+  .state .box.on { box-shadow: inset 0 0 0 1px var(--amber); }
+  .state .arrows { text-align: center; color: var(--muted); font-size: 14px; line-height: 2.2; }
+  @media (max-width: 700px) { .state { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header class="site-head">
+  <a class="brand" href="mockups.html"><b>LAAF</b><span>DESIGN PLANNING</span></a>
+  <nav class="site-nav" aria-label="Design planning">
+    <a href="mockups.html"><i data-icon="load" data-size="15" data-stroke="1.6"></i>Mockups</a>
+    <a href="design-system.html"><i data-icon="options" data-size="15" data-stroke="1.6"></i>Design system</a>
+    <a href="navigation-flow.html" aria-current="page"><i data-icon="pin" data-size="15" data-stroke="1.6"></i>Navigation</a>
+    <a href="product-vision.html"><i data-icon="mark" data-size="15" data-stroke="1.6"></i>Vision</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow-num">03 · Navigation</div>
+    <h1>How the player moves</h1>
+    <p class="lede">From the title screen to the fog and back. Every screen in LAAF is at most three steps from play, Esc always goes back one level, and nothing irreversible happens without a page that says so.</p>
+  </section>
+
+  <h2 id="map">Screen map</h2>
+  <p class="section-lede">Hover over a screen, or focus it with Tab, to light up its transitions. Click it to read what it is. Solid lines go deeper; dashed lines go back.</p>
+  <div class="flow-wrap">
+    <svg id="flow" viewBox="0 0 1290 900" role="img" aria-labelledby="flow-title flow-desc">
+      <title id="flow-title">LAAF screen navigation map</title>
+      <desc id="flow-desc">Boot leads to the title screen, then the main menu dossier with seven tabs. Continue, New, Load and Dev start gameplay. From gameplay, Esc opens the pause menu (Options, Leave this run, which returns to the title), I opens the inventory with five tabs, holding Tab opens the selection wheel, and the story leads to minigames, cinematics, boss choices and the ending.</desc>
+    </svg>
+    <div class="legend">
+      <span><i></i>Goes deeper</span><span><i class="dash"></i>Goes back / closes</span>
+      <span><span class="legend-dot" style="background:rgba(196,41,28,.8)"></span>Primary state (play)</span>
+      <span><span class="legend-dot" style="background:#000;box-shadow:0 0 0 1px rgba(233,226,211,.4)"></span>Leaves the app</span>
+    </div>
+    <div class="detail" id="detail" aria-live="polite"><div><b>Pick a screen</b><span class="section-lede">Its transitions light up and its description shows here.</span></div></div>
+  </div>
+
+  <h2 id="transitions">Transitions</h2>
+  <p class="section-lede">Every route, with the input that takes it on each device. The mouse mirrors the keys everywhere: pointing selects, a left click acts like Enter, a right click goes back like Esc, and the help bar's keycaps are clickable.</p>
+  <div class="table-scroll">
+  <table class="spec">
+    <thead><tr><th>From</th><th>To</th><th>Keyboard / mouse</th><th>Gamepad</th><th>Notes</th></tr></thead>
+    <tbody id="trans"></tbody>
+  </table>
+  </div>
+
+  <h2 id="focus">Focus inside the dossier</h2>
+  <p class="section-lede">The main menu has two focus levels, so the same keys can move between pages or within one.</p>
+  <div class="state">
+    <div class="box on"><b>Tabs focus</b><p class="m" style="font-size:14px;margin:6px 0 0">W/S (or up/down) change the open tab, with a leaf turn. The page's rust bar is <i>armed</i>: Enter fires it directly (RESUME, QUIT TO DESKTOP), or enters the page (NEW, LOAD, OPTIONS, DEV).</p></div>
+    <div class="arrows">Enter / A / click on page →<br>← Esc / B / right click</div>
+    <div class="box"><b>Page focus</b><p class="m" style="font-size:14px;margin:6px 0 0">W/S move the selection inside the page (difficulty rows, saves, options, steps). A/D adjust a setting. Enter acts. Esc returns to the tabs; Esc again returns to the title screen.</p></div>
+  </div>
+
+  <h2 id="rules">Navigation rules</h2>
+  <div class="grid g2">
+    <div class="card"><b>Esc is always "back one level"</b><p class="section-lede" style="margin:6px 0 0">Page → tabs → title on the main menu. Options or Leave → pause page → game in the pause menu. Inventory, wheel and minigames close straight to the game.</p></div>
+    <div class="card"><b>Irreversible actions get their own page</b><p class="section-lede" style="margin:6px 0 0">Quitting, leaving a run and resetting settings each ask first, and say what happens (saves kept, unsaved progress lost).</p></div>
+    <div class="card"><b>Resuming happens on release</b><p class="section-lede" style="margin:6px 0 0">Whatever lets the game go on fires when the button is released, so the click that closes a menu never fires the gun.</p></div>
+    <div class="card"><b>Menus only open when they can help</b><p class="section-lede" style="margin:6px 0 0">The inventory and wheel are blocked during cinematics, minigames and death. Save game is greyed out with a reason in dev runs and when Alex isn't in control.</p></div>
+    <div class="card"><b>Three steps from play, at most</b><p class="section-lede" style="margin:6px 0 0">Title → dossier → RESUME is two key presses for a returning player: any key, then Enter. Every in-game menu is one key away from the game.</p></div>
+    <div class="card"><b>The help bar always tells the truth</b><p class="section-lede" style="margin:6px 0 0">It shows only the keys that work on this page, in this focus, for the device used last (keyboard names or pad buttons).</p></div>
+  </div>
+
+  <h2 id="depth">Depth at a glance</h2>
+  <div class="table-scroll">
+  <table class="spec">
+    <thead><tr><th>Level</th><th>Screens</th></tr></thead>
+    <tbody>
+      <tr><td>0 · Shell</td><td>Title screen</td></tr>
+      <tr><td>1 · Dossier tabs</td><td>Continue · New · Load · Extra · Options · Dev · Quit</td></tr>
+      <tr><td>2 · Page focus</td><td>Difficulty rows · save list · settings · dev steps</td></tr>
+      <tr><td>— · Play</td><td>Gameplay with HUD · cinematics · boss choice · ending and epilogue</td></tr>
+      <tr><td>1 · In-game overlays</td><td>Pause · Inventory (5 tabs) · Selection wheel · Minigame</td></tr>
+      <tr><td>2 · Pause sub-pages</td><td>Options · Leave this run?</td></tr>
+    </tbody>
+  </table>
+  </div>
+</main>
+
+<footer class="site-foot">LAAF · design planning · flows from <code>scripts/main_menu.gd</code>, <code>pause_menu.gd</code>, <code>inventory.gd</code>, <code>game.gd</code>. See also <a href="../project-documentation.md">the project documentation</a>.</footer>
+
+<script>
+// ---------------------------------------------------------------- the map's data: nodes [id, x, y, w, h, label, sub, kind, description]
+const N = [
+  ['boot', 30, 70, 150, 50, 'Boot', 'main_menu.tscn', '', 'The game starts straight into the main menu scene. Settings and achievements load first, so the language and volumes are right from the first frame.'],
+  ['title', 30, 200, 150, 60, 'Title screen', 'PRESS ANY KEY', '', 'The logo over the live town in fog, playing story scenes with captions. Any key, button or click opens the dossier.'],
+  ['quitapp', 30, 790, 150, 50, 'Desktop', 'the app closes', 'exit', 'The application closes. Saves stay where they are.'],
+  ['continue', 270, 90, 250, 50, 'Continue', 'resume the newest save', '', 'The newest save as a case file. RESUME loads it. With no save it offers NEW CASE, which opens New with the difficulty rows focused.'],
+  ['new', 270, 160, 250, 50, 'New', 'pick a difficulty', '', 'Three difficulty rows with live meters. BEGIN starts Chapter I at the intro.'],
+  ['load', 270, 230, 250, 50, 'Load', 'every save, newest first', '', 'Manual saves and autosaves with a map thumbnail. Enter loads the selected one.'],
+  ['extra', 270, 300, 250, 50, 'Extra', 'achievements', '', '13 achievements, earned or locked, with their conditions. A dead end by design: Esc goes back.'],
+  ['options', 270, 370, 250, 50, 'Options', 'settings, applied at once', '', 'The shared Options page. Every change applies immediately and is saved. Reset to defaults asks first.'],
+  ['dev', 270, 440, 250, 50, 'Dev', 'jump to any step', '', 'Developer jumps. A dev run is never saved and unlocks nothing.'],
+  ['quit', 270, 510, 250, 50, 'Quit', 'Leave Hollowmere?', '', 'A confirmation with the map print of where you would leave off. QUIT TO DESKTOP closes the app.'],
+  ['game', 610, 380, 220, 70, 'Gameplay', 'HUD · Hollowmere', 'primary', 'The town, the player and the HUD: objective, weapon and ammo, health and stamina, minimap and clock. Everything else appears only when it matters.'],
+  ['pause', 950, 60, 230, 50, 'Pause', 'Paused · RESUME', '', 'The game freezes under a blur. Shows the chapter, time, difficulty, exact Mark and the NEXT objective. Rows: Save game, Options, Main menu.'],
+  ['poptions', 950, 130, 230, 50, 'Options', 'the same page', '', 'Exactly the main menu\'s Options page, drawn over the paused game.'],
+  ['leave', 950, 200, 230, 50, 'Leave this run?', 'unsaved progress is lost', '', 'Confirms leaving for the title screen, with the map print of the current place.'],
+  ['inv', 950, 320, 230, 50, 'Inventory', 'pauses the game', '', 'The wider dossier with five index tabs. Q/E or LB/RB change tab. Enter uses the selected entry.'],
+  ['invtabs', 950, 390, 230, 70, 'Weapons · Items · Keys', 'Evidence · Map', '', 'Weapons (EQUIP), Items (DRINK, PUT ON…), Key items, Evidence (x / 12), Map (where Alex is and the objective).'],
+  ['wheel', 950, 520, 230, 50, 'Selection wheel', 'time ×0.25', '', 'Hold Tab or Y. Point and release to equip or use; right click or B cancels.'],
+  ['mini', 950, 600, 230, 50, 'Minigame overlay', 'radio · lock · fish · cards · arcade', '', 'Opened with E at a minigame spot. Quittable at any time with Esc or B.'],
+  ['cine', 610, 600, 220, 50, 'Cinematic', 'letterbox · skippable lines', '', 'Story scenes inside the world. Enter or E skips a line. Menus other than pause are blocked.'],
+  ['boss', 610, 680, 220, 50, 'Boss choice', 'Spare · Kill', '', 'After a hunter falls: hold interact to Spare, attack to Kill. No timer. The choice changes the finale and the ending.'],
+  ['ending', 610, 780, 220, 60, 'Ending + Pop. 1413', 'one of five, then epilogue', '', 'Run, Signal, Unveiled, The New Eye or Mixed, then the post-end cinematic, the title card and free roam at dawn.'],
+];
+// edges [from, to, label, back?, route]
+const E = [
+  ['boot', 'title', 'auto'],
+  ['title', 'continue', 'any key', 0, 'h'],
+  ['continue', 'title', 'Esc', 1, 'hl'],
+  ['quit', 'quitapp', 'QUIT TO DESKTOP', 0, 'hl'],
+  ['continue', 'game', 'RESUME', 0, 'r'],
+  ['new', 'game', 'BEGIN', 0, 'r'],
+  ['load', 'game', 'Enter on a save', 0, 'r'],
+  ['dev', 'game', 'Enter on a step', 0, 'r'],
+  ['game', 'pause', 'Esc / Start', 0, 'r'],
+  ['pause', 'game', 'RESUME / Esc', 1, 'rl'],
+  ['pause', 'poptions', 'Options'],
+  ['pause', 'leave', 'Main menu', 0, 'v2'],
+  ['leave', 'title', 'MAIN MENU', 0, 'top'],
+  ['game', 'inv', 'I / Back · M → Map', 0, 'r'],
+  ['inv', 'invtabs', 'Q E'],
+  ['inv', 'game', 'Esc / I / B', 1, 'rl'],
+  ['game', 'wheel', 'hold Tab / Y', 0, 'r'],
+  ['game', 'mini', 'E at a spot', 0, 'r'],
+  ['game', 'cine', 'story beat', 0, 'v'],
+  ['cine', 'boss', 'hunter falls', 0, 'v'],
+  ['boss', 'ending', 'final step', 0, 'v'],
+];
+const svgNS = 'http://www.w3.org/2000/svg', svg = document.getElementById('flow');
+const node = Object.fromEntries(N.map(n => [n[0], {id: n[0], x: n[1], y: n[2], w: n[3], h: n[4], label: n[5], sub: n[6], kind: n[7], desc: n[8]}]));
+let out = '';
+// groups
+const group = (x, y, w, h, t) => `<g class="group"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14"/><text x="${x + 14}" y="${y + 22}">${t}</text></g>`;
+out += group(250, 40, 290, 540, 'MAIN MENU · DOSSIER');
+out += group(930, 20, 270, 250, 'PAUSE MENU');
+out += group(930, 290, 270, 190, 'INVENTORY');
+out += group(930, 495, 270, 175, 'OVERLAYS');
+out += group(590, 570, 260, 290, 'STORY');
+// edges
+const mid = (a, b) => [(a + b) / 2];
+function route(e) {
+  const [f, t, , , r] = e, a = node[f], b = node[t];
+  const ax = a.x, ay = a.y + a.h / 2, bx = b.x, by = b.y + b.h / 2;
+  if (r === 'r') { const sx = a.x + a.w, ex = b.x, c = (sx + ex) / 2; return [`M${sx},${ay} C${c},${ay} ${c},${by} ${ex},${by}`, c, (ay + by) / 2]; }
+  if (r === 'rl') { const sx = a.x, ex = b.x + b.w, c = (sx + ex) / 2; const yo = 14; return [`M${sx},${ay + yo} C${c},${ay + yo} ${c},${by + yo} ${ex},${by + yo}`, c, (ay + by) / 2 + yo + 16]; }
+  if (r === 'h') { const sx = a.x + a.w, ex = b.x; return [`M${sx},${ay} C${sx + 50},${ay} ${ex - 50},${by} ${ex},${by}`, (sx + ex) / 2 - 6, (ay + by) / 2 - 14]; }
+  if (r === 'hl') { const sx = a.x, ex = b.x + b.w; return [`M${sx},${ay + 10} C${sx - 50},${ay + 10} ${ex + 50},${by + 10} ${ex},${by + 10}`, (sx + ex) / 2 + 6, (ay + by) / 2 + 36]; }
+  // Leave → Title: out the right edge, over the top of everything, down the far left, into the title's left side
+  if (r === 'top') { const sx = a.x + a.w, sy = ay + 10; return [`M${sx},${sy} L1268,${sy} Q1280,${sy} 1280,${sy - 12} L1280,20 Q1280,8 1268,8 L22,8 Q10,8 10,20 L10,${by - 12} Q10,${by} 22,${by} L${b.x},${by}`, 600, 22]; }
+  // Pause → Leave: around the right of Options
+  if (r === 'v2') { const sx = a.x + a.w, c = sx + 30; return [`M${sx},${ay} C${c},${ay} ${c},${by} ${sx},${by}`, c + 4, (ay + by) / 2 + 4, 'start']; }
+  // vertical
+  const x = a.x + a.w / 2; return [`M${x},${a.y + a.h} L${x},${b.y}`, x + 8, (a.y + a.h + b.y) / 2 + 4, 'start'];
+}
+E.forEach((e, i) => {
+  const [p, lx, ly, anchor] = route(e);
+  out += `<g class="edge${e[3] ? ' back' : ''}" data-from="${e[0]}" data-to="${e[1]}"><path d="${p}" marker-end="url(#arr)"/><text x="${lx}" y="${ly}" text-anchor="${anchor || 'middle'}">${e[2]}</text></g>`;
+});
+// nodes
+for (const n of Object.values(node)) {
+  out += `<g class="node ${n.kind}" data-id="${n.id}" tabindex="0" role="button" aria-label="${n.label}: ${n.sub}"><rect x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="10"/>
+    <text x="${n.x + 14}" y="${n.y + (n.h > 55 ? 26 : 21)}">${n.label}</text><text class="sub" x="${n.x + 14}" y="${n.y + (n.h > 55 ? 46 : 38)}">${n.sub}</text></g>`;
+}
+svg.insertAdjacentHTML('beforeend', `<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9" fill="none" stroke="rgba(233,226,211,.6)" stroke-width="1.6"/></marker></defs>` + out);
+
+const detail = document.getElementById('detail');
+function light(id) {
+  svg.classList.toggle('focus', !!id);
+  svg.querySelectorAll('.edge').forEach(g => g.classList.toggle('hot', !!id && (g.dataset.from === id || g.dataset.to === id)));
+}
+svg.querySelectorAll('.node').forEach(g => {
+  const id = g.dataset.id, n = node[id];
+  const show = () => { svg.querySelectorAll('.node').forEach(x => x.classList.toggle('on', x === g)); detail.innerHTML = `<div><b>${n.label}</b><span class="section-lede">${n.desc}</span></div>`; };
+  g.addEventListener('mouseenter', () => light(id));
+  g.addEventListener('mouseleave', () => light(null));
+  g.addEventListener('focus', () => { light(id); show(); });
+  g.addEventListener('blur', () => light(null));
+  g.addEventListener('click', show);
+  g.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); show(); } });
+});
+
+// ---------------------------------------------------------------- the transitions table
+const kc = s => s.split(' + ').map(k => `<span class="kc">${k}</span>`).join(' ');
+const T = [
+  ['Title', 'Dossier (Continue)', 'Any key · click', 'Any button', 'The logo drifts to the top left and the folder slides in (0.45 s)'],
+  ['Dossier (any tab)', 'Another tab', 'W / S · click a tab', 'D-pad / stick up-down', 'Leaf turn, 0.18 s'],
+  ['Dossier tab', 'Page focus', 'Enter · click in the page', 'A', 'Not on Continue or Quit, whose bar fires directly'],
+  ['Page focus', 'Dossier tabs', 'Esc · right click', 'B', ''],
+  ['Dossier tabs', 'Title', 'Esc · right click', 'B', ''],
+  ['Continue', 'Gameplay', 'Enter on RESUME', 'A', 'Loads the newest save'],
+  ['Continue (no save)', 'New, rows focused', 'Enter on NEW CASE', 'A', ''],
+  ['New', 'Gameplay', 'Enter on BEGIN', 'A', 'Sets the difficulty, starts Chapter I'],
+  ['Load', 'Gameplay', 'Enter on a save · click', 'A', ''],
+  ['Dev', 'Gameplay (dev run)', 'Enter on a step', 'A', 'Normal difficulty, never saved'],
+  ['Quit', 'Desktop', 'Enter on QUIT TO DESKTOP', 'A', ''],
+  ['Gameplay', 'Pause', 'Esc', 'Start', 'Freezes and blurs the game'],
+  ['Pause', 'Gameplay', 'Esc · RESUME', 'B · Start · A on RESUME', 'Fires on release'],
+  ['Pause', 'Options', 'Enter on Options', 'A', 'The same page as the main menu\'s'],
+  ['Options / Leave?', 'Pause', 'Esc · right click', 'B', ''],
+  ['Pause', 'Leave this run?', 'Enter on Main menu', 'A', ''],
+  ['Leave this run?', 'Title', 'Enter on MAIN MENU', 'A', 'Anything since the last save is lost'],
+  ['Gameplay', 'Inventory', 'I (M opens on Map)', 'Back / View', 'Only while Alex is in control'],
+  ['Inventory', 'Another tab', 'Q / E · click a tab', 'LB / RB', ''],
+  ['Inventory', 'Gameplay', 'Esc · I · right click', 'B · Back · Start', ''],
+  ['Gameplay', 'Selection wheel', 'Hold Tab', 'Hold Y', 'Release picks; right click / B cancels'],
+  ['Gameplay', 'Minigame', 'E at the spot', 'X', 'Esc / B quits at any time'],
+  ['Gameplay', 'Cinematic → boss choice → ending', 'Story', 'Story', 'Enter / E skips a line; Spare = hold E, Kill = attack'],
+];
+document.getElementById('trans').innerHTML = T.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td class="m" style="font-size:14px">${r[4]}</td></tr>`).join('');
+</script>
+</body>
+</html>
