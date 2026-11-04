@@ -499,7 +499,9 @@ func _dev_items() -> Array:
 		tr("Start with the Mark at a set level (its notices, whispers, the heartbeat, the sightings)."),
 		func() -> void:
 			var steps := [-1.0, 30.0, 60.0, 95.0]
-			_g.dev_mark = steps[(steps.find(_g.dev_mark) + 1) % steps.size()]]]
+			_g.dev_mark = steps[(steps.find(_g.dev_mark) + 1) % steps.size()]],
+		[tr("AI result"), tr("Make up a random run and have the AI analyse it, to test the final report's text. Uses one call per try."),
+		_ai_result]]
 	for ch in DEV_STEPS:
 		for st in ch[2]:
 			items.append(["%s · %s" % [ch[0], st.trim_prefix("c2_").trim_prefix("c3_").capitalize()], tr("Chapter %s — %s. Normal, nothing saved.") % [ch[0], tr(ch[1])],
@@ -507,6 +509,14 @@ func _dev_items() -> Array:
 					_g.difficulty = 1
 					_g.start(st, "dev")])
 	return items
+
+
+func _ai_result() -> void:
+	## The final report over the menu, on a random run; back to the menu's pointer after it.
+	var made := RunReport.random_run()
+	await RunReport.present(self, made.flags, made.run)
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	MenuDraw.cursor(true)
 
 
 func _page_dev(r: Rect2) -> void:
