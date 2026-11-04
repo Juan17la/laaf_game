@@ -822,6 +822,8 @@ func pop_1413(ending: String) -> void:
 	hud.banner("LAAF", Color(0.85, 0.8, 0.7), 3.5)
 	await d.wait(3.8)
 	await hud.subtitle("", "Thank you for playing.", 2.6)
+	await RunReport.present(d, d.flags)
+	d.player.set("look_hold", 2)  # (the cursor's jump as the mouse is recaptured isn't a look)
 	d.player.respawn(Vector3(0, 0.1, -150), PI)
 	d.cinematic(false)
 	hud.fade(0.0, 1.5)

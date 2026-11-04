@@ -59,6 +59,7 @@ func _physics_process(delta: float) -> void:
 		elif mine and body.has_method("hit"):
 			body.hit(damage, hit.position)
 			if body is Enemy:
+				G.send("tally", ["shots_hit"])
 				ItemFx.burst(get_parent(), hit.position, "splatter", -velocity.normalized())
 				body.hitstop(Feel.HITSTOP.bow)
 			if body is Node3D:  # stuck in them: it rides along until it drops out

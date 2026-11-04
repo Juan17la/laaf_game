@@ -155,6 +155,7 @@ var _draw := 0.0  ## bow: 0..1 drawn
 var _rebound := 0.0  ## > 0: the axe / bat bounced off something it can't hurt (a wall, Owen on the hunt)
 var _bow_string: Array[MeshInstance3D] = []
 var _bow_arrow: Node3D
+var _rolled_through := false  ## this roll already dodged something (the final report counts it once)
 var _carry_mesh: Node3D
 var _carry_col: CollisionShape3D  ## CARRY_BOX while carrying, turned with the model (_physics_process)
 var _was_hidden := false
@@ -354,6 +355,7 @@ func _physics_process(delta: float) -> void:
 	var h := is_hidden()
 	if h and not _was_hidden:
 		hid.emit(global_position)
+		G.send("tally", ["hides"])
 	_was_hidden = h
 	if weapons.tick(delta) and controls_enabled and carrying == "" and Weapons.GUNS[weapons.gun()].kind == "gun":
 		_fire()
@@ -580,9 +582,11 @@ func _start_roll() -> void:
 	var dir := _move_dir()
 	_end_slide()
 	_roll_left = roll_time
+	_rolled_through = false
 	_roll_dir = dir.normalized() if dir.length() > 0.1 else model.global_basis.z
 	model.rotation.y = atan2(_roll_dir.x, _roll_dir.z)
 	stamina -= roll_cost
+	G.send("tally", ["rolls"])
 	noise(6.0)
 	Snd.sfx("jump", null, -2.0, 0.8)
 
@@ -706,8 +710,18 @@ func _fire() -> void:
 	Snd.sfx("gun_" + gun, global_position + Vector3.UP * 1.4, 0.0, Feel.pitch())
 	_tracer(result.point, Weapons.GUNS[gun].color, gun == "flare")
 	_impacts(result.impacts, dir, gun)
+	_tally_shot(result.impacts, from, dir)
 	if result.collider and result.collider.has_method("hit"):
 		hud.hit_marker(result.double_tap)
+
+
+func _tally_shot(impacts: Array, from: Vector3, dir: Vector3) -> void:
+	## For the final report: a shot that struck nobody while an enemy dived off its line was dodged.
+	G.send("tally", ["shots"])
+	if impacts.any(func(im: Array) -> bool: return im[2] is Enemy):
+		G.send("tally", ["shots_hit"])
+	elif Enemy.diving_off(get_tree(), from, dir):
+		G.send("tally", ["shots_dodged"])
 
 
 func _impacts(impacts: Array, dir: Vector3, gun: String) -> void:
@@ -1088,6 +1102,7 @@ func _loose() -> void:
 	Arrow.fire(get_parent(), from, throw_target(Weapons.GUNS.bow.range), Weapons.GUNS.bow.damage * k, self,
 		lerpf(18.0, 46.0, k))
 	weapons.loose()
+	G.send("tally", ["shots"])
 	anim.recoil = Feel.RECOIL.bow
 	add_trauma(Feel.TRAUMA_SHOT.bow)
 	Snd.sfx("bow", global_position + Vector3.UP * 1.4, 0.0, Feel.pitch())
@@ -1180,6 +1195,7 @@ func _melee_hit() -> void:
 				dmg *= 1.8
 		body.hit(dmg, at)
 		if body is Enemy:
+			G.send("tally", ["melee_hits"])
 			body.hitstop(Feel.HITSTOP.get(sp.style if sp.style in ["jab", "bash"] else weapons.gun(), 0.05))
 		if body.get("state") == Enemy.State.DEAD:
 			G.send("unlock", ["hands_on"])
@@ -1244,6 +1260,9 @@ func _within_reach(p: Vector3) -> bool:
 func hurt(amount: float, _from := Vector3.ZERO, mark_gain := 0.0) -> bool:
 	## Returns false when the hit was dodged (roll i-frames) or ignored (cinematics / minigames never hurt).
 	if dead or not controls_enabled or rolling_invulnerable() or _hurt_cd > 0.0:
+		if not dead and controls_enabled and rolling_invulnerable() and not _rolled_through:
+			_rolled_through = true  # (once a roll: a blow or an arrow touches Alex across several frames)
+			G.send("tally", ["rolled_through"])
 		return false
 	_hurt_cd = 0.25
 	Snd.sfx("hurt", global_position + Vector3.UP * 1.5)
@@ -1265,6 +1284,7 @@ func _check_dead() -> void:
 	if health <= 0.0 and not dead:
 		health = 0.0
 		dead = true
+		G.send("tally", ["deaths"])
 		died.emit()
 
 
@@ -1453,7 +1473,7 @@ func gas_exposure(delta: float) -> void:
 	if not controls_enabled:
 		return  # cinematics never kill
 	health -= GAS_DPS * delta * G.settings().hurt
-	G.send("hurt", [1.0])
+	G.send("hurt", [GAS_DPS * delta * G.settings().hurt])
 	_cough_t -= delta
 	if _cough_t <= 0.0:  # coughing gives Alex away
 		_cough_t = 1.4
@@ -1484,6 +1504,7 @@ func drink_tea() -> void:
 	if teas <= 0 or mark <= 0.0:
 		return
 	teas -= 1
+	G.send("tally", ["teas"])
 	mark = maxf(mark - Feel.MARK_TEA, 0.0)
 	Snd.sfx("item_use")
 	hud.banner("ELENA'S TEA  ·  MARK -15%", Color(0.8, 0.9, 0.6), 1.0)
@@ -1597,6 +1618,7 @@ func _takedown(e: Node3D) -> void:
 	tw.tween_property(anim, "attack", 0.6, 0.25).from(0.0)  # raise both arms...
 	tw.tween_callback(func() -> void:
 		e.takedown()
+		G.send("tally", ["takedowns"])
 		hud.banner("TAKEDOWN", Color(0.9, 0.85, 0.7), 0.5))
 	tw.tween_property(anim, "attack", 1.0, 0.3)  # ...and strike (as long as an enemy's, so the arms don't whip)
 	tw.tween_callback(func() -> void:

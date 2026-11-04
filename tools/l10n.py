@@ -25,7 +25,7 @@ PO = os.path.join(ROOT, "locale", "es.po")
 SOURCES = ["scripts", "player"]
 FILES_SKIPPED = {"humanoid_anim.gd", "actor.gd", "icons.gd", "item_fx.gd", "arrow.gd", "spin.gd", "zone.gd",
                  "flicker.gd", "weather.gd", "feel.gd", "fuel_barrel.gd", "gas_cloud.gd", "smoke_cloud.gd", "threat_arcs.gd",
-                 "hud_eyes.gd", "alert_icon.gd", "g.gd", "snd.gd", "audio.gd", "menu_draw.gd"}  # (audio.gd: bus names, the
+                 "hud_eyes.gd", "alert_icon.gd", "g.gd", "snd.gd", "audio.gd", "menu_draw.gd", "groq.gd"}  # (audio.gd: bus names, the
 # sound captions' keywords, matched against the English id and never shown)
 SCENES = ["maps/hollowmere.tscn"]
 BS = chr(92)
@@ -38,7 +38,7 @@ IGNORE = {
     "Audio", "L", "R", "*", "#loop", ".!?", ",;:—-…", "áàä", "éè", "íì", "óò", "%s %s", "[i]%s[/i]",
     "[b][color=#%s]%s:[/color][/b] %s", "%d / %d", "%s ×%d [%s]", "[%d %s]", "%d %s", "%d. %s", "~#%*=:/" + BS * 2,
     "A", "J", "Q", "K", "G", "T", "H", "E", "N", "<", ">", "+", "x", "?", "!", "#", "—", "♪", "MHz", "%d·%d", "~#%*=:/" + BS,
-    "×%.2f", "×%.1f", "%d%%", "%3d%%", "%.1f×", "  %3d%%", "■", "□", "LAAF", "HOLLOWMERE", "English", "Español",
+    "%.1f km", "%s · %d×", "%d / 12", "Spanish", "rolling on cue", "shooting from afar", "fighting up close", "stunning enemies", "×%.2f", "×%.1f", "%d%%", "%3d%%", "%.1f×", "  %3d%%", "■", "□", "LAAF", "HOLLOWMERE", "English", "Español",
     "Marked Man", "Marked Woman", "marked one", "lucía", "tomás", "I", "II", "III", "…", " · ", "— ", "  · ", "> ",
     " ▶ ", "ENTER", "ESC", "TAB", "Y", "B", "A D", "W S", "W A S D", "%s · %s", "%s · %s · %s · %s", "Mark",
     "(@)", "Hand", "Brand", "ShepLamp", "Saved",  # (hud.gd: the save sound for "Saved." notes; the note itself is its own message)

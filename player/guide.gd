@@ -228,7 +228,10 @@ func distance(to: Vector3) -> String:
 
 func here() -> String:
 	## The zone (its English id) the player stands in, "" outside every one.
-	var p: Vector3 = player.global_position
+	return zone_at(player.global_position)
+
+
+static func zone_at(p: Vector3) -> String:
 	for z in ZONES:
 		if p.x > z[1] and p.x < z[3] and p.z > z[2] and p.z < z[4]:
 			return z[0]

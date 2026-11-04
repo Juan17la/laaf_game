@@ -27,6 +27,8 @@ signal checks_spot(enemy: Enemy, pos: Vector3)  ## checks_hiding: arrived at a h
 
 enum State { PATROL, SUSPICIOUS, CHASE, SEARCH, STUNNED, DOWN, DEAD }
 
+const DODGE_NEAR := 3.0  ## m: how near a shot's line a dive counts as dodging it (the final report)
+
 @export var display_name := "Marked One"
 @export var max_health := 60.0
 @export var walk_speed := 1.6
@@ -774,6 +776,7 @@ func _try_dodge(d: float) -> bool:
 	away.y = 0.0
 	away = away.normalized()
 	_dodge_roll = t == "aim"
+	G.send("tally", ["aim_dodges" if _dodge_roll else "swing_dodges"])
 	if _dodge_roll:
 		_dodge_vel = Vector3(-away.z, 0.0, away.x) * (1.0 if randf() < 0.5 else -1.0) * 6.5
 		_dodge = 0.5
@@ -783,6 +786,16 @@ func _try_dodge(d: float) -> bool:
 		_pounce_cd = 0.0  # ...and straight back in
 	_dodge_cd = randf_range(1.8, 3.0) if boss else randf_range(2.5, 4.0)
 	return true
+
+
+static func diving_off(tree: SceneTree, from: Vector3, dir: Vector3) -> bool:
+	## Is an enemy mid dive-roll within DODGE_NEAR m of this shot's line? (the shot that missed it was dodged)
+	for e: Enemy in tree.get_nodes_in_group("enemies"):
+		if e._dodge > 0.0 and e._dodge_roll:
+			var near := Geometry3D.get_closest_point_to_segment(e.global_position, from, from + dir * 100.0)
+			if near.distance_to(e.global_position) < DODGE_NEAR:
+				return true
+	return false
 
 
 func _do_dodge(delta: float) -> void:
@@ -926,6 +939,7 @@ func _set_state(s: State) -> void:
 		if was != State.CHASE:
 			spotted_t = 0.0
 			if is_physics_processing():
+				G.send("tally", ["spotted"])
 				get_tree().call_group("screen_fx", "spike", Feel.SPIKE_CHASE)  # the Mark flares: it's on him
 	if s == State.CHASE and was != State.CHASE and is_physics_processing():
 		Snd.sfx("enemy_alert" if randf() < 0.5 else "growl", global_position)
@@ -984,6 +998,7 @@ func hit(dmg: float, point: Vector3, flare := false) -> void:
 	_flash()
 	if point.y - global_position.y > 1.5 * _model_scale.y:
 		dmg *= 2.0  # headshot
+		G.send("tally", ["headshots"])
 	if state == State.STUNNED or _calling > 0.0:
 		dmg *= 1.5
 	if state != State.CHASE:
@@ -1118,6 +1133,7 @@ func kill() -> void:
 	_fall(was_down)
 	if drop.is_valid():
 		drop.call(global_position)
+	G.send("tally", ["kills"])
 	died.emit(self)
 	get_tree().create_timer(30.0).timeout.connect(queue_free)
 

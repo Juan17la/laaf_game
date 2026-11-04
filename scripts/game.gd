@@ -9,6 +9,7 @@ extends Node
 
 signal achievement_unlocked(id: String)
 
+const Guide := preload("res://player/guide.gd")
 const WORLD := "res://maps/hollowmere.tscn"
 const MENU := "res://maps/main_menu.tscn"
 const SAVE_DIR := "user://saves"
@@ -55,6 +56,9 @@ var dev_evidence := false  ## Dev Mode: runs start with all 12 pieces of evidenc
 var dev_mark := -1.0  ## Dev Mode: runs start with the Mark at this % (< 0: as the story has it)
 var _unlocked := {}
 var _check_t := 0.0
+var _zone_was := ""  ## the zone Alex stood in on the last tracked frame ("" on the roads, or out of control)
+var _pos_was := Vector3.ZERO
+var _pos_known := false
 var _pause: CanvasLayer
 var _pause_menu: PauseMenu  ## (on _pause) scripts/pause_menu.gd
 
@@ -133,6 +137,36 @@ func at_step(d: Node) -> void:
 func hurt(amount: float) -> void:
 	if amount > 0.0:
 		run.damaged = true
+		tally("damage", amount)
+
+
+func tally(key: String, n: Variant = 1) -> void:
+	## One more of something for the final report (scripts/run_report.gd). Older saves start these from zero.
+	run[key] = run.get(key, 0) + n
+
+
+func _track(delta: float) -> void:
+	## While Alex is in control: time out in the town, distance on foot, each zone's time and visits, the Mark's peak.
+	var p: Node = director.get("player")
+	if not p or not bool(p.controls_enabled) or bool(p.dead):
+		_zone_was = ""
+		_pos_known = false
+		return
+	tally("explore", delta)
+	var at: Vector3 = p.global_position
+	if _pos_known and at.distance_to(_pos_was) < 2.0:  # (farther in one frame: a respawn, not a walk)
+		tally("distance", at.distance_to(_pos_was))
+	_pos_was = at
+	_pos_known = true
+	run["mark_peak"] = maxf(float(run.get("mark_peak", 0.0)), float(p.mark))
+	var zone: String = Guide.zone_at(at)
+	if zone != "":
+		var zones: Dictionary = run.get_or_add("zones", {})
+		var z: Array = zones.get_or_add(zone, [0.0, 0])
+		z[0] += delta
+		if zone != _zone_was:
+			z[1] += 1
+	_zone_was = zone
 
 
 # ------------------------------------------------------------------ saves
@@ -245,6 +279,7 @@ func _process(delta: float) -> void:
 		return
 	if not get_tree().paused:
 		run.time += delta
+		_track(delta)
 	_check_t -= delta
 	if _check_t > 0.0:
 		return
