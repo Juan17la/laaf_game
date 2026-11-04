@@ -1,0 +1,104 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font",
+        "value": "sfmono-regular",
+        "createdAt": "2026-11-02T21:48:36.074Z",
+        "reason": "Claude: monospace is only for inline code in the design-planning docs pages, not game UI"
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          "docs/design-planning/mockups.html"
+        ],
+        "createdAt": "2026-11-02T21:48:36.080Z",
+        "reason": "Claude: mockups reproduce the as-built game UI, including its Faint marks (e.g. ??? evidence slips, inventory.gd:433)"
+      },
+      {
+        "rule": "tiny-text",
+        "value": "*",
+        "files": [
+          "docs/design-planning/design-system.html"
+        ],
+        "createdAt": "2026-11-02T21:51:11.746Z",
+        "reason": "Claude: specimens are written in 7-9 base px and shown with CSS zoom 2-3x, matching the game's 640x360 canvas"
+      },
+      {
+        "rule": "tiny-text",
+        "value": "*",
+        "files": [
+          "docs/design-planning/mockups.html"
+        ],
+        "createdAt": "2026-11-02T21:51:11.752Z",
+        "reason": "Claude: mockups use the game's base px inside a scaled 640x360 stage"
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          "docs/design-planning/design-system.html"
+        ],
+        "createdAt": "2026-11-02T21:51:11.758Z",
+        "reason": "Claude: specimens reproduce the game's disabled/Faint states on purpose (DESIGN.md Faint Bone role)"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "docs/design-planning/mockups.html"
+        ],
+        "createdAt": "2026-11-02T22:00:09.777Z",
+        "reason": "Claude: file reproduces the game's 640x360 UI at base px (shown via scale/zoom 2-3x); folder>row nesting and tight insets are the as-built game layout per DESIGN.md"
+      },
+      {
+        "rule": "nested-cards",
+        "value": "*",
+        "files": [
+          "docs/design-planning/mockups.html"
+        ],
+        "createdAt": "2026-11-02T22:00:09.784Z",
+        "reason": "Claude: file reproduces the game's 640x360 UI at base px (shown via scale/zoom 2-3x); folder>row nesting and tight insets are the as-built game layout per DESIGN.md"
+      },
+      {
+        "rule": "undersized-ui-text",
+        "value": "*",
+        "files": [
+          "docs/design-planning/mockups.html"
+        ],
+        "createdAt": "2026-11-02T22:00:09.792Z",
+        "reason": "Claude: file reproduces the game's 640x360 UI at base px (shown via scale/zoom 2-3x); folder>row nesting and tight insets are the as-built game layout per DESIGN.md"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "docs/design-planning/design-system.html"
+        ],
+        "createdAt": "2026-11-02T22:00:09.799Z",
+        "reason": "Claude: file reproduces the game's 640x360 UI at base px (shown via scale/zoom 2-3x); folder>row nesting and tight insets are the as-built game layout per DESIGN.md"
+      },
+      {
+        "rule": "nested-cards",
+        "value": "*",
+        "files": [
+          "docs/design-planning/design-system.html"
+        ],
+        "createdAt": "2026-11-02T22:00:09.806Z",
+        "reason": "Claude: file reproduces the game's 640x360 UI at base px (shown via scale/zoom 2-3x); folder>row nesting and tight insets are the as-built game layout per DESIGN.md"
+      },
+      {
+        "rule": "undersized-ui-text",
+        "value": "*",
+        "files": [
+          "docs/design-planning/design-system.html"
+        ],
+        "createdAt": "2026-11-02T22:00:09.813Z",
+        "reason": "Claude: file reproduces the game's 640x360 UI at base px (shown via scale/zoom 2-3x); folder>row nesting and tight insets are the as-built game layout per DESIGN.md"
+      }
+    ]
+  }
+}
